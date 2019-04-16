@@ -1,0 +1,7 @@
+@import "colors.css";
+
+.bg-gradualBlue {
+    background-image: var(--gradualBlue);
+    color: #fff;
+    padding: 30px;
+}
