@@ -1,8 +1,8 @@
 {
-  "name": "KlLOGIN",
-  "productName": "KlLOGIN",
+  "name": "Electron_Template",
+  "productName": "Electron_Template",
   "version": "0.1.1",
-  "description": "KlLOGIN",
+  "description": "Electron_Template",
   "main": "main.js",
   "private": true,
   "author": "youliso@Hotmail.com",

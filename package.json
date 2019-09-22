@@ -1,8 +1,8 @@
 {
-  "name": "KlLOGIN",
-  "productName": "KlLOGIN",
-  "version": "0.1.1",
-  "description": "KlLOGIN",
+  "name": "Electron_Template",
+  "productName": "Electron_Template",
+  "version": "0.1.0",
+  "description": "Electron_Template",
   "main": "src/main/main.js",
   "private": true,
   "author": "youliso@Hotmail.com",
@@ -12,8 +12,8 @@
     "build": "electron-builder"
   },
   "build": {
-    "productName": "KlLOGIN",
-    "appId": "org.CS.KlLOGIN",
+    "productName": "Electron_Template",
+    "appId": "org.Electron_Template",
     "directories": {
       "output": "dist"
     },
