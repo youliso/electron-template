@@ -1,0 +1,10 @@
+{
+  "name": "KlLOGIN",
+  "productName": "KlLOGIN",
+  "version": "0.1.1",
+  "description": "KlLOGIN",
+  "main": "main.js",
+  "private": true,
+  "author": "youliso@Hotmail.com",
+  "license": "MIT"
+}

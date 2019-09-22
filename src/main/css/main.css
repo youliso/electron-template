@@ -1,0 +1,25 @@
+@import "animate.css";
+@import "colors.css";
+@import "layout.css";
+
+*, *:after, *:before {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.drag {
+    -webkit-app-region: drag
+}
+
+.no-drag {
+    -webkit-app-region: no-drag
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.user-select-text {
+    user-select: text;
+}

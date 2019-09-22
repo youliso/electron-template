@@ -1,0 +1,58 @@
+{
+  "name": "KlLOGIN",
+  "productName": "KlLOGIN",
+  "version": "0.1.1",
+  "description": "KlLOGIN",
+  "main": "src/main/main.js",
+  "private": true,
+  "author": "youliso@Hotmail.com",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "build": {
+    "productName": "KlLOGIN",
+    "appId": "org.CS.KlLOGIN",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "dist/electron/**/*",
+      "node_modules/",
+      "src/main"
+    ],
+    "nsis": {
+      "oneClick": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "build/icons/icon.ico",
+      "uninstallerIcon": "build/icons/unicon.ico",
+      "installerHeaderIcon": "build/icons/icon.ico",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "KlLOGIN",
+      "include": "build/script/installer.nsh"
+    },
+    "win": {
+      "icon": "build/icons/icon.ico",
+      "requestedExecutionLevel": "highestAvailable",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ]
+    }
+  },
+  "dependencies": {
+    "request": "^2.88.0"
+  },
+  "devDependencies": {
+    "electron": "^6.0.10",
+    "electron-builder": "^21.2.0"
+  }
+}
