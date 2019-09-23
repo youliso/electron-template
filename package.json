@@ -49,6 +49,7 @@
     }
   },
   "dependencies": {
+    "bufferpack": "^0.0.6",
     "request": "^2.88.0"
   },
   "devDependencies": {
