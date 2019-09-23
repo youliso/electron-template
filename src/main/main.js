@@ -25,12 +25,12 @@ if (!gotTheLock) {
 function createWindow() {
     // 创建浏览器窗口。
     win = new BrowserWindow({
-        width: 800,
-        height: 480,
-        minWidth: 800,
-        minHeight: 480,
-        maxWidth: 800,
-        maxHeight: 480,
+        width: 950,
+        height: 600,
+        minWidth: 950,
+        minHeight: 600,
+        maxWidth: 950,
+        maxHeight: 600,
         transparent: true,
         autoHideMenuBar: true,
         resizable:false,

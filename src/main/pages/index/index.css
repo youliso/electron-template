@@ -1,8 +1,49 @@
 html, body {
     user-select: none;
-    background: var(--gradualBlue);
+    background: var(--black);
     padding: 0;
     margin: 0;
     width: 100%;
     height: 100%;
+    filter: grayscale(10%);
+}
+
+.bg-img:after{
+    content: "";
+    width:100%;
+    height:100%;
+    position: absolute;
+    left:0;
+    top:0;
+    background: inherit;
+    z-index: -1;
+    filter: blur(10px);
+}
+
+.head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 35px;
+    color: var(--white);
+    padding: 0 10px;
+}
+
+.head>div:nth-child(2){
+    display: flex;
+    align-items: center;
+}
+
+#mini, #close{
+    width: 18px;
+    height: 18px;
+}
+
+#mini{
+    background-color: var(--olive);
+    margin-right: 15px;
+}
+
+#close{
+    background-color: var(--red);
 }
