@@ -122,45 +122,22 @@ module.exports = {
     }),
 
     rules: make_decoder('E', function rules_decoder(data, callback) {
-        // Okay, we can probably read the first byte by ourselves:
-        console.log(data.toString());
-        data = data.slice(11);
-        let index,rules=[],num =0;
+        data = data.slice(20);
+        //console.log(data.toString());
+        let index,rules=[];
         while (true) {
-            num++;
-            if(num==129){
-                break;
-            }
             let rule={};
             rule.key = data.toString('utf8', 0, index = data.indexOf(0x00));
             data = data.slice(index + 1);
             rule.value = data.toString('utf8', 0, index = data.indexOf(0x00));
             data = data.slice(index + 1);
-            console.log(data);
-            rules.push(rule);
+            //console.log(data);
+            if(rule.key){
+                rules.push(rule);
+            }else {
+                break;
+            }
         }
-        //
-        // while (true) {
-        //     rule = pack.unpack(format, data, position);
-        //     if (!rule) {
-        //         break;
-        //     }
-        //
-        //     rules.push(rule);
-        //
-        //     // Could use pack.calcLength here - but this is simple enough:
-        //     position += rule.name.length + 1
-        //         + rule.value.length + 1;
-        // }
-        //
-        // if (rules_cnt != rules.length) {
-        //     callback(new Error('Did not receive the expected number of rules.'
-        //         + ' Expected: ' + rules_cnt
-        //         + ' But saw: ' + rules.length));
-        //     return;
-        // }
-        // // Get Map ip
-
         callback(null, rules);
     }),
 

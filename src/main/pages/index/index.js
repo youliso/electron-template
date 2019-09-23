@@ -10,10 +10,10 @@ ssq.players('180.101.45.115', 27015, function (err, data) {
         console.log(data)
     }
 });
-// ssq.rules('180.101.45.115', 27015, function (err, data) {
-//     if (!err) {
-//         console.log(data)
-//     }else {
-//         console.log(err)
-//     }
-// });
+ssq.rules('180.101.45.115', 27015, function (err, data) {
+    if (!err) {
+        console.log(data)
+    }else {
+        console.log("213")
+    }
+});

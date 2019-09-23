@@ -8,7 +8,7 @@
 // Module imports
 var dgram = require('dgram')
   , pack = require('bufferpack')
-  , decoders = require('./decoders.js');
+  , decoders = require('./decoders.js'),RULESNum = 0,RULESdata;
 
 // Message request formats, straight from the spec
 // Note: A2A_PING has been deprecated, and the GETCHALLENGE has been replaced
@@ -29,15 +29,27 @@ var NEG_1_BUFFER = new Buffer([0xff, 0xff, 0xff, 0xff]);
 //var get_challenge = adf;
 
 function ssq_request(server, port, request,
-                     decoder, callback, needs_challenge) {
+                       decoder, callback, needs_challenge) {
   var socket = dgram.createSocket('udp4')
     , combined_len, combined_request;
   callback = callback || function (){};
 
   function receive_data(data) {
-    socket.close();
-    decoder(data, callback);
-  };
+    if(A2S_RULES == request){
+      RULESNum++;
+      if(RULESNum == 2){
+        data = data.slice(9);
+        let outdata = Buffer.concat([RULESdata,data]);
+        socket.close();
+        decoder(outdata, callback);
+      }else {
+        RULESdata = Buffer.from(data);
+      }
+    }else {
+      socket.close();
+      decoder(data, callback);
+    }
+  }
 
   function receive_challenge(data) {
     decoders.challenge(data, function (err, challenge) {
@@ -48,12 +60,16 @@ function ssq_request(server, port, request,
 
       // combine challenge with request that requires a challenge
       challenge.copy(combined_request, request.length);
-      socket.once('message', receive_data);
+      if(A2S_RULES == request){
+        socket.on('message', receive_data);
+      }else {
+        socket.once('message', receive_data);
+      }
 
       socket.send(combined_request, 0, combined_len,
-                  port, server, error_handler);
+          port, server, error_handler);
     });
-  };
+  }
 
   function error_handler(err, bytes) {
     if (err) {
