@@ -21,7 +21,7 @@ var A2A_PING = new Buffer("i") // note PING is deprecated
                          0x20, 0x51, 0x75, 0x65, 0x72, 0x79, 0x00])
   // The following messages require challenge values to be appended to them
   , A2S_PLAYER = new Buffer([0xff, 0xff, 0xff, 0xff, 0x55])
-  , A2S_RULES = new Buffer([0xff, 0xff, 0xff, 0xff, 0x56]);
+  , A2S_RULES = new Buffer([ 0xFF,  0xFF,  0xFF, 0xFF, 0x56]);
 
 // -1 buffer for appending to buffers which require challenges
 var NEG_1_BUFFER = new Buffer([0xff, 0xff, 0xff, 0xff]);

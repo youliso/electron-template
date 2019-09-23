@@ -123,17 +123,22 @@ module.exports = {
 
     rules: make_decoder('E', function rules_decoder(data, callback) {
         // Okay, we can probably read the first byte by ourselves:
-        data = data.slice(9);
-        var rules_cnt = data.readInt8(0, 1);
-        data = data.slice(1);
-        var rule
-            , fields = ['S(name)', 'S(value)']
-            , format = '<' + fields.join('')
-            , rules = []
-            , position = 1; // skip past the initial byte we read ourselves
-        // while (true) {
-        //     rule = pack.unpack(format, data, position);
-        // }
+        console.log(data.toString());
+        data = data.slice(11);
+        let index,rules=[],num =0;
+        while (true) {
+            num++;
+            if(num==129){
+                break;
+            }
+            let rule={};
+            rule.key = data.toString('utf8', 0, index = data.indexOf(0x00));
+            data = data.slice(index + 1);
+            rule.value = data.toString('utf8', 0, index = data.indexOf(0x00));
+            data = data.slice(index + 1);
+            console.log(data);
+            rules.push(rule);
+        }
         //
         // while (true) {
         //     rule = pack.unpack(format, data, position);
@@ -156,7 +161,7 @@ module.exports = {
         // }
         // // Get Map ip
 
-        callback(null, data);
+        callback(null, rules);
     }),
 
     challenge: make_decoder('A', function challenge_decoder(data, callback) {
