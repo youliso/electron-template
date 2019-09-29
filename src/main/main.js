@@ -102,5 +102,5 @@ if (!app.isPackaged) {
     args.push(path.resolve(process.argv[1]));
 }
 args.push('--');
-const PROTOCOL = 'KlLOGIN';
+const PROTOCOL = 'Electron_Template';
 app.setAsDefaultProtocolClient(PROTOCOL, process.execPath, args);
