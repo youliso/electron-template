@@ -1,55 +1,69 @@
 'use strict';
-const {ipcRenderer,shell} = require('electron');
-const request = require('request');
 const fs = require("fs");
 
-//判断字符是否为空的方法
-function isEmpty(obj){
-    if(typeof obj == "undefined" || obj == null || obj == ""){
-        return true;
-    }else{
-        return false;
-    }
-}
-
 //写入
-function WriteIn(obj) {
+const WriteIn = (obj) => {
     fs.writeFile(obj.url, JSON.stringify(obj.data), (err) => {
-        if (!err) {
-            console.log('[WriteIn]写入文件操作成功');
-            obj.callback(true);
-        }
-        obj.callback(false);
+        if (err) obj.callback(false);
+        obj.callback(obj.data);
     });
-}
+};
+
+//读取
+const ReadFile = (obj) => {
+    fs.readFile(obj.url, obj.encoding || "utf8", (err, data) => {
+        if (err) obj.callback(false);
+        obj.callback(data);
+    });
+};
 
 //请求
-function getHttp(obj) {
-    request({
-        url: obj.url,
-        method: obj.method,
-        headers: {
-            "content-type": "application/json;charset=UTF-8"
-        },
-        body: obj.data
-    }, (error, response, body) => {
-        if (!error && response.statusCode == 200 && body.code == 0) {
-            console.log("[getHttp]获取数据成功", body);
-            obj.callback(true, body);
-        } else {
-            console.log("[getHttp]获取数据失败", error);
-            obj.callback(false, body);
-        }
+const getHttp = async (obj) => {
+    let data = Buffer.from([]);
+    obj.method = obj.method || 'GET';
+    const request = remote.net.request(obj);
+    if (obj.header) request.setHeader(obj.header.name, obj.header.value);
+    request.on('response', (response) => {
+        console.log(`STATUS: ${response.statusCode}`);
+        response.on('data', (chunk) => {
+            data = Buffer.concat([data, chunk]);
+            if (data.length == response.headers['content-length']) return data;
+        });
+        response.on('error', (error) => {
+            throw error
+        });
+        response.on('end', () => console.log(`end`))
     });
-}
+    request.on('error', (error) => {
+        throw error
+    });
+    request.end();
+};
 
-//打开默认浏览器
-function openDefaultBrowser(url) {
-    shell.openExternal(url);
-}
+//判断是否为空
+const isEmpty = (obj) => typeof obj == "undefined" || obj == null || obj == "";
+
+//毫秒转分时
+const formatSeconds = (value) => {
+    let theTime = parseInt(value);// 秒
+    let middle = 0;// 分
+    let hour = 0;// 小时
+    if (theTime > 60) {
+        middle = parseInt(theTime / 60);
+        theTime = parseInt(theTime % 60);
+        if (middle > 60) {
+            hour = parseInt(middle / 60);
+            middle = parseInt(middle % 60);
+        }
+    }
+    let result = "" + parseInt(theTime) + "秒";
+    if (middle > 0) result = "" + parseInt(middle) + "分" + result;
+    if (hour > 0) result = "" + parseInt(hour) + "小时" + result;
+    return result;
+};
 
 //img加载错误处理
-function imgVs(imgVs) {
+const imgVs = (imgVs) => {
     let img = document.getElementsByTagName("img");
     for (let i = 0; i < img.length; i++) {
         let att = img[i].getAttribute("data");
@@ -69,18 +83,13 @@ function imgVs(imgVs) {
             })(i, att)
         }
     }
-}
-
-//发送消息至主进程
-function send(cld) {
-    ipcRenderer.send(cld);
-}
+};
 
 module.exports = {
     WriteIn,
+    ReadFile,
     getHttp,
-    send,
-    openDefaultBrowser,
-    imgVs,
-    isEmpty
+    isEmpty,
+    formatSeconds,
+    getServerInfo
 };

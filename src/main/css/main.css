@@ -1,11 +1,15 @@
 @import "animate.css";
 @import "colors.css";
-@import "layout.css";
+@import "assembly.css";
 
 *, *:after, *:before {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+}
+
+.display-none{
+    display: none !important;
 }
 
 .drag {
