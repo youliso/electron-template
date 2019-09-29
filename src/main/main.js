@@ -96,11 +96,21 @@ ipcMain.on('restore', () => {
     win.restore();
 });
 
+//重载
+ipcMain.on('reload', () => {
+    win.reload();
+});
+
+//重启
+ipcMain.on('relaunch',()=>{
+    app.relaunch({ args: process.argv.slice(1) });
+});
+
 //链接调起
 const args = [];
 if (!app.isPackaged) {
     args.push(path.resolve(process.argv[1]));
 }
 args.push('--');
-const PROTOCOL = 'Electron_Template';
+const PROTOCOL = app.getName();
 app.setAsDefaultProtocolClient(PROTOCOL, process.execPath, args);
