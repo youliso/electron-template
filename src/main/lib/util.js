@@ -49,6 +49,8 @@ const NewBrowserWindow = (obj) => {
     win.on('resize', obj.resize || null);
     win.on('move', obj.move || null);
     win.on('close', () =>{ win = null});
+    win.loadURL(obj.path);
+    win.show();
     return win;
 };
 
