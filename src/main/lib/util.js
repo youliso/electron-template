@@ -48,7 +48,9 @@ const NewBrowserWindow = (obj) => {
     });
     win.on('resize', obj.resize || null);
     win.on('move', obj.move || null);
-    win.on('close', () =>{ win = null});
+    win.on('close', () => {
+        win = null
+    });
     win.loadURL(obj.path);
     win.show();
     return win;
@@ -69,7 +71,7 @@ const NewBrowserWindow = (obj) => {
  * redirect String (可选) - 请求的重定向模式. 可选值为 follow, error 或 manual. 默认值为 follow. 当模式为error时, 重定向将被终止. 当模式为 manual时，表示延迟重定向直到调用了 request.followRedirect。 在此模式中侦听 redirect事件，以获得关于重定向请求的更多细节。
  * }
  * */
-const GetHttp = async (obj) => {
+const GetHttp = (obj) => {
     let data = Buffer.from([]);
     obj.method = obj.method || 'GET';
     const request = net.request(obj);
@@ -77,16 +79,11 @@ const GetHttp = async (obj) => {
     request.on('response', (response) => {
         response.on('data', (chunk) => {
             data = Buffer.concat([data, chunk]);
-            if (data.length == response.headers['content-length']) return data;
         });
-        response.on('error', (error) => {
-            throw error
-        });
-        response.on('end', () => console.log(`end`))
+        response.on('error', (error) => obj.callback(false, error));
+        response.on('end', () => obj.callback(true, data))
     });
-    request.on('error', (error) => {
-        throw error
-    });
+    request.on('error', (error) => obj.callback(false, error));
     request.end();
 };
 
