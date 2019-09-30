@@ -22,7 +22,7 @@ if (!gotTheLock) {
     })
 }
 
-function createWindow() {
+const createWindow = () => {
     // 创建浏览器窗口。
     win = new BrowserWindow({
         width: 950,
@@ -33,18 +33,18 @@ function createWindow() {
         maxHeight: 600,
         transparent: true,
         autoHideMenuBar: true,
-        resizable:false,
-        maximizable:false,
+        resizable: false,
+        maximizable: false,
         frame: false,
         webPreferences: {
-            devTools:true,
+            devTools: true,
             nodeIntegration: true,
             webSecurity: false
         }
     });
 
     // 加载index.html文件
-    win.loadFile( path.join(__dirname, '/pages/index/index.html'));
+    win.loadFile(path.join(__dirname, '/pages/home/index.html'));
 
     // 打开开发者工具
     win.webContents.openDevTools();
@@ -53,7 +53,7 @@ function createWindow() {
     win.on('closed', () => {
         win = null
     });
-}
+};
 
 app.on('ready', createWindow);
 
@@ -71,7 +71,8 @@ app.on('activate', () => {
 //获得焦点时发出
 app.on('browser-window-focus', () => {
     //关闭刷新
-    globalShortcut.register('CommandOrControl+R', () => {});
+    globalShortcut.register('CommandOrControl+R', () => {
+    });
 });
 
 //失去焦点时发出
@@ -95,11 +96,21 @@ ipcMain.on('restore', () => {
     win.restore();
 });
 
+//重载
+ipcMain.on('reload', () => {
+    win.reload();
+});
+
+//重启
+ipcMain.on('relaunch',()=>{
+    app.relaunch({ args: process.argv.slice(1) });
+});
+
 //链接调起
 const args = [];
 if (!app.isPackaged) {
     args.push(path.resolve(process.argv[1]));
 }
 args.push('--');
-const PROTOCOL = 'KlLOGIN';
+const PROTOCOL = app.getName();
 app.setAsDefaultProtocolClient(PROTOCOL, process.execPath, args);

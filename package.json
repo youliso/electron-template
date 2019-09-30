@@ -1,5 +1,4 @@
 {
-  "name": "Electron_Template",
   "productName": "Electron_Template",
   "version": "0.1.0",
   "description": "Electron_Template",
@@ -47,10 +46,6 @@
         }
       ]
     }
-  },
-  "dependencies": {
-    "bufferpack": "^0.0.6",
-    "request": "^2.88.0"
   },
   "devDependencies": {
     "electron": "^6.0.10",

@@ -1,11 +1,15 @@
 @import "animate.css";
 @import "colors.css";
-@import "layout.css";
-
+@import "assembly.css";
+@import "../sweetalert2/sweetalert2.css";
 *, *:after, *:before {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+}
+
+.display-none{
+    display: none !important;
 }
 
 .bg-img{
@@ -29,4 +33,3 @@
 .user-select-text {
     user-select: text;
 }
-

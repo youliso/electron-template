@@ -1,0 +1,10 @@
+html, body {
+    user-select: none;
+    color: var(--white);
+    background: var(--black);
+    font: 400 16px sans-serif;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+}
