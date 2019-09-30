@@ -1,7 +1,7 @@
 @import "animate.css";
 @import "colors.css";
 @import "assembly.css";
-
+@import "../sweetalert2/sweetalert2.css";
 *, *:after, *:before {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -10,6 +10,12 @@
 
 .display-none{
     display: none !important;
+}
+
+.bg-img{
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
 }
 
 .drag {
