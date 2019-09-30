@@ -5,20 +5,24 @@ const fs = require("fs");
 /**
  * 写入
  * */
-const WriteIn = async (obj) => {
-    fs.writeFile(obj.url, JSON.stringify(obj.data), (err) => {
-        if (err) throw err;
-        return obj.data;
+const WriteIn = (obj) => {
+    return new Promise((resolve, reject) => {
+        fs.writeFile(obj.url, JSON.stringify(obj.data), (err) => {
+            if (err) reject(err);
+            resolve(obj.data);
+        });
     });
 };
 
 /**
  * 读取
  * */
-const ReadFile = async (obj) => {
-    fs.readFile(obj.url, obj.encoding || "utf8", (err, data) => {
-        if (err) throw err;
-        return data;
+const ReadFile = (obj) => {
+    return new Promise((resolve, reject) => {
+        fs.readFile(obj.url, obj.encoding || "utf8", (err, data) => {
+            if (err) reject(err);
+            resolve(data);
+        });
     });
 };
 
@@ -48,9 +52,7 @@ const NewBrowserWindow = (obj) => {
     });
     win.on('resize', obj.resize || null);
     win.on('move', obj.move || null);
-    win.on('close', () => {
-        win = null
-    });
+    win.on('close', () => win = null);
     win.loadURL(obj.path);
     win.show();
     return win;
@@ -72,19 +74,19 @@ const NewBrowserWindow = (obj) => {
  * }
  * */
 const GetHttp = (obj) => {
-    let data = Buffer.from([]);
-    obj.method = obj.method || 'GET';
-    const request = net.request(obj);
-    if (obj.header) request.setHeader(obj.header.name, obj.header.value);
-    request.on('response', (response) => {
-        response.on('data', (chunk) => {
-            data = Buffer.concat([data, chunk]);
+    return new Promise((resolve, reject) => {
+        let data = Buffer.from([]);
+        obj.method = obj.method || 'GET';
+        const request = net.request(obj);
+        if (obj.header) request.setHeader(obj.header.name, obj.header.value);
+        request.on('response', (response) => {
+            response.on('data', (chunk) => data = Buffer.concat([data, chunk]));
+            response.on('error', (error) => reject(error));
+            response.on('end', () => resolve(data));
         });
-        response.on('error', (error) => obj.callback(false, error));
-        response.on('end', () => obj.callback(true, data))
+        request.on('error', (error) => reject(error));
+        request.end();
     });
-    request.on('error', (error) => obj.callback(false, error));
-    request.end();
 };
 
 /**
