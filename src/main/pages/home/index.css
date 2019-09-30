@@ -1,6 +1,8 @@
 html, body {
     user-select: none;
-    background: var(--gradualBlue);
+    color: var(--white);
+    background: var(--black);
+    font: 400 16px sans-serif;
     padding: 0;
     margin: 0;
     width: 100%;

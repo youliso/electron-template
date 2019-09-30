@@ -47,10 +47,6 @@
       ]
     }
   },
-  "dependencies": {
-    "bufferpack": "^0.0.6",
-    "request": "^2.88.0"
-  },
   "devDependencies": {
     "electron": "^6.0.10",
     "electron-builder": "^21.2.0"
