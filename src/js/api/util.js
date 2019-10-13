@@ -2,17 +2,18 @@
 const {BrowserWindow} = require('electron').remote;
 const request = require('request');
 const fs = require('fs');
+const low = require('lowdb');
+const FileSync = require('lowdb/adapters/FileSync');
+const adapter = new FileSync('db.json');
+const db = low(adapter);
+db.defaults({}).write();
 
 /**
  * 写入
  * */
 const WriteIn = (obj) => {
-    return new Promise((resolve, reject) => {
-        fs.writeFile(obj.url, JSON.stringify(obj.data), (err) => {
-            if (err) reject(err);
-            resolve(obj.data);
-        });
-    });
+    db.set('test', obj)
+        .write()
 };
 
 /**
