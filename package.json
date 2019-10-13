@@ -51,8 +51,10 @@
       ]
     }
   },
+  "dependencies": {
+    "request": "^2.88.0"
+  },
   "devDependencies": {
-    "request": "^2.88.0",
     "electron": "^6.0.10",
     "electron-builder": "^21.2.0",
     "gulp": "^4.0.2",
