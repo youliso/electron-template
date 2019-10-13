@@ -8,7 +8,7 @@
   "author": "youliso@Hotmail.com",
   "license": "MIT",
   "scripts": {
-    "start": "electron .",
+    "start": "electron src/main.js",
     "start -gulp": "gulp cfg && gulp css && gulp js && gulp html && electron .",
     "build": "electron-builder",
     "build -gulp": "gulp cfg && gulp css && gulp js && gulp html && electron-builder"
@@ -52,11 +52,12 @@
     }
   },
   "devDependencies": {
+    "request": "^2.88.0",
     "electron": "^6.0.10",
     "electron-builder": "^21.2.0",
     "gulp": "^4.0.2",
-    "gulp-js-obfuscator": "^1.0.0",
     "gulp-htmlmin": "^5.0.1",
+    "gulp-js-obfuscator": "^1.0.0",
     "gulp-minify-css": "^1.2.4",
     "gulp-remove-empty-lines": "^0.1.0",
     "gulp-remove-html": "^1.3.0"
