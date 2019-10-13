@@ -1,2 +1,4 @@
 /.idea/
 /yarn.lock
+/dist
+/out
