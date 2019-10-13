@@ -7,9 +7,9 @@ const js_obfuscator = require('gulp-js-obfuscator');//js压缩混淆
 const buildBasePath = 'dist/';//构建输出的目录
 
 //cfg
-gulp.task('cfg', function() {
+gulp.task('cfg', async () => {
     return gulp.src('src/cfg/**/*')
-        .pipe(gulp.dest(buildBasePath+'cfg'));
+        .pipe(gulp.dest(buildBasePath + 'cfg'));
 });
 
 //css
