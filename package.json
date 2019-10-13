@@ -6,7 +6,7 @@
   "main": "dist/main.js",
   "private": true,
   "author": "youliso@Hotmail.com",
-  "license": "MIT",
+  "license": "GPL",
   "scripts": {
     "start": "electron src/main.js",
     "start -gulp": "gulp cfg && gulp css && gulp js && gulp html && electron .",
