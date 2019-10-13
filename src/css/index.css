@@ -9,7 +9,6 @@ body {
 .head {
     top: 0;
     right: 0;
-    width: 30%;
     height: 36px;
     padding: 0 8px;
     display: flex;
@@ -31,7 +30,7 @@ body {
 
 .content-head {
     display: inline-block;
-    width: 70%;
+    width: calc(100% - 120px);
     height: 36px;
     padding: 0 8px;
     line-height: 36px;
