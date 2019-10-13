@@ -9,28 +9,26 @@ const content = doc.getElementById('content');
 
 //页面模板加载
 const Load_template = (name, V, E) => {
-    content.innerHTML = View_Template[name](V);
-    Event_Template[name](E);
+    content.innerHTML = Template[name].View(V);
+    Template[name].Event(E);
 };
 
 //模板
-const View_Template = {
-    home: (app) => {
-        return `
+const Template = {
+    home: {
+        View: (app) => {
+            return `
            <div class="content-head drag">${app.getName()} ${app.getVersion()}</div>
            <div class="content-cont">
              <button id="xieru">写入</button>
            </div>
            `;
-    }
-};
-
-//模板对应方法
-const Event_Template = {
-    home: (obj) => {
-        document.getElementById('xieru').addEventListener('click', () => {
-            _.WriteIn(obj);
-        })
+        },
+        Event: (obj) => {
+            document.getElementById('xieru').addEventListener('click', () => {
+                _.WriteIn(obj);
+            })
+        }
     }
 };
 
@@ -48,6 +46,6 @@ module.exports = {
             console.log('close');
         });
         //首页加载
-        Load_template('home', remote.app, "test")
+        Load_template('home', remote.app, "test1")
     }
 };
