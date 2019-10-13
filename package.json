@@ -24,7 +24,6 @@
       "node_modules/",
       "dist/"
     ],
-    "asar": false,
     "nsis": {
       "oneClick": false,
       "allowElevation": true,
