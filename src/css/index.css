@@ -2,15 +2,20 @@
 
 body {
     background-color: cyan;
+    position: relative;
 }
 
 /*头部*/
 .head {
+    top: 0;
+    right: 0;
+    width: 30%;
     height: 36px;
     padding: 0 8px;
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    position: absolute;
 }
 
 .head > i {
@@ -18,7 +23,20 @@ body {
     font-size: 1.5em;
 }
 
+/*主体*/
 #content {
     width: 100%;
-    height: calc(100% - 36px);
+    height: 100%;
+}
+
+.content-head {
+    display: inline-block;
+    width: 70%;
+    height: 36px;
+    padding: 0 8px;
+    line-height: 36px;
+}
+
+.content-cont {
+    padding: 0 8px 8px 8px;
 }
