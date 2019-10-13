@@ -6,8 +6,8 @@ const removeEmptyLines = require('gulp-remove-empty-lines');//清除空白行
 const js_obfuscator = require('gulp-js-obfuscator');//js压缩混淆
 const buildBasePath = 'dist/';//构建输出的目录
 
-//复制配置文件
-gulp.task('copy', function() {
+//cfg
+gulp.task('cfg', function() {
     return gulp.src('src/cfg/**/*')
         .pipe(gulp.dest(buildBasePath+'cfg'));
 });

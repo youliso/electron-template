@@ -9,8 +9,9 @@
   "license": "MIT",
   "scripts": {
     "start": "electron .",
-    "gulp": "gulp copy && gulp css && gulp js && gulp html",
-    "build": "electron-builder"
+    "start -gulp": "gulp cfg && gulp css && gulp js && gulp html && electron .",
+    "build": "electron-builder",
+    "build -gulp": "gulp cfg && gulp css && gulp js && gulp html && electron-builder"
   },
   "build": {
     "productName": "Electron_Template",
