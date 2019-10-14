@@ -7,7 +7,7 @@ const mini = doc.getElementById('mini');
 const setting = doc.getElementById('setting');
 const content = doc.getElementById('content');
 
-//页面模板加载
+//模板加载
 const Load_template = (name, V, E) => {
     content.innerHTML = Template[name].View(V);
     Template[name].Event(E);
