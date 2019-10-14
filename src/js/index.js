@@ -25,9 +25,9 @@ const Template = {
            `;
         },
         Event: (obj) => {
-            document.getElementById('xieru').addEventListener('click', () => {
+            document.getElementById('xieru').onclick = () => {
                 _.WriteIn(obj);
-            })
+            }
         }
     }
 };
