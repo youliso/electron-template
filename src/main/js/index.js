@@ -7,12 +7,6 @@ const mini = doc.getElementById('mini');
 const setting = doc.getElementById('setting');
 const content = doc.getElementById('content');
 
-//模板加载
-const Load_template = (name, V, E) => {
-    content.innerHTML = Template[name].View(V);
-    Template[name].Event(E);
-};
-
 //模板
 const Template = {
     home: {
@@ -30,6 +24,12 @@ const Template = {
             }
         }
     }
+};
+
+//模板加载
+const Load_template = (name, V, E) => {
+    content.innerHTML = Template[name].View(V);
+    Template[name].Event(E);
 };
 
 module.exports = {
