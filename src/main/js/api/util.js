@@ -77,7 +77,7 @@ const GetHttp = (obj) => {
                 "content-type": "application/json",
             },
             body: obj.data
-        }, function (error, response, body) {
+        }, (error, response, body) => {
             if (!error && response.statusCode == 200) resolve(body);
             else reject(error)
         });
