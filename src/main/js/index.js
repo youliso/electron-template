@@ -14,14 +14,12 @@ const Template = {
             return `
            <div class="content-head drag">${app.getName()} ${app.getVersion()}</div>
            <div class="content-cont">
-             <button id="xieru">写入</button>
+                Electron_Template
            </div>
            `;
         },
         Event: (obj) => {
-            document.getElementById('xieru').onclick = () => {
-                _.WriteIn(obj);
-            }
+            //function
         }
     }
 };
