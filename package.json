@@ -6,7 +6,7 @@
   "main": "dist/main.js",
   "private": true,
   "author": "youliso@Hotmail.com",
-  "license": "GPL",
+  "license": "MIT",
   "scripts": {
     "start": "electron src/main/main.js",
     "start -gulp": "gulp cfg && gulp css && gulp js && gulp html && electron .",
@@ -16,7 +16,7 @@
   "build": {
     "productName": "Electron_Template",
     "appId": "org.Electron_Template",
-    "copyright": "GPL",
+    "copyright": "MIT",
     "directories": {
       "output": "out"
     },
