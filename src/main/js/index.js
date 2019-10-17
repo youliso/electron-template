@@ -24,16 +24,14 @@ const Template = {
     }
 };
 
-//模板加载
+//加载
 const Load_template = (name, V, E) => {
     content.innerHTML = Template[name].View(V);
     Template[name].Event(E);
 };
 
 module.exports = {
-    //初始化
     Init: () => {
-        //基础事件
         closed.addEventListener('click', () => {
             ipcRenderer.send('closed');
         });
@@ -41,9 +39,8 @@ module.exports = {
             ipcRenderer.send('mini');
         });
         setting.addEventListener('click', () => {
-            console.log('close');
+            console.log('setting');
         });
-        //首页加载
         Load_template('home', remote.app, "test1")
     }
 };
