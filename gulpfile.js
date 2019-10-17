@@ -8,20 +8,20 @@ const buildBasePath = 'dist/';//构建输出的目录
 
 //cfg
 gulp.task('cfg', async () => {
-    return gulp.src('src/cfg/**/*')
+    return gulp.src('src/main/cfg/**/*')
         .pipe(gulp.dest(buildBasePath + 'cfg'));
 });
 
 //css
 gulp.task('css', async () => {
-    gulp.src('src/**/*.css')
+    gulp.src('src/main/**/*.css')
         .pipe(minifyCss())//压缩css到一样
         .pipe(gulp.dest(buildBasePath));//输出到css目录
 });
 
 //js
 gulp.task("js", async () => {
-    return gulp.src("src/**/*.js") //JS文件地址
+    return gulp.src("src/main/**/*.js") //JS文件地址
         .pipe(js_obfuscator({
             compact: true,
             controlFlowFlattening: true,
@@ -57,7 +57,7 @@ gulp.task('html', async () => {
         minifyJS: true,//压缩页面JS
         minifyCSS: true//压缩页面CSS
     };
-    gulp.src('src/**/*.html')
+    gulp.src('src/main/**/*.html')
         .pipe(gulpRemoveHtml())//清除特定标签
         .pipe(removeEmptyLines({removeComments: true}))//清除空白行
         .pipe(htmlmin(options))

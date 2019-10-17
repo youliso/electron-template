@@ -8,7 +8,7 @@
   "author": "youliso@Hotmail.com",
   "license": "GPL",
   "scripts": {
-    "start": "electron src/main.js",
+    "start": "electron src/main/main.js",
     "start -gulp": "gulp cfg && gulp css && gulp js && gulp html && electron .",
     "build": "electron-builder",
     "build -gulp": "gulp cfg && gulp css && gulp js && gulp html && electron-builder -w"
@@ -29,13 +29,13 @@
       "oneClick": false,
       "allowElevation": true,
       "allowToChangeInstallationDirectory": true,
-      "installerIcon": "build/icons/icon.ico",
-      "uninstallerIcon": "build/icons/unicon.ico",
-      "installerHeaderIcon": "build/icons/icon.ico",
+      "installerIcon": "src/resources/icons/icon.ico",
+      "uninstallerIcon": "src/resources/icons/unicon.ico",
+      "installerHeaderIcon": "src/resources/icons/icon.ico",
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "shortcutName": "KlLOGIN",
-      "include": "build/script/installer.nsh"
+      "include": "src/resources/script/installer.nsh"
     },
     "dmg": {
       "contents": [
@@ -53,10 +53,10 @@
       ]
     },
     "mac": {
-      "icon": "build/icons/icon.icns"
+      "icon": "src/resources/icons/icon.icns"
     },
     "win": {
-      "icon": "build/icons/icon.ico",
+      "icon": "src/resources/icons/icon.ico",
       "requestedExecutionLevel": "highestAvailable",
       "target": [
         {
@@ -69,7 +69,7 @@
       ]
     },
     "linux": {
-      "icon": "build/icons"
+      "icon": "src/resources/icons"
     }
   },
   "dependencies": {
@@ -77,7 +77,7 @@
     "request": "^2.88.0"
   },
   "devDependencies": {
-    "electron": "^6.0.10",
+    "electron": "^6.0.12",
     "electron-builder": "^21.2.0",
     "gulp": "^4.0.2",
     "gulp-htmlmin": "^5.0.1",
