@@ -12,8 +12,12 @@ db.defaults({}).write();
  * 写入
  * */
 const WriteIn = (obj) => {
-    db.set('test', obj)
-        .write()
+    return new Promise((resolve, reject) => {
+        fs.writeFile(obj.url, JSON.stringify(obj.data), (err) => {
+            if (err) reject(err);
+            resolve(obj.data);
+        });
+    });
 };
 
 /**
