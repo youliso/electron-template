@@ -11,11 +11,12 @@
     "start": "electron src/main.js",
     "start -gulp": "gulp cfg && gulp css && gulp js && gulp html && electron .",
     "build": "electron-builder",
-    "build -gulp": "gulp cfg && gulp css && gulp js && gulp html && electron-builder"
+    "build -gulp": "gulp cfg && gulp css && gulp js && gulp html && electron-builder -w"
   },
   "build": {
     "productName": "Electron_Template",
     "appId": "org.Electron_Template",
+    "copyright":"GPL",
     "directories": {
       "output": "out"
     },
@@ -36,6 +37,24 @@
       "shortcutName": "KlLOGIN",
       "include": "build/script/installer.nsh"
     },
+    "dmg": {
+      "contents": [
+        {
+          "x": 410,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        },
+        {
+          "x": 130,
+          "y": 150,
+          "type": "file"
+        }
+      ]
+    },
+    "mac": {
+      "icon": "build/icons/icon.icns"
+    },
     "win": {
       "icon": "build/icons/icon.ico",
       "requestedExecutionLevel": "highestAvailable",
@@ -48,6 +67,9 @@
           ]
         }
       ]
+    },
+    "linux": {
+      "icon": "build/icons"
     }
   },
   "dependencies": {
