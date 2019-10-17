@@ -24,13 +24,14 @@ if (!gotTheLock) {
 
 const createWindow = () => {
     // 创建浏览器窗口。
+    let width = 950, height = 600;
     win = new BrowserWindow({
-        width: 950,
-        height: 600,
-        minWidth: 950,
-        minHeight: 600,
-        maxWidth: 950,
-        maxHeight: 600,
+        width: width,
+        height: height,
+        minWidth: width,
+        minHeight: height,
+        maxWidth: width,
+        maxHeight: height,
         transparent: true,
         autoHideMenuBar: true,
         resizable: false,
@@ -102,8 +103,8 @@ ipcMain.on('reload', () => {
 });
 
 //重启
-ipcMain.on('relaunch',()=>{
-    app.relaunch({ args: process.argv.slice(1) });
+ipcMain.on('relaunch', () => {
+    app.relaunch({args: process.argv.slice(1)});
 });
 
 //链接调起
