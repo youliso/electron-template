@@ -23,7 +23,7 @@
     "publish": [
       {
         "provider": "generic",
-        "url": "http://www.baidu.com/"
+        "url": "https://github.com/youliso/Electron_Template/releases"
       }
     ],
     "files": [
