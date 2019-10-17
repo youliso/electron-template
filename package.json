@@ -16,10 +16,16 @@
   "build": {
     "productName": "Electron_Template",
     "appId": "org.Electron_Template",
-    "copyright":"GPL",
+    "copyright": "GPL",
     "directories": {
       "output": "out"
     },
+    "publish": [
+      {
+        "provider": "generic",
+        "url": "http://www.baidu.com/"
+      }
+    ],
     "files": [
       "out/electron/**/*",
       "node_modules/",
