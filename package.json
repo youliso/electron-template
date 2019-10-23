@@ -83,7 +83,7 @@
     "request": "^2.88.0"
   },
   "devDependencies": {
-    "electron": "^6.0.12",
+    "electron": "^7.0.0",
     "electron-builder": "^21.2.0",
     "gulp": "^4.0.2",
     "gulp-htmlmin": "^5.0.1",

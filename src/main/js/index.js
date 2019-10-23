@@ -8,8 +8,13 @@ const setting = doc.getElementById('setting');
 const content = doc.getElementById('content');
 
 //模板
-const Template = {
-    home: {
+class Template {
+    constructor(obj) {
+        obj.view.innerHTML = eval(this[obj.name]).View(obj.data.v);
+        eval(this[obj.name]).Event(obj.data.e);
+    }
+
+    home = {
         View: (app) => {
             return `
            <div class="content-head drag">${app.getName()} ${app.getVersion()}</div>
@@ -22,13 +27,7 @@ const Template = {
             //function
         }
     }
-};
-
-//加载
-const Load_template = (name, V, E) => {
-    content.innerHTML = Template[name].View(V);
-    Template[name].Event(E);
-};
+}
 
 module.exports = {
     Init: () => {
@@ -41,6 +40,6 @@ module.exports = {
         setting.addEventListener('click', () => {
             console.log('setting');
         });
-        Load_template('home', remote.app, "test1")
+        new Template({view: content, name: 'home', data: {v: remote.app, e: 'test'}});
     }
 };
