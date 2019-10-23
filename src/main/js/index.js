@@ -9,9 +9,9 @@ const content = doc.getElementById('content');
 
 //模板
 class Template {
-    constructor(obj) {
-        obj.view.innerHTML = eval(this[obj.name]).View(obj.data.v);
-        eval(this[obj.name]).Event(obj.data.e);
+    constructor(view, name, data) {
+        view.innerHTML = eval(this[name]).View(data.v);
+        eval(this[name]).Event(data.e);
     }
 
     home = {
@@ -40,6 +40,6 @@ module.exports = {
         setting.addEventListener('click', () => {
             console.log('setting');
         });
-        new Template({view: content, name: 'home', data: {v: remote.app, e: 'test'}});
+        new Template(content, 'home', {v: remote.app, e: 'test'});
     }
 };
