@@ -40,7 +40,7 @@
       "installerHeaderIcon": "src/resources/icons/icon.ico",
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "KlLOGIN",
+      "shortcutName": "Electron_Template",
       "include": "src/resources/script/installer.nsh"
     },
     "dmg": {
