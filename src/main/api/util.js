@@ -84,9 +84,9 @@ const GetHttp = (obj) => {
     });
 };
 
-
 module.exports = {
     WriteIn,
     ReadFile,
+    NewBrowserWindow,
     GetHttp
 };

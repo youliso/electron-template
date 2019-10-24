@@ -13,6 +13,25 @@
 </div>
 <div id="content" class="no-drag">
 </div>
-<script>require('./js').Init()</script>
+<script>
+    const {remote, ipcRenderer} = require('electron');
+    const _ = require('./api/util');
+    const homePath = "./pages/home";
+    const doc = document;
+    const closed = doc.getElementById('close');
+    const mini = doc.getElementById('mini');
+    const setting = doc.getElementById('setting');
+    const content = doc.getElementById('content');
+    closed.addEventListener('click', () => {
+        ipcRenderer.send('closed');
+    });
+    mini.addEventListener('click', () => {
+        ipcRenderer.send('mini');
+    });
+    setting.addEventListener('click', () => {
+        console.log('setting');
+    });
+    require(homePath).(content, {v: remote.app, e: "test"});
+</script>
 </body>
 </html>
