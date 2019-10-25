@@ -1,1 +1,5 @@
-{}
+{
+  "pages": {
+    "home": "./pages/home"
+  }
+}

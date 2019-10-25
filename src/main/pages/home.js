@@ -2,24 +2,29 @@
 
 class home {
     constructor(view, data) {
-        view.innerHTML = this.View(data.v);
-        this.Event(data.e);
+        this.data = data;
+        view.innerHTML = this.View();
+        this.Event();
     }
 
-    View(app) {
+    View() {
         return `
-           <div class="content-head drag">${app.getName()} ${app.getVersion()}</div>
+           <div class="content-head drag">${remote.app.getName()} ${remote.app.getVersion()}</div>
            <div class="content-cont">
                      Hello world
            </div>
            `;
     }
 
-    Event(obj) {
+    Event() {
         //function
-        console.log(obj);
-        console.log('function');
+        console.log(this.data);
+        console.log(document);
     }
 }
 
-module.exports = home;
+module.exports = {
+    init(view, data) {
+        new home(view, data);
+    }
+};

@@ -15,23 +15,13 @@
 </div>
 <script>
     const {remote, ipcRenderer} = require('electron');
+    const config = require('./cfg/config');
     const _ = require('./api/util');
-    const homePath = "./pages/home";
-    const doc = document;
-    const closed = doc.getElementById('close');
-    const mini = doc.getElementById('mini');
-    const setting = doc.getElementById('setting');
-    const content = doc.getElementById('content');
-    closed.addEventListener('click', () => {
-        ipcRenderer.send('closed');
-    });
-    mini.addEventListener('click', () => {
-        ipcRenderer.send('mini');
-    });
-    setting.addEventListener('click', () => {
-        console.log('setting');
-    });
-    require(homePath).(content, {v: remote.app, e: "test"});
+    const content = document.getElementById('content');
+    document.getElementById('close').addEventListener('click', () => ipcRenderer.send('closed'));
+    document.getElementById('mini').addEventListener('click', () => ipcRenderer.send('mini'));
+    document.getElementById('setting').addEventListener('click', () => console.log('setting'));
+    require(config.pages.home).init(content, {test: "test"});
 </script>
 </body>
 </html>
