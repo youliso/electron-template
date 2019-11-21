@@ -2,10 +2,22 @@
 const {BrowserWindow,app} = require('electron').remote;
 const request = require('request');
 const fs = require('fs');
-const low = require('lowdb');
-const FileSync = require('lowdb/adapters/FileSync');
-const adapter = new FileSync('db.json');
-const db = low(adapter);
+
+/**
+ * 数据库判断
+ * */
+const accessIn = () => {
+    const low = require('lowdb');
+    const FileSync = require('lowdb/adapters/FileSync');
+    try {
+        fs.accessSync(app.getAppPath()+'/data', fs.constants.F_OK);
+        return low(new FileSync(app.getAppPath()+'/data/db.json'));
+    } catch (err) {
+        return low(new FileSync('db.json'));
+    }
+};
+
+const db = accessIn();
 db.defaults({}).write();
 
 /**

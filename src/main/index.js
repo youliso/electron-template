@@ -1,7 +1,8 @@
 import Vue from './apis/vue.esm.browser.min.js';
 
+const fs = require('fs');
+const {remote, ipcRenderer} = require('electron');
 const pages = () => {
-    const fs = require('fs');
     let o = '';
     fs.readdirSync(__dirname + '/views').forEach((view) => {
         let v = require(__dirname + '/views/' + view);
@@ -10,17 +11,22 @@ const pages = () => {
     });
     return o;
 };
-
 const homeView = pages();
+
 new Vue({
     el: '#app',
-    data: {componentName: homeView, util: require('./apis/util'), remote: require('electron').remote},
+    data: {
+        componentName: homeView,
+        util: require('./apis/util'),
+        remote: remote,
+        seenHead: true
+    },
     created() {
         console.log('init');
     },
     methods: {
-        testC() {
-            console.log(this.$refs.componentName.only)
+        system(channel) {
+            ipcRenderer.send(channel);
         }
     }
 });

@@ -7,6 +7,11 @@
 </head>
 <body>
 <div id="app" class="no-drag content">
+    <div v-if="seenHead" class="head">
+        <i @click="system('setting')" class="iconfont iconSettingscontrol no-drag cursor-pointer"></i>
+        <i @click="system('mini')" class="iconfont iconMinus no-drag cursor-pointer"></i>
+        <i @click="system('closed')" class="iconfont iconCancelcontrol no-drag cursor-pointer"></i>
+    </div>
     <component :is="componentName" ref="componentName"></component>
 </div>
 <script type="module" src="index.js"></script>

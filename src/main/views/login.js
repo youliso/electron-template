@@ -7,7 +7,7 @@ module.exports = {
                 count: 0
             }
         },
-        template: `<div class="content">
+        template: `<div class="subclass">
 
         <h1>{{only}}</h1>
         <button @click="ssa">qyy</button> 
