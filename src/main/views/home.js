@@ -10,7 +10,8 @@ module.exports = {
         template: '<button @click="ssa">{{$parent.remote.app.name}}</button>',
         created() {
             let test = require('./test');
-            new test().ustr()
+            new test().ustr();
+            console.log('当前页面' + this.only);
         },
         methods: {
             ssa() {
