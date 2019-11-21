@@ -6,7 +6,7 @@ exports.home = {
             name:'homes'
         }
     },
-    template: '<button v-on:click="ssa">{{$parent.remote.app.getName()}}</button>',
+    template: '<button v-on:click="ssa">{{$parent.remote.app.name}}</button>',
     methods: {
         ssa(){
             this.$parent.componentName ='login'
