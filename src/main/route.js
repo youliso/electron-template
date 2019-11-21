@@ -1,9 +1,9 @@
 module.exports = {
     pages: (Vue) => {
         const v = {
-            "home": require('./views/home').home,
-            "login": require('./views/login').login
+            "home": './views/home',
+            "login": './views/login'
         };
-        for (let key in v) Vue.component(key, v[key]);
+        for (let key in v) Vue.component(key, require(v[key])[key]);
     }
 };
