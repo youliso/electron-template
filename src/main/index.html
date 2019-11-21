@@ -12,10 +12,11 @@
 </div>
 <script type="module">
     import Vue from './apis/vue.min.js';
+
     require('./route').pages(Vue);
     new Vue({
         el: '#app',
-        data: {componentName: 'home'},
+        data: {componentName: 'home', util: require('./apis/util'), remote: require('electron').remote},
         methods: {
             testC() {
                 console.log(this.$refs.componentName.name)
