@@ -113,5 +113,5 @@ if (!app.isPackaged) {
     args.push(path.resolve(process.argv[1]));
 }
 args.push('--');
-const PROTOCOL = app.getName();
+const PROTOCOL = app.name;
 app.setAsDefaultProtocolClient(PROTOCOL, process.execPath, args);
