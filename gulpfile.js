@@ -21,7 +21,7 @@ gulp.task('css', async () => {
 
 //js
 gulp.task("js", async () => {
-    return gulp.src("src/main/**/*.js") //JS文件地址
+    return gulp.src('src/main/**/*.js') //JS文件地址
         .pipe(js_obfuscator({
             compact: true,
             controlFlowFlattening: true,
@@ -41,7 +41,7 @@ gulp.task("js", async () => {
             stringArrayThreshold: 1,
             transformObjectKeys: true,
             unicodeEscapeSequence: false
-        }))
+        },['**/*.min.js']))
         .pipe(gulp.dest(buildBasePath)) //混淆后文件输出地址
 });
 

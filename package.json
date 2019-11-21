@@ -9,6 +9,7 @@
   "license": "MIT",
   "scripts": {
     "start": "electron src/main/main.js",
+    "gulp": "gulp cfg && gulp css && gulp js && gulp html",
     "start -gulp": "gulp cfg && gulp css && gulp js && gulp html && electron .",
     "build": "electron-builder",
     "build -gulp": "gulp cfg && gulp css && gulp js && gulp html && electron-builder -w"

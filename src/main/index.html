@@ -6,22 +6,24 @@
     <link href="css/index.css" rel="stylesheet"/>
 </head>
 <body>
-<div class="head">
-    <i id="setting" class="iconfont iconSettingscontrol no-drag cursor-pointer"></i>
-    <i id="mini" class="iconfont iconMinus no-drag cursor-pointer"></i>
-    <i id="close" class="iconfont iconCancelcontrol no-drag cursor-pointer"></i>
+<div id="app" class="no-drag">
+    <component :is="componentName" ref="componentName"></component>
+    <button @click="testC">test</button>
 </div>
-<div id="content" class="no-drag">
-</div>
-<script>
-    const {remote, ipcRenderer} = require('electron');
-    const config = require('./cfg/config');
-    const _ = require('./api/util');
-    const content = document.getElementById('content');
-    document.getElementById('close').addEventListener('click', () => ipcRenderer.send('closed'));
-    document.getElementById('mini').addEventListener('click', () => ipcRenderer.send('mini'));
-    document.getElementById('setting').addEventListener('click', () => console.log('setting'));
-    require(config.pages.home).init(content, {test: "test"});
+<script type="module">
+    import Vue from './api/vue.min.js';
+
+    let pages = require('./route').pages();
+    for (let key in pages) Vue.component(key, pages[key]);
+    new Vue({
+        el: '#app',
+        data: {componentName: 'home'},
+        methods: {
+            testC() {
+                console.log(this.$refs.componentName.name)
+            }
+        }
+    });
 </script>
 </body>
 </html>
