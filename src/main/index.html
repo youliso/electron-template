@@ -9,22 +9,6 @@
 <div id="app" class="no-drag content">
     <component :is="componentName" ref="componentName"></component>
 </div>
-<script type="module">
-    import Vue from './apis/vue.esm.browser.min.js';
-
-    const homeView = require('./route').pages(Vue);
-    new Vue({
-        el: '#app',
-        data: {componentName: homeView, util: require('./apis/util'), remote: require('electron').remote},
-        created() {
-            console.log('init');
-        },
-        methods: {
-            testC() {
-                console.log(this.$refs.componentName.only)
-            }
-        }
-    });
-</script>
+<script type="module" src="index.js"></script>
 </body>
 </html>
