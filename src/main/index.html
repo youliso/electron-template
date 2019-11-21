@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Template</title>
-    <link href="css/index.css" rel="stylesheet"/>
+    <link href="css/main.css" rel="stylesheet"/>
 </head>
 <body>
-<div id="app" class="no-drag">
+<div id="app" class="no-drag content">
     <component :is="componentName" ref="componentName"></component>
-    <button @click="testC">test</button>
 </div>
 <script type="module">
     import Vue from './apis/vue.esm.browser.min.js';

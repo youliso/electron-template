@@ -7,9 +7,19 @@ module.exports = {
                 count: 0
             }
         },
-        template: '<button v-on:click="count++">You clicked me {{ count }} times.</button>',
+        template: `<div class="content">
+
+        <h1>{{only}}</h1>
+        <button @click="ssa">qyy</button> 
+        
+        </div>`,
         created() {
             console.log('当前页面' + this.only)
+        },
+        methods: {
+            ssa() {
+                this.$parent.componentName = 'home'
+            }
         }
     }
 };

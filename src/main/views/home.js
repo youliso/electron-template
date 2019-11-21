@@ -4,14 +4,22 @@ module.exports = {
         data() {
             return {
                 only: 'home',
-                count: 0
+                count: 0,
+                date: new Date()
             }
         },
-        template: '<button @click="ssa">{{$parent.remote.app.name}}</button>',
+        template: `<div class="content">
+
+        <h1>{{only}}</h1>
+        <h4>{{date}}</h4>
+        <button @click="ssa">qyy</button>  
+        
+        </div>`,
         created() {
-            let test = require('./test');
-            new test().ustr();
             console.log('当前页面' + this.only);
+            setInterval(() => {
+                this.date = new Date();
+            }, 1000)
         },
         methods: {
             ssa() {

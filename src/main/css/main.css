@@ -71,9 +71,49 @@ ul, li {
 
 }
 
+body {
+    background-color: #263238;
+    color: #ffffff;
+    position: relative;
+}
 
-button {
-    border: 0;
-    background-color: transparent;
-    outline: none;
+/*头部*/
+.head {
+    top: 0;
+    right: 0;
+    height: 36px;
+    padding: 0 8px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    position: absolute;
+}
+
+.head > i {
+    margin-left: 10px;
+    font-size: 1.5em;
+}
+
+/*主体*/
+.content {
+    width: 100%;
+    height: 100%;
+    overflow: overlay;
+}
+
+.content-head {
+    display: inline-block;
+    width: calc(100% - 120px);
+    height: 36px;
+    padding: 0 8px;
+    line-height: 36px;
+}
+
+.content-cont {
+    padding: 0 8px 8px 8px;
+}
+
+/*子页面*/
+.subclass{
+
 }
