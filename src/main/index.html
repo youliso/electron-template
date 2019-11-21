@@ -12,9 +12,7 @@
 </div>
 <script type="module">
     import Vue from './api/vue.min.js';
-
-    let pages = require('./route').pages();
-    for (let key in pages) Vue.component(key, pages[key]);
+    require('./route').pages(Vue);
     new Vue({
         el: '#app',
         data: {componentName: 'home'},
