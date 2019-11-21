@@ -1,15 +1,21 @@
 'use strict';
-exports.home = {
-    data() {
-        return {
-            count: 0,
-            name:'homes'
-        }
-    },
-    template: '<button @click="ssa">{{$parent.remote.app.name}}</button>',
-    methods: {
-        ssa(){
-            this.$parent.componentName ='login'
+module.exports = {
+    main: {
+        data() {
+            return {
+                only: 'home',
+                count: 0
+            }
+        },
+        template: '<button @click="ssa">{{$parent.remote.app.name}}</button>',
+        created() {
+            let test = require('./test');
+            new test().ustr()
+        },
+        methods: {
+            ssa() {
+                this.$parent.componentName = 'login'
+            }
         }
     }
 };

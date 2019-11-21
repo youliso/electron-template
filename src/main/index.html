@@ -13,13 +13,16 @@
 <script type="module">
     import Vue from './apis/vue.esm.browser.min.js';
 
-    require('./route').pages(Vue);
+    const homeView = require('./route').pages(Vue);
     new Vue({
         el: '#app',
-        data: {componentName: 'home', util: require('./apis/util'), remote: require('electron').remote},
+        data: {componentName: homeView, util: require('./apis/util'), remote: require('electron').remote},
+        created() {
+            console.log('init');
+        },
         methods: {
             testC() {
-                console.log(this.$refs.componentName.name)
+                console.log(this.$refs.componentName.only)
             }
         }
     });

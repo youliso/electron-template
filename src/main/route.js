@@ -1,9 +1,12 @@
 module.exports = {
     pages: (Vue) => {
-        const v = {
-            "home": './views/home',
-            "login": './views/login'
-        };
-        for (let key in v) Vue.component(key, require(v[key])[key]);
+        const fs = require('fs');
+        let o = '';
+        fs.readdirSync(__dirname + '/views').forEach((view) => {
+            let v = require(__dirname + '/views/' + view);
+            if (o == '') o = v.main.data().only;
+            if (v.main) Vue.component(v.main.data().only, v.main);
+        });
+        return o;
     }
 };
