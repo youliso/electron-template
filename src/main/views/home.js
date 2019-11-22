@@ -5,8 +5,7 @@ module.exports = {
             return {
                 only: 'home',
                 count: 0,
-                date: new Date(),
-                t: null
+                date: new Date()
             }
         },
         template: `<div class="subclass">
@@ -18,11 +17,10 @@ module.exports = {
         </div>`,
         created() {
             console.log('当前页面' + this.only);
-            let t = setInterval(() => {
-                console.log(1);
+            this.r = setInterval(() => {
+                console.log(this.date);
                 this.date = new Date();
             }, 1000);
-            this.r = t;
         },
         beforeDestroy() {
             clearInterval(this.r);

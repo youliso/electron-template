@@ -40,7 +40,6 @@ util.checkDirExist = (folderpath) => {
  * 数据库创建
  * */
 util.accessIn = (path) => {
-    console.log(path);
     const low = require('lowdb');
     const FileSync = require('lowdb/adapters/FileSync');
     try {

@@ -22,7 +22,6 @@ new Vue({
     },
     created() {
         console.log('init');
-        console.log(this.db);
     },
     methods: {
         system(channel) {
