@@ -85,7 +85,7 @@
   },
   "devDependencies": {
     "electron": "^7.1.2",
-    "electron-builder": "^21.2.0",
+    "electron-builder": "^22.1.0",
     "gulp": "^4.0.2",
     "gulp-htmlmin": "^5.0.1",
     "gulp-js-obfuscator": "^1.0.0",

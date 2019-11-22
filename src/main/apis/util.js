@@ -1,29 +1,12 @@
 'use strict';
-const {BrowserWindow,app} = require('electron').remote;
+const {BrowserWindow, app} = require('electron').remote;
 const request = require('request');
 const fs = require('fs');
-
-/**
- * 数据库判断
- * */
-const accessIn = () => {
-    const low = require('lowdb');
-    const FileSync = require('lowdb/adapters/FileSync');
-    try {
-        fs.accessSync(app.getAppPath()+'/data', fs.constants.F_OK);
-        return low(new FileSync(app.getAppPath()+'/data/db.json'));
-    } catch (err) {
-        return low(new FileSync('db.json'));
-    }
-};
-
-const db = accessIn();
-db.defaults({}).write();
-
+const util = {};
 /**
  * 写入
  * */
-const WriteIn = (obj) => {
+util.WriteIn = (obj) => {
     return new Promise((resolve, reject) => {
         fs.writeFile(obj.url, JSON.stringify(obj.data), (err) => {
             if (err) reject(err);
@@ -35,7 +18,7 @@ const WriteIn = (obj) => {
 /**
  * 读取
  * */
-const ReadFile = (obj) => {
+util.ReadFile = (obj) => {
     return new Promise((resolve, reject) => {
         fs.readFile(obj.url, obj.encoding || "utf8", (err, data) => {
             if (err) reject(err);
@@ -45,11 +28,36 @@ const ReadFile = (obj) => {
 };
 
 /**
+ * 检查路径是否存在 如果不存在则创建路径
+ * @param {string} folderpath 文件路径
+ */
+util.checkDirExist = (folderpath) => {
+    if (!fs.existsSync(folderpath)) {
+        fs.mkdirSync(folderpath);
+    }
+};
+/**
+ * 数据库创建
+ * */
+util.accessIn = (path) => {
+    console.log(path);
+    const low = require('lowdb');
+    const FileSync = require('lowdb/adapters/FileSync');
+    try {
+        util.checkDirExist(path);
+        const db = low(new FileSync(path + '/db.json'));
+        return db.defaults({}).write();
+    } catch (err) {
+        console.log(err);
+    }
+};
+
+/**
  * 创建新窗口
  * win.loadURL(modalPath)
  * win.show()
  * */
-const NewBrowserWindow = (obj) => {
+util.NewBrowserWindow = (obj) => {
     let win = new BrowserWindow({
         width: obj.width,
         height: obj.height,
@@ -79,7 +87,7 @@ const NewBrowserWindow = (obj) => {
 /**
  * 请求
  * */
-const GetHttp = (obj) => {
+util.GetHttp = (obj) => {
     return new Promise((resolve, reject) => {
         request({
             url: obj.url,
@@ -96,9 +104,4 @@ const GetHttp = (obj) => {
     });
 };
 
-module.exports = {
-    WriteIn,
-    ReadFile,
-    NewBrowserWindow,
-    GetHttp
-};
+module.exports = util;

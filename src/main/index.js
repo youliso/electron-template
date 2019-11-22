@@ -2,6 +2,7 @@ import Vue from './apis/vue.esm.browser.min.js';
 
 const fs = require('fs');
 const {remote, ipcRenderer} = require('electron');
+const util = require('./apis/util');
 const pages = () => {
     fs.readdirSync(__dirname + '/views').forEach((view) => {
         let v = require(__dirname + '/views/' + view);
@@ -14,12 +15,14 @@ new Vue({
     el: '#app',
     data: {
         componentName: 'home',
-        util: require('./apis/util'),
+        util: util,
+        db: util.accessIn(process.cwd() + '/data'),
         remote: remote,
         seenHead: true
     },
     created() {
         console.log('init');
+        console.log(this.db);
     },
     methods: {
         system(channel) {
