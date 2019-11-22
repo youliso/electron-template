@@ -16,7 +16,7 @@ module.exports = {
         
         </div>`,
         created() {
-            console.log('当前页面' + this.only);
+            console.log('组件加载:' + this.only);
             this.r = setInterval(() => {
                 console.log(this.date);
                 this.date = new Date();
@@ -24,7 +24,7 @@ module.exports = {
         },
         beforeDestroy() {
             clearInterval(this.r);
-            console.log('页面卸载' + this.only);
+            console.log('组件卸载:' + this.only);
         },
         methods: {
             ssa() {
