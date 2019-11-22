@@ -24,6 +24,7 @@ module.exports = {
         },
         beforeDestroy() {
             clearInterval(this.r);
+            console.log('页面卸载' + this.only);
         },
         methods: {
             ssa() {

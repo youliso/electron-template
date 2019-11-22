@@ -1,3 +1,4 @@
+'use strict';
 import Vue from './apis/vue.esm.browser.min.js';
 
 const fs = require('fs');

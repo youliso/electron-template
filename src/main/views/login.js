@@ -16,6 +16,9 @@ module.exports = {
         created() {
             console.log('当前页面' + this.only)
         },
+        beforeDestroy(){
+            console.log('页面卸载' + this.only);
+        },
         methods: {
             ssa() {
                 this.$parent.componentName = 'home'
