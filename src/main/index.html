@@ -12,7 +12,10 @@
         <i @click="system('mini')" class="iconfont iconMinus no-drag cursor-pointer"></i>
         <i @click="system('closed')" class="iconfont iconCancelcontrol no-drag cursor-pointer"></i>
     </div>
-    <component :is="componentName" ref="componentName"></component>
+    <keep-alive :max="10">
+        <component v-if="component.keepAlive" :is="component.only" ref="component.only"></component>
+    </keep-alive>
+    <component v-if="!component.keepAlive" :is="component.only" ref="component.only"></component>
 </div>
 <script type="module" src="index.js"></script>
 </body>

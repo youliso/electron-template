@@ -4,6 +4,7 @@ module.exports = {
         data() {
             return {
                 only: 'home',
+                keepAlive: true,
                 count: 0,
                 date: new Date()
             }
@@ -16,19 +17,28 @@ module.exports = {
         
         </div>`,
         created() {
-            console.log('组件加载:' + this.only);
+            //首次加载
+            console.log(this.only+':created');
             this.r = setInterval(() => {
-                console.log(this.date);
                 this.date = new Date();
             }, 1000);
         },
         beforeDestroy() {
+            //卸载
+            console.log(this.only+':beforeDestroy');
             clearInterval(this.r);
-            console.log('组件卸载:' + this.only);
+        },
+        activated() {
+            //开启缓存后 切换加载
+            console.log(this.only+':activated');
+        },
+        deactivated() {
+            //开启缓存后 切换卸载
+            console.log(this.only+':deactivated');
         },
         methods: {
             ssa() {
-                this.$parent.componentName = 'login'
+                this.$parent.component = this.$parent.components['login']
             }
         }
     }

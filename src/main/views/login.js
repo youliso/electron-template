@@ -4,6 +4,7 @@ module.exports = {
         data() {
             return {
                 only: 'login',
+                keepAlive: false,
                 count: 0
             }
         },
@@ -14,14 +15,24 @@ module.exports = {
         
         </div>`,
         created() {
-            console.log('组件加载:' + this.only);
+            //首次加载
+            console.log(this.only+':created');
         },
-        beforeDestroy(){
-            console.log('页面卸载' + this.only);
+        beforeDestroy() {
+            //卸载
+            console.log(this.only+':beforeDestroy');
+        },
+        activated() {
+            //开启缓存后 切换加载
+            console.log(this.only+':activated');
+        },
+        deactivated() {
+            //开启缓存后 切换卸载
+            console.log(this.only+':deactivated');
         },
         methods: {
             ssa() {
-                this.$parent.componentName = 'home'
+                this.$parent.component = this.$parent.components['home']
             }
         }
     }
