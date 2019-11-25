@@ -13,9 +13,9 @@
         <i @click="system('closed')" class="iconfont iconCancelcontrol no-drag cursor-pointer"></i>
     </div>
     <keep-alive :max="10">
-        <component v-if="component.keepAlive" :is="component.only" ref="component.only"></component>
+        <component v-if="component.keepAlive" :is="component.name" ref="component.name"></component>
     </keep-alive>
-    <component v-if="!component.keepAlive" :is="component.only" ref="component.only"></component>
+    <component v-if="!component.keepAlive" :is="component.name" ref="component.name"></component>
 </div>
 <script type="module" src="index.js"></script>
 </body>

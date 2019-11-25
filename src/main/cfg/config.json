@@ -1,1 +1,12 @@
-{}
+{
+  "views": {
+    "home": {
+      "keepAlive": false,
+      "v": "home.js"
+    },
+    "login": {
+      "keepAlive": true,
+      "v": "login.js"
+    }
+  }
+}
