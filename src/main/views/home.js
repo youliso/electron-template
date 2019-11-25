@@ -31,7 +31,7 @@ module.exports = {
         },
         methods: {
             ssa() {
-                this.$parent.component = this.$parent.components['login']
+                this.$parent.component = this.$parent.components['app-login']
             }
         }
     }

@@ -18,7 +18,7 @@ const components = views();
 new Vue({
     el: '#app',
     data: {
-        component: components['home'],
+        component: components['app-home'],
         components: components,
         util: util,
         db: util.accessIn(process.cwd() + '/data'),

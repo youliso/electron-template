@@ -25,7 +25,7 @@ module.exports = {
         },
         methods: {
             ssa() {
-                this.$parent.component = this.$parent.components['home']
+                this.$parent.component = this.$parent.components['app-home']
             }
         }
     }

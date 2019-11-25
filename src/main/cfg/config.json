@@ -1,10 +1,10 @@
 {
   "views": {
-    "home": {
+    "app-home": {
       "keepAlive": false,
       "v": "home.js"
     },
-    "login": {
+    "app-login": {
       "keepAlive": true,
       "v": "login.js"
     }
