@@ -107,7 +107,7 @@ ipcMain.on('relaunch', () => {
     app.relaunch({args: process.argv.slice(1)});
 });
 
-//链接调起
+//协议调起
 const args = [];
 if (!app.isPackaged) {
     args.push(path.resolve(process.argv[1]));
