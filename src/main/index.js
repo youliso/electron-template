@@ -6,6 +6,7 @@ const util = require('./apis/util');
 const fetch = require('./apis/fetch');
 const config = require('./cfg/config');
 Vue.prototype.util = util;
+Vue.prototype.db = util.accessIn(process.cwd() + '/data');
 Vue.prototype.fetch = new fetch(config.url);
 const views = () => {
     let components = {};
@@ -23,7 +24,6 @@ new Vue({
     data: {
         component: components['app-home'],
         components: components,
-        db: this.util.accessIn(process.cwd() + '/data'),
         remote: remote,
         seenHead: true
     },
