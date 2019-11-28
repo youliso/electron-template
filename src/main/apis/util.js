@@ -1,7 +1,6 @@
 'use strict';
-const {BrowserWindow} = require('electron').remote;
-const request = require('request');
 const fs = require('fs');
+const config = require('../cfg/config');
 const util = {};
 /**
  * 写入
@@ -56,7 +55,7 @@ util.accessIn = (path) => {
  * win.loadURL(modalPath)
  * win.show()
  * */
-util.NewBrowserWindow = (obj) => {
+util.NewBrowserWindow = (BrowserWindow, obj) => {
     let win = new BrowserWindow({
         width: obj.width,
         height: obj.height,
@@ -81,6 +80,42 @@ util.NewBrowserWindow = (obj) => {
     win.loadURL(obj.path);
     win.show();
     return win;
+};
+/**
+ * 对象转url参数
+ * */
+util.convertObj = (data) => {
+    let _result = [];
+    for (let key in data) {
+        let value = data[key];
+        if (value.constructor == Array) {
+            value.forEach(function (_value) {
+                _result.push(key + "=" + _value);
+            });
+        } else {
+            _result.push(key + '=' + value);
+        }
+    }
+    return _result.join('&');
+};
+
+/**
+ * fetch
+ * */
+
+util.fetch = (url, param) => {
+    let data = {
+        method: param.method || 'GET',
+        headers: {'Content-type': 'application/json'},
+    };
+    if (data.method == 'GET') url = url + util.convertObj(param.data);
+    else data.body = JSON.stringify(param.data);
+    return new Promise((resolve, reject) => {
+        fetch(config.url + url, data)
+            .then(res => res.json())
+            .then(data => resolve(data))
+            .catch(err => reject(err))
+    });
 };
 
 module.exports = util;

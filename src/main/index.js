@@ -3,13 +3,11 @@ import Vue from './apis/vue.esm.browser.min.js';
 
 const {remote, ipcRenderer} = require('electron');
 const util = require('./apis/util');
-const fetch = require('./apis/fetch');
 const config = require('./cfg/config');
 Vue.prototype.remote = remote;
 Vue.prototype.ipcRenderer = ipcRenderer;
 Vue.prototype.util = util;
 Vue.prototype.db = util.accessIn(process.cwd() + '/data');
-Vue.prototype.fetch = new fetch(config.url);
 const views = () => {
     let components = {};
     for (let key in config.views) {
