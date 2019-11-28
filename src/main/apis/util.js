@@ -81,6 +81,7 @@ util.NewBrowserWindow = (BrowserWindow, obj) => {
     win.show();
     return win;
 };
+
 /**
  * 对象转url参数
  * */
@@ -102,16 +103,18 @@ util.convertObj = (data) => {
 /**
  * fetch
  * */
-
-util.fetch = (url, param) => {
+util.fetch = (url, param, is) => {
     let data = {
-        method: param.method || 'GET',
-        headers: {'Content-type': 'application/json'},
+        headers: {'Content-type': 'application/json'}
     };
-    if (data.method == 'GET') url = url + util.convertObj(param.data);
-    else data.body = JSON.stringify(param.data);
+    if (param) {
+        data.method = param.method || 'GET';
+        if (data.method == 'GET') url = url + util.convertObj(param.data);
+        else data.body = JSON.stringify(param.data);
+    }
+    if (is) url = config.url + url;
     return new Promise((resolve, reject) => {
-        fetch(config.url + url, data)
+        fetch(url, data)
             .then(res => res.json())
             .then(data => resolve(data))
             .catch(err => reject(err))
