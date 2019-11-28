@@ -5,6 +5,8 @@ const {remote, ipcRenderer} = require('electron');
 const util = require('./apis/util');
 const fetch = require('./apis/fetch');
 const config = require('./cfg/config');
+Vue.prototype.remote = remote;
+Vue.prototype.ipcRenderer = ipcRenderer;
 Vue.prototype.util = util;
 Vue.prototype.db = util.accessIn(process.cwd() + '/data');
 Vue.prototype.fetch = new fetch(config.url);
@@ -24,7 +26,6 @@ new Vue({
     data: {
         component: components['app-home'],
         components: components,
-        remote: remote,
         seenHead: true
     },
     created() {
@@ -32,7 +33,7 @@ new Vue({
     },
     methods: {
         system(channel) {
-            ipcRenderer.send(channel);
+            this.ipcRenderer.send(channel);
         }
     }
 });
