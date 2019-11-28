@@ -1,4 +1,5 @@
 {
+  "url": "//api.youliso.com/",
   "views": {
     "app-home": {
       "keepAlive": false,

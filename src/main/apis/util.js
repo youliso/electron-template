@@ -83,24 +83,4 @@ util.NewBrowserWindow = (obj) => {
     return win;
 };
 
-/**
- * 请求
- * */
-util.GetHttp = (obj) => {
-    return new Promise((resolve, reject) => {
-        request({
-            url: obj.url,
-            method: obj.method || 'GET',
-            json: obj.json || true,
-            headers: obj.headers || {
-                "content-type": "application/json",
-            },
-            body: obj.data
-        }, (error, response, body) => {
-            if (!error && response.statusCode == 200) resolve(body);
-            else reject(error)
-        });
-    });
-};
-
 module.exports = util;

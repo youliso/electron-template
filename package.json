@@ -80,8 +80,7 @@
     }
   },
   "dependencies": {
-    "lowdb": "^1.0.0",
-    "request": "^2.88.0"
+    "lowdb": "^1.0.0"
   },
   "devDependencies": {
     "electron": "^7.1.2",

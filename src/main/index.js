@@ -3,7 +3,10 @@ import Vue from './apis/vue.esm.browser.min.js';
 
 const {remote, ipcRenderer} = require('electron');
 const util = require('./apis/util');
+const fetch = require('./apis/fetch');
 const config = require('./cfg/config');
+Vue.prototype.util = util;
+Vue.prototype.fetch = new fetch(config.url);
 const views = () => {
     let components = {};
     for (let key in config.views) {
@@ -20,8 +23,7 @@ new Vue({
     data: {
         component: components['app-home'],
         components: components,
-        util: util,
-        db: util.accessIn(process.cwd() + '/data'),
+        db: this.util.accessIn(process.cwd() + '/data'),
         remote: remote,
         seenHead: true
     },
