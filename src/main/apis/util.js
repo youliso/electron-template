@@ -1,5 +1,5 @@
 'use strict';
-const {BrowserWindow, app} = require('electron').remote;
+const {BrowserWindow} = require('electron').remote;
 const request = require('request');
 const fs = require('fs');
 const util = {};
