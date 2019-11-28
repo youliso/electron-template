@@ -8,7 +8,7 @@ const buildBasePath = 'dist/';//构建输出的目录
 
 //cfg
 gulp.task('cfg', async () => {
-    return gulp.src('src/main/cfg/**/*')
+    gulp.src('src/main/cfg/**/*')
         .pipe(gulp.dest(buildBasePath + 'cfg'));
 });
 
@@ -21,7 +21,7 @@ gulp.task('css', async () => {
 
 //js
 gulp.task("js", async () => {
-    return gulp.src('src/main/**/*.js') //JS文件地址
+    gulp.src('src/main/**/*.js') //JS文件地址
         .pipe(js_obfuscator({
             compact: true,
             controlFlowFlattening: true,

@@ -8,8 +8,8 @@ const views = () => {
     let components = {};
     for (let key in config.views) {
         let item = config.views[key];
-        components[key] = {name: key};
-        if (item.hasOwnProperty('keepAlive')) components[key].keepAlive = item.keepAlive;
+        components[key] = item;
+        components[key].name = key;
         Vue.component(key, require(__dirname + '/views/' + item.v).main);
     }
     return components;
