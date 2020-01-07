@@ -52,14 +52,13 @@ const createWindow = async () => {
     // 打开开发者工具
     win.webContents.openDevTools();
 
-    // 加载index.html文件
-    await win.loadFile(path.join(__dirname, './index.html'));
-
-
     // 当 window 被关闭，这个事件会被触发。
     win.on('closed', () => {
         win = null
     });
+
+    // 加载index.html文件
+    await win.loadFile(path.join(__dirname, './index.html'));
 };
 
 app.on('ready', createWindow);
