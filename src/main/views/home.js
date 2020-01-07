@@ -1,5 +1,6 @@
 'use strict';
 module.exports = {
+    lib: [],
     main: {
         data() {
             return {
@@ -30,8 +31,8 @@ module.exports = {
             //开启缓存后 切换卸载
         },
         methods: {
-            ssa() {
-                this.$parent.component = this.$parent.components['app-login']
+            async ssa() {
+                await this.$parent.switchComponent('app-login');
             }
         }
     }

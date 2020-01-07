@@ -5,7 +5,7 @@ module.exports = {
         data() {
             return {}
         },
-        template: `<div v-if="seenHead" class="head">
+        template: `<div class="head">
         <i @click="system('setting')" class="iconfont iconSettingscontrol no-drag cursor-pointer"></i>
         <i @click="system('mini')" class="iconfont iconMinus no-drag cursor-pointer"></i>
         <i @click="system('closed')" class="iconfont iconCancelcontrol no-drag cursor-pointer"></i>
@@ -14,6 +14,10 @@ module.exports = {
         },
         beforeDestroy() {
         },
-        methods: {}
+        methods: {
+            system(channel) {
+                this.util.ipcRenderer.send(channel);
+            }
+        }
     }
 };

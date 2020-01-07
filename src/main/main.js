@@ -44,15 +44,17 @@ const createWindow = async () => {
         }
     });
 
+    win.webContents.on("did-finish-load", () => {
+        let js = `require('./lib/util')(Vue).then(lib => new Vue(lib));`;
+        win.webContents.executeJavaScript(js);
+    });
+
+    // 打开开发者工具
+    win.webContents.openDevTools();
+
     // 加载index.html文件
     await win.loadFile(path.join(__dirname, './index.html'));
 
-    win.webContents.on("did-finish-load", () => {
-        let js = `require('apis/util').init(Vue).then(lib => new Vue(lib));`;
-        win.webContents.executeJavaScript(js);
-    });
-    // 打开开发者工具
-    win.webContents.openDevTools();
 
     // 当 window 被关闭，这个事件会被触发。
     win.on('closed', () => {

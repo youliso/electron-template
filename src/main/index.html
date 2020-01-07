@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Template</title>
-    <link rel="stylesheet" href="//at.alicdn.com/t/font_1452120_0rp3ikj47dln.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_1452120_0rp3ikj47dln.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/sweetalert2.css">
 </head>
@@ -11,9 +11,9 @@
 <div id="app" class="no-drag content">
     <app-head v-if="head" ref="app-head"></app-head>
     <keep-alive :max="10">
-        <component v-if="component.keepAlive" :is="component.name" :ref="component.name"></component>
+        <component v-if="IComponent&&IComponent.keepAlive" :is="IComponent.name" :ref="IComponent.name"></component>
     </keep-alive>
-    <component v-if="!component.keepAlive" :is="component.name" :ref="component.name"></component>
+    <component v-if="IComponent&&!IComponent.keepAlive" :is="IComponent.name" :ref="IComponent.name"></component>
 </div>
 <script type="text/javascript" src="lib/sweetalert2.min.js"></script>
 <script type="text/javascript" src="lib/vue.min.js"></script>

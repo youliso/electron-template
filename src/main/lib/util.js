@@ -145,6 +145,7 @@ let CreateWebSocket = (urlValue, option) => {
  * 动态加载css/js文件
  * */
 let loadCssJs = (srcList) => {
+    srcList = srcList || [];
     let doc = document;
     let list = [];
     for (let i = 0, len = srcList.length; i < len; i++) {
@@ -178,6 +179,7 @@ let loadCssJs = (srcList) => {
  * 移除已经加载过的css/js文件
  * */
 let removeCssJs = (srcList) => {
+    srcList = srcList || [];
     for (let i = 0, len = srcList.length; i < len; i++) {
         let items = srcList[i];
         let type = items.split('.')[1];
@@ -264,7 +266,6 @@ let init = async (Vue) => {
             }
         } else {
             componentName = 'app-login';
-            head = false;
         }
     }
     if (isNull(themeColor)) themeColor = config.colors.black;
@@ -293,8 +294,6 @@ let init = async (Vue) => {
         methods: {
             init() {
                 doc.documentElement.setAttribute('style', `--theme:${this.themeColor}`);
-                doc.querySelector('meta[name="theme-color"]').setAttribute('content', this.themeColor);
-                doc.querySelector('meta[name="msapplication-navbutton-color"]').setAttribute('content', this.themeColor);
                 let swalOpt = {
                     confirmButtonColor: this.themeColor,
                     cancelButtonColor: config.colors.gray,
@@ -320,12 +319,9 @@ let init = async (Vue) => {
                     libList.push(this.util.loadCssJs(this.AppComponents[key].lib));
                     libList.push(this.util.removeCssJs(this.IComponent.lib));
                 }
-                if (this.AppComponents[key].show) this.head = true;
-                else this.head = false;
                 await Promise.all(libList);
                 this.IComponent = this.AppComponents[key];
                 this.subjectLoading = false;
-                console.log(this.$refs);
             },
             wsInit() {
                 let token = storage.get('Authorization', true);
@@ -409,7 +405,7 @@ let init = async (Vue) => {
     }
 };
 
-module.exports = {init};
+module.exports = init;
 /**
  * vue.min.js : //unpkg.com/vue/dist/vue.min.js
  * animate.css : //cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.css

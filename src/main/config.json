@@ -24,7 +24,7 @@
   "no-view-storage": [],
   "assembly": {
     "app-head": {
-      "v": "views/vh/head.js"
+      "v": "../views/vh/head.js"
     }
   },
   "views": {
@@ -33,7 +33,7 @@
       "show": false,
       "keepAlive": false,
       "title": "登录",
-      "v": "views/login.js",
+      "v": "../views/login.js",
       "sub": false
     },
     "app-home": {
@@ -42,7 +42,7 @@
       "keepAlive": true,
       "title": "首页",
       "icon": "iconzhuye",
-      "v": "views/home.js",
+      "v": "../views/home.js",
       "sub": false
     },
     "app-stronghold": {
@@ -51,7 +51,7 @@
       "keepAlive": true,
       "title": "模块",
       "icon": "iconicon-test",
-      "v": "views/demo.js",
+      "v": "../views/demo.js",
       "sub": true,
       "subListIndex": 0,
       "subList": [
