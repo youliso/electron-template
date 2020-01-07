@@ -9,10 +9,11 @@
 </head>
 <body>
 <div id="app" class="no-drag content">
+    <app-head v-if="head" ref="app-head"></app-head>
     <keep-alive :max="10">
-        <component v-if="component.keepAlive" :is="component.name" ref="component.name"></component>
+        <component v-if="component.keepAlive" :is="component.name" :ref="component.name"></component>
     </keep-alive>
-    <component v-if="!component.keepAlive" :is="component.name" ref="component.name"></component>
+    <component v-if="!component.keepAlive" :is="component.name" :ref="component.name"></component>
 </div>
 <script type="text/javascript" src="lib/sweetalert2.min.js"></script>
 <script type="text/javascript" src="lib/vue.min.js"></script>
