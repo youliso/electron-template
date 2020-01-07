@@ -3,20 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Template</title>
-    <link href="css/main.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/sweetalert2.css">
 </head>
 <body>
 <div id="app" class="no-drag content">
-    <div v-if="seenHead" class="head">
-        <i @click="system('setting')" class="iconfont iconSettingscontrol no-drag cursor-pointer"></i>
-        <i @click="system('mini')" class="iconfont iconMinus no-drag cursor-pointer"></i>
-        <i @click="system('closed')" class="iconfont iconCancelcontrol no-drag cursor-pointer"></i>
-    </div>
     <keep-alive :max="10">
         <component v-if="component.keepAlive" :is="component.name" ref="component.name"></component>
     </keep-alive>
     <component v-if="!component.keepAlive" :is="component.name" ref="component.name"></component>
 </div>
-<script type="module" src="index.js"></script>
+<script type="text/javascript" src="apis/sweetalert2.min.js"></script>
+<script type="text/javascript" src="apis/vue.js"></script>
 </body>
 </html>

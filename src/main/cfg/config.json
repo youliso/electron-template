@@ -1,13 +1,69 @@
 {
-  "url": "//api.youliso.com/",
+  "url": "//127.0.0.1:3000/",
+  "ws": "ws://127.0.0.1:3000",
+  "title": "demo",
+  "colors": {
+    "red": "#e54d42",
+    "orange": "#f37b1d",
+    "yellow": "#fbbd08",
+    "olive": "#8dc63f",
+    "green": "#39b54a",
+    "cyan": "#1cbbb4",
+    "blue": "#0081ff",
+    "purple": "#6739b6",
+    "mauve": "#9c26b0",
+    "pink": "#e03997",
+    "brown": "#a5673f",
+    "grey": "#8799a3",
+    "black": "#333333",
+    "darkGray": "#666666",
+    "gray": "#aaaaaa",
+    "ghostWhite": "#f1f1f1",
+    "white": "#ffffff"
+  },
+  "no-view-storage": [],
+  "assembly": {
+    "app-head": {
+      "v": "views/vh/head.js"
+    }
+  },
   "views": {
-    "app-home": {
-      "keepAlive": false,
-      "v": "home.js"
-    },
     "app-login": {
+      "power": 0,
+      "show": false,
+      "keepAlive": false,
+      "title": "登录",
+      "v": "views/login.js",
+      "sub": false
+    },
+    "app-home": {
+      "power": 0,
+      "show": true,
       "keepAlive": true,
-      "v": "login.js"
+      "title": "首页",
+      "icon": "iconzhuye",
+      "v": "views/home.js",
+      "sub": false
+    },
+    "app-stronghold": {
+      "power": 1,
+      "show": true,
+      "keepAlive": true,
+      "title": "模块",
+      "icon": "iconicon-test",
+      "v": "views/demo.js",
+      "sub": true,
+      "subListIndex": 0,
+      "subList": [
+        {
+          "name": "列表",
+          "power": 1
+        },
+        {
+          "name": "添加",
+          "power": 1
+        }
+      ]
     }
   }
 }

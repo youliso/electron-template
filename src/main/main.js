@@ -22,7 +22,7 @@ if (!gotTheLock) {
     })
 }
 
-const createWindow = () => {
+const createWindow = async () => {
     // 创建浏览器窗口。
     let width = 950, height = 600;
     win = new BrowserWindow({
@@ -45,8 +45,12 @@ const createWindow = () => {
     });
 
     // 加载index.html文件
-    win.loadFile(path.join(__dirname, './index.html'));
+    await win.loadFile(path.join(__dirname, './index.html'));
 
+    win.webContents.on("did-finish-load", () => {
+        let js = `require('apis/util').init(Vue).then(lib => new Vue(lib));`;
+        win.webContents.executeJavaScript(js);
+    });
     // 打开开发者工具
     win.webContents.openDevTools();
 
@@ -63,9 +67,9 @@ app.on('window-all-closed', () => {
         app.quit()
     }
 });
-app.on('activate', () => {
+app.on('activate', async () => {
     if (win === null) {
-        createWindow()
+        await createWindow()
     }
 });
 
