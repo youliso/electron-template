@@ -198,7 +198,7 @@ let removeCssJs = (srcList) => {
  * */
 let init = async (Vue) => {
     const doc = document;
-    const config = require('../cfg/config');
+    const config = require('../config');
     const {remote, ipcRenderer} = require('electron');
     Vue.prototype.config = config;
     Vue.prototype.util = {
