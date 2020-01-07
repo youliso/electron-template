@@ -1,9 +1,12 @@
-@import "iconfont.css";
-
 *, *:after, *:before {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+}
+
+
+.iconfont {
+    font-size: 1em !important;
 }
 
 html, body {
