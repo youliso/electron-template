@@ -79,9 +79,7 @@
       "icon": "src/resources/icons"
     }
   },
-  "dependencies": {
-    "lowdb": "^1.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "electron": "^7.1.7",
     "electron-builder": "^22.2.0",
