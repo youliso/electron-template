@@ -241,35 +241,25 @@ let init = async (Vue) => {
         AppComponents[key] = item;
         AppComponents[key].name = key;
     }
+    let componentSubListIndex = storage.get('component-subListIndex');
     let themeColor = storage.get('themeColor');
     if (isNull(themeColor)) themeColor = config.colors.black;
-    let head = true;
-    let componentName = 'app-home';
-    let componentSubListIndex = storage.get('component-subListIndex');
     return {
         el: '#app',
         data: {
             IComponent: null,
             AppComponents,
             loadedComponents: [],
-            head,
+            head: true,
             themeColor,
             ws: null
         },
         async created() {
-            this.init(componentName, componentSubListIndex);
+            this.init(themeColor, 'app-home', componentSubListIndex);
         },
         methods: {
-            async init(componentName, componentSubListIndex) {
-                doc.documentElement.setAttribute('style', `--theme:${this.themeColor}`);
-                let swalOpt = {
-                    confirmButtonColor: this.themeColor,
-                    cancelButtonColor: config.colors.gray,
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    width: '32rem'
-                };
-                Vue.prototype.alert = swal.mixin(swalOpt);
+            async init(themeColor, componentName, componentSubListIndex) {
+                this.themeColor = themeColor;
                 await this.switchComponent(componentName);
                 if (this.IComponent.sub && componentSubListIndex) this.IComponent.subListIndex = componentSubListIndex;
             },
@@ -287,49 +277,46 @@ let init = async (Vue) => {
                 await Promise.all(libList);
                 this.IComponent = this.AppComponents[key];
             },
-            wsInit() {
+            async wsInit() {
                 let token = storage.get('Authorization', true);
-                if (!this.ws && token) {
-                    this.ws = CreateWebSocket(config.ws, [token]);
-                    this.ws.onopen = evt => {
-                        console.log('[ws] init')
-                    };
-                    this.ws.onmessage = evt => {
-                        let req = JSON.parse(evt.data);
-                        if (req.code === 11) {
-                            //连接成功
-                            swal.close();
-                            return;
-                        }
-                        if (req.code === 22) {
-                            //刷新token
-                            storage.set('Authorization', req.data, true);
-                            return;
-                        }
-                        if (req.code === 0) {
-                            let path = req.result.split('.');
-                            if (path.length === 1) this[path[0]] = req.data;
-                            if (path.length === 2) if (this.$refs[path[0]]) this.$refs[path[0]][path[1]] = req.data;
-                        }
-                        if (req.code === -1) {
-                            this.toast.fire({
-                                icon: 'error',
-                                title: req.msg
-                            });
-                        }
-                    };
-                    this.ws.onclose = evt => {
-                        console.log('[ws] close');
-                        this.ws = null;
-                    };
-                }
+                if (token) this.ws = CreateWebSocket(config.ws, token);
+                else this.ws = CreateWebSocket(config.ws);
+                this.ws.onerror = async evt => {
+                    console.log('[ws] error')
+                };
+                this.ws.onopen = async evt => {
+                    console.log('[ws] init')
+                };
+                this.ws.onmessage = async evt => {
+                    let req = JSON.parse(evt.data);
+                    if (req.code === 11) {
+                        //连接成功
+                        console.log('[ws] ready');
+                    }
+                    if (req.code === 22) {
+                        //刷新token
+                        storage.set('Authorization', req.data, true);
+                    }
+                    if (req.code === 0) {
+                        let path = req.result.split('.');
+                        if (path.length === 1) this[path[0]] = req.data;
+                        if (path.length === 2) if (this.$refs[path[0]]) this.$refs[path[0]][path[1]] = req.data;
+                    }
+                    if (req.code === -1) {
+                        this.toast.fire({
+                            icon: 'error',
+                            title: req.msg
+                        });
+                    }
+                };
+                this.ws.onclose = async evt => {
+                    console.log('[ws] close');
+                    this.ws = null;
+                };
+                await Promise.all([this.ws.onerror, this.ws.onopen, this.ws.onmessage, this.ws.onclose]);
             },
             wsSend(path, result, data) {
                 if (this.ws) this.ws.send(JSON.stringify({path, result, data}))
-            },
-            async WsFirst() {
-                //ws准备就绪
-                console.log('[ws] ready');
             }
         },
         watch: {
@@ -345,7 +332,15 @@ let init = async (Vue) => {
                 doc.title = this.config.title + ' - ' + this.IComponent.title + (this.IComponent.sub ? '·' + this.IComponent.subList[this.IComponent.subListIndex].name : '');
             },
             themeColor(val, newVal) {
-                this.init();
+                doc.documentElement.setAttribute('style', `--theme:${val}`);
+                let swalOpt = {
+                    confirmButtonColor: val,
+                    cancelButtonColor: config.colors.gray,
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    width: '32rem'
+                };
+                Vue.prototype.alert = swal.mixin(swalOpt);
                 this.util.storage.set('themeColor', val);
             }
         }

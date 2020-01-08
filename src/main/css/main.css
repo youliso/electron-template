@@ -68,6 +68,7 @@ body {
     width: 100%;
     height: 100%;
     overflow: overlay;
+    position: relative;
 }
 
 /*头部*/
@@ -81,6 +82,7 @@ body {
     justify-content: flex-end;
     align-items: center;
     position: absolute;
+    z-index: 9;
     -webkit-app-region: drag;
 }
 
@@ -92,4 +94,6 @@ body {
 /*子页面*/
 .subclass{
     padding: 36px 10px 10px;
+    position: relative;
+    z-index: 1;
 }
