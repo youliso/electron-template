@@ -241,58 +241,26 @@ let init = async (Vue) => {
         AppComponents[key] = item;
         AppComponents[key].name = key;
     }
-    let componentName = storage.get('component-name');
-    let componentSubListIndex = storage.get('component-subListIndex');
     let themeColor = storage.get('themeColor');
-    let head = true;
-    let userInfo = storage.get('userInfo', true);
-    if (isNull(componentName)) componentName = 'app-home';
-    if (isNull(userInfo)) {
-        let userPwd = storage.get('userPwd');
-        if (userPwd) {
-            let entData = await net(`${config.url}user/login`, {
-                method: 'POST',
-                data: userPwd
-            }).catch(err => console.log(err));
-            if (entData.code === 0) {
-                userInfo = entData.data;
-                storage.set('userInfo', userInfo, true);
-            } else {
-                this.toast.fire({
-                    icon: 'error',
-                    title: entData.msg
-                });
-                componentName = 'app-login';
-            }
-        } else {
-            componentName = 'app-login';
-        }
-    }
     if (isNull(themeColor)) themeColor = config.colors.black;
+    let head = true;
+    let componentName = 'app-home';
+    let componentSubListIndex = storage.get('component-subListIndex');
     return {
         el: '#app',
         data: {
-            initLoading: true,
-            subjectLoading: false,
             IComponent: null,
             AppComponents,
             loadedComponents: [],
             head,
             themeColor,
-            userInfo,
-            wsView: null,
             ws: null
         },
         async created() {
-            if (componentName === 'app-login') {
-                this.init();
-                await this.switchComponent(componentName);
-                if (this.IComponent.sub && componentSubListIndex) this.IComponent.subListIndex = componentSubListIndex;
-                this.initLoading = false;
-            } else this.wsInit();
+            this.init(componentName, componentSubListIndex);
         },
         methods: {
-            init() {
+            async init(componentName, componentSubListIndex) {
                 doc.documentElement.setAttribute('style', `--theme:${this.themeColor}`);
                 let swalOpt = {
                     confirmButtonColor: this.themeColor,
@@ -302,14 +270,11 @@ let init = async (Vue) => {
                     width: '32rem'
                 };
                 Vue.prototype.alert = swal.mixin(swalOpt);
-            },
-            hideNav() {
-                if (this.isNav) this.isNav = false;
-                if (this.isUser) this.isUser = false;
+                await this.switchComponent(componentName);
+                if (this.IComponent.sub && componentSubListIndex) this.IComponent.subListIndex = componentSubListIndex;
             },
             async switchComponent(key) {
                 let libList = [];
-                this.subjectLoading = true;
                 if (this.loadedComponents.indexOf(key) < 0) {
                     let lib = await view(key, this.AppComponents[key].v);
                     libList.push(this.util.loadCssJs(lib));
@@ -321,7 +286,6 @@ let init = async (Vue) => {
                 }
                 await Promise.all(libList);
                 this.IComponent = this.AppComponents[key];
-                this.subjectLoading = false;
             },
             wsInit() {
                 let token = storage.get('Authorization', true);
@@ -335,7 +299,6 @@ let init = async (Vue) => {
                         if (req.code === 11) {
                             //连接成功
                             swal.close();
-                            this.WsFirst();
                             return;
                         }
                         if (req.code === 22) {
@@ -353,7 +316,6 @@ let init = async (Vue) => {
                                 icon: 'error',
                                 title: req.msg
                             });
-                            this.wsView = null;
                         }
                     };
                     this.ws.onclose = evt => {
@@ -366,26 +328,11 @@ let init = async (Vue) => {
                 if (this.ws) this.ws.send(JSON.stringify({path, result, data}))
             },
             async WsFirst() {
+                //ws准备就绪
                 console.log('[ws] ready');
-                //ws准备就绪后启动
-                if (this.initLoading) {
-                    this.init();
-                    await this.switchComponent(componentName);
-                    if (this.IComponent.sub && componentSubListIndex) this.IComponent.subListIndex = componentSubListIndex;
-                    this.initLoading = false;
-                } else {
-                    await this.switchComponent(this.wsView);
-                    this.wsView = null;
-                }
             }
         },
         watch: {
-            async wsView(val) {
-                if (val) {
-                    if (this.IComponent.name === 'app-login') this.ws = null;
-                    this.wsInit();
-                }
-            },
             IComponent(val, newVal) {
                 let index1 = this.loadedComponents.indexOf(val.name);
                 if (index1 < 0) this.loadedComponents.unshift(val.name);

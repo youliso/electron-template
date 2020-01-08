@@ -9,7 +9,7 @@ module.exports = {
         },
         template: `<div class="subclass">
 
-        <button @click="ssa">qyy</button> 
+        <button @click="ssa">切换到首页</button> 
         
         </div>`,
         created() {
