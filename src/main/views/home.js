@@ -9,9 +9,7 @@ module.exports = {
             }
         },
         template: `<div class="subclass">
-
         <h4>{{date}}</h4>
-        <button @click="ssa">切换到登录</button>  
         <button @click="tks">测试弹框</button>  
         </div>`,
         created() {
@@ -31,9 +29,6 @@ module.exports = {
             //开启缓存后 切换卸载
         },
         methods: {
-            async ssa() {
-                await this.$parent.switchComponent('app-login');
-            },
             tks() {
                 const ipAPI = 'https://api.ipify.org?format=json';
 

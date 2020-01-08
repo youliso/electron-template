@@ -94,6 +94,7 @@ body {
 /*子页面*/
 .subclass{
     padding: 36px 10px 10px;
+    height: 100%;
     position: relative;
     z-index: 1;
 }
