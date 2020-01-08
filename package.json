@@ -9,11 +9,10 @@
   "license": "MIT",
   "scripts": {
     "start": "electron src/main/main.js",
-    "build start": "electron  dist/main.js",
     "gulp": "gulp compress",
-    "start -gulp": "gulp compress && electron .",
     "build": "electron-builder",
-    "build -gulp": "gulp compress && electron-builder -w"
+    "build start": "electron  dist/main.js",
+    "build gulp w": "gulp compress && electron-builder -w"
   },
   "build": {
     "productName": "Electron_Template",
