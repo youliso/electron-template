@@ -10,7 +10,7 @@ module.exports = {
         },
         template: `<div class="subclass">
         <h4>{{date}}</h4>
-        <button @click="tks">测试弹框</button>  
+        <button @click="tks" class="button">测试弹框</button>  
         </div>`,
         created() {
             //首次加载
