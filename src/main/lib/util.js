@@ -241,7 +241,6 @@ let init = async (Vue) => {
         AppComponents[key] = item;
         AppComponents[key].name = key;
     }
-    let componentSubListIndex = storage.get('component-subListIndex');
     let themeColor = storage.get('themeColor');
     if (isNull(themeColor)) themeColor = config.colors.black;
     return {
@@ -255,13 +254,12 @@ let init = async (Vue) => {
             ws: null
         },
         async created() {
-            this.init(themeColor, 'app-home', componentSubListIndex);
+            this.init(themeColor, 'app-home');
         },
         methods: {
-            async init(themeColor, componentName, componentSubListIndex) {
+            async init(themeColor, componentName) {
                 this.themeColor = themeColor;
                 await this.switchComponent(componentName);
-                if (this.IComponent.sub && componentSubListIndex) this.IComponent.subListIndex = componentSubListIndex;
             },
             async switchComponent(key) {
                 let libList = [];
@@ -324,12 +322,6 @@ let init = async (Vue) => {
                 let index1 = this.loadedComponents.indexOf(val.name);
                 if (index1 < 0) this.loadedComponents.unshift(val.name);
                 else this.util.swapArr(this.loadedComponents, index1, 0);
-                if (this.config['no-view-storage'].indexOf(val.name) < 0) this.util.storage.set('component-name', val.name);
-                doc.title = this.config.title + ' - ' + val.title + (val.sub ? '·' + val.subList[val.subListIndex].name : '');
-            },
-            'IComponent.subListIndex'(val, newVal) {
-                if (this.IComponent.subListIndex != null) this.util.storage.set('component-subListIndex', this.IComponent.subListIndex);
-                doc.title = this.config.title + ' - ' + this.IComponent.title + (this.IComponent.sub ? '·' + this.IComponent.subList[this.IComponent.subListIndex].name : '');
             },
             themeColor(val, newVal) {
                 doc.documentElement.setAttribute('style', `--theme:${val}`);
