@@ -6,23 +6,27 @@ module.exports = {
             return {
                 count: 0,
                 date: new Date(),
-                test: ''
+                test: '',
+                test_show: false
             }
         },
         template: `<div class="subclass">
         <h4>{{date}}</h4>
-        <img :src="test">
+        <transition name="fade">
+        <img v-if="test_show" width="100%;" :src="test">
+        </transition>
         </div>`,
         created() {
             //首次加载
             this.r = setInterval(() => {
                 this.date = new Date();
             }, 1000);
-            fetch('https://picsum.photos/200').then(e => e.blob()).then(blob => {
+            fetch('https://picsum.photos/950/400').then(e => e.blob()).then(blob => {
                 let reader = new FileReader();
                 reader.readAsDataURL(blob);
                 reader.onload = (e) => {
                     this.test = e.target.result;
+                    this.test_show = true;
                 }
             });
         },
