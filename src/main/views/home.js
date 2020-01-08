@@ -21,14 +21,17 @@ module.exports = {
             this.r = setInterval(() => {
                 this.date = new Date();
             }, 1000);
-            fetch('https://picsum.photos/950/400').then(e => e.blob()).then(blob => {
-                let reader = new FileReader();
-                reader.readAsDataURL(blob);
-                reader.onload = (e) => {
-                    this.test = e.target.result;
-                    this.test_show = true;
-                }
-            });
+           setInterval(()=>{
+               fetch('https://picsum.photos/950/400').then(e => e.blob()).then(blob => {
+                   this.test_show = false;
+                   let reader = new FileReader();
+                   reader.readAsDataURL(blob);
+                   reader.onload = (e) => {
+                       this.test = e.target.result;
+                       this.test_show = true;
+                   }
+               });
+           },10000)
         },
         beforeDestroy() {
             //卸载
