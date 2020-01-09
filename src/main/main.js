@@ -1,5 +1,6 @@
 'use strict';
 const {
+    shell,
     app,
     BrowserWindow,
     globalShortcut,
@@ -24,29 +25,37 @@ if (!gotTheLock) {
 
 const createWindow = async () => {
     // 创建浏览器窗口。
-    let width = 950, height = 600;
-    win = new BrowserWindow({
-        width: width,
-        height: height,
-        minWidth: width,
-        minHeight: height,
-        maxWidth: width,
-        maxHeight: height,
-        transparent: true,
-        autoHideMenuBar: true,
-        resizable: false,
-        maximizable: false,
-        frame: false,
-        webPreferences: {
-            devTools: true,
-            nodeIntegration: true,
-            webSecurity: false
-        }
-    });
+    const width = 950, height = 600,
+        WinOpt = {
+            width: width,
+            height: height,
+            minWidth: width,
+            minHeight: height,
+            maxWidth: width,
+            maxHeight: height,
+            transparent: true,
+            autoHideMenuBar: true,
+            resizable: false,
+            maximizable: false,
+            frame: false,
+            webPreferences: {
+                devTools: true,
+                nodeIntegration: true,
+                webSecurity: false
+            }
+        };
+    win = new BrowserWindow(WinOpt);
 
+    //注入初始化代码
     win.webContents.on("did-finish-load", () => {
         let js = `require('./lib/util')(Vue).then(lib => new Vue(lib));`;
         win.webContents.executeJavaScript(js);
+    });
+
+    //默认浏览器打开跳转连接
+    win.webContents.on('new-window', (event, url, frameName, disposition, options) => {
+        event.preventDefault();
+        shell.openExternal(url);
     });
 
     // 打开开发者工具
