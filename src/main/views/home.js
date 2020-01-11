@@ -14,7 +14,6 @@ module.exports = {
         },
         beforeDestroy() {
             //卸载
-            clearInterval(this.r);
         },
         activated() {
             //开启缓存后 切换加载
