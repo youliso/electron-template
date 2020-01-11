@@ -11,6 +11,27 @@ const gotTheLock = app.requestSingleInstanceLock();
 
 let win;
 
+global.WinOpt = (width, height) => {
+    return {
+        width: width,
+        height: height,
+        minWidth: width,
+        minHeight: height,
+        maxWidth: width,
+        maxHeight: height,
+        transparent: true,
+        autoHideMenuBar: true,
+        resizable: false,
+        maximizable: false,
+        frame: false,
+        webPreferences: {
+            devTools: true,
+            nodeIntegration: true,
+            webSecurity: false
+        }
+    }
+};
+
 if (!gotTheLock) {
     app.quit();
 } else {
@@ -25,26 +46,7 @@ if (!gotTheLock) {
 
 const createWindow = async () => {
     // 创建浏览器窗口。
-    const width = 950, height = 600,
-        WinOpt = {
-            width: width,
-            height: height,
-            minWidth: width,
-            minHeight: height,
-            maxWidth: width,
-            maxHeight: height,
-            transparent: true,
-            autoHideMenuBar: true,
-            resizable: false,
-            maximizable: false,
-            frame: false,
-            webPreferences: {
-                devTools: true,
-                nodeIntegration: true,
-                webSecurity: false
-            }
-        };
-    win = new BrowserWindow(WinOpt);
+    win = new BrowserWindow(WinOpt(950,600));
 
     //注入初始化代码
     win.webContents.on("did-finish-load", () => {

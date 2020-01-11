@@ -1,4 +1,5 @@
 'use strict';
+const path = require('path');
 module.exports = {
     lib: [],
     main: {
@@ -10,7 +11,9 @@ module.exports = {
         template: `<div class="subclass">
            <h4>demo</h4>
         </div>`,
-        created() {
+        async created() {
+            let newWin = new this.util.remote.BrowserWindow(this.util.remote.getGlobal('WinOpt')(200, 100));
+            await newWin.loadFile(path.join(__dirname, '../dialog.html'));
         },
         beforeDestroy() {
             //卸载
