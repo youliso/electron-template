@@ -198,7 +198,7 @@ let removeCssJs = (srcList) => {
  * 初始化
  * @param Vue
  * */
-let init = async (Vue) => {
+let init = async (Vue,el) => {
     const doc = document;
     const config = require('../config');
     const {remote, ipcRenderer} = require('electron');
@@ -244,7 +244,7 @@ let init = async (Vue) => {
     let themeColor = storage.get('themeColor');
     if (isNull(themeColor)) themeColor = config.colors.black;
     return {
-        el: '#app',
+        el,
         data: {
             IComponent: null,
             AppComponents,

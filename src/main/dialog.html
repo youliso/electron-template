@@ -11,8 +11,16 @@
     <link rel="stylesheet" href="css/sweetalert2.css">
 </head>
 <body>
-<div class="drag content">
-test
+<div id="dialog" class="no-drag content">
+    <app-head v-if="head" ref="app-head"></app-head>
+    <keep-alive :max="10">
+        <component v-if="IComponent&&IComponent.keepAlive" :is="IComponent.name" :ref="IComponent.name"></component>
+    </keep-alive>
+    <component v-if="IComponent&&!IComponent.keepAlive" :is="IComponent.name" :ref="IComponent.name"></component>
 </div>
+<script type="text/javascript" src="lib/sweetalert2.min.js"></script>
+<script type="text/javascript" src="lib/vue.min.js">
+    require('./lib/util')(Vue,'#dialog').then(lib => console.log(lib));
+</script>
 </body>
 </html>

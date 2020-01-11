@@ -50,7 +50,7 @@ const createWindow = async () => {
 
     //注入初始化代码
     win.webContents.on("did-finish-load", () => {
-        let js = `require('./lib/util')(Vue).then(lib => new Vue(lib));`;
+        let js = `require('./lib/util')(Vue,'#app').then(lib => new Vue(lib));`;
         win.webContents.executeJavaScript(js);
     });
 
