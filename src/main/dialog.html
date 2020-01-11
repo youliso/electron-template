@@ -19,8 +19,6 @@
     <component v-if="IComponent&&!IComponent.keepAlive" :is="IComponent.name" :ref="IComponent.name"></component>
 </div>
 <script type="text/javascript" src="lib/sweetalert2.min.js"></script>
-<script type="text/javascript" src="lib/vue.min.js">
-    require('./lib/util')(Vue,'#dialog').then(lib => console.log(lib));
-</script>
+<script type="text/javascript" src="lib/vue.min.js"></script>
 </body>
 </html>

@@ -198,7 +198,7 @@ let removeCssJs = (srcList) => {
  * 初始化
  * @param Vue
  * */
-let init = async (Vue,el) => {
+let init = async (Vue, el) => {
     const doc = document;
     const config = require('../config');
     const {remote, ipcRenderer} = require('electron');
@@ -251,6 +251,7 @@ let init = async (Vue,el) => {
             loadedComponents: [],
             head: true,
             themeColor,
+            dialogWin: null,
             ws: null
         },
         async created() {
