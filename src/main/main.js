@@ -50,7 +50,7 @@ const createWindow = async () => {
 
     //注入初始化代码
     win.webContents.on("did-finish-load", () => {
-        let js = `require('./lib/util').init(Vue,'#app').then(lib => new Vue(lib));`;
+        let js = `require('./lib/util').init(Vue,'app').then(lib => new Vue(lib));`;
         win.webContents.executeJavaScript(js);
     });
 
@@ -129,10 +129,10 @@ ipcMain.on('newWin', async (event, args) => {
     let index = newWins.length;
     newWins[index] = new BrowserWindow(WinOpt(args.width, args.height));
     // 打开开发者工具
-    // newWins[index].webContents.openDevTools();
+    newWins[index].webContents.openDevTools();
     //注入初始化代码
     newWins[index].webContents.on("did-finish-load", async () => {
-        let js = `require('./lib/util').init(Vue,'#dialog',{name:'${args.name}',v:'${args.v}',id:${index}}).then(lib => new Vue(lib));`;
+        let js = `require('./lib/util').init(Vue,'dialog',{name:'${args.name}',v:'${args.v}',id:${index}}).then(lib => new Vue(lib));`;
         await newWins[index].webContents.executeJavaScript(js);
     });
     newWins[index].loadFile(path.join(__dirname, './dialog.html'));

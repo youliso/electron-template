@@ -1,7 +1,32 @@
 {
+  "app-assembly": [
+    "../views/app/vh/head.js"
+  ],
+  "app-views": [
+    {
+      "keepAlive": false,
+      "v": "../views/app/login.js"
+    },
+    {
+      "keepAlive": true,
+      "v": "../views/app/home.js"
+    },
+    {
+      "keepAlive": true,
+      "v": "../views/app/demo.js"
+    }
+  ],
+  "dialog-assembly": [
+    "../views/dialog/vh/head.js"
+  ],
+  "dialog-views": [
+    {
+      "keepAlive": true,
+      "v": "../views/dialog/test.js"
+    }
+  ],
   "url": "http://127.0.0.1:3000/",
   "ws": "ws://127.0.0.1:3000",
-  "title": "demo",
   "colors": {
     "red": "#e54d42",
     "orange": "#f37b1d",
@@ -21,30 +46,5 @@
     "ghostWhite": "#f1f1f1",
     "white": "#ffffff"
   },
-  "no-view-storage": [],
-  "assembly": {
-    "app-head": {
-      "v": "../views/vh/head.js"
-    }
-  },
-  "app-views": {
-    "app-login": {
-      "keepAlive": false,
-      "v": "../views/login.js"
-    },
-    "app-home": {
-      "keepAlive": true,
-      "v": "../views/home.js"
-    },
-    "app-stronghold": {
-      "keepAlive": true,
-      "v": "../views/demo.js"
-    }
-  },
-  "dialog-views": {
-    "dialog-test": {
-      "keepAlive": true,
-      "v": "../views/dialog/test.js"
-    }
-  }
+  "no-view-storage": []
 }

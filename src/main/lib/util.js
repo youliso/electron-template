@@ -205,6 +205,7 @@ let removeCssJs = (srcList) => {
  * @param Vue
  * */
 let init = async (Vue, el, conf) => {
+    conf = conf || null;
     Vue.prototype.$config = config;
     Vue.prototype.$util = {
         trim,
@@ -235,112 +236,72 @@ let init = async (Vue, el, conf) => {
         Vue.component(key, main);
         return lib;
     };
-    const methods = {
-        async init(themeColor, componentName) {
-            this.themeColor = themeColor;
-            await this.switchComponent(componentName);
+    let viewsList = [];
+    for (let i of config[`${el}-assembly`]) {
+        viewsList.push(view(`${el}-${i.substring(i.lastIndexOf('/') + 1, i.lastIndexOf('.'))}`, i));
+    }
+    await Promise.all(viewsList);
+    const AppComponents = {};
+    for (let i of config[`${el}-views`]) {
+        i.name = `${el}-${i.v.substring(i.v.lastIndexOf('/') + 1, i.v.lastIndexOf('.'))}`;
+        AppComponents[i.name] = i;
+    }
+    let themeColor = storage.get('themeColor');
+    if (isNull(themeColor)) themeColor = config.colors.black;
+    return {
+        el: `#${el}`,
+        data: {
+            conf,
+            IComponent: null,
+            AppComponents,
+            loadedComponents: [],
+            head: true,
+            themeColor
         },
-        async switchComponent(key) {
-            let libList = [];
-            if (this.loadedComponents.indexOf(key) < 0) {
-                let lib = await view(key, this.AppComponents[key].v);
-                libList.push(this.$util.loadCssJs(lib));
-                if (this.loadedComponents.length > 0) libList.push(this.$util.removeCssJs(this.IComponent.lib));
-                this.AppComponents[key].lib = lib;
-            } else {
-                libList.push(this.$util.loadCssJs(this.AppComponents[key].lib));
-                libList.push(this.$util.removeCssJs(this.IComponent.lib));
-            }
-            await Promise.all(libList);
-            this.IComponent = this.AppComponents[key];
-        }
-    };
-
-    if (el === '#app') {
-        let viewsList = [];
-        for (let key in config.assembly) viewsList.push(view(key, config.assembly[key].v));
-        await Promise.all(viewsList);
-        const AppComponents = {};
-        for (let key in config['app-views']) {
-            let item = config['app-views'][key];
-            AppComponents[key] = item;
-            AppComponents[key].name = key;
-        }
-        let themeColor = storage.get('themeColor');
-        if (isNull(themeColor)) themeColor = config.colors.black;
-        return {
-            el,
-            data: {
-                IComponent: null,
-                AppComponents,
-                loadedComponents: [],
-                head: true,
-                themeColor,
-                ws: null
+        async created() {
+            if (conf) this.init(themeColor, conf.v);
+            else this.init(themeColor, `${el}-home`);
+        },
+        methods: {
+            async init(themeColor, componentName) {
+                this.themeColor = themeColor;
+                await this.switchComponent(componentName);
             },
-            async created() {
-                this.init(themeColor, 'app-home');
-            },
-            methods,
-            watch: {
-                IComponent(val) {
-                    let index1 = this.loadedComponents.indexOf(val.name);
-                    if (index1 < 0) this.loadedComponents.unshift(val.name);
-                    else this.$util.swapArr(this.loadedComponents, index1, 0);
-                },
-                themeColor(val) {
-                    doc.documentElement.setAttribute('style', `--theme:${val}`);
-                    let swalOpt = {
-                        confirmButtonColor: val,
-                        cancelButtonColor: config.colors.gray,
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        width: '32rem'
-                    };
-                    Vue.prototype.$alert = swal.mixin(swalOpt);
-                    this.$util.storage.set('themeColor', val);
+            async switchComponent(key) {
+                let libList = [];
+                if (this.loadedComponents.indexOf(key) < 0) {
+                    let lib = await view(key, this.AppComponents[key].v);
+                    libList.push(this.$util.loadCssJs(lib));
+                    if (this.loadedComponents.length > 0) libList.push(this.$util.removeCssJs(this.IComponent.lib));
+                    this.AppComponents[key].lib = lib;
+                } else {
+                    libList.push(this.$util.loadCssJs(this.AppComponents[key].lib));
+                    libList.push(this.$util.removeCssJs(this.IComponent.lib));
                 }
+                await Promise.all(libList);
+                this.IComponent = this.AppComponents[key];
             }
-        }
-    } else if (el === '#dialog') {
-        const AppComponents = {};
-        for (let key in config['dialog-views']) {
-            let item = config['dialog-views'][key];
-            AppComponents[key] = item;
-            AppComponents[key].name = key;
-        }
-        let themeColor = storage.get('themeColor');
-        if (isNull(themeColor)) themeColor = config.colors.black;
-        return {
-            el,
-            data: {
-                conf,
-                IComponent: null,
-                AppComponents,
-                loadedComponents: [],
-                themeColor
+        },
+        watch: {
+            IComponent(val) {
+                let index1 = this.loadedComponents.indexOf(val.name);
+                if (index1 < 0) this.loadedComponents.unshift(val.name);
+                else this.$util.swapArr(this.loadedComponents, index1, 0);
             },
-            async created() {
-                this.init(themeColor, conf.v);
-            },
-            methods,
-            watch: {
-                themeColor(val) {
-                    doc.documentElement.setAttribute('style', `--theme:${val}`);
-                    let swalOpt = {
-                        confirmButtonColor: val,
-                        cancelButtonColor: config.colors.gray,
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        width: '32rem'
-                    };
-                    Vue.prototype.$alert = swal.mixin(swalOpt);
-                    this.$util.storage.set('themeColor', val);
-                }
+            themeColor(val) {
+                doc.documentElement.setAttribute('style', `--theme:${val}`);
+                let swalOpt = {
+                    confirmButtonColor: val,
+                    cancelButtonColor: config.colors.gray,
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    width: '32rem'
+                };
+                Vue.prototype.$alert = swal.mixin(swalOpt);
+                this.$util.storage.set('themeColor', val);
             }
         }
     }
-
 };
 
 module.exports = {init};
