@@ -27,43 +27,24 @@
       "v": "../views/vh/head.js"
     }
   },
-  "views": {
+  "app-views": {
     "app-login": {
-      "power": 0,
-      "show": false,
       "keepAlive": false,
-      "title": "登录",
-      "v": "../views/login.js",
-      "sub": false
+      "v": "../views/login.js"
     },
     "app-home": {
-      "power": 0,
-      "show": true,
       "keepAlive": true,
-      "title": "首页",
-      "icon": "iconzhuye",
-      "v": "../views/home.js",
-      "sub": false
+      "v": "../views/home.js"
     },
     "app-stronghold": {
-      "power": 1,
-      "show": true,
       "keepAlive": true,
-      "title": "模块",
-      "icon": "iconicon-test",
-      "v": "../views/demo.js",
-      "sub": true,
-      "subListIndex": 0,
-      "subList": [
-        {
-          "name": "列表",
-          "power": 1
-        },
-        {
-          "name": "添加",
-          "power": 1
-        }
-      ]
+      "v": "../views/demo.js"
+    }
+  },
+  "dialog-views": {
+    "dialog-test": {
+      "keepAlive": true,
+      "v": "../views/dialog/test.js"
     }
   }
 }

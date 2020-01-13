@@ -1,3 +1,8 @@
+'use strict';
+const config = require('../config');
+const {remote, ipcRenderer} = require('electron');
+const doc = document;
+
 /**
  * 去除空格
  * */
@@ -194,16 +199,14 @@ let removeCssJs = (srcList) => {
         }
     }
 };
+
 /**
- * 初始化
+ * 主体初始化
  * @param Vue
  * */
-let init = async (Vue, el) => {
-    const doc = document;
-    const config = require('../config');
-    const {remote, ipcRenderer} = require('electron');
-    Vue.prototype.config = config;
-    Vue.prototype.util = {
+let init = async (Vue, el, conf) => {
+    Vue.prototype.$config = config;
+    Vue.prototype.$util = {
         trim,
         isNull,
         Random,
@@ -215,8 +218,8 @@ let init = async (Vue, el) => {
         remote,
         ipcRenderer
     };
-    Vue.prototype.srl = (srl) => config.url + srl;
-    Vue.prototype.toast = swal.mixin({
+    Vue.prototype.$srl = (srl) => config.url + srl;
+    Vue.prototype.$toast = swal.mixin({
         toast: true,
         position: 'top',
         showConfirmButton: false,
@@ -232,115 +235,103 @@ let init = async (Vue, el) => {
         Vue.component(key, main);
         return lib;
     };
-    let viewsList = [];
-    for (let key in config.assembly) viewsList.push(view(key, config.assembly[key].v));
-    await Promise.all(viewsList);
-    const AppComponents = {};
-    for (let key in config.views) {
-        let item = config.views[key];
-        AppComponents[key] = item;
-        AppComponents[key].name = key;
-    }
-    let themeColor = storage.get('themeColor');
-    if (isNull(themeColor)) themeColor = config.colors.black;
-    return {
-        el,
-        data: {
-            IComponent: null,
-            AppComponents,
-            loadedComponents: [],
-            head: true,
-            themeColor,
-            dialogWin: null,
-            ws: null
+    const methods = {
+        async init(themeColor, componentName) {
+            this.themeColor = themeColor;
+            await this.switchComponent(componentName);
         },
-        async created() {
-            this.init(themeColor, 'app-home');
-        },
-        methods: {
-            async init(themeColor, componentName) {
-                this.themeColor = themeColor;
-                await this.switchComponent(componentName);
-            },
-            async switchComponent(key) {
-                let libList = [];
-                if (this.loadedComponents.indexOf(key) < 0) {
-                    let lib = await view(key, this.AppComponents[key].v);
-                    libList.push(this.util.loadCssJs(lib));
-                    if (this.loadedComponents.length > 0) libList.push(this.util.removeCssJs(this.IComponent.lib));
-                    this.AppComponents[key].lib = lib;
-                } else {
-                    libList.push(this.util.loadCssJs(this.AppComponents[key].lib));
-                    libList.push(this.util.removeCssJs(this.IComponent.lib));
-                }
-                await Promise.all(libList);
-                this.IComponent = this.AppComponents[key];
-            },
-            async wsInit() {
-                let token = storage.get('Authorization', true);
-                if (token) this.ws = CreateWebSocket(config.ws, token);
-                else this.ws = CreateWebSocket(config.ws);
-                this.ws.onerror = async evt => {
-                    console.log('[ws] error')
-                };
-                this.ws.onopen = async evt => {
-                    console.log('[ws] init')
-                };
-                this.ws.onmessage = async evt => {
-                    let req = JSON.parse(evt.data);
-                    if (req.code === 11) {
-                        //连接成功
-                        console.log('[ws] ready');
-                    }
-                    if (req.code === 22) {
-                        //刷新token
-                        storage.set('Authorization', req.data, true);
-                    }
-                    if (req.code === 0) {
-                        let path = req.result.split('.');
-                        if (path.length === 1) this[path[0]] = req.data;
-                        if (path.length === 2) if (this.$refs[path[0]]) this.$refs[path[0]][path[1]] = req.data;
-                    }
-                    if (req.code === -1) {
-                        this.toast.fire({
-                            icon: 'error',
-                            title: req.msg
-                        });
-                    }
-                };
-                this.ws.onclose = async evt => {
-                    console.log('[ws] close');
-                    this.ws = null;
-                };
-                await Promise.all([this.ws.onerror, this.ws.onopen, this.ws.onmessage, this.ws.onclose]);
-            },
-            wsSend(path, result, data) {
-                if (this.ws) this.ws.send(JSON.stringify({path, result, data}))
+        async switchComponent(key) {
+            let libList = [];
+            if (this.loadedComponents.indexOf(key) < 0) {
+                let lib = await view(key, this.AppComponents[key].v);
+                libList.push(this.$util.loadCssJs(lib));
+                if (this.loadedComponents.length > 0) libList.push(this.$util.removeCssJs(this.IComponent.lib));
+                this.AppComponents[key].lib = lib;
+            } else {
+                libList.push(this.$util.loadCssJs(this.AppComponents[key].lib));
+                libList.push(this.$util.removeCssJs(this.IComponent.lib));
             }
-        },
-        watch: {
-            IComponent(val, newVal) {
-                let index1 = this.loadedComponents.indexOf(val.name);
-                if (index1 < 0) this.loadedComponents.unshift(val.name);
-                else this.util.swapArr(this.loadedComponents, index1, 0);
+            await Promise.all(libList);
+            this.IComponent = this.AppComponents[key];
+        }
+    };
+    const watch = {
+        themeColor(val) {
+            doc.documentElement.setAttribute('style', `--theme:${val}`);
+            let swalOpt = {
+                confirmButtonColor: val,
+                cancelButtonColor: config.colors.gray,
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                width: '32rem'
+            };
+            Vue.prototype.$alert = swal.mixin(swalOpt);
+            this.$util.storage.set('themeColor', val);
+        }
+    };
+
+    if (el === '#app') {
+        let viewsList = [];
+        for (let key in config.assembly) viewsList.push(view(key, config.assembly[key].v));
+        await Promise.all(viewsList);
+        const AppComponents = {};
+        for (let key in config['app-views']) {
+            let item = config['app-views'][key];
+            AppComponents[key] = item;
+            AppComponents[key].name = key;
+        }
+        let themeColor = storage.get('themeColor');
+        if (isNull(themeColor)) themeColor = config.colors.black;
+        watch.IComponent = (val) => {
+            let index1 = this.loadedComponents.indexOf(val.name);
+            if (index1 < 0) this.loadedComponents.unshift(val.name);
+            else this.$util.swapArr(this.loadedComponents, index1, 0);
+        };
+        return {
+            el,
+            data: {
+                IComponent: null,
+                AppComponents,
+                loadedComponents: [],
+                head: true,
+                themeColor,
+                ws: null
             },
-            themeColor(val, newVal) {
-                doc.documentElement.setAttribute('style', `--theme:${val}`);
-                let swalOpt = {
-                    confirmButtonColor: val,
-                    cancelButtonColor: config.colors.gray,
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    width: '32rem'
-                };
-                Vue.prototype.alert = swal.mixin(swalOpt);
-                this.util.storage.set('themeColor', val);
-            }
+            async created() {
+                this.init(themeColor, 'app-home');
+            },
+            methods,
+            watch
+        }
+    } else if (el === '#dialog') {
+        const AppComponents = {};
+        for (let key in config['dialog-views']) {
+            let item = config['dialog-views'][key];
+            AppComponents[key] = item;
+            AppComponents[key].name = key;
+        }
+        let themeColor = storage.get('themeColor');
+        if (isNull(themeColor)) themeColor = config.colors.black;
+        return {
+            el,
+            data: {
+                conf,
+                IComponent: null,
+                AppComponents,
+                loadedComponents: [],
+                themeColor
+            },
+            async created() {
+                this.init(themeColor, conf.v);
+            },
+            methods,
+            watch
         }
     }
+
 };
 
-module.exports = init;
+module.exports = {init};
 /**
  * vue.min.js : //unpkg.com/vue/dist/vue.min.js
  * animate.css : //cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.css

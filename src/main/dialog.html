@@ -11,8 +11,15 @@
     <link rel="stylesheet" href="css/sweetalert2.css">
 </head>
 <body>
-<div id="dialog" class="no-drag content">
-    <app-head v-if="head" ref="app-head"></app-head>
+<div id="dialog" class="drag content">
+    <div v-if="IComponent" class="head">
+        <div>
+            <span v-if="conf.name">{{conf.name}}</span>
+        </div>
+        <div>
+            <i @click="$util.ipcRenderer.send('newWin-closed',{id:conf.id})" class="iconfont iconCancelcontrol no-drag cursor-pointer"></i>
+        </div>
+    </div>
     <keep-alive :max="10">
         <component v-if="IComponent&&IComponent.keepAlive" :is="IComponent.name" :ref="IComponent.name"></component>
     </keep-alive>

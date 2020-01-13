@@ -11,7 +11,7 @@ const gotTheLock = app.requestSingleInstanceLock();
 
 let win;
 
-global.WinOpt = (width, height) => {
+const WinOpt = (width, height) => {
     return {
         width: width,
         height: height,
@@ -46,11 +46,11 @@ if (!gotTheLock) {
 
 const createWindow = async () => {
     // 创建浏览器窗口。
-    win = new BrowserWindow(WinOpt(950,600));
+    win = new BrowserWindow(WinOpt(950, 600));
 
     //注入初始化代码
     win.webContents.on("did-finish-load", () => {
-        let js = `require('./lib/util')(Vue,'#app').then(lib => new Vue(lib));`;
+        let js = `require('./lib/util').init(Vue,'#app').then(lib => new Vue(lib));`;
         win.webContents.executeJavaScript(js);
     });
 
@@ -121,6 +121,28 @@ ipcMain.on('reload', () => {
 //重启
 ipcMain.on('relaunch', () => {
     app.relaunch({args: process.argv.slice(1)});
+});
+
+//新窗口
+const newWins = [];
+ipcMain.on('newWin', async (event, args) => {
+    let index = newWins.length;
+    newWins[index] = new BrowserWindow(WinOpt(args.width, args.height));
+    // 打开开发者工具
+    newWins[index].webContents.openDevTools();
+    //注入初始化代码
+    newWins[index].webContents.on("did-finish-load", async () => {
+        let js = `require('./lib/util').init(Vue,'#dialog',{name:'${args.name}',v:'${args.v}',id:${index}}).then(lib => new Vue(lib));`;
+        await newWins[index].webContents.executeJavaScript(js);
+    });
+    newWins[index].loadFile(path.join(__dirname, './dialog.html'));
+    newWins[index].show();
+    newWins[index].focus();
+});
+
+//新窗口 关闭
+ipcMain.on('newWin-closed', (event, args) => {
+    newWins[args.id].close();
 });
 
 //协议调起
