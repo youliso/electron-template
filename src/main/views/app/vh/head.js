@@ -20,8 +20,13 @@ module.exports = {
         beforeDestroy() {
         },
         methods: {
-            settings(){
-                this.$util.ipcRenderer.send('newWin', {name: '设置', v: 'dialog-test', width: 400, height: 200})
+            settings() {
+                this.$util.ipcRenderer.send('newWin', {
+                    name: '设置',
+                    v: 'dialog-settings',
+                    width: 600,
+                    height: 500
+                })
             },
             system(channel) {
                 this.$util.ipcRenderer.send(channel);

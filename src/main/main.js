@@ -125,24 +125,34 @@ ipcMain.on('relaunch', () => {
 
 //新窗口
 const newWins = [];
+const newWinsVs = [];
 ipcMain.on('newWin', async (event, args) => {
-    let index = newWins.length;
-    newWins[index] = new BrowserWindow(WinOpt(args.width, args.height));
+    let id = newWins.length;
+    for (let i of newWins) {
+        if (i && i.uniquekey === args.v && !i.complex) {
+            i.focus();
+            return;
+        }
+    }
+    newWins[id] = new BrowserWindow(WinOpt(args.width, args.height));
+    newWins[id].uniquekey = args.v;
+    newWins[id].complex = args.complex || false;
     // 打开开发者工具
-    newWins[index].webContents.openDevTools();
+    newWins[id].webContents.openDevTools();
     //注入初始化代码
-    newWins[index].webContents.on("did-finish-load", async () => {
-        let js = `require('./lib/util').init(Vue,'dialog',{name:'${args.name}',v:'${args.v}',id:${index}}).then(lib => new Vue(lib));`;
-        await newWins[index].webContents.executeJavaScript(js);
+    newWins[id].webContents.on("did-finish-load", () => {
+        let js = `require('./lib/util').init(Vue,'dialog',{name:'${args.name}',v:'${args.v}',id:${id}}).then(lib => new Vue(lib));`;
+        newWins[id].webContents.executeJavaScript(js);
     });
-    newWins[index].loadFile(path.join(__dirname, './dialog.html'));
-    newWins[index].show();
-    newWins[index].focus();
+    await newWins[id].loadFile(path.join(__dirname, './dialog.html'));
+    newWins[id].show();
+    newWins[id].focus();
 });
 
 //新窗口 关闭
-ipcMain.on('newWin-closed', (event, args) => {
-    newWins[args.id].close();
+ipcMain.on('newWin-closed', (event, id) => {
+    newWins[id].close();
+    delete newWins[id];
 });
 
 //协议调起

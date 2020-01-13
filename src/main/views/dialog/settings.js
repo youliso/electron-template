@@ -9,7 +9,7 @@ module.exports = {
             }
         },
         template: `<div class="subclass">
-           <h4>test</h4>
+           <h4>settings</h4>
         </div>`,
         async created() {
         },

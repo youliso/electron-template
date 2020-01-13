@@ -22,7 +22,7 @@
   "dialog-views": [
     {
       "keepAlive": true,
-      "v": "../views/dialog/test.js"
+      "v": "../views/dialog/settings.js"
     }
   ],
   "url": "http://127.0.0.1:3000/",
