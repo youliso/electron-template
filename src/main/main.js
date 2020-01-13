@@ -8,8 +8,9 @@ const {
 } = require('electron');
 const path = require('path');
 const gotTheLock = app.requestSingleInstanceLock();
-
-let win;
+const win_w = 950, win_h = 600;
+let win = null;
+let winPo = null;
 
 const WinOpt = (width, height) => {
     return {
@@ -25,8 +26,8 @@ const WinOpt = (width, height) => {
         maximizable: false,
         frame: false,
         webPreferences: {
-            devTools: true,
             nodeIntegration: true,
+            devTools: true,
             webSecurity: false
         }
     }
@@ -46,7 +47,7 @@ if (!gotTheLock) {
 
 const createWindow = async () => {
     // 创建浏览器窗口。
-    win = new BrowserWindow(WinOpt(950, 600));
+    win = new BrowserWindow(WinOpt(win_w, win_h));
 
     //注入初始化代码
     win.webContents.on("did-finish-load", () => {
@@ -66,6 +67,11 @@ const createWindow = async () => {
     // 当 window 被关闭，这个事件会被触发。
     win.on('closed', () => {
         win = null
+    });
+
+    //获取当前主窗口位置
+    win.on('move', (e) => {
+        winPo = win.getPosition();
     });
 
     // 加载index.html文件
@@ -98,9 +104,46 @@ app.on('browser-window-blur', () => {
     globalShortcut.unregister('CommandOrControl+R');
 });
 
+//新窗口
+const newWins = [];
+ipcMain.on('newWin', async (event, args) => {
+    let id = newWins.length;
+    for (let i of newWins) {
+        if (i && i.uniquekey === args.v && !i.complex) {
+            i.focus();
+            return;
+        }
+    }
+    let opt = WinOpt(args.width, args.height);
+    if (winPo) {
+        opt.x = winPo[0] + ((win_w - args.width) / 2);
+        opt.y = winPo[1] + ((win_h - args.height) / 2);
+    }
+    newWins[id] = new BrowserWindow(opt);
+    newWins[id].uniquekey = args.v;
+    newWins[id].complex = args.complex || false;
+    // 打开开发者工具
+    newWins[id].webContents.openDevTools();
+    //注入初始化代码
+    newWins[id].webContents.on("did-finish-load", () => {
+        let js = `require('./lib/util').init(Vue,'dialog',{name:'${args.name}',v:'${args.v}',id:${id}}).then(lib => new Vue(lib));`;
+        newWins[id].webContents.executeJavaScript(js);
+    });
+    await newWins[id].loadFile(path.join(__dirname, './dialog.html'));
+    newWins[id].show();
+    newWins[id].focus();
+});
+
+//新窗口 关闭
+ipcMain.on('newWin-closed', (event, id) => {
+    newWins[id].close();
+    delete newWins[id];
+});
+
 //关闭
 ipcMain.on('closed', () => {
-    win.close()
+    for (let i of newWins) if (i) i.close();
+    win.close();
 });
 
 //最小化
@@ -121,38 +164,6 @@ ipcMain.on('reload', () => {
 //重启
 ipcMain.on('relaunch', () => {
     app.relaunch({args: process.argv.slice(1)});
-});
-
-//新窗口
-const newWins = [];
-const newWinsVs = [];
-ipcMain.on('newWin', async (event, args) => {
-    let id = newWins.length;
-    for (let i of newWins) {
-        if (i && i.uniquekey === args.v && !i.complex) {
-            i.focus();
-            return;
-        }
-    }
-    newWins[id] = new BrowserWindow(WinOpt(args.width, args.height));
-    newWins[id].uniquekey = args.v;
-    newWins[id].complex = args.complex || false;
-    // 打开开发者工具
-    newWins[id].webContents.openDevTools();
-    //注入初始化代码
-    newWins[id].webContents.on("did-finish-load", () => {
-        let js = `require('./lib/util').init(Vue,'dialog',{name:'${args.name}',v:'${args.v}',id:${id}}).then(lib => new Vue(lib));`;
-        newWins[id].webContents.executeJavaScript(js);
-    });
-    await newWins[id].loadFile(path.join(__dirname, './dialog.html'));
-    newWins[id].show();
-    newWins[id].focus();
-});
-
-//新窗口 关闭
-ipcMain.on('newWin-closed', (event, id) => {
-    newWins[id].close();
-    delete newWins[id];
 });
 
 //协议调起
