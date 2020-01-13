@@ -255,20 +255,6 @@ let init = async (Vue, el, conf) => {
             this.IComponent = this.AppComponents[key];
         }
     };
-    const watch = {
-        themeColor(val) {
-            doc.documentElement.setAttribute('style', `--theme:${val}`);
-            let swalOpt = {
-                confirmButtonColor: val,
-                cancelButtonColor: config.colors.gray,
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                width: '32rem'
-            };
-            Vue.prototype.$alert = swal.mixin(swalOpt);
-            this.$util.storage.set('themeColor', val);
-        }
-    };
 
     if (el === '#app') {
         let viewsList = [];
@@ -282,11 +268,6 @@ let init = async (Vue, el, conf) => {
         }
         let themeColor = storage.get('themeColor');
         if (isNull(themeColor)) themeColor = config.colors.black;
-        watch.IComponent = (val) => {
-            let index1 = this.loadedComponents.indexOf(val.name);
-            if (index1 < 0) this.loadedComponents.unshift(val.name);
-            else this.$util.swapArr(this.loadedComponents, index1, 0);
-        };
         return {
             el,
             data: {
@@ -301,7 +282,25 @@ let init = async (Vue, el, conf) => {
                 this.init(themeColor, 'app-home');
             },
             methods,
-            watch
+            watch: {
+                IComponent(val) {
+                    let index1 = this.loadedComponents.indexOf(val.name);
+                    if (index1 < 0) this.loadedComponents.unshift(val.name);
+                    else this.$util.swapArr(this.loadedComponents, index1, 0);
+                },
+                themeColor(val) {
+                    doc.documentElement.setAttribute('style', `--theme:${val}`);
+                    let swalOpt = {
+                        confirmButtonColor: val,
+                        cancelButtonColor: config.colors.gray,
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        width: '32rem'
+                    };
+                    Vue.prototype.$alert = swal.mixin(swalOpt);
+                    this.$util.storage.set('themeColor', val);
+                }
+            }
         }
     } else if (el === '#dialog') {
         const AppComponents = {};
@@ -325,7 +324,20 @@ let init = async (Vue, el, conf) => {
                 this.init(themeColor, conf.v);
             },
             methods,
-            watch
+            watch: {
+                themeColor(val) {
+                    doc.documentElement.setAttribute('style', `--theme:${val}`);
+                    let swalOpt = {
+                        confirmButtonColor: val,
+                        cancelButtonColor: config.colors.gray,
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        width: '32rem'
+                    };
+                    Vue.prototype.$alert = swal.mixin(swalOpt);
+                    this.$util.storage.set('themeColor', val);
+                }
+            }
         }
     }
 
