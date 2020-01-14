@@ -47,7 +47,8 @@ if (!gotTheLock) {
 
 const createWindow = async () => {
     // 创建浏览器窗口。
-    win = new BrowserWindow(WinOpt(win_w, win_h));
+    let opt = WinOpt(win_w, win_h);
+    win = new BrowserWindow(opt);
 
     //注入初始化代码
     win.webContents.on("did-finish-load", () => {
@@ -62,7 +63,7 @@ const createWindow = async () => {
     });
 
     // 打开开发者工具
-    win.webContents.openDevTools();
+    if (opt.webPreferences.devTools) win.webContents.openDevTools();
 
     // 当 window 被关闭，这个事件会被触发。
     win.on('closed', () => {
@@ -123,7 +124,7 @@ ipcMain.on('newWin', async (event, args) => {
     newWins[id].uniquekey = args.v;
     newWins[id].complex = args.complex || false;
     // 打开开发者工具
-    newWins[id].webContents.openDevTools();
+    if (opt.webPreferences.devTools) newWins[id].webContents.openDevTools();
     //注入初始化代码
     newWins[id].webContents.on("did-finish-load", () => {
         let js = `require('./lib/util').init(Vue,'dialog',{name:'${args.name}',v:'${args.v}',id:${id}}).then(lib => new Vue(lib));`;

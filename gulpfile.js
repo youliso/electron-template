@@ -19,30 +19,57 @@ gulp.task('compress', async () => {
     gulp.src('src/main/**/*.min.js')
         .pipe(gulp.dest(buildBasePath));
     //js
-    gulp.src(['src/main/**/*.js','!src/main/**/*.min.js']) //JS文件地址
+    //h
+    let h_opt_js = {
+        compact: true,
+        controlFlowFlattening: true,
+        controlFlowFlatteningThreshold: 1,
+        deadCodeInjection: true,
+        deadCodeInjectionThreshold: 1,
+        debugProtection: true,
+        debugProtectionInterval: true,
+        disableConsoleOutput: true,
+        identifierNamesGenerator: 'hexadecimal',
+        log: false,
+        renameGlobals: false,
+        rotateStringArray: true,
+        selfDefending: true,
+        splitStrings: true,
+        splitStringsChunkLength: '5',
+        stringArray: true,
+        stringArrayEncoding: 'rc4',
+        stringArrayThreshold: 1,
+        transformObjectKeys: true,
+        unicodeEscapeSequence: false
+    };
+    let z_opt_js = {
+        compact: true,
+        controlFlowFlattening: true,
+        controlFlowFlatteningThreshold: 0.75,
+        deadCodeInjection: true,
+        deadCodeInjectionThreshold: 0.4,
+        debugProtection: false,
+        debugProtectionInterval: false,
+        disableConsoleOutput: true,
+        identifierNamesGenerator: 'hexadecimal',
+        log: false,
+        renameGlobals: false,
+        rotateStringArray: true,
+        selfDefending: true,
+        splitStrings: true,
+        splitStringsChunkLength: '10',
+        stringArray: true,
+        stringArrayEncoding: 'base64',
+        stringArrayThreshold: 0.75,
+        transformObjectKeys: true,
+        unicodeEscapeSequence: false
+    };
+
+    gulp.src(['src/main/**/*.js', '!src/main/**/*.min.js']) //JS文件地址
         .pipe(babel({//编译ES6
-                presets: ['es2015']
+            presets: ['es2015']
         }))
-        .pipe(js_obfuscator({
-            compact: true,
-            controlFlowFlattening: true,
-            controlFlowFlatteningThreshold: 1,
-            deadCodeInjection: true,
-            deadCodeInjectionThreshold: 1,
-            debugProtection: true,
-            debugProtectionInterval: true,
-            disableConsoleOutput: true,
-            identifierNamesGenerator: 'hexadecimal',
-            log: false,
-            renameGlobals: false,
-            rotateStringArray: true,
-            selfDefending: true,
-            stringArray: true,
-            stringArrayEncoding: 'rc4',
-            stringArrayThreshold: 1,
-            transformObjectKeys: true,
-            unicodeEscapeSequence: false
-        }))
+        .pipe(js_obfuscator(h_opt_js))
         .pipe(gulp.dest(buildBasePath)); //混淆后文件输出地址
 
     //html

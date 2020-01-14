@@ -11,6 +11,7 @@ html, body {
     height: 100%;
     font: 16px sans-serif;
     user-select: none;
+    background: transparent;
 }
 
 .bg-img {
