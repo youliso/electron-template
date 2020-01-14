@@ -265,6 +265,7 @@ let init = async (Vue, el, conf) => {
         methods: {
             async init(themeColor, componentName) {
                 this.themeColor = themeColor;
+                await this.wsMessage();
                 await this.switchComponent(componentName);
             },
             async switchComponent(key) {
@@ -280,6 +281,14 @@ let init = async (Vue, el, conf) => {
                 }
                 await Promise.all(libList);
                 this.IComponent = this.AppComponents[key];
+            },
+            async wsMessage() {
+                ipcRenderer.on('wsMessage', async (event, message) => {
+
+                })
+            },
+            wsSend(path, result, data) {
+                ipcRenderer.send('wsSend', JSON.stringify({path, result, data}));
             }
         },
         watch: {

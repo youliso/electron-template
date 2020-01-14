@@ -12,6 +12,7 @@ module.exports = {
            <h4>settings</h4>
         </div>`,
         async created() {
+            this.$parent.wsSend('test', 'test', 'test')
         },
         beforeDestroy() {
             //卸载
@@ -22,7 +23,6 @@ module.exports = {
         deactivated() {
             //开启缓存后 切换卸载
         },
-        methods: {
-        }
+        methods: {}
     }
 };

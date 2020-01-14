@@ -6,11 +6,13 @@ const {
     globalShortcut,
     ipcMain
 } = require('electron');
+const WebSocket = require('ws');
 const path = require('path');
 const gotTheLock = app.requestSingleInstanceLock();
 const win_w = 950, win_h = 600;
 let win = null;
 let winPo = null;
+let ws = null;
 
 const WinOpt = (width, height) => {
     return {
@@ -175,3 +177,35 @@ if (!app.isPackaged) {
 args.push('--');
 const PROTOCOL = app.name;
 app.setAsDefaultProtocolClient(PROTOCOL, process.execPath, args);
+
+//ws
+const wsInit = async (address, protocols, options) => {
+    ws = new WebSocket(address, protocols, options);
+    ws.onopen = (e) => {
+        console.log('[ws]init');
+    };
+    ws.onclose = (e) => {
+        console.log('[ws]close');
+        ws = null;
+    };
+    ws.onerror = (e) => {
+        console.log('[ws]error');
+        ws = null;
+    };
+    ws.onmessage = (e) => {
+        win.webContents.send('wsMessage', JSON.parse(e.data));
+        for (let i of newWins) if (i) i.webContents.send('wsMessage', JSON.parse(e.data));
+    };
+    await Promise.all([ws.onerror, ws.onopen, ws.onmessage, ws.onclose]);
+};
+
+//ws初始化
+ipcMain.on('wsInit', async (event, args) => {
+    if (!ws) await wsInit(args.address, args.protocols, args.options);
+});
+
+//wsSend
+ipcMain.on('wsSend', async (event, args) => {
+    console.log(args);
+    if (ws) ws.send(args)
+});
