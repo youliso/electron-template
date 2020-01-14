@@ -47,7 +47,7 @@ if (!gotTheLock) {
     })
 }
 
-const createWindow = async () => {
+const createWindow = () => {
     // 创建浏览器窗口。
     let opt = WinOpt(win_w, win_h);
     win = new BrowserWindow(opt);
@@ -78,7 +78,7 @@ const createWindow = async () => {
     });
 
     // 加载index.html文件
-    await win.loadFile(path.join(__dirname, './index.html'));
+    win.loadFile(path.join(__dirname, './index.html'));
 };
 
 app.on('ready', createWindow);
@@ -88,9 +88,9 @@ app.on('window-all-closed', () => {
         app.quit()
     }
 });
-app.on('activate', async () => {
+app.on('activate', () => {
     if (win === null) {
-        await createWindow()
+        createWindow()
     }
 });
 
@@ -109,7 +109,7 @@ app.on('browser-window-blur', () => {
 
 //新窗口
 const newWins = [];
-ipcMain.on('newWin', async (event, args) => {
+ipcMain.on('newWin',  (event, args) => {
     let id = newWins.length;
     for (let i of newWins) {
         if (i && i.uniquekey === args.v && !i.complex) {
@@ -132,9 +132,7 @@ ipcMain.on('newWin', async (event, args) => {
         let js = `require('./lib/util').init(Vue,'dialog',{name:'${args.name}',v:'${args.v}',id:${id}}).then(lib => new Vue(lib));`;
         newWins[id].webContents.executeJavaScript(js);
     });
-    await newWins[id].loadFile(path.join(__dirname, './dialog.html'));
-    newWins[id].show();
-    newWins[id].focus();
+    newWins[id].loadFile(path.join(__dirname, './dialog.html'));
 });
 
 //新窗口 关闭
