@@ -266,6 +266,7 @@ let init = async (Vue, el, conf) => {
             async init(themeColor, componentName) {
                 this.themeColor = themeColor;
                 await this.wsMessage();
+                this.wsInit();
                 await this.switchComponent(componentName);
             },
             async switchComponent(key) {
@@ -283,9 +284,35 @@ let init = async (Vue, el, conf) => {
                 this.IComponent = this.AppComponents[key];
             },
             async wsMessage() {
-                ipcRenderer.on('wsMessage', async (event, message) => {
-
+                ipcRenderer.on('wsMessage', async (event, req) => {
+                    if (req.code === 11) {
+                        //连接成功
+                        console.log('[ws] ready');
+                    }
+                    if (req.code === 22) {
+                        //刷新token
+                        storage.set('Authorization', req.data, true);
+                    }
+                    if (req.code === 0) {
+                        let path = req.result.split('.');
+                        if (path.length === 1) this[path[0]] = req.data;
+                        if (path.length === 2) if (this.$refs[path[0]]) this.$refs[path[0]][path[1]] = req.data;
+                    }
+                    if (req.code === -1) {
+                        this.$toast.fire({
+                            icon: 'error',
+                            title: req.msg
+                        });
+                    }
                 })
+            },
+            wsInit() {
+                let args = {
+                    protocols: storage.get('Authorization', true) || null,
+                    address: config.ws,
+                    options: null
+                };
+                if (args.protocols) this.$util.ipcRenderer.send('wsInit', args);
             },
             wsSend(path, result, data) {
                 ipcRenderer.send('wsSend', JSON.stringify({path, result, data}));

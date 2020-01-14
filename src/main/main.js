@@ -206,6 +206,5 @@ ipcMain.on('wsInit', async (event, args) => {
 
 //wsSend
 ipcMain.on('wsSend', async (event, args) => {
-    console.log(args);
     if (ws) ws.send(args)
 });
