@@ -6,13 +6,11 @@ const {
     globalShortcut,
     ipcMain
 } = require('electron');
-const WebSocket = require('ws');
+const webSocket = require('ws');
 const path = require('path');
 const gotTheLock = app.requestSingleInstanceLock();
 const win_w = 950, win_h = 600;
-let win = null;
-let winPo = null;
-let ws = null;
+let win = null, winPo = null, ws = null;
 
 const WinOpt = (width, height) => {
     return {
@@ -178,7 +176,7 @@ app.setAsDefaultProtocolClient(PROTOCOL, process.execPath, args);
 
 //ws
 const wsInit = async (address, protocols, options) => {
-    ws = new WebSocket(address, protocols, options);
+    ws = new webSocket(address, protocols, options);
     ws.onopen = (e) => {
         console.log('[ws]init');
     };

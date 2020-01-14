@@ -1,11 +1,56 @@
+const fs = require('fs');
+const join = require('path').join;
+const execSync = require('child_process').execSync;
 const gulp = require("gulp");
 const minifyCss = require('gulp-minify-css');//压缩CSS为一行；
 const htmlmin = require('gulp-htmlmin');//html压缩组件
 const gulpRemoveHtml = require('gulp-remove-html');//标签清除
 const removeEmptyLines = require('gulp-remove-empty-lines');//清除空白行
-const js_obfuscator = require('gulp-js-obfuscator');//js压缩混淆
-const babel = require("gulp-babel");
 const buildBasePath = 'dist/';//构建输出的目录
+
+function findSync(startPath) {
+    let result = [];
+
+    function finder(path) {
+        let files = fs.readdirSync(path);
+        files.forEach((val, index) => {
+            let fPath = join(path, val);
+            let stats = fs.statSync(fPath);
+            if (stats.isDirectory()) finder(fPath);
+            if (stats.isFile()) result.push(fPath);
+        });
+    }
+
+    finder(startPath);
+    return result;
+}
+
+const checkDirExist = (folderpath) => {
+    const pathArr = folderpath.split('\\');
+    let _path = '';
+    for (let i = 0; i < pathArr.length; i++) {
+        if (pathArr[i]) {
+            _path += `${i === 0 ? '' : '/'}${pathArr[i]}`;
+            if (!fs.existsSync(_path)) {
+                fs.mkdirSync(_path);
+            }
+        }
+    }
+};
+
+//读取文件，并且替换文件中指定的字符串
+const replaceFile = (filePath, sourceRegx, targetStr) => {
+    fs.readFile(filePath, (err, data) => {
+        if (err) {
+            return err;
+        }
+        let str = data.toString();
+        str = str.replace(sourceRegx, targetStr);
+        fs.writeFile(filePath, str, (err) => {
+            if (err) return err;
+        });
+    });
+};
 
 gulp.task('compress', async () => {
     //cfg
@@ -18,59 +63,21 @@ gulp.task('compress', async () => {
     //js
     gulp.src('src/main/**/*.min.js')
         .pipe(gulp.dest(buildBasePath));
-    //js
-    //h
-    let h_opt_js = {
-        compact: true,
-        controlFlowFlattening: true,
-        controlFlowFlatteningThreshold: 1,
-        deadCodeInjection: true,
-        deadCodeInjectionThreshold: 1,
-        debugProtection: true,
-        debugProtectionInterval: true,
-        disableConsoleOutput: true,
-        identifierNamesGenerator: 'hexadecimal',
-        log: false,
-        renameGlobals: false,
-        rotateStringArray: true,
-        selfDefending: true,
-        splitStrings: true,
-        splitStringsChunkLength: '5',
-        stringArray: true,
-        stringArrayEncoding: 'rc4',
-        stringArrayThreshold: 1,
-        transformObjectKeys: true,
-        unicodeEscapeSequence: false
-    };
-    let z_opt_js = {
-        compact: true,
-        controlFlowFlattening: true,
-        controlFlowFlatteningThreshold: 0.75,
-        deadCodeInjection: true,
-        deadCodeInjectionThreshold: 0.4,
-        debugProtection: false,
-        debugProtectionInterval: false,
-        disableConsoleOutput: true,
-        identifierNamesGenerator: 'hexadecimal',
-        log: false,
-        renameGlobals: false,
-        rotateStringArray: true,
-        selfDefending: true,
-        splitStrings: true,
-        splitStringsChunkLength: '10',
-        stringArray: true,
-        stringArrayEncoding: 'base64',
-        stringArrayThreshold: 0.75,
-        transformObjectKeys: true,
-        unicodeEscapeSequence: false
-    };
 
-    gulp.src(['src/main/**/*.js', '!src/main/**/*.min.js']) //JS文件地址
-        .pipe(babel({//编译ES6
-            presets: ['es2015']
-        }))
-        .pipe(js_obfuscator(h_opt_js))
-        .pipe(gulp.dest(buildBasePath)); //混淆后文件输出地址
+    // Closure Compiler
+    for (let i of findSync(__dirname + '/src/main')) {
+        i = i.replace(__dirname + '\\src\\main', '');
+        if (i.indexOf('config.json') < 0 && /^((?!js).*)js/.test(i) && !/^((?!min.js).*)min.js/.test(i)) {
+            let dUrl = __dirname + '\\dist' + i;
+            checkDirExist(dUrl.slice(0, dUrl.lastIndexOf('\\')));
+            if (fs.existsSync(dUrl)) fs.unlinkSync(dUrl);
+            let javaExe = "";
+            javaExe = "D:\\tool\\IntelliJ IDEA 2019.2.1\\jbr\\bin\\java";
+            // javaExe = "C:\\Program Files\\JetBrains\\IntelliJ IDEA 2019.3\\jbr\\bin\\java";
+            execSync(`"${javaExe}" -jar closure-compiler-v20200101.jar --js ${'src/main' + i} --js_output_file ${'dist' + i} --compilation_level=SIMPLE --jscomp_warning=* --env=CUSTOM --module_resolution=NODE`, {cwd: process.cwd()});
+        }
+    }
+
 
     //html
     gulp.src('src/main/**/*.html')
