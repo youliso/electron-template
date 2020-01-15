@@ -11,8 +11,7 @@ module.exports = {
         template: `<div class="subclass">
            <h4>settings</h4>
         </div>`,
-        async created() {
-            this.$parent.wsSend('test', 'test', 'test')
+        created() {
         },
         beforeDestroy() {
             //卸载

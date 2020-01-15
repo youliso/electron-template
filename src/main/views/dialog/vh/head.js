@@ -10,7 +10,7 @@ module.exports = {
         <span>{{$parent.conf.name}}</span>
         </div>
         <div>
-         <i @click="system" class="iconfont iconCancelcontrol no-drag cursor-pointer"></i>
+         <i @click="closed" class="iconfont iconCancelcontrol no-drag cursor-pointer"></i>
         </div>
         </div>`,
         created() {
@@ -18,7 +18,7 @@ module.exports = {
         beforeDestroy() {
         },
         methods: {
-            system() {
+            closed() {
                 this.$util.ipcRenderer.send('newWin-closed', this.$parent.conf.id)
             }
         }

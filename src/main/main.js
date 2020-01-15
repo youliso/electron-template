@@ -27,7 +27,7 @@ const WinOpt = (width, height) => {
         frame: false,
         webPreferences: {
             nodeIntegration: true,
-            devTools: true,
+            devTools: false,
             webSecurity: false
         }
     }
@@ -107,7 +107,7 @@ app.on('browser-window-blur', () => {
 
 //新窗口
 const newWins = [];
-ipcMain.on('newWin',  (event, args) => {
+ipcMain.on('newWin', (event, args) => {
     let id = newWins.length;
     for (let i of newWins) {
         if (i && i.uniquekey === args.v && !i.complex) {
@@ -127,7 +127,8 @@ ipcMain.on('newWin',  (event, args) => {
     if (opt.webPreferences.devTools) newWins[id].webContents.openDevTools();
     //注入初始化代码
     newWins[id].webContents.on("did-finish-load", () => {
-        let js = `require('./lib/util').init(Vue,'dialog',{name:'${args.name}',v:'${args.v}',id:${id}}).then(lib => new Vue(lib));`;
+        args.id = id;
+        let js = `require('./lib/util').init(Vue,'dialog','${encodeURIComponent(JSON.stringify(args))}').then(lib => new Vue(lib));`;
         newWins[id].webContents.executeJavaScript(js);
     });
     newWins[id].loadFile(path.join(__dirname, './dialog.html'));

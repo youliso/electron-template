@@ -205,7 +205,7 @@ let removeCssJs = (srcList) => {
  * @param Vue
  * */
 let init = async (Vue, el, conf) => {
-    conf = conf || null;
+    conf = conf ? JSON.parse(decodeURIComponent(conf)) : null;
     Vue.prototype.$config = config;
     Vue.prototype.$util = {
         trim,
