@@ -15,6 +15,7 @@
     "build gulp w": "gulp compress && electron-builder -w"
   },
   "build": {
+    "compression": "maximum",
     "productName": "Electron_Template",
     "appId": "org.Electron_Template",
     "copyright": "MIT",
@@ -39,6 +40,8 @@
       "installerIcon": "src/resources/icons/icon.ico",
       "uninstallerIcon": "src/resources/icons/unicon.ico",
       "installerHeaderIcon": "src/resources/icons/icon.ico",
+      "installerSidebar": "src/resources/icons/modern-wizard.bmp",
+      "uninstallerSidebar": "src/resources/icons/modern-wizard.bmp",
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "shortcutName": "Electron_Template",
