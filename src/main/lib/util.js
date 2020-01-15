@@ -248,16 +248,17 @@ let init = async (Vue, el, conf) => {
     }
     let themeColor = storage.get('themeColor');
     if (isNull(themeColor)) themeColor = config.colors.black;
+    let app_data = {
+        IComponent: null,
+        AppComponents,
+        loadedComponents: [],
+        head: true,
+        themeColor
+    };
+    if (conf) app_data.conf = conf;
     return {
         el: `#${el}`,
-        data: {
-            conf,
-            IComponent: null,
-            AppComponents,
-            loadedComponents: [],
-            head: true,
-            themeColor
-        },
+        data: app_data,
         async created() {
             if (conf) this.init(themeColor, conf.v);
             else this.init(themeColor, `${el}-home`);
