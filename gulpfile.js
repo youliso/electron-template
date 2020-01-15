@@ -75,7 +75,7 @@ gulp.task('compress', async () => {
             let javaExe = "";
             javaExe = "D:\\tool\\IntelliJ IDEA 2019.2.1\\jbr\\bin\\java";
             // javaExe = "C:\\Program Files\\JetBrains\\IntelliJ IDEA 2019.3\\jbr\\bin\\java";
-            execSync(`"${javaExe}" -jar closure-compiler-v20200101.jar --js ${'src/main' + i} --js_output_file ${'dist' + i} --language_out=ECMASCRIPT_2017 --compilation_level=SIMPLE --jscomp_warning=* --env=CUSTOM --module_resolution=NODE`, {cwd: process.cwd()});
+            execSync(`"${javaExe}" -jar closure-compiler-v20200101.jar --js ${'src/main' + i} --js_output_file ${'dist' + i} --language_in=ECMASCRIPT_2017 --language_out=ECMASCRIPT_2017 --compilation_level=SIMPLE --jscomp_warning=* --env=CUSTOM --module_resolution=NODE`, {cwd: process.cwd()});
         }
     }
 
