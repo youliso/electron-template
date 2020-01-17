@@ -86,7 +86,7 @@
     "ws": "^7.2.1"
   },
   "devDependencies": {
-    "electron": "^7.1.7",
+    "electron": "^7.1.8",
     "electron-builder": "^22.2.0",
     "gulp": "^4.0.2",
     "gulp-htmlmin": "^5.0.1",
