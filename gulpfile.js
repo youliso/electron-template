@@ -72,10 +72,8 @@ gulp.task('compress', async () => {
             let dUrl = __dirname + '\\dist' + i;
             checkDirExist(dUrl.slice(0, dUrl.lastIndexOf('\\')));
             if (fs.existsSync(dUrl)) fs.unlinkSync(dUrl);
-            let javaExe = "";
-            javaExe = "D:\\tool\\IntelliJ IDEA 2019.2.1\\jbr\\bin\\java";
-            // javaExe = "C:\\Program Files\\JetBrains\\IntelliJ IDEA 2019.3\\jbr\\bin\\java";
-            execSync(`"${javaExe}" -jar closure-compiler-v20200101.jar --js ${'src/main' + i} --js_output_file ${'dist' + i} --language_in=ECMASCRIPT_2017 --language_out=ECMASCRIPT_2017 --compilation_level=SIMPLE --jscomp_warning=* --env=CUSTOM --module_resolution=NODE`, {cwd: process.cwd()});
+            let javaExe = "D:\\Program Files\\idea\\jbr\\bin\\java";
+            execSync(`"${javaExe}" -jar closure-compiler-v20200224.jar --js ${'src/main' + i} --js_output_file ${'dist' + i} --language_in=ECMASCRIPT_2017 --language_out=ECMASCRIPT_2017 --compilation_level=SIMPLE --jscomp_warning=* --env=CUSTOM --module_resolution=NODE`, {cwd: process.cwd()});
         }
     }
 
