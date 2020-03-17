@@ -26,8 +26,8 @@ function findSync(startPath) {
     return result;
 }
 
-const checkDirExist = (folderpath) => {
-    const pathArr = folderpath.split('\\');
+const checkDirExist = (folderpath,os) => {
+    const pathArr = folderpath.split(os);
     let _path = '';
     for (let i = 0; i < pathArr.length; i++) {
         if (pathArr[i]) {
@@ -65,14 +65,26 @@ gulp.task('compress', async () => {
     gulp.src('src/main/**/*.min.js')
         .pipe(gulp.dest(buildBasePath));
 
-    // Closure Compiler
+    // Closure Compiler-Win
+    // for (let i of findSync(__dirname + '/src/main')) {
+    //     i = i.replace(__dirname + '\\src\\main', '');
+    //     if (i.indexOf('config.json') < 0 && /^((?!js).*)js/.test(i) && !/^((?!min.js).*)min.js/.test(i)) {
+    //         let dUrl = __dirname + '\\dist' + i;
+    //         checkDirExist(dUrl.slice(0, dUrl.lastIndexOf('\\')));
+    //         if (fs.existsSync(dUrl)) fs.unlinkSync(dUrl);
+    //         let javaExe = "D:\\Program Files\\idea\\jbr\\bin\\java";
+    //         execSync(`"${javaExe}" -jar closure-compiler-v20200224.jar --js ${'src/main' + i} --js_output_file ${'dist' + i} --language_in=ECMASCRIPT_2017 --language_out=ECMASCRIPT_2017 --compilation_level=SIMPLE --jscomp_warning=* --env=CUSTOM --module_resolution=NODE`, {cwd: process.cwd()});
+    //     }
+    // }
+
+    // Closure Compiler-Linux
     for (let i of findSync(__dirname + '/src/main')) {
-        i = i.replace(__dirname + '\\src\\main', '');
+        i = i.replace(__dirname + '/src/main', '');
         if (i.indexOf('config.json') < 0 && /^((?!js).*)js/.test(i) && !/^((?!min.js).*)min.js/.test(i)) {
-            let dUrl = __dirname + '\\dist' + i;
-            checkDirExist(dUrl.slice(0, dUrl.lastIndexOf('\\')));
+            let dUrl = __dirname + '/dist' + i;
+            checkDirExist(dUrl.slice(0, dUrl.lastIndexOf('/')),'/');
             if (fs.existsSync(dUrl)) fs.unlinkSync(dUrl);
-            let javaExe = "D:\\Program Files\\idea\\jbr\\bin\\java";
+            let javaExe = "/lib/idea/jbr/bin/java";
             execSync(`"${javaExe}" -jar closure-compiler-v20200224.jar --js ${'src/main' + i} --js_output_file ${'dist' + i} --language_in=ECMASCRIPT_2017 --language_out=ECMASCRIPT_2017 --compilation_level=SIMPLE --jscomp_warning=* --env=CUSTOM --module_resolution=NODE`, {cwd: process.cwd()});
         }
     }

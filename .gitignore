@@ -1,8 +1,9 @@
 /.idea/
 /yarn.lock
-/dist
 /out
 /db.json
 /data
 /Electron_Template.iml
 /node_modules/
+/dist/
+/package-lock.json
