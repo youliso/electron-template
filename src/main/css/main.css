@@ -38,12 +38,19 @@ html, body {
 
 /*主体*/
 .content {
-    background: var(--black);
     color: var(--white);
     width: 100%;
     height: 100%;
     overflow: overlay;
     position: relative;
+}
+
+#app {
+    background-color: var(--black);
+}
+
+#dialog {
+    background-color: var(--blackShadow);
 }
 
 /*头部*/

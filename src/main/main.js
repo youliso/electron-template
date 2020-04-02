@@ -22,14 +22,14 @@ const WinOpt = (width, height) => {
         minHeight: height,
         maxWidth: width,
         maxHeight: height,
-        transparent: false,
+        transparent: true,
         autoHideMenuBar: true,
         resizable: false,
         maximizable: false,
         frame: false,
         webPreferences: {
             nodeIntegration: true,
-            devTools: true,
+            devTools: false,
             webSecurity: false
         }
     }
