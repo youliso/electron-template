@@ -201,6 +201,16 @@ let removeCssJs = (srcList) => {
 };
 
 /**
+ * 弹框初始化参数
+ * @param Vue
+ * */
+let dataJsonPort = (cak) => {
+    ipcRenderer.on('dataJsonPort', async (event,message) => {
+        cak(message);
+    });
+};
+
+/**
  * 主体初始化
  * @param Vue
  * */
@@ -341,7 +351,7 @@ let init = async (Vue, el, conf) => {
     }
 };
 
-module.exports = {init};
+module.exports = {init, dataJsonPort};
 /**
  * vue.min.js : //unpkg.com/vue/dist/vue.min.js
  * animate.css : //cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.css

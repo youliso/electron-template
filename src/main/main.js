@@ -27,7 +27,7 @@ const WinOpt = (width, height) => {
         frame: false,
         webPreferences: {
             nodeIntegration: true,
-            devTools: false,
+            devTools: true,
             webSecurity: false
         }
     }
@@ -49,12 +49,6 @@ const createWindow = () => {
     // 创建浏览器窗口。
     let opt = WinOpt(win_w, win_h);
     win = new BrowserWindow(opt);
-
-    //注入初始化代码
-    win.webContents.on("did-finish-load", () => {
-        let js = `require('./lib/util').init(Vue,'app').then(lib => new Vue(lib));`;
-        win.webContents.executeJavaScript(js);
-    });
 
     //默认浏览器打开跳转连接
     win.webContents.on('new-window', (event, url, frameName, disposition, options) => {
@@ -125,13 +119,12 @@ ipcMain.on('newWin', (event, args) => {
     newWins[id].complex = args.complex || false;
     // 打开开发者工具
     if (opt.webPreferences.devTools) newWins[id].webContents.openDevTools();
+    newWins[id].loadFile(path.join(__dirname, './dialog.html'));
     //注入初始化代码
     newWins[id].webContents.on("did-finish-load", () => {
         args.id = id;
-        let js = `require('./lib/util').init(Vue,'dialog','${encodeURIComponent(JSON.stringify(args))}').then(lib => new Vue(lib));`;
-        newWins[id].webContents.executeJavaScript(js);
+        newWins[id].webContents.send('dataJsonPort', encodeURIComponent(JSON.stringify(args)));
     });
-    newWins[id].loadFile(path.join(__dirname, './dialog.html'));
 });
 
 //新窗口 关闭

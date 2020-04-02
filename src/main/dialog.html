@@ -20,5 +20,11 @@
 </div>
 <script type="text/javascript" src="lib/sweetalert2.min.js"></script>
 <script type="text/javascript" src="lib/vue.min.js"></script>
+<script>
+    const _ = require('./lib/util');
+    _.dataJsonPort(e => {
+        _.init(Vue, 'dialog', e).then(lib => new Vue(lib));
+    });
+</script>
 </body>
 </html>
