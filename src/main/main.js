@@ -102,10 +102,10 @@ app.on('browser-window-blur', () => {
 });
 
 //新窗口
-const newWins = [];
-ipcMain.on('newWin', (event, args) => {
-    let id = newWins.length;
-    for (let i of newWins) {
+const dialogs = [];
+ipcMain.on('new-dialog', (event, args) => {
+    let id = dialogs.length;
+    for (let i of dialogs) {
         if (i && i.uniquekey === args.v && !i.complex) {
             i.focus();
             return;
@@ -118,17 +118,17 @@ ipcMain.on('newWin', (event, args) => {
     }
     opt.parent = win;
     opt.alwaysOnTop = args.alwaysOnTop;
-    newWins[id] = new BrowserWindow(opt);
-    newWins[id].uniquekey = args.v;
-    if (args.r) newWins[id].loopKey = args.r;
-    newWins[id].complex = args.complex || false;
+    dialogs[id] = new BrowserWindow(opt);
+    dialogs[id].uniquekey = args.v;
+    if (args.r) dialogs[id].loopKey = args.r;
+    dialogs[id].complex = args.complex || false;
     // 打开开发者工具
-    if (opt.webPreferences.devTools) newWins[id].webContents.openDevTools();
-    newWins[id].loadFile(path.join(__dirname, './dialog.html'));
+    if (opt.webPreferences.devTools) dialogs[id].webContents.openDevTools();
+    dialogs[id].loadFile(path.join(__dirname, './dialog.html'));
     //注入初始化代码
-    newWins[id].webContents.on("did-finish-load", () => {
+    dialogs[id].webContents.on("did-finish-load", () => {
         args.id = id;
-        newWins[id].webContents.send('dataJsonPort', encodeURIComponent(JSON.stringify(args)));
+        dialogs[id].webContents.send('dataJsonPort', encodeURIComponent(JSON.stringify(args)));
     });
 
 
@@ -136,18 +136,18 @@ ipcMain.on('newWin', (event, args) => {
 
 //新窗口 反馈
 ipcMain.on('newWin-feedback', (event, args) => {
-    if (newWins[args.id].loopKey) win.webContents.send(newWins[args.id].loopKey, args);
+    if (dialogs[args.id].loopKey) win.webContents.send(dialogs[args.id].loopKey, args);
 });
 
 //新窗口 关闭
 ipcMain.on('newWin-closed', (event, id) => {
-    newWins[id].close();
-    delete newWins[id];
+    dialogs[id].close();
+    delete dialogs[id];
 });
 
 //关闭
 ipcMain.on('closed', () => {
-    for (let i of newWins) if (i) i.close();
+    for (let i of dialogs) if (i) i.close();
     win.close();
 });
 
@@ -196,7 +196,7 @@ const wsInit = async (address, protocols, options) => {
     };
     ws.onmessage = (e) => {
         win.webContents.send('wsMessage', JSON.parse(e.data));
-        for (let i of newWins) if (i) i.webContents.send('wsMessage', JSON.parse(e.data));
+        for (let i of dialogs) if (i) i.webContents.send('wsMessage', JSON.parse(e.data));
     };
     await Promise.all([ws.onerror, ws.onopen, ws.onmessage, ws.onclose]);
 };

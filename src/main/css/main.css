@@ -50,7 +50,7 @@ html, body {
 }
 
 #dialog {
-    background-color: var(--blackShadow);
+    background-color: rgba(47, 47, 47, 0.85);
 }
 
 /*头部*/

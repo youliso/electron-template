@@ -335,7 +335,7 @@ let init = async (Vue, el, conf) => {
                 if (data.width) args.width = data.width;
                 if (data.height) args.height = data.height;
                 if(data.complex) args.complex = data.complex;
-                this.$util.ipcRenderer.send('newWin', args)
+                this.$util.ipcRenderer.send('new-dialog', args)
             }
         },
         watch: {
