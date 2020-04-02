@@ -205,7 +205,7 @@ let removeCssJs = (srcList) => {
  * @param Vue
  * */
 let dataJsonPort = (cak) => {
-    ipcRenderer.on('dataJsonPort', async (event,message) => {
+    ipcRenderer.on('dataJsonPort', async (event, message) => {
         cak(message);
     });
 };
@@ -230,17 +230,6 @@ let init = async (Vue, el, conf) => {
         ipcRenderer
     };
     Vue.prototype.$srl = (srl) => config.url + srl;
-    Vue.prototype.$toast = swal.mixin({
-        toast: true,
-        position: 'top',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        onOpen: (toast) => {
-            toast.addEventListener('mouseenter', swal.stopTimer);
-            toast.addEventListener('mouseleave', swal.resumeTimer);
-        }
-    });
     const view = async (key, view) => {
         let {lib, main} = require(view);
         Vue.component(key, main);
@@ -310,9 +299,14 @@ let init = async (Vue, el, conf) => {
                         if (path.length === 2) if (this.$refs[path[0]]) this.$refs[path[0]][path[1]] = req.data;
                     }
                     if (req.code === -1) {
-                        this.$toast.fire({
-                            icon: 'error',
-                            title: req.msg
+                        this.$parent.Dialog({
+                            name: '提示',
+                            v: 'dialog-message',
+                            complex: true,
+                            data: {
+                                tit:'ws反馈',
+                                title: req.msg
+                            }
                         });
                     }
                 })
@@ -327,6 +321,21 @@ let init = async (Vue, el, conf) => {
             },
             wsSend(path, result, data) {
                 ipcRenderer.send('wsSend', JSON.stringify({path, result, data}));
+            },
+            Dialog(data) {
+                let args = {
+                    name: data.name,
+                    v: data.v,
+                    data: data.data,
+                    width: 400,
+                    height: 150,
+                    complex: false
+                };
+                if (data.r) args.r = data.r;
+                if (data.width) args.width = data.width;
+                if (data.height) args.height = data.height;
+                if(data.complex) args.complex = data.complex;
+                this.$util.ipcRenderer.send('newWin', args)
             }
         },
         watch: {
@@ -337,14 +346,6 @@ let init = async (Vue, el, conf) => {
             },
             themeColor(val) {
                 doc.documentElement.setAttribute('style', `--theme:${val}`);
-                let swalOpt = {
-                    confirmButtonColor: val,
-                    cancelButtonColor: config.colors.gray,
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    width: '32rem'
-                };
-                Vue.prototype.$alert = swal.mixin(swalOpt);
                 this.$util.storage.set('themeColor', val);
             }
         }

@@ -22,7 +22,7 @@ const WinOpt = (width, height) => {
         minHeight: height,
         maxWidth: width,
         maxHeight: height,
-        transparent: true,
+        transparent: false,
         autoHideMenuBar: true,
         resizable: false,
         maximizable: false,
@@ -116,8 +116,11 @@ ipcMain.on('newWin', (event, args) => {
         opt.x = winPo[0] + ((win_w - args.width) / 2);
         opt.y = winPo[1] + ((win_h - args.height) / 2);
     }
+    opt.parent = win;
+    opt.alwaysOnTop = args.alwaysOnTop;
     newWins[id] = new BrowserWindow(opt);
     newWins[id].uniquekey = args.v;
+    if (args.r) newWins[id].loopKey = args.r;
     newWins[id].complex = args.complex || false;
     // 打开开发者工具
     if (opt.webPreferences.devTools) newWins[id].webContents.openDevTools();
@@ -127,6 +130,13 @@ ipcMain.on('newWin', (event, args) => {
         args.id = id;
         newWins[id].webContents.send('dataJsonPort', encodeURIComponent(JSON.stringify(args)));
     });
+
+
+});
+
+//新窗口 反馈
+ipcMain.on('newWin-feedback', (event, args) => {
+    if (newWins[args.id].loopKey) win.webContents.send(newWins[args.id].loopKey, args);
 });
 
 //新窗口 关闭
