@@ -6,6 +6,8 @@ const {
     globalShortcut,
     ipcMain
 } = require('electron');
+//禁用网站实例覆盖
+app.allowRendererProcessReuse = true;
 const webSocket = require('ws');
 const path = require('path');
 const gotTheLock = app.requestSingleInstanceLock();
