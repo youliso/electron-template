@@ -20,15 +20,16 @@ module.exports = {
         beforeDestroy() {
         },
         methods: {
-            settings() {
-                this.$parent.Dialog(
+           async settings() {
+                let id = await this.$parent.Dialog(
                     {
                         name: '设置',
                         v: 'dialog-settings',
                         width: 600,
                         height: 500
                     }
-                )
+                );
+               console.log(id);
             },
             system(channel) {
                 this.$util.ipcRenderer.send(channel);

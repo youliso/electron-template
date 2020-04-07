@@ -29,7 +29,7 @@ const WinOpt = (width, height) => {
         frame: false,
         webPreferences: {
             nodeIntegration: true,
-            devTools: false,
+            devTools: true,
             webSecurity: false
         }
     }
@@ -102,10 +102,11 @@ app.on('browser-window-blur', () => {
 });
 
 //新窗口
-const dialogs = [];
+global.dialogs = [];
+let is_Dialogs = [];
 ipcMain.on('new-dialog', (event, args) => {
-    let id = dialogs.length;
-    for (let i of dialogs) {
+    let id = global.dialogs.length;
+    for (let i of global.dialogs) {
         if (i && i.uniquekey === args.v && !i.complex) {
             i.focus();
             return;
@@ -118,36 +119,42 @@ ipcMain.on('new-dialog', (event, args) => {
     }
     opt.parent = win;
     opt.alwaysOnTop = args.alwaysOnTop;
-    dialogs[id] = new BrowserWindow(opt);
-    dialogs[id].uniquekey = args.v;
-    if (args.r) dialogs[id].loopKey = args.r;
-    dialogs[id].complex = args.complex || false;
+    global.dialogs[id] = new BrowserWindow(opt);
+    global.dialogs[id].uniquekey = args.v;
+    global.dialogs[id].complex = args.complex || false;
     // 打开开发者工具
-    if (opt.webPreferences.devTools) dialogs[id].webContents.openDevTools();
-    dialogs[id].loadFile(path.join(__dirname, './dialog.html'));
+    // if (opt.webPreferences.devTools) global.dialogs[id].webContents.openDevTools();
+    global.dialogs[id].loadFile(path.join(__dirname, './dialog.html'));
     //注入初始化代码
-    dialogs[id].webContents.on("did-finish-load", () => {
+    global.dialogs[id].webContents.on("did-finish-load", () => {
         args.id = id;
-        dialogs[id].webContents.send('dataJsonPort', encodeURIComponent(JSON.stringify(args)));
+        global.dialogs[id].webContents.send('dataJsonPort', encodeURIComponent(JSON.stringify(args)));
+        win.webContents.send('newWin-rbk', 'newWin-item-' + id);
     });
-
-
+    is_Dialogs[id] = true;
 });
 
 //新窗口 反馈
 ipcMain.on('newWin-feedback', (event, args) => {
-    if (dialogs[args.id].loopKey) win.webContents.send(dialogs[args.id].loopKey, args);
+    win.webContents.send('newWin-item-' + args.id, args);
 });
 
 //新窗口 关闭
 ipcMain.on('newWin-closed', (event, id) => {
-    dialogs[id].close();
-    delete dialogs[id];
+    is_Dialogs[id] = false;
+    global.dialogs[id].close();
+    delete global.dialogs[id];
+    let is = true;
+    for (let i = 0, len = is_Dialogs.length; i < len; i++) if (is_Dialogs[i]) is = false;
+    if (is) {
+        global.dialogs = [];
+        is_Dialogs = [];
+    }
 });
 
 //关闭
 ipcMain.on('closed', () => {
-    for (let i of dialogs) if (i) i.close();
+    for (let i of global.dialogs) if (i) i.close();
     win.close();
 });
 
@@ -196,7 +203,7 @@ const wsInit = async (address, protocols, options) => {
     };
     ws.onmessage = (e) => {
         win.webContents.send('wsMessage', JSON.parse(e.data));
-        for (let i of dialogs) if (i) i.webContents.send('wsMessage', JSON.parse(e.data));
+        for (let i of global.dialogs) if (i) i.webContents.send('wsMessage', JSON.parse(e.data));
     };
     await Promise.all([ws.onerror, ws.onopen, ws.onmessage, ws.onclose]);
 };

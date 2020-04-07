@@ -304,7 +304,7 @@ let init = async (Vue, el, conf) => {
                             v: 'dialog-message',
                             complex: true,
                             data: {
-                                tit:'ws反馈',
+                                tit: 'ws反馈',
                                 title: req.msg
                             }
                         });
@@ -324,18 +324,27 @@ let init = async (Vue, el, conf) => {
             },
             Dialog(data) {
                 let args = {
-                    name: data.name,
-                    v: data.v,
-                    data: data.data,
+                    name: data.name, //名称
+                    v: data.v, //页面id
+                    data: data.data, //数据
                     width: 400,
                     height: 150,
-                    complex: false
+                    complex: false //是否支持多窗口
                 };
-                if (data.r) args.r = data.r;
                 if (data.width) args.width = data.width;
                 if (data.height) args.height = data.height;
-                if(data.complex) args.complex = data.complex;
-                this.$util.ipcRenderer.send('new-dialog', args)
+                if (data.complex) args.complex = data.complex;
+                this.$util.ipcRenderer.send('new-dialog', args);
+                return new Promise((resolve) => {
+                    let items = this.$util.remote.getGlobal('dialogs');
+                    if (data.complex) {
+                        resolve('newWin-item-' + (items.length - 1));
+                    } else {
+                        for (let i = 0, len = items.length; i < len; i++) {
+                            if (items[i] && items[i].uniquekey === data.v) resolve('newWin-item-' + i);
+                        }
+                    }
+                });
             }
         },
         watch: {
