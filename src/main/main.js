@@ -123,7 +123,7 @@ ipcMain.on('new-dialog', (event, args) => {
     global.dialogs[id].uniquekey = args.v;
     global.dialogs[id].complex = args.complex || false;
     // 打开开发者工具
-    // if (opt.webPreferences.devTools) global.dialogs[id].webContents.openDevTools();
+    if (opt.webPreferences.devTools) global.dialogs[id].webContents.openDevTools();
     global.dialogs[id].loadFile(path.join(__dirname, './dialog.html'));
     //注入初始化代码
     global.dialogs[id].webContents.on("did-finish-load", () => {
