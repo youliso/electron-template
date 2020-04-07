@@ -299,7 +299,7 @@ let init = async (Vue, el, conf) => {
                         if (path.length === 2) if (this.$refs[path[0]]) this.$refs[path[0]][path[1]] = req.data;
                     }
                     if (req.code === -1) {
-                        this.$parent.Dialog({
+                        this.Dialog({
                             name: '提示',
                             v: 'dialog-message',
                             complex: true,
