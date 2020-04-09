@@ -4,7 +4,9 @@ const {
     app,
     BrowserWindow,
     globalShortcut,
-    ipcMain
+    ipcMain,
+    Menu,
+    Tray
 } = require('electron');
 //禁用网站实例覆盖
 app.allowRendererProcessReuse = true;
@@ -12,7 +14,7 @@ const webSocket = require('ws');
 const path = require('path');
 const gotTheLock = app.requestSingleInstanceLock();
 const win_w = 950, win_h = 600;
-let win = null, winPo = null, ws = null;
+let win = null, appTray = null, winPo = null, ws = null;
 
 const WinOpt = (width, height) => {
     return {
@@ -73,6 +75,27 @@ const createWindow = () => {
 
     // 加载index.html文件
     win.loadFile(path.join(__dirname, './index.html'));
+
+    //托盘
+    appTray = new Tray(path.join(__dirname, '../resources/icons/icon.ico'));
+    const contextMenu = Menu.buildFromTemplate([
+        {
+            label: '显示', click() {
+                win.show();
+            }
+        },
+        {
+            label: '退出', click() {
+                app.quit();
+            }
+        }
+    ]);
+    appTray.setToolTip(app.name);
+    // if (!/^win/.test(process.platform)) contextMenu.items[1].checked = false;
+    appTray.setContextMenu(contextMenu);
+    appTray.on('double-click', () => {
+        win.show();
+    })
 };
 
 app.on('ready', createWindow);
@@ -153,9 +176,9 @@ ipcMain.on('newWin-closed', (event, id) => {
 });
 
 //关闭
-ipcMain.on('closed', () => {
+ipcMain.on('closed', (event, args) => {
     for (let i of global.dialogs) if (i) i.close();
-    win.close();
+    win.hide();
 });
 
 //最小化
