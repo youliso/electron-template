@@ -77,8 +77,7 @@ gulp.task('retrieval', async () => {
             "gray": "#aaaaaa",
             "ghostWhite": "#f1f1f1",
             "white": "#ffffff"
-        },
-        "no-view-storage": []
+        }
     };
     //app
     fs.readdirSync('src/main/views/app/vh').forEach((element) => {
