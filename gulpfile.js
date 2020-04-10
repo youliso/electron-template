@@ -28,7 +28,7 @@ function findSync(startPath) {
 }
 
 const checkDirExist = (folderpath) => {
-    const pathArr = folderpath.split(isWin?'\\':'/');
+    const pathArr = folderpath.split(isWin ? '\\' : '/');
     let _path = '';
     for (let i = 0; i < pathArr.length; i++) {
         if (pathArr[i]) {
@@ -54,6 +54,56 @@ const replaceFile = (filePath, sourceRegx, targetStr) => {
     });
 };
 
+gulp.task('retrieval', async () => {
+    let nConf = {
+        'app-assembly': [], 'app-views': [], 'dialog-assembly': [], 'dialog-views': [],
+        "url": "http://127.0.0.1:3000/",
+        "ws": "ws://127.0.0.1:3000",
+        "colors": {
+            "red": "#e54d42",
+            "orange": "#f37b1d",
+            "yellow": "#fbbd08",
+            "olive": "#8dc63f",
+            "green": "#39b54a",
+            "cyan": "#1cbbb4",
+            "blue": "#0081ff",
+            "purple": "#6739b6",
+            "mauve": "#9c26b0",
+            "pink": "#e03997",
+            "brown": "#a5673f",
+            "grey": "#8799a3",
+            "black": "#333333",
+            "darkGray": "#666666",
+            "gray": "#aaaaaa",
+            "ghostWhite": "#f1f1f1",
+            "white": "#ffffff"
+        },
+        "no-view-storage": []
+    };
+    //app
+    fs.readdirSync('src/main/views/app/vh').forEach((element) => {
+        nConf["app-assembly"].push('../views/app/vh/' + element);
+    });
+    fs.readdirSync('src/main/views/app').forEach((element) => {
+        if (element !== 'vh') {
+            let {keepAlive} = require('./src/main/views/app/' + element);
+            nConf["app-views"].push({keepAlive, v: '../views/app/' + element});
+        }
+    });
+    //dialog
+    fs.readdirSync('src/main/views/dialog/vh').forEach((element) => {
+        nConf["dialog-assembly"].push('../views/dialog/vh/' + element);
+    });
+    fs.readdirSync('src/main/views/dialog').forEach((element) => {
+        if (element !== 'vh') {
+            let {keepAlive} = require('./src/main/views/dialog/' + element);
+            if (keepAlive === undefined) keepAlive = true;
+            nConf["dialog-views"].push({keepAlive, v: '../views/dialog/' + element});
+        }
+    });
+    fs.writeFileSync(__dirname + '/src/main/config.json', JSON.stringify(nConf));
+});
+
 gulp.task('compress', async () => {
     //cfg
     gulp.src('src/main/**/*.json')
@@ -67,7 +117,7 @@ gulp.task('compress', async () => {
         .pipe(gulp.dest(buildBasePath));
 
 
-    if (isWin){
+    if (isWin) {
         // Closure Compiler-Win
         for (let i of findSync(__dirname + '/src/main')) {
             i = i.replace(__dirname + '\\src\\main', '');
@@ -79,7 +129,7 @@ gulp.task('compress', async () => {
                 execSync(`"${javaExe}" -jar closure-compiler-v20200224.jar --js ${'src/main' + i} --js_output_file ${'dist' + i} --language_in=ECMASCRIPT_2017 --language_out=ECMASCRIPT_2017 --compilation_level=SIMPLE --jscomp_warning=* --env=CUSTOM --module_resolution=NODE`, {cwd: process.cwd()});
             }
         }
-    }else {
+    } else {
         // Closure Compiler-Linux
         for (let i of findSync(__dirname + '/src/main')) {
             i = i.replace(__dirname + '/src/main', '');
