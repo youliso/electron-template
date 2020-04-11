@@ -130,7 +130,6 @@ ipcMain.on('new-dialog', (event, args) => {
     let id = dialogs.length;
     for (let i of dialogs) {
         if (i && i.uniquekey === args.v && !i.complex) {
-            console.log(i)
             i.focus();
             return;
         }

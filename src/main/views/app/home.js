@@ -38,7 +38,7 @@ module.exports = {
                 let name = v.substring(v.lastIndexOf('\\\\') + 2);
                 let data = execSync(`wmic datafile where "Name= '${v}'" get Version`);
                 data = this.$util.trim(data.slice(7).toString());
-                let dialogId = await this.$parent.Dialog({
+                this.$parent.dialogInit({
                     name: '提示',
                     v: 'dialog-message',
                     complex: true,
@@ -47,7 +47,6 @@ module.exports = {
                         text: data === '' ? '此应用未设置版本号' : data
                     }
                 });
-                console.log(dialogId);//监听的key
             }
         }
     }
