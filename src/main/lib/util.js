@@ -356,10 +356,3 @@ let init = async (Vue, el, conf) => {
 };
 
 module.exports = {init, dataJsonPort};
-/**
- * vue.min.js : //unpkg.com/vue/dist/vue.min.js
- * animate.css : //cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.css
- * jquery.min.js : //unpkg.com/jquery/dist/jquery.min.js
- * sweetalert2.min.js : //unpkg.com/sweetalert2/dist/sweetalert2.min.js
- * babel-polyfill : //unpkg.com/babel-polyfill/dist/polyfill.min.js
- * */
