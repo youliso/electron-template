@@ -245,26 +245,22 @@ let init = async (Vue, el, conf) => {
         i.name = `${el}-${i.v.substring(i.v.lastIndexOf('/') + 1, i.v.lastIndexOf('.'))}`;
         AppComponents[i.name] = i;
     }
-    let themeColor = storage.get('themeColor');
-    if (isNull(themeColor)) themeColor = config.colors.black;
     let app_data = {
         IComponent: null,
         AppComponents,
         loadedComponents: [],
-        head: true,
-        themeColor
+        head: true
     };
     if (conf) app_data.conf = conf;
     return {
         el: `#${el}`,
         data: app_data,
         async created() {
-            if (conf) this.init(themeColor, conf.v);
-            else this.init(themeColor, `${el}-home`);
+            if (conf) this.init(conf.v);
+            else this.init(`${el}-home`);
         },
         methods: {
-            async init(themeColor, componentName) {
-                this.themeColor = themeColor;
+            async init(componentName) {
                 await this.wsMessage();
                 this.wsInit();
                 await this.switchComponent(componentName);
@@ -352,10 +348,6 @@ let init = async (Vue, el, conf) => {
                 let index1 = this.loadedComponents.indexOf(val.name);
                 if (index1 < 0) this.loadedComponents.unshift(val.name);
                 else this.$util.swapArr(this.loadedComponents, index1, 0);
-            },
-            themeColor(val) {
-                doc.documentElement.setAttribute('style', `--theme:${val}`);
-                this.$util.storage.set('themeColor', val);
             }
         }
     }

@@ -77,7 +77,7 @@ const createWindow = () => {
     win.loadFile(path.join(__dirname, './index.html'));
 
     //托盘
-    appTray = new Tray(path.join(__dirname, '../resources/icons/icon.ico'));
+    appTray = new Tray(path.join(__dirname, './icon.ico'));
     const contextMenu = Menu.buildFromTemplate([
         {
             label: '显示', click() {

@@ -9,9 +9,10 @@
   "license": "MIT",
   "scripts": {
     "start": "electron src/main/main.js",
+    "build": "electron-builder",
+    "gulp": "gulp compress retrieval",
     "gulp compress": "gulp compress",
     "gulp retrieval": "gulp retrieval",
-    "build": "electron-builder",
     "build start": "electron  dist/main.js",
     "build gulp w": "gulp compress && electron-builder -w"
   },

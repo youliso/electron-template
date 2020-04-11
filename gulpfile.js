@@ -105,7 +105,7 @@ gulp.task('retrieval', async () => {
 
 gulp.task('compress', async () => {
     //cfg
-    gulp.src('src/main/**/*.json')
+    gulp.src(['src/main/**/*.json','src/main/**/*.ico'])
         .pipe(gulp.dest(buildBasePath));
     //css
     gulp.src('src/main/**/*.css')
