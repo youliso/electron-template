@@ -10,6 +10,7 @@ module.exports = {
         },
         template: `<div class="subclass">
            <h4>settings</h4>
+           <button @click="test">test</button>
         </div>`,
         created() {
         },
@@ -22,6 +23,15 @@ module.exports = {
         deactivated() {
             //开启缓存后 切换卸载
         },
-        methods: {}
+        methods: {
+            test() {
+                this.$parent.dialogSend({
+                    r:this.$parent.conf.r,
+                    data:{
+                        test:'测试'
+                    }
+                })
+            }
+        }
     }
 };

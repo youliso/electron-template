@@ -9,7 +9,9 @@ module.exports = {
             }
         },
         template: `<div class="subclass">
-           <h4>是否最小化?</h4>
+           <h4>是否最小化到托盘?</h4>
+           <button @click="closed(0)" class="button">确定</button>
+           <button @click="closed(1)" class="button">取消</button>
         </div>`,
         created() {
         },
@@ -22,6 +24,11 @@ module.exports = {
         deactivated() {
             //开启缓存后 切换卸载
         },
-        methods: {}
+        methods: {
+            closed(is) {
+                if (is === 1) this.$util.ipcRenderer.send('closed')
+                else this.$util.ipcRenderer.send('hide')
+            }
+        }
     }
 };

@@ -3,7 +3,10 @@ module.exports = {
     lib: [],
     main: {
         data() {
-            return {}
+            return {
+                d_settings: null,
+                d_exitprompt: null
+            }
         },
         template: `<div class="head">
         <div>
@@ -20,19 +23,33 @@ module.exports = {
         beforeDestroy() {
         },
         methods: {
-           async settings() {
-                let id = await this.$parent.Dialog(
+            async settings() {
+                this.$parent.dialogInit(
                     {
                         name: '设置',
                         v: 'dialog-settings',
+                        r: 'app-head.d_settings',
                         width: 600,
                         height: 500
                     }
                 );
-               console.log(id);
             },
-            system(channel) {
-                this.$util.ipcRenderer.send(channel);
+            async system(channel) {
+                if (channel !== 'closed') this.$util.ipcRenderer.send(channel);
+                else {
+                    this.$parent.dialogInit(
+                        {
+                            name: '提示',
+                            v: 'dialog-exitprompt',
+                            r: 'app-head.d_exitprompt'
+                        }
+                    );
+                }
+            }
+        },
+        watch: {
+            d_settings(v) {
+                console.log(v.test);
             }
         }
     }

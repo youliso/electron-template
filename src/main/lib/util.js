@@ -262,6 +262,7 @@ let init = async (Vue, el, conf) => {
         methods: {
             async init(componentName) {
                 await this.wsMessage();
+                await this.dialogMessage();
                 this.wsInit();
                 await this.switchComponent(componentName);
             },
@@ -318,7 +319,7 @@ let init = async (Vue, el, conf) => {
             wsSend(path, result, data) {
                 ipcRenderer.send('wsSend', JSON.stringify({path, result, data}));
             },
-            Dialog(data) {
+            dialogInit(data) {
                 let args = {
                     name: data.name, //名称
                     v: data.v, //页面id
@@ -327,20 +328,21 @@ let init = async (Vue, el, conf) => {
                     height: 150,
                     complex: false //是否支持多窗口
                 };
+                if (data.r) args.r = data.r;
                 if (data.width) args.width = data.width;
                 if (data.height) args.height = data.height;
                 if (data.complex) args.complex = data.complex;
                 this.$util.ipcRenderer.send('new-dialog', args);
-                return new Promise((resolve) => {
-                    let items = this.$util.remote.getGlobal('dialogs');
-                    if (data.complex) {
-                        resolve('newWin-item-' + (items.length - 1));
-                    } else {
-                        for (let i = 0, len = items.length; i < len; i++) {
-                            if (items[i] && items[i].uniquekey === data.v) resolve('newWin-item-' + i);
-                        }
-                    }
-                });
+            },
+            async dialogMessage() {
+                ipcRenderer.on('newWin-rbk', async (event, req) => {
+                    let path = req.r.split('.');
+                    if (path.length === 1) this[path[0]] = req.data;
+                    if (path.length === 2) if (this.$refs[path[0]]) this.$refs[path[0]][path[1]] = req.data;
+                })
+            },
+            dialogSend(args) {
+                ipcRenderer.send('newWin-feedback', args);
             }
         },
         watch: {

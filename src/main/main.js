@@ -125,12 +125,12 @@ app.on('browser-window-blur', () => {
 });
 
 //新窗口
-global.dialogs = [];
-let is_Dialogs = [];
+let dialogs = [], is_Dialogs = [];
 ipcMain.on('new-dialog', (event, args) => {
-    let id = global.dialogs.length;
-    for (let i of global.dialogs) {
+    let id = dialogs.length;
+    for (let i of dialogs) {
         if (i && i.uniquekey === args.v && !i.complex) {
+            console.log(i)
             i.focus();
             return;
         }
@@ -142,42 +142,49 @@ ipcMain.on('new-dialog', (event, args) => {
     }
     opt.parent = win;
     opt.alwaysOnTop = args.alwaysOnTop;
-    global.dialogs[id] = new BrowserWindow(opt);
-    global.dialogs[id].uniquekey = args.v;
-    global.dialogs[id].complex = args.complex || false;
+    dialogs[id] = new BrowserWindow(opt);
+    dialogs[id].uniquekey = args.v;
+    dialogs[id].complex = args.complex || false;
     // 打开开发者工具
-    if (opt.webPreferences.devTools) global.dialogs[id].webContents.openDevTools();
-    global.dialogs[id].loadFile(path.join(__dirname, './dialog.html'));
+    if (opt.webPreferences.devTools) dialogs[id].webContents.openDevTools();
+    dialogs[id].loadFile(path.join(__dirname, './dialog.html'));
     //注入初始化代码
-    global.dialogs[id].webContents.on("did-finish-load", () => {
+    dialogs[id].webContents.on("did-finish-load", () => {
         args.id = id;
-        global.dialogs[id].webContents.send('dataJsonPort', encodeURIComponent(JSON.stringify(args)));
-        win.webContents.send('newWin-rbk', 'newWin-item-' + id);
+        dialogs[id].webContents.send('dataJsonPort', encodeURIComponent(JSON.stringify(args)));
     });
     is_Dialogs[id] = true;
 });
 
 //新窗口 反馈
 ipcMain.on('newWin-feedback', (event, args) => {
-    win.webContents.send('newWin-item-' + args.id, args);
+    win.webContents.send('newWin-rbk', args);
 });
 
 //新窗口 关闭
 ipcMain.on('newWin-closed', (event, id) => {
     is_Dialogs[id] = false;
-    global.dialogs[id].close();
-    delete global.dialogs[id];
+    dialogs[id].close();
+    delete dialogs[id];
     let is = true;
     for (let i = 0, len = is_Dialogs.length; i < len; i++) if (is_Dialogs[i]) is = false;
     if (is) {
-        global.dialogs = [];
+        dialogs = [];
         is_Dialogs = [];
     }
 });
 
 //关闭
 ipcMain.on('closed', (event, args) => {
-    for (let i of global.dialogs) if (i) i.close();
+    for (let i of dialogs) if (i) i.close();
+    win.close();
+});
+
+//隐藏
+ipcMain.on('hide', (event, args) => {
+    for (let i of dialogs) if (i) i.close();
+    dialogs = [];
+    is_Dialogs = [];
     win.hide();
 });
 
@@ -226,7 +233,7 @@ const wsInit = async (address, protocols, options) => {
     };
     ws.onmessage = (e) => {
         win.webContents.send('wsMessage', JSON.parse(e.data));
-        for (let i of global.dialogs) if (i) i.webContents.send('wsMessage', JSON.parse(e.data));
+        for (let i of dialogs) if (i) i.webContents.send('wsMessage', JSON.parse(e.data));
     };
     await Promise.all([ws.onerror, ws.onopen, ws.onmessage, ws.onclose]);
 };
