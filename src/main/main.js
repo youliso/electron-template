@@ -221,17 +221,16 @@ const wsInit = (address, protocols, options) => {
     ws = new webSocket(address, protocols, options);
     ws.onopen = (e) => {
         console.log('[ws]init');
-        win.webContents.send('wsState', 0);
     };
     ws.onclose = (e) => {
         console.log('[ws]close');
         ws = null;
-        win.webContents.send('wsState', 1);
+        win.webContents.send('wsMessage', {code: -1, msg: '[ws]close'});
     };
     ws.onerror = (e) => {
         console.log('[ws]error');
         ws = null;
-        win.webContents.send('wsState', 2);
+        win.webContents.send('wsMessage', {code: -2, msg: '[ws]error'});
     };
     ws.onmessage = (e) => {
         win.webContents.send('wsMessage', JSON.parse(e.data));

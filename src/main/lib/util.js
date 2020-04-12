@@ -249,15 +249,16 @@ let init = async (Vue, el, conf) => {
         el: `#${el}`,
         data: app_data,
         async created() {
-            if (conf) this.init(conf.v);
+            if (this.conf) this.init(this.conf.v);
             else this.init(`${el}-home`);
         },
         methods: {
             async init(componentName) {
-                this.wsMessage();
+                this.wsMessage(componentName);
                 this.dialogMessage();
-                if (this.isWs && !conf) await this.wsInit();
-                await this.switchComponent(componentName);
+                if (this.isWs && !this.conf) await this.wsInit();
+                if (!this.isWs && !this.conf) await this.switchComponent(componentName);
+                if (this.conf) await this.switchComponent(componentName);
             },
             async switchComponent(key) {
                 let libList = [];
@@ -273,50 +274,53 @@ let init = async (Vue, el, conf) => {
                 await Promise.all(libList);
                 this.IComponent = this.AppComponents[key];
             },
-            wsMessage() {
-                ipcRenderer.on('wsMessage', (event, req) => {
-                    if (req.code === 11) {
-                        //连接成功
-                        console.log('[ws] ready');
-                    }
-                    if (req.code === 22) {
-                        //刷新token
-                        storage.set('Authorization', req.data, true);
-                    }
-                    if (req.code === 0) {
-                        let path = req.result.split('.');
-                        if (path.length === 1) this[path[0]] = req.data;
-                        if (path.length === 2) if (this.$refs[path[0]]) this.$refs[path[0]][path[1]] = req.data;
-                    }
-                    if (req.code === -1) {
-                        console.error(req.msg)
+            wsMessage(componentName) {
+                this.$util.ipcRenderer.on('wsMessage', (event, req) => {
+                    switch (req.code) {
+                        case 11:
+                            //连接成功
+                            console.log('[ws] ready');
+                            if (this.isWs && !this.conf) this.switchComponent(componentName);
+                            break;
+                        case 22:
+                            //刷新token
+                            this.$util.storage.set('Authorization', req.data, true);
+                            break;
+                        case 0:
+                            let path = req.result.split('.');
+                            if (path.length === 1) this[path[0]] = req.data;
+                            if (path.length === 2) if (this.$refs[path[0]]) this.$refs[path[0]][path[1]] = req.data;
+                            break;
+                        case -1:
+                            console.log(req.msg);
+                            break;
+                        case -2:
+                            this.dialogInit({
+                                name: '错误提示（3秒后关闭程序）',
+                                v: 'dialog-message',
+                                data: {
+                                    text: req.msg
+                                }
+                            });
+                            setTimeout(() => {
+                                this.$util.ipcRenderer.send('closed');
+                            }, 3000)
+                            break;
+                        default:
+                            console.log('wsMessage...');
                     }
                 })
             },
             wsInit() {
                 let args = {
-                    protocols: storage.get('Authorization', true) || null,
-                    address: config.ws,
+                    protocols: this.$util.storage.get('Authorization', true) || null,
+                    address: this.$config.ws,
                     options: null
                 };
                 this.$util.ipcRenderer.send('wsInit', args);
-                return new Promise((resolve, reject) => {
-                    ipcRenderer.on('wsState', async (event, message) => {
-                        if (message !== 1) {
-                            this.dialogInit({
-                                name: '提示',
-                                v: 'dialog-message',
-                                data: {
-                                    text: 'ws连接失败'
-                                }
-                            });
-                        }
-                        resolve('ok')
-                    });
-                });
             },
             wsSend(path, result, data) {
-                ipcRenderer.send('wsSend', JSON.stringify({path, result, data}));
+                this.$util.ipcRenderer.send('wsSend', JSON.stringify({path, result, data}));
             },
             dialogInit(data) {
                 let args = {
@@ -335,14 +339,14 @@ let init = async (Vue, el, conf) => {
                 this.$util.ipcRenderer.send('new-dialog', args);
             },
             dialogMessage() {
-                ipcRenderer.on('newWin-rbk',  (event, req) => {
+                this.$util.ipcRenderer.on('newWin-rbk', (event, req) => {
                     let path = req.r.split('.');
                     if (path.length === 1) this[path[0]] = req.data;
                     if (path.length === 2) if (this.$refs[path[0]]) this.$refs[path[0]][path[1]] = req.data;
                 })
             },
             dialogSend(args) {
-                ipcRenderer.send('newWin-feedback', args);
+                this.$util.ipcRenderer.send('newWin-feedback', args);
             }
         },
         watch: {
