@@ -138,15 +138,6 @@ let net = (url, param) => {
 };
 
 /**
- * 创建 WebSocket
- * */
-let CreateWebSocket = (urlValue, option) => {
-    if (window.WebSocket) return new WebSocket(urlValue, option);
-    if (window.MozWebSocket) return new MozWebSocket(urlValue, option);
-    return false;
-};
-
-/**
  * 动态加载css/js文件
  * */
 let loadCssJs = (srcList) => {
@@ -202,11 +193,12 @@ let removeCssJs = (srcList) => {
 
 /**
  * 弹框初始化参数
- * @param Vue
  * */
-let dataJsonPort = (cak) => {
-    ipcRenderer.on('dataJsonPort', async (event, message) => {
-        cak(message);
+let dataJsonPort = () => {
+    return new Promise((resolve, reject) => {
+        ipcRenderer.on('dataJsonPort', async (event, message) => {
+            resolve(message);
+        });
     });
 };
 
@@ -252,6 +244,7 @@ let init = async (Vue, el, conf) => {
         head: true
     };
     if (conf) app_data.conf = conf;
+    app_data.isWs = false;  //是否开启ws
     return {
         el: `#${el}`,
         data: app_data,
@@ -261,9 +254,9 @@ let init = async (Vue, el, conf) => {
         },
         methods: {
             async init(componentName) {
-                await this.wsMessage();
-                await this.dialogMessage();
-                this.wsInit();
+                this.wsMessage();
+                this.dialogMessage();
+                if (this.isWs && !conf) await this.wsInit();
                 await this.switchComponent(componentName);
             },
             async switchComponent(key) {
@@ -280,8 +273,8 @@ let init = async (Vue, el, conf) => {
                 await Promise.all(libList);
                 this.IComponent = this.AppComponents[key];
             },
-            async wsMessage() {
-                ipcRenderer.on('wsMessage', async (event, req) => {
+            wsMessage() {
+                ipcRenderer.on('wsMessage', (event, req) => {
                     if (req.code === 11) {
                         //连接成功
                         console.log('[ws] ready');
@@ -296,15 +289,7 @@ let init = async (Vue, el, conf) => {
                         if (path.length === 2) if (this.$refs[path[0]]) this.$refs[path[0]][path[1]] = req.data;
                     }
                     if (req.code === -1) {
-                        this.Dialog({
-                            name: '提示',
-                            v: 'dialog-message',
-                            complex: true,
-                            data: {
-                                tit: 'ws反馈',
-                                title: req.msg
-                            }
-                        });
+                        console.error(req.msg)
                     }
                 })
             },
@@ -314,7 +299,21 @@ let init = async (Vue, el, conf) => {
                     address: config.ws,
                     options: null
                 };
-                if (args.protocols) this.$util.ipcRenderer.send('wsInit', args);
+                this.$util.ipcRenderer.send('wsInit', args);
+                return new Promise((resolve, reject) => {
+                    ipcRenderer.on('wsState', async (event, message) => {
+                        if (message !== 1) {
+                            this.dialogInit({
+                                name: '提示',
+                                v: 'dialog-message',
+                                data: {
+                                    text: 'ws连接失败'
+                                }
+                            });
+                        }
+                        resolve('ok')
+                    });
+                });
             },
             wsSend(path, result, data) {
                 ipcRenderer.send('wsSend', JSON.stringify({path, result, data}));
@@ -328,14 +327,15 @@ let init = async (Vue, el, conf) => {
                     height: 150,
                     complex: false //是否支持多窗口
                 };
+                if (data.v === 'dialog-message') args.complex = true;
                 if (data.r) args.r = data.r;
                 if (data.width) args.width = data.width;
                 if (data.height) args.height = data.height;
                 if (data.complex) args.complex = data.complex;
                 this.$util.ipcRenderer.send('new-dialog', args);
             },
-            async dialogMessage() {
-                ipcRenderer.on('newWin-rbk', async (event, req) => {
+            dialogMessage() {
+                ipcRenderer.on('newWin-rbk',  (event, req) => {
                     let path = req.r.split('.');
                     if (path.length === 1) this[path[0]] = req.data;
                     if (path.length === 2) if (this.$refs[path[0]]) this.$refs[path[0]][path[1]] = req.data;

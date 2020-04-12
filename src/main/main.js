@@ -217,32 +217,34 @@ const PROTOCOL = app.name;
 app.setAsDefaultProtocolClient(PROTOCOL, process.execPath, args);
 
 //ws
-const wsInit = async (address, protocols, options) => {
+const wsInit = (address, protocols, options) => {
     ws = new webSocket(address, protocols, options);
     ws.onopen = (e) => {
         console.log('[ws]init');
+        win.webContents.send('wsState', 0);
     };
     ws.onclose = (e) => {
         console.log('[ws]close');
         ws = null;
+        win.webContents.send('wsState', 1);
     };
     ws.onerror = (e) => {
         console.log('[ws]error');
         ws = null;
+        win.webContents.send('wsState', 2);
     };
     ws.onmessage = (e) => {
         win.webContents.send('wsMessage', JSON.parse(e.data));
         for (let i of dialogs) if (i) i.webContents.send('wsMessage', JSON.parse(e.data));
     };
-    await Promise.all([ws.onerror, ws.onopen, ws.onmessage, ws.onclose]);
 };
 
 //ws初始化
 ipcMain.on('wsInit', async (event, args) => {
-    if (!ws) await wsInit(args.address, args.protocols, args.options);
+    if (!ws) wsInit(args.address, args.protocols, args.options);
 });
 
 //wsSend
 ipcMain.on('wsSend', async (event, args) => {
-    if (ws) ws.send(args)
+    if (ws.readyState === 1) ws.send(args)
 });

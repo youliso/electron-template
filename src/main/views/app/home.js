@@ -41,10 +41,8 @@ module.exports = {
                 this.$parent.dialogInit({
                     name: '提示',
                     v: 'dialog-message',
-                    complex: true,
                     data: {
-                        tit: name + '版本号：',
-                        text: data === '' ? '此应用未设置版本号' : data
+                        text: name + '版本号：' + (data === '' ? '此应用未设置版本号' : data)
                     }
                 });
             }
