@@ -58,7 +58,7 @@ gulp.task('retrieval', async () => {
     let nConf = {
         'app-assembly': [], 'app-views': [], 'dialog-assembly': [], 'dialog-views': [],
         "url": "http://127.0.0.1:3000/",
-        "ws": "ws://127.0.0.1:3000",
+        "socket": "127.0.0.1:3000",
         "colors": {
             "red": "#e54d42",
             "orange": "#f37b1d",

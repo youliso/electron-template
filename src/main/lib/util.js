@@ -275,7 +275,7 @@ let init = async (Vue, el, conf) => {
                 this.IComponent = this.AppComponents[key];
             },
             wsMessage(componentName) {
-                this.$util.ipcRenderer.on('wsMessage', (event, req) => {
+                this.$util.ipcRenderer.on('data', (event, req) => {
                     switch (req.code) {
                         case 11:
                             //连接成功

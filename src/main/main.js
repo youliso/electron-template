@@ -10,7 +10,7 @@ const {
 } = require('electron');
 //禁用网站实例覆盖
 app.allowRendererProcessReuse = true;
-const webSocket = require('ws');
+const net = require('net');
 const path = require('path');
 const gotTheLock = app.requestSingleInstanceLock();
 const win_w = 950, win_h = 600;
@@ -217,25 +217,25 @@ const PROTOCOL = app.name;
 app.setAsDefaultProtocolClient(PROTOCOL, process.execPath, args);
 
 //ws
-const wsInit = (address, protocols, options) => {
-    ws = new webSocket(address, protocols, options);
-    ws.onopen = (e) => {
-        console.log('[ws]init');
-    };
-    ws.onclose = (e) => {
-        console.log('[ws]close');
-        ws = null;
-        win.webContents.send('wsMessage', {code: -1, msg: '[ws]close'});
-    };
-    ws.onerror = (e) => {
-        console.log('[ws]error');
-        ws = null;
-        win.webContents.send('wsMessage', {code: -2, msg: '[ws]error'});
-    };
-    ws.onmessage = (e) => {
-        win.webContents.send('wsMessage', JSON.parse(e.data));
-        for (let i of dialogs) if (i) i.webContents.send('wsMessage', JSON.parse(e.data));
-    };
+const wsInit = (address, protocols) => {
+    address = address.split(":");
+    const socket = new net.Socket(protocols);
+    socket.connect(address[1],address[0],()=>{
+        console.log('[socket]init');
+    })
+    socket.on( 'data',(e)=> {
+        let data = JSON.parse(e.data.toString());
+        win.webContents.send('data', data);
+        for (let i of dialogs) if (i) i.webContents.send('data', data);
+    });
+    socket.on( 'error',(msg)=> {
+        console.log('[socket]error');
+        win.webContents.send('data', {code: -2, msg});
+    });
+    socket.on('close',()=>{
+        console.log('[socket]close');
+        win.webContents.send('data', {code: -1, msg: '[socket]close'});
+    });
 };
 
 //ws初始化
