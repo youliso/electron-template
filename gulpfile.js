@@ -13,7 +13,7 @@ let nConf = {//基础配置
     'app-assembly': [], 'app-views': [], 'dialog-assembly': [], 'dialog-views': [],
     "url": "http://127.0.0.1:3000/"
 };
-
+// 下载compiler.jar(http://dl.google.com/closure-compiler/compiler-latest.zip)
 function findSync(startPath) {
     let result = [];
 
