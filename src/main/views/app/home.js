@@ -2,6 +2,7 @@
 const execSync = require('child_process').execSync;
 module.exports = {
     keepAlive: true,
+    size:[300,200],
     lib: [],
     main: {
         data() {
@@ -40,7 +41,7 @@ module.exports = {
                 data = this.$util.trim(data.slice(7).toString());
                 this.$parent.dialogInit({
                     name: '提示',
-                    v: 'dialog-message',
+                    v: 'message',
                     data: {
                         text: name + '版本号：' + (data === '' ? '此应用未设置版本号' : data)
                     }

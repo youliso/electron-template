@@ -10,20 +10,20 @@ const {
 } = require('electron');
 //禁用网站实例覆盖
 app.allowRendererProcessReuse = true;
-const net = require('net');
 const path = require('path');
 const gotTheLock = app.requestSingleInstanceLock();
 const win_w = 950, win_h = 600;
-let win = null, appTray = null, winPo = null, ws = null;
+let win = null, appTray = null, socket = null;
+global.App_Data = {
+    Authorization: "",
+    win_w: win_w,
+    win_h: win_h
+};
 
 const WinOpt = (width, height) => {
     return {
         width: width,
         height: height,
-        minWidth: width,
-        minHeight: height,
-        maxWidth: width,
-        maxHeight: height,
         transparent: true,
         autoHideMenuBar: true,
         resizable: false,
@@ -67,15 +67,8 @@ const createWindow = () => {
     win.on('closed', () => {
         win = null
     });
-
-    //获取当前主窗口位置
-    win.on('move', (e) => {
-        winPo = win.getPosition();
-    });
-
     // 加载index.html文件
-    win.loadFile(path.join(__dirname, './index.html'));
-
+    win.loadFile('index.html');
     //托盘
     appTray = new Tray(path.join(__dirname, './icon.ico'));
     const contextMenu = Menu.buildFromTemplate([
@@ -91,26 +84,22 @@ const createWindow = () => {
         }
     ]);
     appTray.setToolTip(app.name);
-    // if (!/^win/.test(process.platform)) contextMenu.items[1].checked = false;
     appTray.setContextMenu(contextMenu);
     appTray.on('double-click', () => {
         win.show();
     })
 };
-
-app.on('ready', createWindow);
-
+app.whenReady().then(createWindow);
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         app.quit()
     }
-});
+})
 app.on('activate', () => {
-    if (win === null) {
+    if (BrowserWindow.getAllWindows().length === 0) {
         createWindow()
     }
-});
-
+})
 //获得焦点时发出
 app.on('browser-window-focus', () => {
     //关闭刷新
@@ -135,18 +124,15 @@ ipcMain.on('new-dialog', (event, args) => {
         }
     }
     let opt = WinOpt(args.width, args.height);
-    if (winPo) {
-        opt.x = winPo[0] + ((win_w - args.width) / 2);
-        opt.y = winPo[1] + ((win_h - args.height) / 2);
-    }
+    opt.x = win.getPosition()[0] + ((win.getBounds().width - args.width) / 2);
+    opt.y = win.getPosition()[1] + ((win.getBounds().height - args.height) / 2);
     opt.parent = win;
-    opt.alwaysOnTop = args.alwaysOnTop;
     dialogs[id] = new BrowserWindow(opt);
     dialogs[id].uniquekey = args.v;
     dialogs[id].complex = args.complex || false;
     // 打开开发者工具
     if (opt.webPreferences.devTools) dialogs[id].webContents.openDevTools();
-    dialogs[id].loadFile(path.join(__dirname, './dialog.html'));
+    dialogs[id].loadFile('dialog.html');
     //注入初始化代码
     dialogs[id].webContents.on("did-finish-load", () => {
         args.id = id;
@@ -216,34 +202,48 @@ args.push('--');
 const PROTOCOL = app.name;
 app.setAsDefaultProtocolClient(PROTOCOL, process.execPath, args);
 
-//ws
-const wsInit = (address, protocols) => {
-    address = address.split(":");
-    const socket = new net.Socket(protocols);
-    socket.connect(address[1],address[0],()=>{
-        console.log('[socket]init');
-    })
-    socket.on( 'data',(e)=> {
-        let data = JSON.parse(e.data.toString());
-        win.webContents.send('data', data);
-        for (let i of dialogs) if (i) i.webContents.send('data', data);
+//socket 三次
+let socketStatus = 0;
+const socketInit = (address) => {
+    socket = require('socket.io-client')(address, {query: `Authorization=${global['App_Data'].Authorization}`});
+    socket.on('connect', () => {
+        win.webContents.executeJavaScript('console.log(\'[socket]connect\');');
+        socketStatus = 1;
     });
-    socket.on( 'error',(msg)=> {
-        console.log('[socket]error');
+    socket.on('message', (data) => {
+        if (data.code === 11) {//刷新Token
+            global['App_Data'].Authorization = data.data;
+            return;
+        }
+        win.webContents.send('message', data);
+        for (let i of dialogs) if (i) i.webContents.send('message', data);
+    });
+    socket.on('error', (msg) => {
         win.webContents.send('data', {code: -2, msg});
     });
-    socket.on('close',()=>{
-        console.log('[socket]close');
+    socket.on('disconnect', () => {
+        socketStatus = 0;
+        win.webContents.executeJavaScript('console.log(\'[socket]disconnect\');');
+        setTimeout(() => {
+            if (socketStatus === 0) socket.open()
+        }, 1000 * 60 * 3)
+    });
+    socket.on('close', () => {
         win.webContents.send('data', {code: -1, msg: '[socket]close'});
     });
 };
 
-//ws初始化
-ipcMain.on('wsInit', async (event, args) => {
-    if (!ws) wsInit(args.address, args.protocols, args.options);
+//socket初始化
+ipcMain.on('socketInit', async (event, address) => {
+    if (!socket) socketInit(address);
 });
 
-//wsSend
-ipcMain.on('wsSend', async (event, args) => {
-    if (ws.readyState === 1) ws.send(args)
+//socket重新连接
+ipcMain.on('socketInit', async (event, address) => {
+    if (!socket) socket.open();
+});
+
+//socket发消息
+ipcMain.on('socketSend', async (event, args) => {
+    socket.send(args)
 });

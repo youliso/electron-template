@@ -9,6 +9,10 @@ const gulpRemoveHtml = require('gulp-remove-html');//标签清除
 const removeEmptyLines = require('gulp-remove-empty-lines');//清除空白行
 const buildBasePath = 'dist/';//构建输出的目录
 const config = require('./package');
+let nConf = {//基础配置
+    'app-assembly': [], 'app-views': [], 'dialog-assembly': [], 'dialog-views': [],
+    "url": "http://127.0.0.1:3000/"
+};
 
 function findSync(startPath) {
     let result = [];
@@ -55,30 +59,6 @@ const replaceFile = (filePath, sourceRegx, targetStr) => {
 };
 
 gulp.task('retrieval', async () => {
-    let nConf = {
-        'app-assembly': [], 'app-views': [], 'dialog-assembly': [], 'dialog-views': [],
-        "url": "http://127.0.0.1:3000/",
-        "socket": "127.0.0.1:3000",
-        "colors": {
-            "red": "#e54d42",
-            "orange": "#f37b1d",
-            "yellow": "#fbbd08",
-            "olive": "#8dc63f",
-            "green": "#39b54a",
-            "cyan": "#1cbbb4",
-            "blue": "#0081ff",
-            "purple": "#6739b6",
-            "mauve": "#9c26b0",
-            "pink": "#e03997",
-            "brown": "#a5673f",
-            "grey": "#8799a3",
-            "black": "#333333",
-            "darkGray": "#666666",
-            "gray": "#aaaaaa",
-            "ghostWhite": "#f1f1f1",
-            "white": "#ffffff"
-        }
-    };
     //app
     fs.readdirSync('src/main/views/app/vh').forEach((element) => {
         nConf["app-assembly"].push('../views/app/vh/' + element);

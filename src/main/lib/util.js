@@ -1,7 +1,6 @@
 'use strict';
 const config = require('../config');
 const {remote, ipcRenderer} = require('electron');
-const doc = document;
 
 /**
  * 去除空格
@@ -107,7 +106,7 @@ let net = (url, param) => {
     let checkStatus = (res) => {
         if (res.status >= 200 && res.status < 300) {
             let Authorization = res.headers.get('Authorization');
-            if (Authorization) storage.set('Authorization', res.headers.get('Authorization'), true);
+            if (Authorization) remote.getGlobal('App_Data').Authorization = Authorization;
             return res;
         }
         const error = new Error(res.statusText);
@@ -176,12 +175,13 @@ let loadCssJs = (srcList) => {
  * */
 let removeCssJs = (srcList) => {
     srcList = srcList || [];
+    let doc = document;
     for (let i = 0, len = srcList.length; i < len; i++) {
         let items = srcList[i];
         let type = items.split('.')[1];
         let element = (type === 'css') ? 'link' : 'script';
         let attr = (type === 'css') ? 'href' : 'src';
-        let suspects = document.getElementsByTagName(element);
+        let suspects = doc.getElementsByTagName(element);
         for (let s = 0, len = suspects.length; s < len; s++) {
             let item = suspects[s];
             if (!item) break;
@@ -223,9 +223,9 @@ let init = async (Vue, el, conf) => {
     };
     Vue.prototype.$srl = (srl) => config.url + srl;
     const view = async (key, view) => {
-        let {lib, main} = require(view);
+        let {lib,size,main} = require(view);
         Vue.component(key, main);
-        return lib;
+        return {lib,size};
     };
     let viewsList = [];
     for (let i of config[`${el}-assembly`]) {
@@ -244,26 +244,27 @@ let init = async (Vue, el, conf) => {
         head: true
     };
     if (conf) app_data.conf = conf;
-    app_data.isWs = false;  //是否开启ws
+    app_data.headKey = el+'-';
     return {
         el: `#${el}`,
         data: app_data,
         async created() {
             if (this.conf) this.init(this.conf.v);
-            else this.init(`${el}-home`);
+            else this.init('home');
         },
         methods: {
             async init(componentName) {
-                this.wsMessage(componentName);
+                this.socketMessage();
                 this.dialogMessage();
-                if (this.isWs && !this.conf) await this.wsInit();
-                if (!this.isWs && !this.conf) await this.switchComponent(componentName);
-                if (this.conf) await this.switchComponent(componentName);
+                await this.switchComponent(componentName);
             },
             async switchComponent(key) {
+                let size_ = null;
+                key = this.headKey +key;
                 let libList = [];
                 if (this.loadedComponents.indexOf(key) < 0) {
-                    let lib = await view(key, this.AppComponents[key].v);
+                    let {lib,size} = await view(key, this.AppComponents[key].v);
+                    if(size) size_ = size;
                     libList.push(this.$util.loadCssJs(lib));
                     if (this.loadedComponents.length > 0) libList.push(this.$util.removeCssJs(this.IComponent.lib));
                     this.AppComponents[key].lib = lib;
@@ -273,54 +274,45 @@ let init = async (Vue, el, conf) => {
                 }
                 await Promise.all(libList);
                 this.IComponent = this.AppComponents[key];
+                if(!conf){
+                    let Rectangle = {
+                        width: this.$util.remote.getGlobal('App_Data').win_w,
+                        height: this.$util.remote.getGlobal('App_Data').win_h
+                    }
+                    if(size_) {
+                        Rectangle.width = size_[0];
+                        Rectangle.height = size_[1];
+                        Rectangle.x =  this.$util.remote.getCurrentWindow().getPosition()[0] + (( this.$util.remote.getCurrentWindow().getBounds().width - size_[0]) / 2);
+                        Rectangle.y =  this.$util.remote.getCurrentWindow().getPosition()[1] + (( this.$util.remote.getCurrentWindow().getBounds().height - size_[1]) / 2);
+                    } else {
+                        Rectangle.x =  this.$util.remote.getCurrentWindow().getPosition()[0] + (( this.$util.remote.getCurrentWindow().getBounds().width - Rectangle.width) / 2);
+                        Rectangle.y =  this.$util.remote.getCurrentWindow().getPosition()[1] + (( this.$util.remote.getCurrentWindow().getBounds().height -  Rectangle.height) / 2);
+                    }
+                    this.$util.remote.getCurrentWindow().setBounds(Rectangle);
+                }
             },
-            wsMessage(componentName) {
-                this.$util.ipcRenderer.on('data', (event, req) => {
+            socketMessage() {
+                this.$util.ipcRenderer.on('message', (event, req) => {
                     switch (req.code) {
-                        case 11:
-                            //连接成功
-                            console.log('[ws] ready');
-                            if (this.isWs && !this.conf) this.switchComponent(componentName);
-                            break;
-                        case 22:
-                            //刷新token
-                            this.$util.storage.set('Authorization', req.data, true);
-                            break;
                         case 0:
                             let path = req.result.split('.');
-                            if (path.length === 1) this[path[0]] = req.data;
-                            if (path.length === 2) if (this.$refs[path[0]]) this.$refs[path[0]][path[1]] = req.data;
+                            if (path.length === 1) this[this.headKey+path[0]] = req.data;
+                            if (path.length === 2) this.$refs[this.headKey+path[0]][path[1]] = req.data;
                             break;
                         case -1:
                             console.log(req.msg);
                             break;
-                        case -2:
-                            this.dialogInit({
-                                name: '错误提示（3秒后关闭程序）',
-                                v: 'dialog-message',
-                                data: {
-                                    text: req.msg
-                                }
-                            });
-                            setTimeout(() => {
-                                this.$util.ipcRenderer.send('closed');
-                            }, 3000)
-                            break;
                         default:
-                            console.log('wsMessage...');
+                            console.log('socketMessage...');
+                            console.log(req)
                     }
                 })
             },
-            wsInit() {
-                let args = {
-                    protocols: this.$util.storage.get('Authorization', true) || null,
-                    address: this.$config.ws,
-                    options: null
-                };
-                this.$util.ipcRenderer.send('wsInit', args);
+            socketInit() {
+                this.$util.ipcRenderer.send('socketInit', this.$config.url);
             },
-            wsSend(path, result, data) {
-                this.$util.ipcRenderer.send('wsSend', JSON.stringify({path, result, data}));
+            socketSend(path, result, data) {
+                this.$util.ipcRenderer.send('socketSend', JSON.stringify({path, result, data}));
             },
             dialogInit(data) {
                 let args = {
@@ -331,7 +323,7 @@ let init = async (Vue, el, conf) => {
                     height: 150,
                     complex: false //是否支持多窗口
                 };
-                if (data.v === 'dialog-message') args.complex = true;
+                if (data.v === 'message') args.complex = true;
                 if (data.r) args.r = data.r;
                 if (data.width) args.width = data.width;
                 if (data.height) args.height = data.height;
@@ -341,8 +333,8 @@ let init = async (Vue, el, conf) => {
             dialogMessage() {
                 this.$util.ipcRenderer.on('newWin-rbk', (event, req) => {
                     let path = req.r.split('.');
-                    if (path.length === 1) this[path[0]] = req.data;
-                    if (path.length === 2) if (this.$refs[path[0]]) this.$refs[path[0]][path[1]] = req.data;
+                    if (path.length === 1) this[this.headKey+path[0]] = req.data;
+                    if (path.length === 2) this.$refs[this.headKey+path[0]][path[1]] = req.data;
                 })
             },
             dialogSend(args) {

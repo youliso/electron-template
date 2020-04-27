@@ -27,8 +27,8 @@ module.exports = {
                 this.$parent.dialogInit(
                     {
                         name: '设置',
-                        v: 'dialog-settings',
-                        r: 'app-head.d_settings',
+                        v: 'settings',
+                        r: 'head.d_settings',
                         width: 600,
                         height: 500
                     }
@@ -40,8 +40,8 @@ module.exports = {
                     this.$parent.dialogInit(
                         {
                             name: '提示',
-                            v: 'dialog-exitprompt',
-                            r: 'app-head.d_exitprompt'
+                            v: 'exitprompt',
+                            r: 'head.d_exitprompt'
                         }
                     );
                 }
