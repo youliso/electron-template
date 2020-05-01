@@ -24,12 +24,6 @@
     "directories": {
       "output": "out"
     },
-    "publish": [
-      {
-        "provider": "generic",
-        "url": "https://github.com/youliso/Electron_Template/releases"
-      }
-    ],
     "files": [
       "out/electron/**/*",
       "node_modules/",
@@ -37,6 +31,7 @@
     ],
     "nsis": {
       "oneClick": false,
+      "perMachine": true,
       "allowElevation": true,
       "allowToChangeInstallationDirectory": true,
       "installerIcon": "src/resources/icons/icon.ico",
