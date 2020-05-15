@@ -2,7 +2,7 @@
 const execSync = require('child_process').execSync;
 module.exports = {
     keepAlive: true,
-    size:[300,200],
+    size:[700,500],
     lib: [],
     main: {
         data() {

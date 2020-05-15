@@ -260,36 +260,36 @@ let init = async (Vue, el, conf) => {
             },
             async switchComponent(key) {
                 let size_ = null;
-                key = this.headKey +key;
-                let libList = [];
+                key = this.headKey + key;
                 if (this.loadedComponents.indexOf(key) < 0) {
-                    let {lib,size} = await view(key, this.AppComponents[key].v);
-                    if(size) size_ = size;
-                    libList.push(this.$util.loadCssJs(lib));
-                    if (this.loadedComponents.length > 0) libList.push(this.$util.removeCssJs(this.IComponent.lib));
+                    let {lib, size} = await view(key, this.AppComponents[key].v);
+                    if (size) size_ = size;
+                    await this.$util.loadCssJs(lib)
+                    if (this.loadedComponents.length > 0) await this.$util.removeCssJs(this.IComponent.lib);
                     this.AppComponents[key].lib = lib;
+                    this.AppComponents[key].size = size;
                 } else {
-                    libList.push(this.$util.loadCssJs(this.AppComponents[key].lib));
-                    libList.push(this.$util.removeCssJs(this.IComponent.lib));
+                    size_ = this.AppComponents[key].size;
+                    await this.$util.loadCssJs(this.AppComponents[key].lib)
+                    await this.$util.removeCssJs(this.IComponent.lib)
                 }
-                await Promise.all(libList);
-                this.IComponent = this.AppComponents[key];
-                if(!conf){
+                if (!conf) {
                     let Rectangle = {
                         width: this.$util.remote.getGlobal('App_Data').win_w,
                         height: this.$util.remote.getGlobal('App_Data').win_h
                     }
-                    if(size_) {
+                    if (size_) {
                         Rectangle.width = size_[0];
                         Rectangle.height = size_[1];
-                        Rectangle.x =  this.$util.remote.getCurrentWindow().getPosition()[0] + (( this.$util.remote.getCurrentWindow().getBounds().width - size_[0]) / 2);
-                        Rectangle.y =  this.$util.remote.getCurrentWindow().getPosition()[1] + (( this.$util.remote.getCurrentWindow().getBounds().height - size_[1]) / 2);
+                        Rectangle.x = this.$util.remote.getCurrentWindow().getPosition()[0] + ((this.$util.remote.getCurrentWindow().getBounds().width - size_[0]) / 2);
+                        Rectangle.y = this.$util.remote.getCurrentWindow().getPosition()[1] + ((this.$util.remote.getCurrentWindow().getBounds().height - size_[1]) / 2);
                     } else {
-                        Rectangle.x =  this.$util.remote.getCurrentWindow().getPosition()[0] + (( this.$util.remote.getCurrentWindow().getBounds().width - Rectangle.width) / 2);
-                        Rectangle.y =  this.$util.remote.getCurrentWindow().getPosition()[1] + (( this.$util.remote.getCurrentWindow().getBounds().height -  Rectangle.height) / 2);
+                        Rectangle.x = this.$util.remote.getCurrentWindow().getPosition()[0] + ((this.$util.remote.getCurrentWindow().getBounds().width - Rectangle.width) / 2);
+                        Rectangle.y = this.$util.remote.getCurrentWindow().getPosition()[1] + ((this.$util.remote.getCurrentWindow().getBounds().height - Rectangle.height) / 2);
                     }
                     this.$util.remote.getCurrentWindow().setBounds(Rectangle);
                 }
+                this.IComponent = this.AppComponents[key];
             },
             socketMessage() {
                 this.$util.ipcRenderer.on('message', (event, req) => {
