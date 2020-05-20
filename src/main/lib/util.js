@@ -141,14 +141,13 @@ let net = (url, param) => {
  * */
 let loadCssJs = (srcList) => {
     srcList = srcList || [];
-    let doc = document;
     let list = [];
     for (let i = 0, len = srcList.length; i < len; i++) {
         let item = srcList[i];
         if (!item) break;
         let type = item.split('.')[1];
-        let dom = doc.createElement(type === 'css' ? 'link' : 'script');
-        let node = (type === 'css') ? doc.getElementsByTagName("head")[0] : doc.body;
+        let dom = document.createElement(type === 'css' ? 'link' : 'script');
+        let node = (type === 'css') ? document.getElementsByTagName("head")[0] : document.body;
         if (type === 'css') {
             dom.setAttribute('rel', 'stylesheet');
             dom.setAttribute('href', item);
@@ -175,13 +174,12 @@ let loadCssJs = (srcList) => {
  * */
 let removeCssJs = (srcList) => {
     srcList = srcList || [];
-    let doc = document;
     for (let i = 0, len = srcList.length; i < len; i++) {
         let items = srcList[i];
         let type = items.split('.')[1];
         let element = (type === 'css') ? 'link' : 'script';
         let attr = (type === 'css') ? 'href' : 'src';
-        let suspects = doc.getElementsByTagName(element);
+        let suspects = document.getElementsByTagName(element);
         for (let s = 0, len = suspects.length; s < len; s++) {
             let item = suspects[s];
             if (!item) break;
@@ -298,6 +296,9 @@ let init = async (Vue, el, conf) => {
                 this.IComponent = this.AppComponents[key];
                 this.$args = args;
             },
+            socketInit() {
+                this.$util.ipcRenderer.send('socketInit', this.$config.socket_url);
+            },
             socketMessage() {
                 this.$util.ipcRenderer.on('message', (event, req) => {
                     switch (req.code) {
@@ -315,9 +316,6 @@ let init = async (Vue, el, conf) => {
                     }
                 })
             },
-            socketInit() {
-                this.$util.ipcRenderer.send('socketInit', this.$config.socket_url);
-            },
             socketSend(path, result, data) {
                 this.$util.ipcRenderer.send('socketSend', JSON.stringify({path, result, data}));
             },
@@ -327,9 +325,9 @@ let init = async (Vue, el, conf) => {
                     v: data.v, //页面id
                     data: data.data, //数据
                     complex: false, //是否支持多窗口
-                    parent: 'win'
+                    parent: 'win' //父窗口
                 };
-                if (this.conf) args.parent = this.conf.dialogId;
+                if (this.conf) args.parent = this.conf.id;
                 if (data.v === 'message') args.complex = true;
                 if (data.r) args.r = data.r;
                 if (data.complex) args.complex = data.complex;

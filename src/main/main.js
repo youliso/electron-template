@@ -138,7 +138,6 @@ ipcMain.on('new-dialog', (event, args) => {
     dialogs[id] = new BrowserWindow(opt);
     dialogs[id].uniquekey = args.v;
     dialogs[id].complex = args.complex || false;
-    args.dialogId = id;
     //window加载完毕后显示
     dialogs[id].once('ready-to-show', () => dialogs[id].show());
     //window被关闭，这个事件会被触发。
@@ -180,24 +179,41 @@ ipcMain.on('closed', (event, args) => {
 
 //隐藏
 ipcMain.on('hide', (event, args) => {
-    for (let i of dialogs) if (i) i.close();
+    for (let i of dialogs) if (i) i.hide();
     dialogs = [];
     is_Dialogs = [];
     win.hide();
 });
 
+//显示
+ipcMain.on('hide', (event, args) => {
+    for (let i of dialogs) if (i) i.show();
+    dialogs = [];
+    is_Dialogs = [];
+    win.show();
+});
+
 //最小化
 ipcMain.on('mini', () => {
+    for (let i of dialogs) if (i) i.minimize();
+    dialogs = [];
+    is_Dialogs = [];
     win.minimize();
 });
 
 //复原
 ipcMain.on('restore', () => {
+    for (let i of dialogs) if (i) i.restore();
+    dialogs = [];
+    is_Dialogs = [];
     win.restore();
 });
 
 //重载
 ipcMain.on('reload', () => {
+    for (let i of dialogs) if (i) i.reload();
+    dialogs = [];
+    is_Dialogs = [];
     win.reload();
 });
 
