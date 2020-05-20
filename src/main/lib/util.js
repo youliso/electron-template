@@ -221,7 +221,7 @@ let init = async (Vue, el, conf) => {
         remote,
         ipcRenderer
     };
-    Vue.prototype.$srl = (srl) => config.url + srl;
+    Vue.prototype.$srl = (srl) => config.app_url + srl;
     const view = async (key, view) => {
         let {lib, size, main} = require(view);
         Vue.component(key, main);
@@ -259,7 +259,7 @@ let init = async (Vue, el, conf) => {
                 await this.switchComponent(componentName);
             },
             async switchComponent(key, args) {
-                let size_ = null;
+                let size_ = [];
                 key = this.headKey + key;
                 if (this.loadedComponents.indexOf(key) < 0) {
                     let {lib, size} = await view(key, this.AppComponents[key].v);
@@ -273,22 +273,28 @@ let init = async (Vue, el, conf) => {
                     await this.$util.loadCssJs(this.AppComponents[key].lib)
                     await this.$util.removeCssJs(this.IComponent.lib)
                 }
-                if (!conf) {
-                    let Rectangle = {
-                        width: this.$util.remote.getGlobal('App_Data').win_w,
-                        height: this.$util.remote.getGlobal('App_Data').win_h
+                let Rectangle = {};
+                if (conf) {
+                    Rectangle = {
+                        width: this.$util.remote.getGlobal('App_Data').dia_w,
+                        height: this.$util.remote.getGlobal('App_Data').dia_h
                     }
-                    if (size_) {
-                        Rectangle.width = size_[0];
-                        Rectangle.height = size_[1];
-                        Rectangle.x = this.$util.remote.getCurrentWindow().getPosition()[0] + ((this.$util.remote.getCurrentWindow().getBounds().width - size_[0]) / 2);
-                        Rectangle.y = this.$util.remote.getCurrentWindow().getPosition()[1] + ((this.$util.remote.getCurrentWindow().getBounds().height - size_[1]) / 2);
-                    } else {
-                        Rectangle.x = this.$util.remote.getCurrentWindow().getPosition()[0] + ((this.$util.remote.getCurrentWindow().getBounds().width - Rectangle.width) / 2);
-                        Rectangle.y = this.$util.remote.getCurrentWindow().getPosition()[1] + ((this.$util.remote.getCurrentWindow().getBounds().height - Rectangle.height) / 2);
+                } else {
+                    Rectangle = {
+                        width: this.$util.remote.getGlobal('App_Data').app_w,
+                        height: this.$util.remote.getGlobal('App_Data').app_h
                     }
-                    this.$util.remote.getCurrentWindow().setBounds(Rectangle);
                 }
+                if (size_ && size_.length > 0) {
+                    Rectangle.width = size_[0];
+                    Rectangle.height = size_[1];
+                    Rectangle.x = this.$util.remote.getCurrentWindow().getPosition()[0] + ((this.$util.remote.getCurrentWindow().getBounds().width - size_[0]) / 2);
+                    Rectangle.y = this.$util.remote.getCurrentWindow().getPosition()[1] + ((this.$util.remote.getCurrentWindow().getBounds().height - size_[1]) / 2);
+                } else {
+                    Rectangle.x = this.$util.remote.getCurrentWindow().getPosition()[0] + ((this.$util.remote.getCurrentWindow().getBounds().width - Rectangle.width) / 2);
+                    Rectangle.y = this.$util.remote.getCurrentWindow().getPosition()[1] + ((this.$util.remote.getCurrentWindow().getBounds().height - Rectangle.height) / 2);
+                }
+                this.$util.remote.getCurrentWindow().setBounds(Rectangle);
                 this.IComponent = this.AppComponents[key];
                 this.$args = args;
             },
@@ -310,7 +316,7 @@ let init = async (Vue, el, conf) => {
                 })
             },
             socketInit() {
-                this.$util.ipcRenderer.send('socketInit', this.$config.url);
+                this.$util.ipcRenderer.send('socketInit', this.$config.app_url);
             },
             socketSend(path, result, data) {
                 this.$util.ipcRenderer.send('socketSend', JSON.stringify({path, result, data}));
@@ -320,14 +326,10 @@ let init = async (Vue, el, conf) => {
                     name: data.name, //名称
                     v: data.v, //页面id
                     data: data.data, //数据
-                    width: 400,
-                    height: 150,
                     complex: false //是否支持多窗口
                 };
                 if (data.v === 'message') args.complex = true;
                 if (data.r) args.r = data.r;
-                if (data.width) args.width = data.width;
-                if (data.height) args.height = data.height;
                 if (data.complex) args.complex = data.complex;
                 this.$util.ipcRenderer.send('new-dialog', args);
             },

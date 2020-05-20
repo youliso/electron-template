@@ -1,6 +1,7 @@
 'use strict';
 const path = require('path');
 module.exports = {
+    size:[],
     lib: [],
     main: {
         data() {

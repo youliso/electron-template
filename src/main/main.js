@@ -14,23 +14,25 @@ const fs = require('fs');
 const path = require('path');
 const gotTheLock = app.requestSingleInstanceLock();
 const config = require('./config.json');
-const win_w = 950, win_h = 600;
 let win = null, appTray = null, socket = null;
 global.App_Data = {
     Authorization: "",
-    win_w: win_w,
-    win_h: win_h
+    app_w: 800,
+    app_h: 500,
+    dia_w: 400,
+    dia_h: 150
 };
 
 const WinOpt = (width, height) => {
     return {
         width: width,
         height: height,
-        transparent: true,
+        transparent: false,
         autoHideMenuBar: true,
         resizable: false,
         maximizable: false,
         frame: false,
+        show: false,
         webPreferences: {
             nodeIntegration: true,
             devTools: true,
@@ -53,24 +55,21 @@ if (!gotTheLock) {
 
 const createWindow = () => {
     // 创建浏览器窗口。
-    let opt = WinOpt(win_w, win_h);
+    let opt = WinOpt(global.App_Data['app_w'], global.App_Data['app_h']);
     win = new BrowserWindow(opt);
-
+    //window 加载完毕后显示
+    win.once('ready-to-show', () => win.show());
+    // 当 window 被关闭，这个事件会被触发。
+    win.on('closed', () => win = null);
     //默认浏览器打开跳转连接
     win.webContents.on('new-window', (event, url, frameName, disposition, options) => {
         event.preventDefault();
         shell.openExternal(url);
     });
-
     // 打开开发者工具
     if (opt.webPreferences.devTools) win.webContents.openDevTools();
-
-    // 当 window 被关闭，这个事件会被触发。
-    win.on('closed', () => {
-        win = null
-    });
     // 加载index.html文件
-    win.loadFile('index.html');
+    win.loadFile(path.join(__dirname, './index.html'));
     //托盘
     appTray = new Tray(path.join(__dirname, './icon.ico'));
     const contextMenu = Menu.buildFromTemplate([
@@ -125,16 +124,20 @@ ipcMain.on('new-dialog', (event, args) => {
             return;
         }
     }
-    let opt = WinOpt(args.width, args.height);
-    opt.x = win.getPosition()[0] + ((win.getBounds().width - args.width) / 2);
-    opt.y = win.getPosition()[1] + ((win.getBounds().height - args.height) / 2);
+    let opt = WinOpt(global.App_Data['dia_w'], global.App_Data['dia_h']);
+    opt.x = win.getPosition()[0] + ((win.getBounds().width - global.App_Data['dia_w']) / 2);
+    opt.y = win.getPosition()[1] + ((win.getBounds().height - global.App_Data['dia_h']) / 2);
     opt.parent = win;
     dialogs[id] = new BrowserWindow(opt);
     dialogs[id].uniquekey = args.v;
     dialogs[id].complex = args.complex || false;
+    //window加载完毕后显示
+    dialogs[id].once('ready-to-show', () => dialogs[id].show());
+    //window被关闭，这个事件会被触发。
+    dialogs[id].on('closed', () => dialogs[id] = null);
     // 打开开发者工具
     if (opt.webPreferences.devTools) dialogs[id].webContents.openDevTools();
-    dialogs[id].loadFile('dialog.html');
+    dialogs[id].loadFile(path.join(__dirname, './dialog.html'));
     //注入初始化代码
     dialogs[id].webContents.on("did-finish-load", () => {
         args.id = id;
@@ -286,7 +289,7 @@ const updateHandle = () => {
         updateNotAva: {code: 3, msg: '现在使用的就是最新版本，不用更新'}
     };
     // 这里的URL就是更新服务器的放置文件的地址
-    autoUpdater.setFeedURL(`${config.url}public/dist/`);
+    autoUpdater.setFeedURL(config.update_url);
     autoUpdater.on('error', (error) => {
         sendUpdateMessage(message.error)
     });

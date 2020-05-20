@@ -28,9 +28,7 @@ module.exports = {
                     {
                         name: '设置',
                         v: 'settings',
-                        r: 'head.d_settings',
-                        width: 600,
-                        height: 500
+                        r: 'head.d_settings'
                     }
                 );
             },

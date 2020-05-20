@@ -45,12 +45,8 @@ html, body {
     position: relative;
 }
 
-#app {
+#app,#dialog {
     background-color: var(--black);
-}
-
-#dialog {
-    background-color: #3d3c3c;
 }
 
 /*头部*/
