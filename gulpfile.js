@@ -11,9 +11,12 @@ const buildBasePath = 'dist/';//构建输出的目录
 const config = require('./package');
 let nConf = {//基础配置
     'app-assembly': [], 'app-views': [], 'dialog-assembly': [], 'dialog-views': [],
-    "app_url": "http://127.0.0.1:3000/",
-    "update_url":"http://127.0.0.1:3000/public/dist/"
+    "app_url": "http://127.0.0.1:3000/", //程序主访问地址
+    "socket_url": "http://127.0.0.1:3000/",// 程序socket访问地址
+    "update_url": "http://127.0.0.1:3000/", //更新地址
+    "update_file_url": "http://127.0.0.1:3000/public/dist/" //更新文件地址
 };
+
 // 下载compiler.jar(http://dl.google.com/closure-compiler/compiler-latest.zip)
 function findSync(startPath) {
     let result = [];
@@ -82,11 +85,16 @@ gulp.task('retrieval', async () => {
         }
     });
     fs.writeFileSync(__dirname + '/src/main/config.json', JSON.stringify(nConf));
+    config.build.publish = [{
+        "provider": "generic",
+        "url": nConf.update_url
+    }]
+    fs.writeFileSync('./package.json', JSON.stringify(config));
 });
 
 gulp.task('compress', async () => {
     //cfg
-    gulp.src(['src/main/**/*.json','src/main/**/*.ico'])
+    gulp.src(['src/main/**/*.json', 'src/main/**/*.ico'])
         .pipe(gulp.dest(buildBasePath));
     //css
     gulp.src('src/main/**/*.css')

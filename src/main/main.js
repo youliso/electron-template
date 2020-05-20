@@ -290,7 +290,7 @@ const updateHandle = () => {
         updateNotAva: {code: 3, msg: '现在使用的就是最新版本，不用更新'}
     };
     // 这里的URL就是更新服务器的放置文件的地址
-    autoUpdater.setFeedURL(config.update_url);
+    autoUpdater.setFeedURL(config.update_file_url);
     autoUpdater.on('error', (error) => {
         sendUpdateMessage(message.error)
     });

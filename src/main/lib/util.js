@@ -316,7 +316,7 @@ let init = async (Vue, el, conf) => {
                 })
             },
             socketInit() {
-                this.$util.ipcRenderer.send('socketInit', this.$config.app_url);
+                this.$util.ipcRenderer.send('socketInit', this.$config.socket_url);
             },
             socketSend(path, result, data) {
                 this.$util.ipcRenderer.send('socketSend', JSON.stringify({path, result, data}));
