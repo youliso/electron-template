@@ -33,7 +33,7 @@ const WinOpt = (width, height) => {
         maximizable: false,
         frame: false,
         show: false,
-        backgroundColor:'#333333', //主题色
+        backgroundColor: '#333333', //主题色
         webPreferences: {
             nodeIntegration: true,
             devTools: true,
@@ -126,12 +126,19 @@ ipcMain.on('new-dialog', (event, args) => {
         }
     }
     let opt = WinOpt(global.App_Data['dia_w'], global.App_Data['dia_h']);
-    opt.x = win.getPosition()[0] + ((win.getBounds().width - global.App_Data['dia_w']) / 2);
-    opt.y = win.getPosition()[1] + ((win.getBounds().height - global.App_Data['dia_h']) / 2);
-    opt.parent = win;
+    if (typeof args.parent === 'string') {
+        opt.parent = win;
+        opt.x = win.getPosition()[0] + ((win.getBounds().width - global.App_Data['dia_w']) / 2);
+        opt.y = win.getPosition()[1] + ((win.getBounds().height - global.App_Data['dia_h']) / 2);
+    } else if (typeof args.parent === 'number') {
+        opt.parent = dialogs[args.parent];
+        opt.x = dialogs[args.parent].getPosition()[0] + ((dialogs[args.parent].getBounds().width - global.App_Data['dia_w']) / 2);
+        opt.y = dialogs[args.parent].getPosition()[1] + ((dialogs[args.parent].getBounds().height - global.App_Data['dia_h']) / 2);
+    }
     dialogs[id] = new BrowserWindow(opt);
     dialogs[id].uniquekey = args.v;
     dialogs[id].complex = args.complex || false;
+    args.dialogId = id;
     //window加载完毕后显示
     dialogs[id].once('ready-to-show', () => dialogs[id].show());
     //window被关闭，这个事件会被触发。

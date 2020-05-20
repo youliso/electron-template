@@ -25,6 +25,13 @@ module.exports = {
         },
         methods: {
             test() {
+                this.$parent.dialogInit({
+                    name: '提示',
+                    v: 'message',
+                    data: {
+                        text: '123'
+                    }
+                });
                 this.$parent.dialogSend({
                     r:this.$parent.conf.r,
                     data:{

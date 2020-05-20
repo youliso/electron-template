@@ -274,7 +274,7 @@ let init = async (Vue, el, conf) => {
                     await this.$util.removeCssJs(this.IComponent.lib)
                 }
                 let Rectangle = {};
-                if (conf) {
+                if (this.conf) {
                     Rectangle = {
                         width: this.$util.remote.getGlobal('App_Data').dia_w,
                         height: this.$util.remote.getGlobal('App_Data').dia_h
@@ -326,8 +326,10 @@ let init = async (Vue, el, conf) => {
                     name: data.name, //名称
                     v: data.v, //页面id
                     data: data.data, //数据
-                    complex: false //是否支持多窗口
+                    complex: false, //是否支持多窗口
+                    parent: 'win'
                 };
+                if (this.conf) args.parent = this.conf.dialogId;
                 if (data.v === 'message') args.complex = true;
                 if (data.r) args.r = data.r;
                 if (data.complex) args.complex = data.complex;
