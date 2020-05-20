@@ -76,6 +76,7 @@ const createWindow = () => {
     const contextMenu = Menu.buildFromTemplate([
         {
             label: '显示', click() {
+                for (let i of dialogs) if (i) i.show();
                 win.show();
             }
         },
@@ -88,6 +89,7 @@ const createWindow = () => {
     appTray.setToolTip(app.name);
     appTray.setContextMenu(contextMenu);
     appTray.on('double-click', () => {
+        for (let i of dialogs) if (i) i.show();
         win.show();
     })
 };
@@ -174,46 +176,38 @@ ipcMain.on('newWin-closed', (event, id) => {
 //关闭
 ipcMain.on('closed', (event, args) => {
     for (let i of dialogs) if (i) i.close();
+    dialogs = [];
+    is_Dialogs = [];
     win.close();
 });
 
 //隐藏
 ipcMain.on('hide', (event, args) => {
     for (let i of dialogs) if (i) i.hide();
-    dialogs = [];
-    is_Dialogs = [];
     win.hide();
 });
 
 //显示
-ipcMain.on('hide', (event, args) => {
+ipcMain.on('show', (event, args) => {
     for (let i of dialogs) if (i) i.show();
-    dialogs = [];
-    is_Dialogs = [];
     win.show();
 });
 
 //最小化
 ipcMain.on('mini', () => {
     for (let i of dialogs) if (i) i.minimize();
-    dialogs = [];
-    is_Dialogs = [];
     win.minimize();
 });
 
 //复原
 ipcMain.on('restore', () => {
     for (let i of dialogs) if (i) i.restore();
-    dialogs = [];
-    is_Dialogs = [];
     win.restore();
 });
 
 //重载
 ipcMain.on('reload', () => {
     for (let i of dialogs) if (i) i.reload();
-    dialogs = [];
-    is_Dialogs = [];
     win.reload();
 });
 
