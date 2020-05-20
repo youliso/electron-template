@@ -33,6 +33,7 @@ const WinOpt = (width, height) => {
         maximizable: false,
         frame: false,
         show: false,
+        backgroundColor:'#333333', //主题色
         webPreferences: {
             nodeIntegration: true,
             devTools: true,
