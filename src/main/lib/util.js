@@ -91,7 +91,7 @@ let net = (url, param) => {
     let sendData = {
         headers: {
             'Content-type': 'application/json;charset=utf-8',
-            'Authorization': storage.get('Authorization', true) || ''
+            'Authorization': remote.getGlobal('App_Data').Authorization || ''
         },
         outTime: 30000,
         mode: 'cors'
@@ -223,9 +223,9 @@ let init = async (Vue, el, conf) => {
     };
     Vue.prototype.$srl = (srl) => config.url + srl;
     const view = async (key, view) => {
-        let {lib,size,main} = require(view);
+        let {lib, size, main} = require(view);
         Vue.component(key, main);
-        return {lib,size};
+        return {lib, size};
     };
     let viewsList = [];
     for (let i of config[`${el}-assembly`]) {
@@ -244,7 +244,7 @@ let init = async (Vue, el, conf) => {
         head: true
     };
     if (conf) app_data.conf = conf;
-    app_data.headKey = el+'-';
+    app_data.headKey = el + '-';
     return {
         el: `#${el}`,
         data: app_data,
@@ -258,7 +258,7 @@ let init = async (Vue, el, conf) => {
                 this.dialogMessage();
                 await this.switchComponent(componentName);
             },
-            async switchComponent(key) {
+            async switchComponent(key, args) {
                 let size_ = null;
                 key = this.headKey + key;
                 if (this.loadedComponents.indexOf(key) < 0) {
@@ -290,14 +290,15 @@ let init = async (Vue, el, conf) => {
                     this.$util.remote.getCurrentWindow().setBounds(Rectangle);
                 }
                 this.IComponent = this.AppComponents[key];
+                this.$args = args;
             },
             socketMessage() {
                 this.$util.ipcRenderer.on('message', (event, req) => {
                     switch (req.code) {
                         case 0:
                             let path = req.result.split('.');
-                            if (path.length === 1) this[this.headKey+path[0]] = req.data;
-                            if (path.length === 2) this.$refs[this.headKey+path[0]][path[1]] = req.data;
+                            if (path.length === 1) this[this.headKey + path[0]] = req.data;
+                            if (path.length === 2) this.$refs[this.headKey + path[0]][path[1]] = req.data;
                             break;
                         case -1:
                             console.log(req.msg);
@@ -333,8 +334,8 @@ let init = async (Vue, el, conf) => {
             dialogMessage() {
                 this.$util.ipcRenderer.on('newWin-rbk', (event, req) => {
                     let path = req.r.split('.');
-                    if (path.length === 1) this[this.headKey+path[0]] = req.data;
-                    if (path.length === 2) this.$refs[this.headKey+path[0]][path[1]] = req.data;
+                    if (path.length === 1) this[this.headKey + path[0]] = req.data;
+                    if (path.length === 2) this.$refs[this.headKey + path[0]][path[1]] = req.data;
                 })
             },
             dialogSend(args) {

@@ -10,8 +10,10 @@ const {
 } = require('electron');
 //禁用网站实例覆盖
 app.allowRendererProcessReuse = true;
+const fs = require('fs');
 const path = require('path');
 const gotTheLock = app.requestSingleInstanceLock();
+const config = require('./config.json');
 const win_w = 950, win_h = 600;
 let win = null, appTray = null, socket = null;
 global.App_Data = {
@@ -246,4 +248,81 @@ ipcMain.on('socketInit', async (event, address) => {
 //socket发消息
 ipcMain.on('socketSend', async (event, args) => {
     socket.send(args)
+});
+
+
+/**
+ * 自动更新
+ * */
+
+// 注意这个autoUpdater不是electron中的autoUpdater
+const {autoUpdater} = require("electron-updater")
+// 通过main进程发送事件给renderer进程，提示更新信息
+const sendUpdateMessage = (data) => {
+    win.webContents.send('update_message', data)
+}
+//删除文件
+const delDir = (path) => {
+    let files = [];
+    if (fs.existsSync(path)) {
+        files = fs.readdirSync(path);
+        files.forEach((file, index) => {
+            let curPath = path + "/" + file;
+            if (fs.statSync(curPath).isDirectory()) {
+                delDir(curPath); //递归删除文件夹
+            } else {
+                fs.unlinkSync(curPath); //删除文件
+            }
+        });
+        fs.rmdirSync(path);
+    }
+}
+// 检测更新，在你想要检查更新的时候执行，renderer事件触发后的操作自行编写
+const updateHandle = () => {
+    let message = {
+        error: {code: 0, msg: '检查更新出错'},
+        checking: {code: 1, msg: '正在检查更新'},
+        updateAva: {code: 2, msg: '检测到新版本，正在下载'},
+        updateNotAva: {code: 3, msg: '现在使用的就是最新版本，不用更新'}
+    };
+    // 这里的URL就是更新服务器的放置文件的地址
+    autoUpdater.setFeedURL(`${config.url}public/dist/`);
+    autoUpdater.on('error', (error) => {
+        sendUpdateMessage(message.error)
+    });
+    autoUpdater.on('checking-for-update', () => {
+        sendUpdateMessage(message.checking)
+    });
+    autoUpdater.on('update-available', (info) => {
+        sendUpdateMessage(message.updateAva)
+    });
+    autoUpdater.on('update-not-available', (info) => {
+        sendUpdateMessage(message.updateNotAva)
+    });
+    // 更新下载进度事件
+    autoUpdater.on('download-progress', (progressObj) => {
+        win.webContents.send('downloadProgress', progressObj)
+    })
+    // 下载完成事件
+    autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName, releaseDate, updateUrl, quitAndUpdate) => {
+        ipcMain.on('isUpdateNow', (e, arg) => {
+            // 关闭程序安装新的软件
+            autoUpdater.quitAndInstall(true);
+        })
+        // 通知渲染进程现在完成
+        win.webContents.send('isUpdateNow')
+    });
+
+    //执行自动更新检查
+    autoUpdater.checkForUpdates().catch(e => console.log(e));
+}
+
+//删除更新文件
+ipcMain.on('del_update', () => {
+    delDir('../kl-updater');
+});
+
+//检查更新
+ipcMain.on('updateHandle', () => {
+    updateHandle();
 });
