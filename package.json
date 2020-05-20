@@ -24,6 +24,12 @@
     "directories": {
       "output": "out"
     },
+    "publish": [
+      {
+        "provider": "generic",
+        "url": ""
+      }
+    ],
     "files": [
       "out/electron/**/*",
       "node_modules/",
