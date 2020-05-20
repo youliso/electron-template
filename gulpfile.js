@@ -12,10 +12,11 @@ const config = require('./package');
 const allowToChangeInstallationDirectory = true; //是否允许用户修改安装为位置
 let nConf = {//基础配置
     'app-assembly': [], 'app-views': [], 'dialog-assembly': [], 'dialog-views': [],
-    "app_url": "http://127.0.0.1:3000/", //程序主访问地址
-    "socket_url": "http://127.0.0.1:3000/",// 程序socket访问地址
-    "update_url": "http://127.0.0.1:3000/", //更新地址
-    "update_file_url": "http://127.0.0.1:3000/public/dist/" //更新文件地址
+    "themeColor": "#333333", //主题色
+    "appUrl": "http://127.0.0.1:3000/", //程序主访问地址
+    "socketUrl": "http://127.0.0.1:3000/",// 程序socket访问地址
+    "updateUrl": "http://127.0.0.1:3000/", //更新地址
+    "updateFileUrl": "http://127.0.0.1:3000/public/dist/" //更新文件地址
 };
 
 // 下载compiler.jar(http://dl.google.com/closure-compiler/compiler-latest.zip)
@@ -88,7 +89,7 @@ gulp.task('retrieval', async () => {
     fs.writeFileSync(__dirname + '/src/main/config.json', JSON.stringify(nConf));
     config.build.publish = [{
         "provider": "generic",
-        "url": nConf.update_url
+        "url": nConf.updateUrl
     }]
     config.build.nsis.allowToChangeInstallationDirectory = allowToChangeInstallationDirectory;
     fs.writeFileSync('./package.json', JSON.stringify(config));

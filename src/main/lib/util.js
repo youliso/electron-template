@@ -219,7 +219,7 @@ let init = async (Vue, el, conf) => {
         remote,
         ipcRenderer
     };
-    Vue.prototype.$srl = (srl) => config.app_url + srl;
+    Vue.prototype.$srl = (srl) => config.appUrl + srl;
     const view = async (key, view) => {
         let {lib, size, main} = require(view);
         Vue.component(key, main);
@@ -239,7 +239,8 @@ let init = async (Vue, el, conf) => {
         IComponent: null,
         AppComponents,
         loadedComponents: [],
-        head: true
+        head: true,
+        themeColor: config.themeColor
     };
     if (conf) app_data.conf = conf;
     app_data.headKey = el + '-';

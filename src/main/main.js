@@ -33,7 +33,7 @@ const WinOpt = (width, height) => {
         maximizable: false,
         frame: false,
         show: false,
-        backgroundColor: '#333333', //主题色
+        backgroundColor: config.themeColor,
         webPreferences: {
             nodeIntegration: true,
             devTools: true,
@@ -307,7 +307,7 @@ const updateHandle = () => {
         updateNotAva: {code: 3, msg: '现在使用的就是最新版本，不用更新'}
     };
     // 这里的URL就是更新服务器的放置文件的地址
-    autoUpdater.setFeedURL(config.update_file_url);
+    autoUpdater.setFeedURL(config.updateFileUrl);
     autoUpdater.on('error', (error) => {
         sendUpdateMessage(message.error)
     });

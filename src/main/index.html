@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
-<div id="app" class="no-drag content">
+<div id="app" class="no-drag content" :style="'--theme:'+themeColor">
     <app-head v-if="head" ref="app-head"></app-head>
     <keep-alive :max="10">
         <component v-if="IComponent&&IComponent.keepAlive" :is="IComponent.name" :ref="IComponent.name"></component>

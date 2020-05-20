@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
-<div id="dialog" class="drag content">
+<div id="dialog" class="drag content" :style="'--theme:'+themeColor">
     <dialog-head v-if="head" ref="app-head"></dialog-head>
     <keep-alive :max="10">
         <component v-if="IComponent&&IComponent.keepAlive" :is="IComponent.name" :ref="IComponent.name"></component>
@@ -21,9 +21,7 @@
 <script type="text/javascript" src="lib/vue.min.js"></script>
 <script>
     const _ = require('./lib/util');
-    _.dataJsonPort().then(e => {
-        _.init(Vue, 'dialog', e).then(lib => new Vue(lib));
-    });
+    _.dataJsonPort().then(e => _.init(Vue, 'dialog', e).then(lib => new Vue(lib)));
 </script>
 </body>
 </html>
