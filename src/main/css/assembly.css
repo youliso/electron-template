@@ -95,6 +95,11 @@ button:active {
     color: var(--white);
 }
 
+.button.red {
+    background-color: var(--red);
+    color: var(--white);
+}
+
 th {
     text-align: left;
 }

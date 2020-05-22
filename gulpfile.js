@@ -11,7 +11,7 @@ const buildBasePath = 'dist/';//构建输出的目录
 const config = require('./package');
 const allowToChangeInstallationDirectory = true; //是否允许用户修改安装为位置
 let nConf = {//基础配置
-    'app-assembly': [], 'app-views': [], 'dialog-assembly': [], 'dialog-views': [],
+    'app-assembly': [], 'app-views': [], 'dialog-assembly': [], 'dialog-views': [],'menu-assembly': [], 'menu-views': [],
     "themeColor": "#333333", //主题色
     "appUrl": "http://127.0.0.1:3000/", //程序主访问地址
     "socketUrl": "http://127.0.0.1:3000/",// 程序socket访问地址
@@ -86,6 +86,18 @@ gulp.task('retrieval', async () => {
             nConf["dialog-views"].push({keepAlive, v: '../views/dialog/' + element});
         }
     });
+    //menu
+    fs.readdirSync('src/main/views/menu/vh').forEach((element) => {
+        nConf["menu-assembly"].push('../views/menu/vh/' + element);
+    });
+    fs.readdirSync('src/main/views/menu').forEach((element) => {
+        if (element !== 'vh') {
+            let {keepAlive} = require('./src/main/views/menu/' + element);
+            if (keepAlive === undefined) keepAlive = true;
+            nConf["menu-views"].push({keepAlive, v: '../views/menu/' + element});
+        }
+    });
+
     fs.writeFileSync(__dirname + '/src/main/config.json', JSON.stringify(nConf));
     config.build.publish = [{
         "provider": "generic",

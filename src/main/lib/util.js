@@ -273,16 +273,24 @@ let init = async (Vue, el, conf) => {
                     await this.$util.removeCssJs(this.IComponent.lib)
                 }
                 let Rectangle = {};
-                if (this.conf) {
-                    Rectangle = {
-                        width: this.$util.remote.getGlobal('App_Data').dia_w,
-                        height: this.$util.remote.getGlobal('App_Data').dia_h
-                    }
-                } else {
-                    Rectangle = {
-                        width: this.$util.remote.getGlobal('App_Data').app_w,
-                        height: this.$util.remote.getGlobal('App_Data').app_h
-                    }
+                switch (this.$el.id) {
+                    case 'app':
+                        Rectangle = {
+                            width: this.$util.remote.getGlobal('App_Data').app_w,
+                            height: this.$util.remote.getGlobal('App_Data').app_h
+                        }
+                        break;
+                    case 'dialog':
+                        Rectangle = {
+                            width: this.$util.remote.getGlobal('App_Data').dia_w,
+                            height: this.$util.remote.getGlobal('App_Data').dia_h
+                        }
+                        break;
+                    case 'menu':
+                        Rectangle = {
+                            width: this.$util.remote.getGlobal('App_Data').menu_w,
+                            height: this.$util.remote.getGlobal('App_Data').menu_h
+                        }
                 }
                 if (size_ && size_.length > 0) {
                     Rectangle.width = size_[0];

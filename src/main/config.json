@@ -1,1 +1,40 @@
-{"app-assembly":["../views/app/vh/head.js"],"app-views":[{"keepAlive":true,"v":"../views/app/home.js"}],"dialog-assembly":["../views/dialog/vh/head.js"],"dialog-views":[{"keepAlive":true,"v":"../views/dialog/exitprompt.js"},{"keepAlive":true,"v":"../views/dialog/message.js"},{"keepAlive":true,"v":"../views/dialog/settings.js"}],"themeColor":"#333333","appUrl":"http://127.0.0.1:3000/","socketUrl":"http://127.0.0.1:3000/","updateUrl":"http://127.0.0.1:3000/","updateFileUrl":"http://127.0.0.1:3000/public/dist/"}
+{
+  "app-assembly": [
+    "../views/app/vh/head.js"
+  ],
+  "app-views": [
+    {
+      "keepAlive": true,
+      "v": "../views/app/home.js"
+    }
+  ],
+  "dialog-assembly": [
+    "../views/dialog/vh/head.js"
+  ],
+  "dialog-views": [
+    {
+      "keepAlive": true,
+      "v": "../views/dialog/exitprompt.js"
+    },
+    {
+      "keepAlive": true,
+      "v": "../views/dialog/message.js"
+    },
+    {
+      "keepAlive": true,
+      "v": "../views/dialog/settings.js"
+    }
+  ],
+  "menu-assembly": [],
+  "menu-views": [
+    {
+      "keepAlive": true,
+      "v": "../views/menu/home.js"
+    }
+  ],
+  "themeColor": "#333333",
+  "appUrl": "http://127.0.0.1:3000/",
+  "socketUrl": "http://127.0.0.1:3000/",
+  "updateUrl": "http://127.0.0.1:3000/",
+  "updateFileUrl": "http://127.0.0.1:3000/public/dist/"
+}

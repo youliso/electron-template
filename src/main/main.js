@@ -5,7 +5,7 @@ const {
     BrowserWindow,
     globalShortcut,
     ipcMain,
-    Menu,
+    screen,
     Tray
 } = require('electron');
 //禁用网站实例覆盖
@@ -14,13 +14,15 @@ const fs = require('fs');
 const path = require('path');
 const gotTheLock = app.requestSingleInstanceLock();
 const config = require('./config.json');
-let win = null, appTray = null, socket = null;
+let win = null, menu = null, appTray = null, socket = null;
 global.App_Data = {
     Authorization: "",
     app_w: 800,
     app_h: 500,
     dia_w: 400,
-    dia_h: 150
+    dia_h: 150,
+    menu_w: 60,
+    menu_h: 70
 };
 
 const WinOpt = (width, height) => {
@@ -71,55 +73,44 @@ const createWindow = () => {
     if (opt.webPreferences.devTools) win.webContents.openDevTools();
     // 加载index.html文件
     win.loadFile(path.join(__dirname, './index.html'));
-    //托盘
+};
+
+//托盘
+const createTray = () => {
     appTray = new Tray(path.join(__dirname, './icon.ico'));
-    const contextMenu = Menu.buildFromTemplate([
-        {
-            label: '显示', click() {
-                for (let i of dialogs) if (i) i.show();
-                win.show();
-            }
-        },
-        {
-            label: '退出', click() {
-                app.quit();
-            }
-        }
-    ]);
     appTray.setToolTip(app.name);
-    appTray.setContextMenu(contextMenu);
+    let menu_point = null;
     appTray.on('double-click', () => {
         for (let i of dialogs) if (i) i.show();
         win.show();
     })
-};
-app.whenReady().then(createWindow);
-app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
-        app.quit()
-    }
-})
-app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-        createWindow()
-    }
-})
-//获得焦点时发出
-app.on('browser-window-focus', () => {
-    //关闭刷新
-    globalShortcut.register('CommandOrControl+R', () => {
-    });
-});
-
-//失去焦点时发出
-app.on('browser-window-blur', () => {
-    // 注销快捷键
-    globalShortcut.unregister('CommandOrControl+R');
-});
-
-//新窗口
+    appTray.on('mouse-move', (e, p) => menu_point = p)
+    appTray.on('right-click', (e, b) => {
+        // 创建浏览器窗口。
+        let opt = WinOpt(global.App_Data['menu_w'], global.App_Data['menu_h']);
+        opt.x = menu_point.x - 5;
+        if ((opt.x + 300) > screen.getPrimaryDisplay().workAreaSize.width) opt.x = menu_point.x - (global.App_Data['menu_w'] - 7);
+        opt.y = menu_point.y - (global.App_Data['menu_h'] - 7);
+        menu = new BrowserWindow(opt);
+        //window 加载完毕后显示
+        menu.once('ready-to-show', () => menu.show());
+        // 当 window 被关闭，这个事件会被触发。
+        menu.on('closed', () => menu = null);
+        //默认浏览器打开跳转连接
+        menu.webContents.on('new-window', (event, url, frameName, disposition, options) => {
+            event.preventDefault();
+            shell.openExternal(url);
+        });
+        // 打开开发者工具
+        if (opt.webPreferences.devTools) menu.webContents.openDevTools();
+        menu.setAlwaysOnTop(true, 'screen-saver');
+        // 加载index.html文件
+        menu.loadFile(path.join(__dirname, './menu.html'));
+    })
+}
+//弹框窗口
 let dialogs = [], is_Dialogs = [];
-ipcMain.on('new-dialog', (event, args) => {
+const createDialog = (args) => {
     let id = dialogs.length;
     for (let i of dialogs) {
         if (i && i.uniquekey === args.v && !i.complex) {
@@ -144,6 +135,11 @@ ipcMain.on('new-dialog', (event, args) => {
     dialogs[id].once('ready-to-show', () => dialogs[id].show());
     //window被关闭，这个事件会被触发。
     dialogs[id].on('closed', () => dialogs[id] = null);
+    //默认浏览器打开跳转连接
+    dialogs[id].webContents.on('new-window', (event, url, frameName, disposition, options) => {
+        event.preventDefault();
+        shell.openExternal(url);
+    });
     // 打开开发者工具
     if (opt.webPreferences.devTools) dialogs[id].webContents.openDevTools();
     dialogs[id].loadFile(path.join(__dirname, './dialog.html'));
@@ -153,14 +149,41 @@ ipcMain.on('new-dialog', (event, args) => {
         dialogs[id].webContents.send('dataJsonPort', encodeURIComponent(JSON.stringify(args)));
     });
     is_Dialogs[id] = true;
+}
+app.whenReady().then(()=>{
+    createWindow();
+    createTray();
 });
+app.on('window-all-closed', () => {
+    if (process.platform !== 'darwin') {
+        app.quit()
+    }
+})
+app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+        createWindow()
+    }
+})
+//获得焦点时发出
+app.on('browser-window-focus', () => {
+    //关闭刷新
+    globalShortcut.register('CommandOrControl+R', () => {
+    });
+});
+//失去焦点时发出
+app.on('browser-window-blur', () => {
+    // 注销快捷键
+    globalShortcut.unregister('CommandOrControl+R');
+});
+//弹框 创建
+ipcMain.on('new-dialog', (event, args) => createDialog(args));
 
-//新窗口 反馈
+//弹框 反馈
 ipcMain.on('newWin-feedback', (event, args) => {
     win.webContents.send('newWin-rbk', args);
 });
 
-//新窗口 关闭
+//弹框 关闭
 ipcMain.on('newWin-closed', (event, id) => {
     is_Dialogs[id] = false;
     dialogs[id].close();
