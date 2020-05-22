@@ -248,8 +248,16 @@ let init = async (Vue, el, conf) => {
         el: `#${el}`,
         data: app_data,
         async created() {
-            if (this.conf) this.init(this.conf.v);
-            else this.init('home');
+            switch (el) {
+                case 'app':
+                    this.init('home');
+                    break;
+                case 'dialog':
+                    this.init(this.conf.v);
+                    break;
+                case 'menu':
+                    this.init('home');
+            }
         },
         methods: {
             async init(componentName) {
