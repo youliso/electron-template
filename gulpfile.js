@@ -16,7 +16,10 @@ let nConf = {//基础配置
     "appUrl": "http://127.0.0.1:3000/", //程序主访问地址
     "socketUrl": "http://127.0.0.1:3000/",// 程序socket访问地址
     "updateUrl": "http://127.0.0.1:3000/", //更新地址
-    "updateFileUrl": "http://127.0.0.1:3000/public/dist/" //更新文件地址
+    "updateFileUrl": "http://127.0.0.1:3000/public/dist/", //更新文件地址
+    "appSize": [800, 500],
+    "dialogSize": [400, 150],
+    "menuSize": [60, 70]
 };
 
 // 下载compiler.jar(http://dl.google.com/closure-compiler/compiler-latest.zip)

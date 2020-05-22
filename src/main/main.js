@@ -17,12 +17,9 @@ const config = require('./config.json');
 let win = null, menu = null, appTray = null, socket = null;
 global.App_Data = {
     Authorization: "",
-    app_w: 800,
-    app_h: 500,
-    dia_w: 400,
-    dia_h: 150,
-    menu_w: 60,
-    menu_h: 70
+    appSize: config.appSize,
+    dialogSize: config.dialogSize,
+    menuSize: config.menuSize
 };
 
 const WinOpt = (width, height) => {
@@ -58,7 +55,7 @@ if (!gotTheLock) {
 
 const createWindow = () => {
     // 创建浏览器窗口。
-    let opt = WinOpt(global.App_Data['app_w'], global.App_Data['app_h']);
+    let opt = WinOpt(global.App_Data['appSize'][0], global.App_Data['appSize'][1]);
     win = new BrowserWindow(opt);
     //window 加载完毕后显示
     win.once('ready-to-show', () => win.show());
@@ -87,10 +84,10 @@ const createTray = () => {
     appTray.on('mouse-move', (e, p) => menu_point = p)
     appTray.on('right-click', (e, b) => {
         // 创建浏览器窗口。
-        let opt = WinOpt(global.App_Data['menu_w'], global.App_Data['menu_h']);
+        let opt = WinOpt(global.App_Data['menuSize'][0], global.App_Data['menuSize'][1]);
         opt.x = menu_point.x - 5;
-        if ((opt.x + 300) > screen.getPrimaryDisplay().workAreaSize.width) opt.x = menu_point.x - (global.App_Data['menu_w'] - 7);
-        opt.y = menu_point.y - (global.App_Data['menu_h'] - 7);
+        if ((opt.x + 300) > screen.getPrimaryDisplay().workAreaSize.width) opt.x = menu_point.x - (global.App_Data['menuSize'][0] - 7);
+        opt.y = menu_point.y - (global.App_Data['menuSize'][1] - 7);
         menu = new BrowserWindow(opt);
         //window 加载完毕后显示
         menu.once('ready-to-show', () => menu.show());
@@ -118,15 +115,15 @@ const createDialog = (args) => {
             return;
         }
     }
-    let opt = WinOpt(global.App_Data['dia_w'], global.App_Data['dia_h']);
+    let opt = WinOpt(global.App_Data['dialogSize'][0], global.App_Data['dialogSize'][1]);
     if (typeof args.parent === 'string') {
         opt.parent = win;
-        opt.x = win.getPosition()[0] + ((win.getBounds().width - global.App_Data['dia_w']) / 2);
-        opt.y = win.getPosition()[1] + ((win.getBounds().height - global.App_Data['dia_h']) / 2);
+        opt.x = win.getPosition()[0] + ((win.getBounds().width - global.App_Data['dialogSize'][0]) / 2);
+        opt.y = win.getPosition()[1] + ((win.getBounds().height - global.App_Data['dialogSize'][1]) / 2);
     } else if (typeof args.parent === 'number') {
         opt.parent = dialogs[args.parent];
-        opt.x = dialogs[args.parent].getPosition()[0] + ((dialogs[args.parent].getBounds().width - global.App_Data['dia_w']) / 2);
-        opt.y = dialogs[args.parent].getPosition()[1] + ((dialogs[args.parent].getBounds().height - global.App_Data['dia_h']) / 2);
+        opt.x = dialogs[args.parent].getPosition()[0] + ((dialogs[args.parent].getBounds().width - global.App_Data['dialogSize'][0]) / 2);
+        opt.y = dialogs[args.parent].getPosition()[1] + ((dialogs[args.parent].getBounds().height - global.App_Data['dialogSize'][1]) / 2);
     }
     dialogs[id] = new BrowserWindow(opt);
     dialogs[id].uniquekey = args.v;
