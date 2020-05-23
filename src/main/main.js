@@ -77,11 +77,11 @@ const createTray = () => {
     appTray = new Tray(path.join(__dirname, './icon.ico'));
     appTray.setToolTip(app.name);
     let menu_point = null;
+    appTray.on('mouse-move', (e, p) => menu_point = p);
     appTray.on('double-click', () => {
         for (let i of dialogs) if (i) i.show();
         win.show();
     })
-    appTray.on('mouse-move', (e, p) => menu_point = p)
     appTray.on('right-click', (e, b) => {
         // 创建浏览器窗口。
         let opt = WinOpt(global.App_Data['menuSize'][0], global.App_Data['menuSize'][1]);
@@ -100,6 +100,9 @@ const createTray = () => {
         });
         // 打开开发者工具
         if (opt.webPreferences.devTools) menu.webContents.openDevTools();
+        //隐藏menu任务栏状态
+        menu.setSkipTaskbar(true);
+        //menu最顶层
         menu.setAlwaysOnTop(true, 'screen-saver');
         // 加载index.html文件
         menu.loadFile(path.join(__dirname, './menu.html'));
@@ -147,7 +150,7 @@ const createDialog = (args) => {
     });
     is_Dialogs[id] = true;
 }
-app.whenReady().then(()=>{
+app.whenReady().then(() => {
     createWindow();
     createTray();
 });
@@ -198,6 +201,7 @@ ipcMain.on('closed', (event, args) => {
     for (let i of dialogs) if (i) i.close();
     dialogs = [];
     is_Dialogs = [];
+    if (menu) menu.close();
     win.close();
 });
 

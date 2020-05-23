@@ -9,6 +9,7 @@ const gulpRemoveHtml = require('gulp-remove-html');//标签清除
 const removeEmptyLines = require('gulp-remove-empty-lines');//清除空白行
 const buildBasePath = 'dist/';//构建输出的目录
 const config = require('./package');
+const asar = false; //是否asar打包
 const allowToChangeInstallationDirectory = true; //是否允许用户修改安装为位置
 let nConf = {//基础配置
     'app-assembly': [], 'app-views': [], 'dialog-assembly': [], 'dialog-views': [],'menu-assembly': [], 'menu-views': [],
@@ -106,6 +107,7 @@ gulp.task('retrieval', async () => {
         "provider": "generic",
         "url": nConf.updateUrl
     }]
+    config.build.asar = asar;
     config.build.nsis.allowToChangeInstallationDirectory = allowToChangeInstallationDirectory;
     fs.writeFileSync('./package.json', JSON.stringify(config));
 });
