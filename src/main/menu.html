@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="css/main/assembly.css">
     <link rel="stylesheet" href="css/main/main.css">
 </head>
-<body class="drag content" style="background: var(--black);padding: 2px;" onmouseleave="window.close()">
+<body class="drag content" onmouseleave="MOUSE_LEAVE()">
 <div id="menu" style="width: 100%;height: 100%;" class="no-drag" :style="'--theme:'+themeColor">
     <app-head v-if="head" ref="app-head"></app-head>
     <keep-alive :max="10">
@@ -21,5 +21,8 @@
 <script>
 </script>
 <script type="text/javascript" src="lib/vue.min.js"></script>
-<script>require('./lib/util').init(Vue, 'menu').then(lib => new Vue(lib));</script>
+<script>
+    let MOUSE_LEAVE = () => window.close();
+    require('./lib/util').init(Vue, 'menu').then(lib => new Vue(lib));
+</script>
 </html>

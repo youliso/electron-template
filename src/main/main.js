@@ -26,13 +26,13 @@ const WinOpt = (width, height) => {
     return {
         width: width,
         height: height,
-        transparent: false,
+        transparent: true,
         autoHideMenuBar: true,
         resizable: false,
         maximizable: false,
         frame: false,
         show: false,
-        backgroundColor: config.themeColor,
+        // backgroundColor: config.themeColor,
         webPreferences: {
             nodeIntegration: true,
             devTools: true,

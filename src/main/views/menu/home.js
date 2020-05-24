@@ -31,7 +31,9 @@ module.exports = {
                 this.$util.ipcRenderer.send('show');
             },
             closed(){
+                MOUSE_LEAVE = () =>{};
                 window.close();
+                this.closed_txt = "退出中";
                 this.$util.ipcRenderer.send('closed');
             }
         }

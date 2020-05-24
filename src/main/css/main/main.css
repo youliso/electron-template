@@ -6,7 +6,7 @@
 
 html, body {
     margin: 0;
-    padding: 0;
+    padding: 4px;
     width: 100%;
     height: 100%;
     font: 16px sans-serif;
@@ -45,7 +45,8 @@ html, body {
     position: relative;
 }
 
-#app,#dialog {
+#app,#dialog,#menu {
+    box-shadow:0 0 4px #333333;
     background-color: var(--black);
 }
 
