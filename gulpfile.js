@@ -133,7 +133,7 @@ gulp.task('compress', async () => {
                 let dUrl = __dirname + '\\dist' + i;
                 checkDirExist(dUrl.slice(0, dUrl.lastIndexOf('\\')));
                 if (fs.existsSync(dUrl)) fs.unlinkSync(dUrl);
-                let javaExe = "D:\\Program Files\\idea\\jbr\\bin\\java";
+                let javaExe = "D:\\PF\\IDEA\\jbr\\bin\\java";
                 execSync(`"${javaExe}" -jar closure-compiler-v20200406.jar --js ${'src/main' + i} --js_output_file ${'dist' + i} --language_in=ECMASCRIPT_2018 --language_out=ECMASCRIPT_2018 --compilation_level=SIMPLE --jscomp_warning=* --env=CUSTOM --module_resolution=NODE`, {cwd: process.cwd()});
             }
         }
