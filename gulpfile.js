@@ -93,7 +93,7 @@ gulp.task('retrieval', async () => {
     }]
     config.build.asar = asar;
     config.build.nsis.allowToChangeInstallationDirectory = allowToChangeInstallationDirectory;
-    fs.writeFileSync('./package.json', JSON.stringify(config));
+    fs.writeFileSync('./package.json', JSON.stringify(config,null,2));
 });
 
 gulp.task('compress', async () => {
