@@ -6,9 +6,9 @@ module.exports = {
         data() {
             return {}
         },
-        template: `<div class="subclass">
-           <h4>{{$parent.conf.data.text}}</h4>
-           <button @click="closed" class="button">确定</button>
+        template: `<div class="subclass" style="display: flex;flex-direction: column;justify-content: space-between;">
+           <div>{{$parent.conf.data.text}}</div>
+           <div><button @click="closed" class="button">确定</button></div>
         </div>`,
         created() {
         },

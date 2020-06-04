@@ -9,10 +9,12 @@ module.exports = {
                 listData: []
             }
         },
-        template: `<div class="subclass">
-           <h4>是否最小化到托盘?</h4>
+        template: `<div class="subclass" style="display: flex;flex-direction: column;justify-content: space-between;">
+           <div>是否最小化到托盘?</div>
+           <div>
            <button @click="closed(0)" class="button">确定</button>
            <button @click="closed(1)" class="button">取消</button>
+           </div>
         </div>`,
         created() {
         },

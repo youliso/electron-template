@@ -1,18 +1,31 @@
 const isWin = /^win/.test(process.platform);
 const fs = require('fs');
-const join = require('path').join;
-const execSync = require('child_process').execSync;
+const path = require('path');
 const gulp = require("gulp");
 const minifyCss = require('gulp-minify-css');//压缩CSS为一行；
 const htmlmin = require('gulp-htmlmin');//html压缩组件
 const gulpRemoveHtml = require('gulp-remove-html');//标签清除
 const removeEmptyLines = require('gulp-remove-empty-lines');//清除空白行
+const compiler = require('google-closure-compiler').jsCompiler;
+const closureCompiler = new compiler({
+    compilation_level: 'SIMPLE',
+    module_resolution: "NODE",
+    language_in: "ECMASCRIPT_2018",
+    language_out: "ECMASCRIPT_2018",
+    jscomp_warning: "*",
+    env: "CUSTOM"
+});
 const buildBasePath = 'dist/';//构建输出的目录
 const config = require('./package');
 const asar = false; //是否asar打包
 const allowToChangeInstallationDirectory = true; //是否允许用户修改安装为位置
 let nConf = {//基础配置
-    'app-assembly': [], 'app-views': [], 'dialog-assembly': [], 'dialog-views': [],'menu-assembly': [], 'menu-views': [],
+    'app-assembly': [],
+    'app-views': [],
+    'dialog-assembly': [],
+    'dialog-views': [],
+    'menu-assembly': [],
+    'menu-views': [],
     "themeColor": "#333333", //主题色
     "appUrl": "http://127.0.0.1:3000/", //程序主访问地址
     "socketUrl": "http://127.0.0.1:3000/",// 程序socket访问地址
@@ -23,50 +36,21 @@ let nConf = {//基础配置
     "menuSize": [80, 90]
 };
 
-// 下载compiler.jar(http://dl.google.com/closure-compiler/compiler-latest.zip)
-function findSync(startPath) {
-    let result = [];
-
-    function finder(path) {
-        let files = fs.readdirSync(path);
-        files.forEach((val, index) => {
-            let fPath = join(path, val);
-            let stats = fs.statSync(fPath);
-            if (stats.isDirectory()) finder(fPath);
-            if (stats.isFile()) result.push(fPath);
-        });
+function findFileBySuffix(dirs, fileName) {
+    let files = []
+    let dirArray = fs.readdirSync(dirs)
+    for (let d of dirArray) {
+        let filePath = path.resolve(dirs, d)
+        let stat = fs.statSync(filePath)
+        if (stat.isDirectory()) {
+            files = files.concat(findFileBySuffix(filePath, fileName))
+        }
+        if (stat.isFile() && path.extname(filePath) === fileName) {
+            files.push(filePath)
+        }
     }
-
-    finder(startPath);
-    return result;
+    return files
 }
-
-const checkDirExist = (folderpath) => {
-    const pathArr = folderpath.split(isWin ? '\\' : '/');
-    let _path = '';
-    for (let i = 0; i < pathArr.length; i++) {
-        if (pathArr[i]) {
-            _path += `${i === 0 ? '' : '/'}${pathArr[i]}`;
-            if (!fs.existsSync(_path)) {
-                fs.mkdirSync(_path);
-            }
-        }
-    }
-};
-
-//读取文件，并且替换文件中指定的字符串
-const replaceFile = (filePath, sourceRegx, targetStr) => {
-    fs.readFile(filePath, (err, data) => {
-        if (err) {
-            return err;
-        }
-        let str = data.toString();
-        str = str.replace(sourceRegx, targetStr);
-        fs.writeFile(filePath, str, (err) => {
-            if (err) return err;
-        });
-    });
-};
 
 gulp.task('retrieval', async () => {
     //app
@@ -121,35 +105,9 @@ gulp.task('compress', async () => {
         .pipe(minifyCss())//压缩css到一样
         .pipe(gulp.dest(buildBasePath));//输出到css目录
     //js
-    gulp.src('src/main/**/*.min.js')
+    gulp.src('src/main/**/*.js')
         .pipe(gulp.dest(buildBasePath));
 
-
-    if (isWin) {
-        // Closure Compiler-Win
-        for (let i of findSync(__dirname + '/src/main')) {
-            i = i.replace(__dirname + '\\src\\main', '');
-            if (i.indexOf('config.json') < 0 && /^((?!js).*)js/.test(i) && !/^((?!min.js).*)min.js/.test(i)) {
-                let dUrl = __dirname + '\\dist' + i;
-                checkDirExist(dUrl.slice(0, dUrl.lastIndexOf('\\')));
-                if (fs.existsSync(dUrl)) fs.unlinkSync(dUrl);
-                let javaExe = "D:\\PF\\IDEA\\jbr\\bin\\java";
-                execSync(`"${javaExe}" -jar closure-compiler-v20200406.jar --js ${'src/main' + i} --js_output_file ${'dist' + i} --language_in=ECMASCRIPT_2018 --language_out=ECMASCRIPT_2018 --compilation_level=SIMPLE --jscomp_warning=* --env=CUSTOM --module_resolution=NODE`, {cwd: process.cwd()});
-            }
-        }
-    } else {
-        // Closure Compiler-Linux
-        for (let i of findSync(__dirname + '/src/main')) {
-            i = i.replace(__dirname + '/src/main', '');
-            if (i.indexOf('config.json') < 0 && /^((?!js).*)js/.test(i) && !/^((?!min.js).*)min.js/.test(i)) {
-                let dUrl = __dirname + '/dist' + i;
-                checkDirExist(dUrl.slice(0, dUrl.lastIndexOf('/')));
-                if (fs.existsSync(dUrl)) fs.unlinkSync(dUrl);
-                let javaExe = "/lib/idea/jbr/bin/java";
-                execSync(`"${javaExe}" -jar closure-compiler-v20200406.jar --js ${'src/main' + i} --js_output_file ${'dist' + i} --language_in=ECMASCRIPT_2018 --language_out=ECMASCRIPT_2018 --compilation_level=SIMPLE --jscomp_warning=* --env=CUSTOM --module_resolution=NODE`, {cwd: process.cwd()});
-            }
-        }
-    }
 
     //html
     gulp.src('src/main/**/*.html')
@@ -195,3 +153,18 @@ gulp.task('compress', async () => {
     fs.writeFileSync(__dirname + '/src/resources/script/installer.nsh', nsh);
 
 });
+
+gulp.task('compiler', async () => {
+    let files = [];
+    for (let i of findFileBySuffix(isWin ? __dirname + '\\dist' : __dirname + '/dist', '.js')) {
+        if (i.indexOf('min.js') === -1) {
+            let cc = await closureCompiler.run([{
+                path: i,
+                src: fs.readFileSync(i).toString(),
+                sourceMap: null
+            }],);
+            fs.writeFileSync(i, cc['compiledFiles'][0].src);
+        }
+    }
+    //-jar closure-compiler-v20200406.jar --js ${'src/main' + i} --js_output_file ${'dist' + i} --language_in=ECMASCRIPT_2018 --language_out=ECMASCRIPT_2018 --compilation_level=SIMPLE --jscomp_warning=* --env=CUSTOM --module_resolution=NODE
+})
