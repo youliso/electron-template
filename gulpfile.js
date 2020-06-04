@@ -107,8 +107,6 @@ gulp.task('compress', async () => {
     //js
     gulp.src('src/main/**/*.js')
         .pipe(gulp.dest(buildBasePath));
-
-
     //html
     gulp.src('src/main/**/*.html')
         .pipe(gulpRemoveHtml())//清除特定标签
@@ -155,7 +153,6 @@ gulp.task('compress', async () => {
 });
 
 gulp.task('compiler', async () => {
-    let files = [];
     for (let i of findFileBySuffix(isWin ? __dirname + '\\dist' : __dirname + '/dist', '.js')) {
         if (i.indexOf('min.js') === -1) {
             let cc = await closureCompiler.run([{
