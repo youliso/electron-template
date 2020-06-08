@@ -8,10 +8,10 @@ const gulpRemoveHtml = require('gulp-remove-html');//标签清除
 const removeEmptyLines = require('gulp-remove-empty-lines');//清除空白行
 const compiler = require('google-closure-compiler').jsCompiler;
 const closureCompiler = new compiler({
-    compilation_level: 'SIMPLE',
+    compilation_level: 'SIMPLE',//ADVANCED
     module_resolution: "NODE",
-    language_in: "ECMASCRIPT_2018",
-    language_out: "ECMASCRIPT_2018",
+    language_in: "ECMASCRIPT_2019",
+    language_out: "ECMASCRIPT_2019",
     jscomp_warning: "*",
     env: "CUSTOM"
 });
