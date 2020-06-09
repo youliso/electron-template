@@ -352,7 +352,7 @@ const updateHandle = () => {
     autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName, releaseDate, updateUrl, quitAndUpdate) => {
         ipcMain.on('isUpdateNow', (e, arg) => {
             // 关闭程序安装新的软件
-            autoUpdater.quitAndInstall(true);
+            autoUpdater.quitAndInstall();
         })
         // 通知渲染进程现在完成
         win.webContents.send('isUpdateNow')
