@@ -83,6 +83,11 @@ const createTray = () => {
         win.show();
     })
     appTray.on('right-click', (e, b) => {
+        if (!menu_point) menu_point = b;
+        if (menu) {
+            menu.show();
+            return;
+        }
         // 创建浏览器窗口。
         let opt = WinOpt(global.App_Data['menuSize'][0], global.App_Data['menuSize'][1]);
         opt.x = menu_point.x - 5;
