@@ -2,6 +2,12 @@
 module.exports = {
     lib: [],
     main: {
+        props: {
+            IComponentName: {
+                type: String,
+                required: true
+            }
+        },
         data() {
             return {
                 d_settings: null,
@@ -19,18 +25,18 @@ module.exports = {
         </div>
     </div>`,
         created() {
-            console.log('创建', this.$parent.$parent.IComponent.name);
+            console.log('创建', this.IComponentName);
         },
         beforeDestroy() {
-            console.log('销毁', this.$parent.$parent.IComponent.name);
+            console.log('销毁', this.IComponentName);
         },
         activated() {
             //开启缓存后 切换加载
-            console.log('加载[缓存]', this.$parent.$parent.IComponent.name);
+            console.log('加载[缓存]', this.IComponentName);
         },
         deactivated() {
             //开启缓存后 切换卸载
-            console.log('卸载[缓存]', this.$parent.$parent.IComponent.name);
+            console.log('卸载[缓存]', this.IComponentName);
         },
         methods: {
             async settings() {
@@ -38,7 +44,7 @@ module.exports = {
                     {
                         name: '设置',
                         v: 'settings',
-                        r: this.$parent.$parent.IComponent.name + '.head.d_settings'
+                        r: this.IComponentName + '.head.d_settings'
                     }
                 );
             },
@@ -49,7 +55,7 @@ module.exports = {
                         {
                             name: '提示',
                             v: 'exitprompt',
-                            r: this.$parent.$parent.IComponent.name + '.head.d_exitprompt'
+                            r: this.IComponentName + '.head.d_exitprompt'
                         }
                     );
                 }

@@ -2,8 +2,8 @@
 const execSync = require('child_process').execSync;
 module.exports = {
     keepAlive: true,
-    size:[],
-    components:[
+    size: [],
+    components: [
         'head'
     ],
     lib: [
@@ -16,7 +16,7 @@ module.exports = {
             }
         },
         template: `<div class="no-drag content">
-        <app-head ref="app-head"></app-head>
+        <app-head v-bind:IComponentName="$options.name" ref="app-head"></app-head>
           <div class="subclass">
              <h4>首页</h4>
              <button @click="test" class="button">获取软件版本号</button>
