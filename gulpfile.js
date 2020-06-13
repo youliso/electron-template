@@ -20,12 +20,6 @@ const config = require('./package');
 const asar = false; //是否asar打包
 const allowToChangeInstallationDirectory = true; //是否允许用户修改安装为位置
 let nConf = {//基础配置
-    'app-assembly': [],
-    'app-views': [],
-    'dialog-assembly': [],
-    'dialog-views': [],
-    'menu-assembly': [],
-    'menu-views': [],
     "themeColor": "#333333", //主题色
     "appUrl": "http://127.0.0.1:3000/", //程序主访问地址
     "socketUrl": "http://127.0.0.1:3000/",// 程序socket访问地址
@@ -52,40 +46,35 @@ function findFileBySuffix(dirs, fileName) {
     return files
 }
 
-gulp.task('retrieval', async () => {
-    //app
-    fs.readdirSync('src/main/views/app/vh').forEach((element) => {
-        nConf["app-assembly"].push('../views/app/vh/' + element);
-    });
-    fs.readdirSync('src/main/views/app').forEach((element) => {
-        if (element !== 'vh') {
-            let {keepAlive} = require('./src/main/views/app/' + element);
-            nConf["app-views"].push({keepAlive, v: '../views/app/' + element});
-        }
-    });
-    //dialog
-    fs.readdirSync('src/main/views/dialog/vh').forEach((element) => {
-        nConf["dialog-assembly"].push('../views/dialog/vh/' + element);
-    });
-    fs.readdirSync('src/main/views/dialog').forEach((element) => {
-        if (element !== 'vh') {
-            let {keepAlive} = require('./src/main/views/dialog/' + element);
-            if (keepAlive === undefined) keepAlive = true;
-            nConf["dialog-views"].push({keepAlive, v: '../views/dialog/' + element});
-        }
-    });
-    //menu
-    fs.readdirSync('src/main/views/menu/vh').forEach((element) => {
-        nConf["menu-assembly"].push('../views/menu/vh/' + element);
-    });
-    fs.readdirSync('src/main/views/menu').forEach((element) => {
-        if (element !== 'vh') {
-            let {keepAlive} = require('./src/main/views/menu/' + element);
-            if (keepAlive === undefined) keepAlive = true;
-            nConf["menu-views"].push({keepAlive, v: '../views/menu/' + element});
-        }
-    });
 
+gulp.task('retrieval', async () => {
+    let retrievals = ['app', 'dialog', 'menu']
+    let views = {
+        'app-global-components' :[],
+        'app-components' :{},
+        'app-views' :[],
+        'dialog-global-components' :[],
+        'dialog-components' :{},
+        'dialog-views' :[],
+        'menu-global-components' :[],
+        'menu-components' :{},
+        'menu-views' :[]
+    };
+    for (let i of retrievals) {
+        fs.readdirSync(`src/main/views/${i}/components/global`).forEach((element) => {
+            views[`${i}-global-components`].push(`../views/${i}/components/global/` + element);
+        });
+        fs.readdirSync(`src/main/views/${i}/components/local`).forEach((element) => {
+            views[`${i}-components`][element.slice(0, element.length - 3)] = `../views/${i}/components/local/` + element;
+        });
+        fs.readdirSync(`src/main/views/${i}`).forEach((element) => {
+            if (element !== 'components') {
+                let {keepAlive} = require(`./src/main/views/${i}/` + element);
+                views[`${i}-views`].push({keepAlive, v: `../views/${i}/` + element});
+            }
+        });
+    }
+    nConf.views = views;
     fs.writeFileSync(__dirname + '/src/main/config.json', JSON.stringify(nConf));
     config.build.publish = [{
         "provider": "generic",
@@ -93,7 +82,7 @@ gulp.task('retrieval', async () => {
     }]
     config.build.asar = asar;
     config.build.nsis.allowToChangeInstallationDirectory = allowToChangeInstallationDirectory;
-    fs.writeFileSync('./package.json', JSON.stringify(config,null,2));
+    fs.writeFileSync('./package.json', JSON.stringify(config, null, 2));
 });
 
 gulp.task('compress', async () => {

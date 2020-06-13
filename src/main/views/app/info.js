@@ -1,7 +1,7 @@
 'use strict';
 const execSync = require('child_process').execSync;
 module.exports = {
-    keepAlive: true,
+    keepAlive: false,
     size:[],
     components:[
         'head'
@@ -18,9 +18,9 @@ module.exports = {
         template: `<div class="no-drag content">
         <app-head ref="app-head"></app-head>
           <div class="subclass">
-             <h4>首页</h4>
+             <h4>详情</h4>
              <button @click="test" class="button">获取软件版本号</button>
-              <button @click="$parent.switchComponent('info')" class="button">详情</button>
+             <button @click="$parent.switchComponent('home')" class="button">返回</button>
           </div>
         </div>`,
         async created() {

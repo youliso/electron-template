@@ -221,25 +221,32 @@ let init = async (Vue, el, conf) => {
     };
     Vue.prototype.$srl = (srl) => config.appUrl + srl;
     const view = async (key, view) => {
-        let {lib, size, main} = require(view);
-        Vue.component(key, main);
-        return {lib, size};
+        let v = require(view);
+        if (v.components) {
+            v.main.components = {};
+            for (let i of v.components) {
+                let {lib, main} = require(config['views'][`${el}-components`][i]);
+                v.main.components[`${el}-${i}`] = main;
+                v.lib = [...lib, ...v.lib];
+            }
+        }
+        Vue.component(key, v.main);
+        return {lib: v.lib, size: v.size};
     };
     let viewsList = [];
-    for (let i of config[`${el}-assembly`]) {
+    for (let i of config['views'][`${el}-global-components`]) {
         viewsList.push(view(`${el}-${i.substring(i.lastIndexOf('/') + 1, i.lastIndexOf('.'))}`, i));
     }
     await Promise.all(viewsList);
     const AppComponents = {};
-    for (let i of config[`${el}-views`]) {
+    for (let i of config['views'][`${el}-views`]) {
         i.name = `${el}-${i.v.substring(i.v.lastIndexOf('/') + 1, i.v.lastIndexOf('.'))}`;
         AppComponents[i.name] = i;
     }
     let app_data = {
         IComponent: null,
         AppComponents,
-        loadedComponents: [],
-        head: true,
+        LoadedComponents: [],
         themeColor: config.themeColor
     };
     if (conf) app_data.conf = conf;
@@ -268,11 +275,11 @@ let init = async (Vue, el, conf) => {
             async switchComponent(key, args) {
                 let size_ = [];
                 key = this.headKey + key;
-                if (this.loadedComponents.indexOf(key) < 0) {
+                if (this.LoadedComponents.indexOf(key) < 0) {
                     let {lib, size} = await view(key, this.AppComponents[key].v);
                     if (size) size_ = size;
                     await this.$util.loadCssJs(lib)
-                    if (this.loadedComponents.length > 0) await this.$util.removeCssJs(this.IComponent.lib);
+                    if (this.LoadedComponents.length > 0) await this.$util.removeCssJs(this.IComponent.lib);
                     this.AppComponents[key].lib = lib;
                     this.AppComponents[key].size = size;
                 } else {
@@ -355,7 +362,8 @@ let init = async (Vue, el, conf) => {
                 this.$util.ipcRenderer.on('newWin-rbk', (event, req) => {
                     let path = req.r.split('.');
                     if (path.length === 1) this[this.headKey + path[0]] = req.data;
-                    if (path.length === 2) this.$refs[this.headKey + path[0]][path[1]] = req.data;
+                    if (path.length === 2) this.$refs[this.headKey + path[0]].$refs[path[1]] = req.data;
+                    if (path.length === 3 && this.$refs[path[0]]) this.$refs[path[0]].$refs[this.headKey + path[1]][path[2]] = req.data;
                 })
             },
             dialogSend(args) {
@@ -364,9 +372,9 @@ let init = async (Vue, el, conf) => {
         },
         watch: {
             IComponent(val) {
-                let index1 = this.loadedComponents.indexOf(val.name);
-                if (index1 < 0) this.loadedComponents.unshift(val.name);
-                else this.$util.swapArr(this.loadedComponents, index1, 0);
+                let index1 = this.LoadedComponents.indexOf(val.name);
+                if (index1 < 0) this.LoadedComponents.unshift(val.name);
+                else this.$util.swapArr(this.LoadedComponents, index1, 0);
             }
         }
     }

@@ -72,7 +72,9 @@ const createWindow = () => {
     win.loadFile(path.join(__dirname, './index.html'));
 };
 
-//托盘
+/**
+ * 托盘
+ * */
 const createTray = () => {
     appTray = new Tray(path.join(__dirname, './icon.ico'));
     appTray.setToolTip(app.name);
@@ -90,9 +92,9 @@ const createTray = () => {
         }
         // 创建浏览器窗口。
         let opt = WinOpt(global.App_Data['menuSize'][0], global.App_Data['menuSize'][1]);
-        opt.x = menu_point.x - 5;
-        if ((opt.x + 300) > screen.getPrimaryDisplay().workAreaSize.width) opt.x = menu_point.x - (global.App_Data['menuSize'][0] - 7);
-        opt.y = menu_point.y - (global.App_Data['menuSize'][1] - 7);
+        opt.x = menu_point.x - 12;
+        if ((opt.x + 300) > screen.getPrimaryDisplay().workAreaSize.width) opt.x = menu_point.x - (global.App_Data['menuSize'][0] - 13);
+        opt.y = menu_point.y - (global.App_Data['menuSize'][1] - 13);
         menu = new BrowserWindow(opt);
         //window 加载完毕后显示
         menu.once('ready-to-show', () => menu.show());
@@ -113,7 +115,9 @@ const createTray = () => {
         menu.loadFile(path.join(__dirname, './menu.html'));
     })
 }
-//弹框窗口
+/**
+ * 弹框窗口
+ * */
 let dialogs = [], is_Dialogs = [];
 const createDialog = (args) => {
     let id = dialogs.length;
