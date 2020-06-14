@@ -10,12 +10,12 @@
     <link rel="stylesheet" href="css/main/main.css">
 </head>
 <body>
-<div id="dialog" class="drag content" :style="'--theme:'+themeColor">
-    <dialog-head ref="app-head"></dialog-head>
+<div id="dialog" class="drag" :style="'--theme:'+themeColor">
     <keep-alive :max="10">
         <component v-if="IComponent&&IComponent.keepAlive" :is="IComponent.name" :ref="IComponent.name"></component>
     </keep-alive>
     <component v-if="IComponent&&!IComponent.keepAlive" :is="IComponent.name" :ref="IComponent.name"></component>
+    <dialog-head v-if="IComponent" v-bind:IComponentName="IComponent.name" ref="dialog-head"></dialog-head>
 </div>
 <!-- //unpkg.com/vue/dist/vue.min.js -->
 <script type="text/javascript" src="lib/vue.min.js"></script>

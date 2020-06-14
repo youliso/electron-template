@@ -3,9 +3,7 @@ const execSync = require('child_process').execSync;
 module.exports = {
     keepAlive: true,
     size: [],
-    components: [
-        'head'
-    ],
+    components: [],
     lib: [
         'css/views/home.css'
     ],
@@ -15,14 +13,13 @@ module.exports = {
                 listData: []
             }
         },
-        template: `<div class="no-drag content">
-        <app-head v-bind:IComponentName="$options.name" ref="app-head"></app-head>
-          <div class="subclass">
+        template: `
+          <div class="subclass no-drag">
              <h4>首页</h4>
              <button @click="test" class="button">获取软件版本号</button>
               <button @click="$parent.switchComponent('info')" class="button">详情</button>
           </div>
-        </div>`,
+        `,
         async created() {
         },
         beforeDestroy() {

@@ -2,10 +2,16 @@
 module.exports = {
     lib: [],
     main: {
+        props: {
+            IComponentName: {
+                type: String,
+                required: true
+            }
+        },
         data() {
             return {}
         },
-        template: `<div class="head">
+        template: `<div class="head drag">
         <div>
         <span>{{$parent.conf.name}}</span>
         </div>

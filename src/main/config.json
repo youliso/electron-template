@@ -1,1 +1,60 @@
-{"themeColor":"#333333","appUrl":"http://127.0.0.1:3000/","socketUrl":"http://127.0.0.1:3000/","updateUrl":"http://127.0.0.1:3000/","updateFileUrl":"http://127.0.0.1:3000/public/dist/","appSize":[800,500],"dialogSize":[400,150],"menuSize":[80,90],"views":{"app-global-components":["../views/app/components/global/test.js"],"app-components":{"head":"../views/app/components/local/head.js"},"app-views":[{"keepAlive":true,"v":"../views/app/home.js"},{"keepAlive":false,"v":"../views/app/info.js"}],"dialog-global-components":["../views/dialog/components/global/head.js"],"dialog-components":{},"dialog-views":[{"v":"../views/dialog/exitprompt.js"},{"v":"../views/dialog/message.js"},{"v":"../views/dialog/settings.js"}],"menu-global-components":[],"menu-components":{},"menu-views":[{"keepAlive":true,"v":"../views/menu/home.js"}]}}
+{
+  "themeColor": "#333333",
+  "appUrl": "http://127.0.0.1:3000/",
+  "socketUrl": "http://127.0.0.1:3000/",
+  "updateUrl": "http://127.0.0.1:3000/",
+  "updateFileUrl": "http://127.0.0.1:3000/public/dist/",
+  "appSize": [
+    800,
+    500
+  ],
+  "dialogSize": [
+    400,
+    150
+  ],
+  "menuSize": [
+    80,
+    90
+  ],
+  "views": {
+    "app-global-components": [
+      "../views/app/components/global/head.js"
+    ],
+    "app-components": {
+      "test": "../views/app/components/local/test.js"
+    },
+    "app-views": [
+      {
+        "keepAlive": true,
+        "v": "../views/app/home.js"
+      },
+      {
+        "keepAlive": false,
+        "v": "../views/app/info.js"
+      }
+    ],
+    "dialog-global-components": [
+      "../views/dialog/components/global/head.js"
+    ],
+    "dialog-components": {},
+    "dialog-views": [
+      {
+        "v": "../views/dialog/exitprompt.js"
+      },
+      {
+        "v": "../views/dialog/message.js"
+      },
+      {
+        "v": "../views/dialog/settings.js"
+      }
+    ],
+    "menu-global-components": [],
+    "menu-components": {},
+    "menu-views": [
+      {
+        "keepAlive": true,
+        "v": "../views/menu/home.js"
+      }
+    ]
+  }
+}

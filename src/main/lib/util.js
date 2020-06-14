@@ -361,9 +361,9 @@ let init = async (Vue, el, conf) => {
             dialogMessage() {
                 this.$util.ipcRenderer.on('newWin-rbk', (event, req) => {
                     let path = req.r.split('.');
-                    if (path.length === 1) this[this.headKey + path[0]] = req.data;
-                    if (path.length === 2) this.$refs[this.headKey + path[0]].$refs[path[1]] = req.data;
-                    if (path.length === 3 && this.$refs[path[0]]) this.$refs[path[0]].$refs[this.headKey + path[1]][path[2]] = req.data;
+                    if (path.length === 1) this[path[0]] = req.data;
+                    if (path.length === 2) this.$refs[path[0]][path[1]] = req.data;
+                    if (path.length === 3 && this.$refs[path[0]]) this.$refs[path[0]].$refs[path[1]][path[2]] = req.data;
                 })
             },
             dialogSend(args) {
