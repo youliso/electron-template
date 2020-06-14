@@ -11,8 +11,8 @@ module.exports = {
             }
         },
         template: `<div class="subclass" style="padding:0;">
-           <div><button @click="show" class="button theme" style="width: 100%;font: normal 12px sans-serif;">显示</button></div>
-           <div><button @click="closed" class="button theme" style="width: 100%;font: normal 12px sans-serif;color: red;">退出</button></div>
+           <div><button @click="show" class="button transparent">显示</button></div>
+           <div><button @click="closed" class="button transparent">退出</button></div>
         </div>`,
         async created() {
         },

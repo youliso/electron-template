@@ -1,3 +1,58 @@
+html {
+    --red: #e54d42;
+    --orange: #f37b1d;
+    --yellow: #fbbd08;
+    --olive: #8dc63f;
+    --green: #39b54a;
+    --cyan: #1cbbb4;
+    --blue: #0081ff;
+    --purple: #6739b6;
+    --mauve: #9c26b0;
+    --pink: #e03997;
+    --brown: #a5673f;
+    --grey: #8799a3;
+    --black: #333333;
+    --darkGray: #666666;
+    --gray: #aaaaaa;
+    --ghostWhite: #f1f1f1;
+    --white: #ffffff;
+    /* 浅色 */
+    --redLight: #fadbd9;
+    --orangeLight: #fde6d2;
+    --yellowLight: #fef2ce;
+    --oliveLight: #e8f4d9;
+    --greenLight: #d7f0db;
+    --cyanLight: #d2f1f0;
+    --blueLight: #cce6ff;
+    --purpleLight: #e1d7f0;
+    --mauveLight: #ebd4ef;
+    --pinkLight: #f9d7ea;
+    --brownLight: #ede1d9;
+    --greyLight: #e7ebed;
+    /* 渐变色 */
+    --gradualRed: linear-gradient(45deg, #f43f3b, #ec008c);
+    --gradualOrange: linear-gradient(45deg, #ff9700, #ed1c24);
+    --gradualGreen: linear-gradient(45deg, #39b54a, #8dc63f);
+    --gradualPurple: linear-gradient(45deg, #9000ff, #5e00ff);
+    --gradualPink: linear-gradient(45deg, #ec008c, #6739b6);
+    --gradualBlue: linear-gradient(45deg, #0081ff, #1cbbb4);
+    /* 透明色 */
+    --redShadow: rgba(204, 69, 59, 0.2);
+    --orangeShadow: rgba(217, 109, 26, 0.2);
+    --yellowShadow: rgba(224, 170, 7, 0.2);
+    --oliveShadow: rgba(124, 173, 55, 0.2);
+    --greenShadow: rgba(48, 156, 63, 0.2);
+    --cyanShadow: rgba(28, 187, 180, 0.2);
+    --blueShadow: rgba(0, 102, 204, 0.2);
+    --purpleShadow: rgba(88, 48, 156, 0.2);
+    --mauveShadow: rgba(133, 33, 150, 0.2);
+    --pinkShadow: rgba(199, 50, 134, 0.2);
+    --brownShadow: rgba(140, 88, 53, 0.2);
+    --greyShadow: rgba(114, 130, 138, 0.2);
+    --grayShadow: rgba(114, 130, 138, 0.2);
+    --blackShadow: rgba(26, 26, 26, 0.2);
+}
+
 ::-webkit-input-placeholder {
     color: var(--gray);
 }
@@ -29,6 +84,21 @@
     /*-webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0);*/
     background: transparent;
 }
+*, *:after, *:before {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 5px;
+    width: 100%;
+    height: 100%;
+    font: 16px sans-serif;
+    user-select: none;
+    background: transparent;
+}
 
 ul, li {
     padding: 0;
@@ -44,54 +114,34 @@ a:visited {
     color: var(--white);
 }
 
-input, button, select {
-    border: none;
-    outline: none;
-    border-radius: 0;
-    -webkit-app-region: no-drag;
-}
-
-button {
+.button, .select {
     cursor: pointer;
 }
 
-button:hover {
+.input, .button, .select {
+    border: none;
+    outline: none;
+    border-radius: 0;
+    margin: 2px 0;
+    padding: 0 12px;
+    background-color: var(--ghostWhite);
+    vertical-align: middle;
+    height: 32px;
+}
+
+.button:hover {
     background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0.1)), to(rgba(0, 0, 0, 0.1)));
     background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1));
 }
 
-button:active {
+.button:active {
     background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0.2)), to(rgba(0, 0, 0, 0.2)));
     background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
 }
 
 
-.input {
-    margin: 2px 0;
-    padding: 10px 15px;
-    background-color: var(--ghostWhite);
-    vertical-align: middle;
-    height: 30px;
-}
-
-.button {
-    margin: 2px 0;
-    padding: 0 10px;
-    background-color: var(--ghostWhite);
-    vertical-align: middle;
-    height: 30px;
-}
-
-.select {
-    margin: 2px 0;
-    padding: 0 10px;
-    background-color: var(--ghostWhite);
-    vertical-align: middle;
-    height: 30px;
-}
-
-.button.theme {
-    background-color: var(--theme);
+.button.transparent {
+    background-color: transparent;
     color: var(--white);
 }
 
@@ -100,29 +150,34 @@ button:active {
     color: var(--white);
 }
 
-th {
-    text-align: left;
+.button.yellow {
+    background-color: var(--yellow);
+    color: var(--white);
 }
 
-table {
-    width: 100%;
-    max-width: 100%;
-    border-collapse: collapse;
+.button.green {
+    background-color: var(--green);
+    color: var(--white);
 }
 
-.table > thead > tr > th,
-.table > tbody > tr > th,
-.table > tfoot > tr > th,
-.table > thead > tr > td,
-.table > tbody > tr > td,
-.table > tfoot > tr > td {
-    padding: 8px;
+.bg-img {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
 }
 
-.table > tbody > tr:hover {
-    background-color: var(--ghostWhite);
+.drag {
+    -webkit-app-region: drag
 }
 
-.table.no-hover > tbody > tr:hover {
-    background-color: transparent;
+.no-drag {
+    -webkit-app-region: no-drag
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.user-select-text {
+    user-select: text;
 }

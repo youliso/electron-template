@@ -9,8 +9,7 @@ module.exports = {
             }
         },
         template: `<div class="subclass">
-           <h4>settings</h4>
-           <button @click="test">test</button>
+           <button @click="test" class="button no-drag">test</button>
         </div>`,
         created() {
         },

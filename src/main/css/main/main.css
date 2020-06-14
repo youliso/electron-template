@@ -1,40 +1,5 @@
-*, *:after, *:before {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-}
-
-html, body {
-    margin: 0;
-    padding: 5px;
-    width: 100%;
-    height: 100%;
-    font: 16px sans-serif;
-    user-select: none;
-    background: transparent;
-}
-
-.bg-img {
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-}
-
-.drag {
-    -webkit-app-region: drag
-}
-
-.no-drag {
-    -webkit-app-region: no-drag
-}
-
-.cursor-pointer {
-    cursor: pointer;
-}
-
-.user-select-text {
-    user-select: text;
-}
+@import "assembly.css";
+@import "icon.css";
 
 #app,#dialog,#menu {
     color: var(--white);

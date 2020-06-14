@@ -16,8 +16,10 @@ module.exports = {
         template: `
           <div class="subclass no-drag">
              <h4>首页</h4>
-             <button @click="test" class="button">获取软件版本号</button>
-              <button @click="$parent.switchComponent('info')" class="button">详情</button>
+             <input class="input">
+             <select class="select"><option>123</option></select>
+             <button @click="test" class="button yellow">获取软件版本号</button>
+              <button @click="$parent.switchComponent('info')" class="button green">详情</button>
           </div>
         `,
         async created() {

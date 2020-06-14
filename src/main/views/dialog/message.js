@@ -8,7 +8,7 @@ module.exports = {
         },
         template: `<div class="subclass" style="display: flex;flex-direction: column;justify-content: space-between;">
            <div>{{$parent.conf.data.text}}</div>
-           <div><button @click="closed" class="button">确定</button></div>
+           <div><button @click="closed" class="button no-drag">确定</button></div>
         </div>`,
         created() {
         },
