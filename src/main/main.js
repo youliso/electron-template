@@ -137,6 +137,7 @@ const createDialog = (args) => {
         opt.x = dialogs[args.parent].getPosition()[0] + ((dialogs[args.parent].getBounds().width - global.App_Data['dialogSize'][0]) / 2);
         opt.y = dialogs[args.parent].getPosition()[1] + ((dialogs[args.parent].getBounds().height - global.App_Data['dialogSize'][1]) / 2);
     }
+    opt.modal = true;
     dialogs[id] = new BrowserWindow(opt);
     dialogs[id].uniquekey = args.v;
     dialogs[id].complex = args.complex || false;
