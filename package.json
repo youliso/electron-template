@@ -8,7 +8,7 @@
   "author": "youliso@Hotmail.com",
   "license": "MIT",
   "scripts": {
-    "update": "yarn upgrade-interactive --latest",
+    "update": "npm update",
     "start src": "electron src/main/main.js",
     "start dist": "electron  dist/main.js",
     "gulp": "gulp retrieval compress && gulp compiler",
