@@ -144,7 +144,7 @@ let loadCssJs = (srcList) => {
     let list = [];
     for (let i = 0, len = srcList.length; i < len; i++) {
         let item = srcList[i];
-        if (!item) break;
+        if (!item) continue;
         let type = item.split('.')[1];
         let dom = document.createElement(type === 'css' ? 'link' : 'script');
         let node = (type === 'css') ? document.getElementsByTagName("head")[0] : document.body;
@@ -176,13 +176,14 @@ let removeCssJs = (srcList) => {
     srcList = srcList || [];
     for (let i = 0, len = srcList.length; i < len; i++) {
         let items = srcList[i];
+        if (!items) continue;
         let type = items.split('.')[1];
         let element = (type === 'css') ? 'link' : 'script';
         let attr = (type === 'css') ? 'href' : 'src';
         let suspects = document.getElementsByTagName(element);
         for (let s = 0, len = suspects.length; s < len; s++) {
             let item = suspects[s];
-            if (!item) break;
+            if (!item) continue;
             let attrs = item[attr];
             if (attrs != null && attrs.indexOf(items) > -1) item.parentNode.removeChild(item);
         }
@@ -273,20 +274,27 @@ let init = async (Vue, el, conf) => {
                 await this.switchComponent(componentName);
             },
             async switchComponent(key, args) {
-                let size_ = [];
+                let size_ = [], I_lib = [], R_lib = [];
                 key = this.headKey + key;
                 if (this.LoadedComponents.indexOf(key) < 0) {
                     let {lib, size} = await view(key, this.AppComponents[key].v);
-                    if (size) size_ = size;
-                    await this.$util.loadCssJs(lib)
-                    if (this.LoadedComponents.length > 0) await this.$util.removeCssJs(this.IComponent.lib);
                     this.AppComponents[key].lib = lib;
                     this.AppComponents[key].size = size;
+                    if (size) size_ = size;
+                    I_lib = lib;
+                    if (this.LoadedComponents.length > 0) R_lib = this.IComponent.lib;
                 } else {
                     size_ = this.AppComponents[key].size;
-                    await this.$util.loadCssJs(this.AppComponents[key].lib)
-                    await this.$util.removeCssJs(this.IComponent.lib)
+                    I_lib = this.AppComponents[key].lib;
+                    R_lib = this.IComponent.lib;
                 }
+                let repeat_Lib = Array.from([...new Set([...I_lib, ...R_lib].filter(i => [...I_lib, ...R_lib].indexOf(i) !== [...I_lib, ...R_lib].lastIndexOf(i)))]);
+                for (let i = 0, len = repeat_Lib.length; i < len; i++) {
+                    if (I_lib.indexOf(repeat_Lib[i]) > -1) delete I_lib[I_lib.indexOf(repeat_Lib[i])];
+                    if (R_lib.indexOf(repeat_Lib[i]) > -1) delete R_lib[R_lib.indexOf(repeat_Lib[i])];
+                }
+                await this.$util.loadCssJs(I_lib);
+                await this.$util.removeCssJs(R_lib);
                 let Rectangle = {};
                 let App_Data = this.$util.remote.getGlobal('App_Data');
                 switch (this.$el.id) {

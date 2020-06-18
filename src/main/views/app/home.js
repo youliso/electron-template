@@ -3,11 +3,11 @@ const execSync = require('child_process').execSync;
 module.exports = {
     keepAlive: true,
     size: [],
-    components: [
-        'head'
-    ],
     lib: [
         'css/views/home.css'
+    ],
+    components: [
+        'head'
     ],
     main: {
         data() {
