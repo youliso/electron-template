@@ -11,7 +11,6 @@
         <component v-if="IComponent&&IComponent.keepAlive" :is="IComponent.name" :ref="IComponent.name"></component>
     </keep-alive>
     <component v-if="IComponent&&!IComponent.keepAlive" :is="IComponent.name" :ref="IComponent.name"></component>
-    <app-head v-if="IComponent" v-bind:IComponentName="IComponent.name" ref="app-head"></app-head>
 </div>
 <!-- //unpkg.com/vue/dist/vue.min.js -->
 <script type="text/javascript" src="lib/vue.min.js"></script>

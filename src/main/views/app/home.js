@@ -3,7 +3,9 @@ const execSync = require('child_process').execSync;
 module.exports = {
     keepAlive: true,
     size: [],
-    components: [],
+    components: [
+        'head'
+    ],
     lib: [
         'css/views/home.css'
     ],
@@ -15,6 +17,7 @@ module.exports = {
         },
         template: `
           <div class="subclass no-drag">
+             <app-head v-bind:IComponentName="$options.name" ref="app-head"></app-head>
              <h4>首页</h4>
              <input class="input">
              <select class="select"><option>123</option></select>

@@ -15,6 +15,7 @@ module.exports = {
         },
         template: `
           <div class="subclass no-drag">
+             <app-head v-bind:IComponentName="$options.name" ref="app-head"></app-head>
              <h4>详情</h4>
              <button @click="test" class="button">获取软件版本号</button>
              <button @click="$parent.switchComponent('home')" class="button">返回</button>

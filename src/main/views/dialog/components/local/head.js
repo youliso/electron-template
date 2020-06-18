@@ -25,6 +25,7 @@ module.exports = {
         </div>
     </div>`,
         created() {
+            console.log(this.$parent.$options.name,this.$options.name)
         },
         methods: {
             async settings() {

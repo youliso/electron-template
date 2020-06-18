@@ -15,12 +15,6 @@ module.exports = {
         },
         beforeDestroy() {
         },
-        activated() {
-            //开启缓存后 切换加载
-        },
-        deactivated() {
-            //开启缓存后 切换卸载
-        },
         methods: {
         },
         watch: {

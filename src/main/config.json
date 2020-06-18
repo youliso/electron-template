@@ -18,10 +18,10 @@
   ],
   "views": {
     "app-global-components": [
-      "../views/app/components/global/head.js"
+      "../views/app/components/global/test.js"
     ],
     "app-components": {
-      "test": "../views/app/components/local/test.js"
+      "head": "../views/app/components/local/head.js"
     },
     "app-views": [
       {
@@ -36,7 +36,9 @@
     "dialog-global-components": [
       "../views/dialog/components/global/head.js"
     ],
-    "dialog-components": {},
+    "dialog-components": {
+      "head": "../views/dialog/components/local/head.js"
+    },
     "dialog-views": [
       {
         "v": "../views/dialog/exitprompt.js"
@@ -48,8 +50,12 @@
         "v": "../views/dialog/settings.js"
       }
     ],
-    "menu-global-components": [],
-    "menu-components": {},
+    "menu-global-components": [
+      "../views/menu/components/global/head.js"
+    ],
+    "menu-components": {
+      "head": "../views/menu/components/local/head.js"
+    },
     "menu-views": [
       {
         "keepAlive": true,
