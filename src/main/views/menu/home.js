@@ -10,9 +10,9 @@ module.exports = {
                 listData: []
             }
         },
-        template: `<div class="subclass" style="padding:0;">
-           <div><button @click="show" class="button transparent">显示</button></div>
-           <div><button @click="closed" class="button transparent">退出</button></div>
+        template: `<div class="subclass" style="padding:0;display: flex;flex-direction: column;justify-content: center;align-items: center;">
+           <div style="display: flex;justify-content: center;"><button @click="show" class="button transparent">显示</button></div>
+           <div style="display: flex;justify-content: center;"><button @click="closed" class="button transparent">退出</button></div>
         </div>`,
         async created() {
         },

@@ -25,26 +25,28 @@ module.exports = {
         </div>
     </div>`,
         created() {
-            console.log(this.$parent.$options.name,this.$options._componentTag)
         },
         methods: {
+            r(v){
+                return `${this.$parent.$options.name}.${this.$options._componentTag}.${v}`;
+            },
             async settings() {
-                this.$parent.dialogInit(
+                this.$parent.$parent.dialogInit(
                     {
                         name: '设置',
                         v: 'settings',
-                        r: this.$options.name + '.d_settings'
+                        r: this.r('d_settings')
                     }
                 );
             },
             async system(channel) {
                 if (channel !== 'closed') this.$util.ipcRenderer.send(channel);
                 else {
-                    this.$parent.dialogInit(
+                    this.$parent.$parent.dialogInit(
                         {
                             name: '提示',
                             v: 'exitprompt',
-                            r: this.$options.name + '.d_exitprompt'
+                            r: this.r('d_settings')
                         }
                     );
                 }

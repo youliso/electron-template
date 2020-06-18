@@ -27,7 +27,7 @@ let nConf = {//基础配置
     "updateFileUrl": "http://127.0.0.1:3000/public/dist/", //更新文件地址
     "appSize": [800, 500],
     "dialogSize": [400, 150],
-    "menuSize": [75, 95]
+    "menuSize": [76, 94]
 };
 
 function findFileBySuffix(dirs, fileName) {

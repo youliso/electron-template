@@ -5,7 +5,6 @@
     color: var(--white);
     width: 100%;
     height: 100%;
-    overflow: overlay;
     position: relative;
     box-shadow:0 0 5px rgba(0, 0, 0, 0.60);
     background-color: var(--black);
@@ -23,7 +22,6 @@
     align-items: center;
     position: absolute;
     color: var(--white);
-    z-index: 1;
 }
 
 .head i {
@@ -35,6 +33,9 @@
 .subclass {
     padding: 36px 10px 10px;
     height: 100%;
-    position: relative;
-    z-index: 1;
+    overflow: overlay;
+}
+
+#app .subclass{
+    padding: 10px;
 }
