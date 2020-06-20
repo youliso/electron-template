@@ -129,7 +129,7 @@ const createDialog = (args) => {
     }
     let opt = WinOpt(global.App_Data['dialogSize'][0], global.App_Data['dialogSize'][1]);
     if (typeof args.parent === 'string') {
-        opt.parent = win;
+        if (args.parent === 'win') opt.parent = win;
         opt.x = win.getPosition()[0] + ((win.getBounds().width - global.App_Data['dialogSize'][0]) / 2);
         opt.y = win.getPosition()[1] + ((win.getBounds().height - global.App_Data['dialogSize'][1]) / 2);
     } else if (typeof args.parent === 'number') {
@@ -137,10 +137,11 @@ const createDialog = (args) => {
         opt.x = dialogs[args.parent].getPosition()[0] + ((dialogs[args.parent].getBounds().width - global.App_Data['dialogSize'][0]) / 2);
         opt.y = dialogs[args.parent].getPosition()[1] + ((dialogs[args.parent].getBounds().height - global.App_Data['dialogSize'][1]) / 2);
     }
-    opt.modal = true;
+    opt.modal = args.modal;
+    opt.resizable = args.resizable;
     dialogs[id] = new BrowserWindow(opt);
     dialogs[id].uniquekey = args.v;
-    dialogs[id].complex = args.complex || false;
+    dialogs[id].complex = args.complex;
     //window加载完毕后显示
     dialogs[id].once('ready-to-show', () => dialogs[id].show());
     //window被关闭，这个事件会被触发。
@@ -204,6 +205,11 @@ ipcMain.on('newWin-closed', (event, id) => {
         dialogs = [];
         is_Dialogs = [];
     }
+});
+
+//弹框 最小化
+ipcMain.on('newWin-mini', (event, id) => {
+    dialogs[id].minimize();
 });
 
 //关闭

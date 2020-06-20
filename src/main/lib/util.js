@@ -218,7 +218,8 @@ let init = async (Vue, el, conf) => {
         removeCssJs,
         storage,
         remote,
-        ipcRenderer
+        ipcRenderer,
+        log: require('./log')
     };
     Vue.prototype.$srl = (srl) => config.appUrl + srl;
     const view = async (key, view) => {
@@ -325,9 +326,13 @@ let init = async (Vue, el, conf) => {
                     Rectangle.x = this.$util.remote.getCurrentWindow().getPosition()[0] + ((this.$util.remote.getCurrentWindow().getBounds().width - Rectangle.width) / 2);
                     Rectangle.y = this.$util.remote.getCurrentWindow().getPosition()[1] + ((this.$util.remote.getCurrentWindow().getBounds().height - Rectangle.height) / 2);
                 }
+                Rectangle.width = parseInt(Rectangle.width);
+                Rectangle.height = parseInt(Rectangle.height);
+                Rectangle.x = parseInt(Rectangle.x);
+                Rectangle.y = parseInt(Rectangle.y);
                 this.$util.remote.getCurrentWindow().setBounds(Rectangle);
+                this.$args = args || null;
                 this.IComponent = this.AppComponents[key];
-                this.$args = args;
             },
             socketInit() {
                 this.$util.ipcRenderer.send('socketInit', this.$config.socketUrl);
@@ -356,14 +361,19 @@ let init = async (Vue, el, conf) => {
                 let args = {
                     name: data.name, //名称
                     v: data.v, //页面id
+                    resizable: false,// 是否支持调整窗口大小
                     data: data.data, //数据
                     complex: false, //是否支持多窗口
-                    parent: 'win' //父窗口
+                    parent: 'win', //父窗口
+                    modal: true //父窗口置顶
                 };
                 if (this.conf) args.parent = this.conf.id;
                 if (data.v === 'message') args.complex = true;
                 if (data.r) args.r = data.r;
                 if (data.complex) args.complex = data.complex;
+                if (data.parent) args.parent = data.parent;
+                if (data.modal) args.modal = data.modal;
+                if (data.resizable) args.resizable = data.resizable;
                 this.$util.ipcRenderer.send('new-dialog', args);
             },
             dialogMessage() {
