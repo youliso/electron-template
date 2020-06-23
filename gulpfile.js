@@ -50,15 +50,15 @@ function findFileBySuffix(dirs, fileName) {
 gulp.task('retrieval', async () => {
     let retrievals = ['app', 'dialog', 'menu']
     let views = {
-        'app-global-components' :[],
-        'app-components' :{},
-        'app-views' :[],
-        'dialog-global-components' :[],
-        'dialog-components' :{},
-        'dialog-views' :[],
-        'menu-global-components' :[],
-        'menu-components' :{},
-        'menu-views' :[]
+        'app-global-components': [],
+        'app-components': {},
+        'app-views': {},
+        'dialog-global-components': [],
+        'dialog-components': {},
+        'dialog-views': {},
+        'menu-global-components': [],
+        'menu-components': {},
+        'menu-views': {}
     };
     for (let i of retrievals) {
         fs.readdirSync(`src/main/views/${i}/components/global`).forEach((element) => {
@@ -69,8 +69,7 @@ gulp.task('retrieval', async () => {
         });
         fs.readdirSync(`src/main/views/${i}`).forEach((element) => {
             if (element !== 'components') {
-                let {keepAlive} = require(`./src/main/views/${i}/` + element);
-                views[`${i}-views`].push({keepAlive, v: `../views/${i}/` + element});
+                views[`${i}-views`][`${i}-${element.slice(0, element.length - 3)}`] = `../views/${i}/` + element;
             }
         });
     }

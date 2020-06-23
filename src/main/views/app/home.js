@@ -12,7 +12,7 @@ module.exports = {
     main: {
         data() {
             return {
-                listData: []
+                listData: [1]
             }
         },
         template: `
@@ -26,15 +26,22 @@ module.exports = {
           </div>
         `,
         async created() {
+            console.log(`${this.$options.name}: created`,document)
         },
         beforeDestroy() {
             //卸载
+            console.log(`${this.$options.name}: beforeDestroy`)
         },
         activated() {
             //开启缓存后 切换加载
+            console.log(`${this.$options.name}: activated`,document)
         },
         deactivated() {
             //开启缓存后 切换卸载
+            console.log(`${this.$options.name}: deactivated`)
+        },
+        beforeUpdate() {
+            console.log(`${this.$options.name}: beforeUpdate`)
         },
         methods: {
             async test() {
@@ -57,6 +64,11 @@ module.exports = {
                         text: name + '版本号：' + (data === '' ? '此应用未设置版本号' : data)
                     }
                 });
+            }
+        },
+        watch: {
+            statusCode(v) {
+                console.log('statusCode')
             }
         }
     }

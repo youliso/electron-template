@@ -233,21 +233,16 @@ let init = async (Vue, el, conf) => {
             }
         }
         Vue.component(key, v.main);
-        return {lib: v.lib, size: v.size};
+        return v;
     };
     let viewsList = [];
     for (let i of config['views'][`${el}-global-components`]) {
         viewsList.push(view(`${el}-${i.substring(i.lastIndexOf('/') + 1, i.lastIndexOf('.'))}`, i));
     }
     await Promise.all(viewsList);
-    const AppComponents = {};
-    for (let i of config['views'][`${el}-views`]) {
-        i.name = `${el}-${i.v.substring(i.v.lastIndexOf('/') + 1, i.v.lastIndexOf('.'))}`;
-        AppComponents[i.name] = i;
-    }
     let app_data = {
         IComponent: null,
-        AppComponents,
+        AppComponents: {},
         LoadedComponents: [],
         themeColor: config.themeColor
     };
@@ -268,6 +263,9 @@ let init = async (Vue, el, conf) => {
                     this.init('home');
             }
         },
+        updated(){
+            console.log(this.$refs[this.IComponent.name])
+        },
         methods: {
             async init(componentName) {
                 this.socketMessage();
@@ -278,11 +276,15 @@ let init = async (Vue, el, conf) => {
                 let size_ = [], I_lib = [], R_lib = [];
                 key = this.headKey + key;
                 if (this.LoadedComponents.indexOf(key) < 0) {
-                    let {lib, size} = await view(key, this.AppComponents[key].v);
-                    this.AppComponents[key].lib = lib;
-                    this.AppComponents[key].size = size;
-                    if (size) size_ = size;
-                    I_lib = lib;
+                    let vi = await view(key, this.$config['views'][`${this.headKey}views`][key]);
+                    this.AppComponents[key] = {
+                        keepAlive: vi.keepAlive,
+                        size: vi.size,
+                        lib: vi.lib,
+                        name: key
+                    };
+                    if (vi.size) size_ = vi.size;
+                    I_lib = vi.lib;
                     if (this.LoadedComponents.length > 0) R_lib = this.IComponent.lib;
                 } else {
                     size_ = this.AppComponents[key].size;

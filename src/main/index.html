@@ -12,8 +12,10 @@
     </keep-alive>
     <component v-if="IComponent&&!IComponent.keepAlive" :is="IComponent.name" :ref="IComponent.name"></component>
 </div>
-<!-- //unpkg.com/vue/dist/vue.min.js -->
-<script type="text/javascript" src="lib/vue.min.js"></script>
-<script>require('./lib/util').init(Vue,'app').then(lib => new Vue(lib));</script>
+<!-- //unpkg.com/vue/dist/vue.esm.browser.min.js -->
+<script type="module">
+    import Vue from './lib/vue.esm.browser.min.js';
+    require('./lib/util').init(Vue, 'app').then(lib => new Vue(lib));
+</script>
 </body>
 </html>

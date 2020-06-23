@@ -13,9 +13,9 @@
     <component v-if="IComponent&&!IComponent.keepAlive" :is="IComponent.name" :ref="IComponent.name"></component>
     <dialog-head v-if="IComponent" v-bind:IComponentName="IComponent.name" ref="dialog-head"></dialog-head>
 </div>
-<!-- //unpkg.com/vue/dist/vue.min.js -->
-<script type="text/javascript" src="lib/vue.min.js"></script>
-<script>
+<!-- //unpkg.com/vue/dist/vue.esm.browser.min.js -->
+<script type="module">
+    import Vue from './lib/vue.esm.browser.min.js';
     const _ = require('./lib/util');
     _.dataJsonPort().then(e => _.init(Vue, 'dialog', e).then(lib => new Vue(lib)));
 </script>
