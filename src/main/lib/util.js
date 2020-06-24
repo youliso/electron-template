@@ -264,7 +264,7 @@ let init = async (Vue, el, conf) => {
             }
         },
         updated(){
-            console.log(this.$refs[this.IComponent.name])
+            // console.log(this.$refs[this.IComponent.name])
         },
         methods: {
             async init(componentName) {

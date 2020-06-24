@@ -19,14 +19,14 @@ module.exports = {
           <div class="subclass no-drag">
              <app-head v-bind:IComponentName="$options.name" ref="app-head"></app-head>
              <h4>首页</h4>
-             <input class="input">
+             <input id="test" class="input" value="test">
              <select class="select"><option>123</option></select>
              <button @click="test" class="button yellow">获取软件版本号</button>
-              <button @click="$parent.switchComponent('info')" class="button green">详情</button>
+             <button @click="$parent.switchComponent('info')" class="button green">详情</button>
           </div>
         `,
         async created() {
-            console.log(`${this.$options.name}: created`,document)
+            console.log(`${this.$options.name}: created`)
         },
         beforeDestroy() {
             //卸载
@@ -34,7 +34,7 @@ module.exports = {
         },
         activated() {
             //开启缓存后 切换加载
-            console.log(`${this.$options.name}: activated`,document)
+            console.log(`${this.$options.name}: activated`,document.getElementById('test').value)
         },
         deactivated() {
             //开启缓存后 切换卸载
