@@ -4,7 +4,7 @@ module.exports = {
     keepAlive: true,
     size: [],
     lib: [
-        'css/views/home.css'
+        'lib/static/css/views/home.css'
     ],
     components: [
         'head'
