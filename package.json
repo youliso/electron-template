@@ -86,7 +86,7 @@
     }
   },
   "devDependencies": {
-    "electron": "^9.0.4",
+    "electron": "^9.0.5",
     "electron-builder": "^22.6.1",
     "google-closure-compiler": "^20200517.0.0",
     "gulp": "^4.0.2",
