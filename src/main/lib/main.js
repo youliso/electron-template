@@ -215,7 +215,7 @@ class main {
         try {
             await autoUpdater.checkForUpdates();
         } catch (e) {
-            _.log.error(e);
+            _.log().error(e);
         }
     }
 
