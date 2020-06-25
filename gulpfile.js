@@ -17,9 +17,11 @@ const closureCompiler = new compiler({
 });
 const buildBasePath = 'dist/';//构建输出的目录
 const config = require('./package');
+
 const asar = false; //是否asar打包
 const allowToChangeInstallationDirectory = true; //是否允许用户修改安装为位置
 let nConf = {//基础配置
+    "devTools": true, //是否打开devTools
     "themeColor": "#333333", //主题色
     "appUrl": "http://127.0.0.1:3000/", //程序主访问地址
     "socketUrl": "http://127.0.0.1:3000/",// 程序socket访问地址
@@ -74,7 +76,7 @@ gulp.task('retrieval', async () => {
         });
     }
     nConf.views = views;
-    fs.writeFileSync(__dirname + '/src/main/config.json', JSON.stringify(nConf));
+    fs.writeFileSync(__dirname + '/src/main/lib/cfg/config.json', JSON.stringify(nConf));
     config.build.publish = [{
         "provider": "generic",
         "url": nConf.updateUrl
@@ -135,7 +137,8 @@ gulp.task('compiler', async () => {
                 path: i,
                 src: fs.readFileSync(i).toString(),
                 sourceMap: null
-            }],);
+            }]);
+            if (i === 'D:\\Code\\Node_Template\\APP\\dist\\lib\\util.js') console.log(cc);
             fs.writeFileSync(i, cc['compiledFiles'][0].src);
         }
     }

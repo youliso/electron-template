@@ -18,6 +18,7 @@
 </script>
 <script type="module">
     import Vue from './lib/vue.esm.browser.min.js';
-    require('./lib/util').init(Vue, 'menu').then(lib => new Vue(lib));
+
+    require('./lib/main').vue(Vue, 'menu').then(lib => new Vue(lib));
 </script>
 </html>

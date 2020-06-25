@@ -1,403 +1,264 @@
 'use strict';
-const config = require('../config');
-const {remote, ipcRenderer} = require('electron');
+const {existsSync, readdirSync, statSync, unlinkSync, rmdirSync, mkdirSync, writeFileSync, appendFileSync} = require('fs');
+const {resolve} = require('path');
+const {remote} = require('electron');
 
-/**
- * 去除空格
- * */
-let trim = (str) => str.replace(/^\s*|\s*$/g, "");
-
-/**
- * 判空
- * */
-let isNull = (arg) => {
-    if (typeof arg === 'string') arg = trim(arg);
-    return !arg && arg !== 0 && typeof arg !== "boolean" ? true : false
-};
-
-/**
- * 随机整数
- * 例如 6-10 （m-n）
- * */
-let Random = (m, n) => Math.floor(Math.random() * (n - m)) + m;
-
-/**
- * 数组元素互换
- * */
-let swapArr = (arr, index1, index2) => [arr[index1], arr[index2]] = [arr[index2], arr[index1]];
-
-/**
- * isJson
- * str : string
- * */
-let toJSON = (str) => {
-    try {
-        return JSON.parse(str);
-    } catch (e) {
-        return str;
+class util {
+    static getInstance() {
+        if (!util.instance) util.instance = new util();
+        return util.instance;
     }
-};
 
-/**
- * 浏览器缓存
- * */
-let storage = {
-    set(key, value, sk) {
-        sk = sk ? 'sessionStorage' : 'localStorage';
-        if (typeof value === "boolean" || typeof value === "string") eval(sk).setItem(key, value);
-        else eval(sk).setItem(key, JSON.stringify(value));
-    },
-    get(key, sk) {
-        sk = sk ? 'sessionStorage' : 'localStorage';
-        let data = eval(sk).getItem(key);
-        if (isNull(data)) return null;
-        return toJSON(data);
-    },
-    remove(key, sk) {
-        sk = sk ? 'sessionStorage' : 'localStorage';
-        eval(sk).removeItem(key);
-    },
-    clear(is, sk) {
-        sk = sk ? 'sessionStorage' : 'localStorage';
-        if (is) {
-            sessionStorage.clear();
-            localStorage.clear();
-        } else eval(sk).clear();
+    constructor() {
+        this.logFile = resolve("./log");
+        try {
+            statSync(this.logFile);
+        } catch (e) {
+            mkdirSync(this.logFile, {recursive: true});
+        }
     }
-};
 
-/**
- * 对象转url参数
- * */
-let convertObj = (data) => {
-    let _result = [];
-    for (let key in data) {
-        let value = data[key];
-        if (value && value.constructor == Array) {
-            value.forEach(function (_value) {
-                _result.push(key + "=" + _value);
+
+    /**
+     * 日志输出
+     * */
+    log() {
+        return {
+            info(val) {
+                try {
+                    statSync(this.logFile + '/info.log');
+                } catch (e) {
+                    writeFileSync(this.logFile + '/info.log', '');
+                }
+                appendFileSync(this.logFile + '/info.log', `[${new Date()}] ${val}\n`);
+            },
+            error(val) {
+                try {
+                    statSync(this.file + '/error.log');
+                } catch (e) {
+                    writeFileSync(this.file + '/error.log', '');
+                }
+                appendFileSync(this.file + '/error.log', `[${new Date()}] ${val}\n`);
+            }
+        }
+    }
+
+
+    /**
+     * 删除目录和内部文件
+     * */
+    delDir(path) {
+        let files = [];
+        if (existsSync(path)) {
+            files = readdirSync(path);
+            files.forEach((file, index) => {
+                let curPath = path + "/" + file;
+                if (statSync(curPath).isDirectory()) {
+                    this.delDir(curPath); //递归删除文件夹
+                } else {
+                    unlinkSync(curPath); //删除文件
+                }
             });
-        } else {
-            _result.push(key + '=' + value);
+            rmdirSync(path);
         }
     }
-    return _result.join('&');
-};
 
-/**
- * 网络请求
- * */
-let net = (url, param) => {
-    let sendData = {
-        headers: {
-            'Content-type': 'application/json;charset=utf-8',
-            'Authorization': remote.getGlobal('App_Data').Authorization || ''
-        },
-        outTime: 30000,
-        mode: 'cors'
-    };
-    param = param || {};
-    if (param.headers) sendData.headers = param.headers;
-    if (param.outTime) sendData.outTime = param.outTime;
-    if (param.mode) sendData.mode = param.mode;
-    sendData.method = param.method || 'GET';
-    if (sendData.method === 'GET') url = url + convertObj(param.data);
-    else sendData.body = JSON.stringify(param.data);
-    let checkStatus = (res) => {
-        if (res.status >= 200 && res.status < 300) {
-            let Authorization = res.headers.get('Authorization');
-            if (Authorization) remote.getGlobal('App_Data').Authorization = Authorization;
-            return res;
+    /**
+     * 去除空格
+     * */
+    trim(str) {
+        return str.replace(/^\s*|\s*$/g, "");
+    }
+
+    /**
+     * 判空
+     * */
+    isNull(arg) {
+        if (typeof arg === 'string') arg = trim(arg);
+        return !arg && arg !== 0 && typeof arg !== "boolean" ? true : false;
+    }
+
+    /**
+     * 随机整数
+     * 例如 6-10 （m-n）
+     * */
+    Random(m, n) {
+        return Math.floor(Math.random() * (n - m)) + m;
+    }
+
+    /**
+     * 数组元素互换
+     * */
+    swapArr(arr, index1, index2) {
+        [arr[index1], arr[index2]] = [arr[index2], arr[index1]];
+    }
+
+    /**
+     * isJson
+     * str : string
+     * */
+    toJSON(str) {
+        try {
+            return JSON.parse(str);
+        } catch (e) {
+            return str;
         }
-        const error = new Error(res.statusText);
-        error.response = res;
-        throw error;
-    };
-    let timeoutPromise = () => {
+    }
+
+    /**
+     * 浏览器缓存
+     * */
+    storage() {
+        return {
+            set(key, value, sk) {
+                sk = sk ? 'sessionStorage' : 'localStorage';
+                if (typeof value === "boolean" || typeof value === "string") eval(sk).setItem(key, value);
+                else eval(sk).setItem(key, JSON.stringify(value));
+            },
+            get(key, sk) {
+                sk = sk ? 'sessionStorage' : 'localStorage';
+                let data = eval(sk).getItem(key);
+                if (this.isNull(data)) return null;
+                return toJSON(data);
+            },
+            remove(key, sk) {
+                sk = sk ? 'sessionStorage' : 'localStorage';
+                eval(sk).removeItem(key);
+            },
+            clear(is, sk) {
+                sk = sk ? 'sessionStorage' : 'localStorage';
+                if (is) {
+                    sessionStorage.clear();
+                    localStorage.clear();
+                } else eval(sk).clear();
+            }
+        }
+    }
+
+    /**
+     * 对象转url参数
+     * */
+    convertObj(data) {
+        let _result = [];
+        for (let key in data) {
+            let value = data[key];
+            if (value && value.constructor == Array) {
+                value.forEach(function (_value) {
+                    _result.push(key + "=" + _value);
+                });
+            } else {
+                _result.push(key + '=' + value);
+            }
+        }
+        return _result.join('&');
+    }
+
+    /**
+     * 网络请求
+     * */
+    net(url, param) {
+        let sendData = {
+            headers: {
+                'Content-type': 'application/json;charset=utf-8',
+                'Authorization': remote.getGlobal('App_Data').Authorization || ''
+            },
+            outTime: 30000,
+            mode: 'cors'
+        };
+        param = param || {};
+        if (param.headers) sendData.headers = param.headers;
+        if (param.outTime) sendData.outTime = param.outTime;
+        if (param.mode) sendData.mode = param.mode;
+        sendData.method = param.method || 'GET';
+        if (sendData.method === 'GET') url = url + this.convertObj(param.data);
+        else sendData.body = JSON.stringify(param.data);
+        let checkStatus = (res) => {
+            if (res.status >= 200 && res.status < 300) {
+                let Authorization = res.headers.get('Authorization');
+                if (Authorization) remote.getGlobal('App_Data').Authorization = Authorization;
+                return res;
+            }
+            const error = new Error(res.statusText);
+            error.response = res;
+            throw error;
+        };
+        let timeoutPromise = () => {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    reject({code: -1, msg: '超时'});
+                }, sendData.outTime);
+            });
+        };
+        let fetchPromise = () => {
+            return new Promise((resolve, reject) => {
+                fetch(url, sendData)
+                    .then(checkStatus)
+                    .then(res => res.text())
+                    .then(data => resolve(toJSON(data)))
+                    .catch(err => reject(err))
+            });
+        };
         return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                reject({code: -1, msg: '超时'});
-            }, sendData.outTime);
-        });
-    };
-    let fetchPromise = () => {
-        return new Promise((resolve, reject) => {
-            fetch(url, sendData)
-                .then(checkStatus)
-                .then(res => res.text())
-                .then(data => resolve(toJSON(data)))
+            Promise.race([timeoutPromise(), fetchPromise()])
+                .then(data => resolve(data))
                 .catch(err => reject(err))
         });
-    };
-    return new Promise((resolve, reject) => {
-        Promise.race([timeoutPromise(), fetchPromise()])
-            .then(data => resolve(data))
-            .catch(err => reject(err))
-    });
-};
-
-/**
- * 动态加载css/js文件
- * */
-let loadCssJs = (srcList) => {
-    srcList = srcList || [];
-    let list = [];
-    for (let i = 0, len = srcList.length; i < len; i++) {
-        let item = srcList[i];
-        if (!item) continue;
-        let type = item.split('.')[1];
-        let dom = document.createElement(type === 'css' ? 'link' : 'script');
-        let node = (type === 'css') ? document.getElementsByTagName("head")[0] : document.body;
-        if (type === 'css') {
-            dom.setAttribute('rel', 'stylesheet');
-            dom.setAttribute('href', item);
-        } else {
-            dom.setAttribute('type', 'text/javascript');
-            dom.setAttribute('src', item);
-        }
-        node.appendChild(dom);
-        list.push(new Promise(resolve => {
-            if (dom.readyState) {
-                dom.onreadystatechange = () => {
-                    if (dom.readyState === 'complete' || dom.readyState === 'loaded') resolve();
-                }
-            } else dom.onload = () => resolve();
-        }))
     }
-    return new Promise(resolve => {
-        Promise.all(list).then(values => resolve(values));
-    })
-};
 
-/**
- * 移除已经加载过的css/js文件
- * */
-let removeCssJs = (srcList) => {
-    srcList = srcList || [];
-    for (let i = 0, len = srcList.length; i < len; i++) {
-        let items = srcList[i];
-        if (!items) continue;
-        let type = items.split('.')[1];
-        let element = (type === 'css') ? 'link' : 'script';
-        let attr = (type === 'css') ? 'href' : 'src';
-        let suspects = document.getElementsByTagName(element);
-        for (let s = 0, len = suspects.length; s < len; s++) {
-            let item = suspects[s];
+    /**
+     * 动态加载css/js文件
+     * */
+    loadCssJs(srcList) {
+        srcList = srcList || [];
+        let list = [];
+        for (let i = 0, len = srcList.length; i < len; i++) {
+            let item = srcList[i];
             if (!item) continue;
-            let attrs = item[attr];
-            if (attrs != null && attrs.indexOf(items) > -1) item.parentNode.removeChild(item);
-        }
-    }
-};
-
-/**
- * 弹框初始化参数
- * */
-let dataJsonPort = () => {
-    return new Promise((resolve, reject) => {
-        ipcRenderer.on('dataJsonPort', async (event, message) => {
-            resolve(message);
-        });
-    });
-};
-
-/**
- * 主体初始化
- * @param Vue
- * */
-let init = async (Vue, el, conf) => {
-    conf = conf ? JSON.parse(decodeURIComponent(conf)) : null;
-    Vue.prototype.$config = config;
-    Vue.prototype.$util = {
-        trim,
-        isNull,
-        Random,
-        swapArr,
-        net,
-        loadCssJs,
-        removeCssJs,
-        storage,
-        remote,
-        ipcRenderer,
-        log: require('./log')
-    };
-    Vue.prototype.$srl = (srl) => config.appUrl + srl;
-    const view = async (key, view) => {
-        let v = require(view);
-        if (v.components) {
-            v.main.components = {};
-            for (let i of v.components) {
-                let {lib, main} = require(config['views'][`${el}-components`][i]);
-                v.main.components[`${el}-${i}`] = main;
-                v.lib = [...lib, ...v.lib];
+            let type = item.split('.')[1];
+            let dom = document.createElement(type === 'css' ? 'link' : 'script');
+            let node = (type === 'css') ? document.getElementsByTagName("head")[0] : document.body;
+            if (type === 'css') {
+                dom.setAttribute('rel', 'stylesheet');
+                dom.setAttribute('href', item);
+            } else {
+                dom.setAttribute('type', 'text/javascript');
+                dom.setAttribute('src', item);
             }
-        }
-        Vue.component(key, v.main);
-        return v;
-    };
-    let viewsList = [];
-    for (let i of config['views'][`${el}-global-components`]) {
-        viewsList.push(view(`${el}-${i.substring(i.lastIndexOf('/') + 1, i.lastIndexOf('.'))}`, i));
-    }
-    await Promise.all(viewsList);
-    let app_data = {
-        IComponent: null,
-        AppComponents: {},
-        LoadedComponents: [],
-        themeColor: config.themeColor
-    };
-    if (conf) app_data.conf = conf;
-    app_data.headKey = el + '-';
-    return {
-        el: `#${el}`,
-        data: app_data,
-        async created() {
-            switch (el) {
-                case 'app':
-                    this.init('home');
-                    break;
-                case 'dialog':
-                    this.init(this.conf.v);
-                    break;
-                case 'menu':
-                    this.init('home');
-            }
-        },
-        updated(){
-            // console.log(this.$refs[this.IComponent.name])
-        },
-        methods: {
-            async init(componentName) {
-                this.socketMessage();
-                this.dialogMessage();
-                await this.switchComponent(componentName);
-            },
-            async switchComponent(key, args) {
-                let size_ = [], I_lib = [], R_lib = [];
-                key = this.headKey + key;
-                if (this.LoadedComponents.indexOf(key) < 0) {
-                    let vi = await view(key, this.$config['views'][`${this.headKey}views`][key]);
-                    this.AppComponents[key] = {
-                        keepAlive: vi.keepAlive,
-                        size: vi.size,
-                        lib: vi.lib,
-                        name: key
-                    };
-                    if (vi.size) size_ = vi.size;
-                    I_lib = vi.lib;
-                    if (this.LoadedComponents.length > 0) R_lib = this.IComponent.lib;
-                } else {
-                    size_ = this.AppComponents[key].size;
-                    I_lib = this.AppComponents[key].lib;
-                    R_lib = this.IComponent.lib;
-                }
-                let repeat_Lib = Array.from([...new Set([...I_lib, ...R_lib].filter(i => [...I_lib, ...R_lib].indexOf(i) !== [...I_lib, ...R_lib].lastIndexOf(i)))]);
-                for (let i = 0, len = repeat_Lib.length; i < len; i++) {
-                    if (I_lib.indexOf(repeat_Lib[i]) > -1) delete I_lib[I_lib.indexOf(repeat_Lib[i])];
-                    if (R_lib.indexOf(repeat_Lib[i]) > -1) delete R_lib[R_lib.indexOf(repeat_Lib[i])];
-                }
-                await this.$util.loadCssJs(I_lib);
-                await this.$util.removeCssJs(R_lib);
-                let Rectangle = {};
-                let App_Data = this.$util.remote.getGlobal('App_Data');
-                switch (this.$el.id) {
-                    case 'app':
-                        Rectangle = {
-                            width: App_Data.appSize[0],
-                            height: App_Data.appSize[1]
-                        }
-                        break;
-                    case 'dialog':
-                        Rectangle = {
-                            width: App_Data.dialogSize[0],
-                            height: App_Data.dialogSize[1]
-                        }
-                        break;
-                    case 'menu':
-                        Rectangle = {
-                            width: App_Data.menuSize[0],
-                            height: App_Data.menuSize[1]
-                        }
-                }
-                if (size_ && size_.length > 0) {
-                    Rectangle.width = size_[0];
-                    Rectangle.height = size_[1];
-                    Rectangle.x = this.$util.remote.getCurrentWindow().getPosition()[0] + ((this.$util.remote.getCurrentWindow().getBounds().width - size_[0]) / 2);
-                    Rectangle.y = this.$util.remote.getCurrentWindow().getPosition()[1] + ((this.$util.remote.getCurrentWindow().getBounds().height - size_[1]) / 2);
-                } else {
-                    Rectangle.x = this.$util.remote.getCurrentWindow().getPosition()[0] + ((this.$util.remote.getCurrentWindow().getBounds().width - Rectangle.width) / 2);
-                    Rectangle.y = this.$util.remote.getCurrentWindow().getPosition()[1] + ((this.$util.remote.getCurrentWindow().getBounds().height - Rectangle.height) / 2);
-                }
-                Rectangle.width = parseInt(Rectangle.width);
-                Rectangle.height = parseInt(Rectangle.height);
-                Rectangle.x = parseInt(Rectangle.x);
-                Rectangle.y = parseInt(Rectangle.y);
-                this.$util.remote.getCurrentWindow().setBounds(Rectangle);
-                this.$args = args || null;
-                this.IComponent = this.AppComponents[key];
-            },
-            socketInit() {
-                this.$util.ipcRenderer.send('socketInit', this.$config.socketUrl);
-            },
-            socketMessage() {
-                this.$util.ipcRenderer.on('message', (event, req) => {
-                    switch (req.code) {
-                        case 0:
-                            let path = req.result.split('.');
-                            if (path.length === 1) this[this.headKey + path[0]] = req.data;
-                            if (path.length === 2) this.$refs[this.headKey + path[0]][path[1]] = req.data;
-                            break;
-                        case -1:
-                            console.log(req.msg);
-                            break;
-                        default:
-                            console.log('socketMessage...');
-                            console.log(req)
+            node.appendChild(dom);
+            list.push(new Promise(resolve => {
+                if (dom.readyState) {
+                    dom.onreadystatechange = () => {
+                        if (dom.readyState === 'complete' || dom.readyState === 'loaded') resolve();
                     }
-                })
-            },
-            socketSend(path, result, data) {
-                this.$util.ipcRenderer.send('socketSend', JSON.stringify({path, result, data}));
-            },
-            dialogInit(data) {
-                let args = {
-                    name: data.name, //名称
-                    v: data.v, //页面id
-                    resizable: false,// 是否支持调整窗口大小
-                    data: data.data, //数据
-                    complex: false, //是否支持多窗口
-                    parent: 'win', //父窗口
-                    modal: true //父窗口置顶
-                };
-                if (this.conf) args.parent = this.conf.id;
-                if (data.v === 'message') args.complex = true;
-                if (data.r) args.r = data.r;
-                if (data.complex) args.complex = data.complex;
-                if (data.parent) args.parent = data.parent;
-                if (data.modal) args.modal = data.modal;
-                if (data.resizable) args.resizable = data.resizable;
-                this.$util.ipcRenderer.send('new-dialog', args);
-            },
-            dialogMessage() {
-                this.$util.ipcRenderer.on('newWin-rbk', (event, req) => {
-                    let path = req.r.split('.');
-                    if (path.length === 1) this[path[0]] = req.data;
-                    if (path.length === 2) this.$refs[path[0]][path[1]] = req.data;
-                    if (path.length === 3 && this.$refs[path[0]]) this.$refs[path[0]].$refs[path[1]][path[2]] = req.data;
-                })
-            },
-            dialogSend(args) {
-                this.$util.ipcRenderer.send('newWin-feedback', args);
-            }
-        },
-        watch: {
-            IComponent(val) {
-                let index1 = this.LoadedComponents.indexOf(val.name);
-                if (index1 < 0) this.LoadedComponents.unshift(val.name);
-                else this.$util.swapArr(this.LoadedComponents, index1, 0);
+                } else dom.onload = () => resolve();
+            }))
+        }
+        return new Promise(resolve => {
+            Promise.all(list).then(values => resolve(values));
+        })
+    };
+
+    /**
+     * 移除已经加载过的css/js文件
+     * */
+    removeCssJs(srcList) {
+        srcList = srcList || [];
+        for (let i = 0, len = srcList.length; i < len; i++) {
+            let items = srcList[i];
+            if (!items) continue;
+            let type = items.split('.')[1];
+            let element = (type === 'css') ? 'link' : 'script';
+            let attr = (type === 'css') ? 'href' : 'src';
+            let suspects = document.getElementsByTagName(element);
+            for (let s = 0, len = suspects.length; s < len; s++) {
+                let item = suspects[s];
+                if (!item) continue;
+                let attrs = item[attr];
+                if (attrs != null && attrs.indexOf(items) > -1) item.parentNode.removeChild(item);
             }
         }
-    }
-};
+    };
 
-module.exports = {init, dataJsonPort};
+}
+
+module.exports = util.getInstance();

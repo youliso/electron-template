@@ -15,9 +15,10 @@
 </div>
 <!-- //unpkg.com/vue/dist/vue.esm.browser.min.js -->
 <script type="module">
+    const {ipcRenderer} = require('electron');
     import Vue from './lib/vue.esm.browser.min.js';
-    const _ = require('./lib/util');
-    _.dataJsonPort().then(e => _.init(Vue, 'dialog', e).then(lib => new Vue(lib)));
+
+    ipcRenderer.on('dataJsonPort', async (event, e) => require('./lib/main').vue(Vue, 'dialog', e).then(lib => new Vue(lib)));
 </script>
 </body>
 </html>
