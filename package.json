@@ -9,8 +9,8 @@
   "license": "MIT",
   "scripts": {
     "update": "npm update",
-    "start src": "electron src/main/index.js",
-    "start dist": "electron  dist/index.js",
+    "start src": "electron src/main/lib/index.js",
+    "start dist": "electron  dist/lib/index.js",
     "gulp": "gulp retrieval && gulp compress && gulp compiler",
     "build": "electron-builder",
     "build w": "electron-builder -w"

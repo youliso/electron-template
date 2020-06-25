@@ -138,7 +138,6 @@ gulp.task('compiler', async () => {
                 src: fs.readFileSync(i).toString(),
                 sourceMap: null
             }]);
-            if (i === 'D:\\Code\\Node_Template\\APP\\dist\\lib\\util.js') console.log(cc);
             fs.writeFileSync(i, cc['compiledFiles'][0].src);
         }
     }
