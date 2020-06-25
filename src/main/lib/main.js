@@ -255,11 +255,10 @@ class main {
             globalShortcut.unregister('CommandOrControl+R');
         });
         //协议调起
-        const args = [];
+        let args = [];
         if (!app.isPackaged) args.push(resolve(process.argv[1]));
         args.push('--');
-        const PROTOCOL = app.name;
-        app.setAsDefaultProtocolClient(PROTOCOL, process.execPath, args);
+        app.setAsDefaultProtocolClient(app.name, process.execPath, args);
     }
 
     async ipc() {
