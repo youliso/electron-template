@@ -11,10 +11,7 @@ class main {
 
     constructor() {
         this.config = require('./cfg/config.json');
-        this.Authorization = "";
-        this.appSize = this.config.appSize;
-        this.dialogSize = this.config.dialogSize;
-        this.menuSize = this.config.menuSize;
+        this.Authorization = ""; //token
         this.win = null; //主窗口
         this.dialogs = []; //弹框组
         this.is_Dialogs = []; //弹框组状态
@@ -47,7 +44,7 @@ class main {
     }
 
     async createWindow() {
-        this.win = new BrowserWindow(this.browserWindowOpt(this.appSize));
+        this.win = new BrowserWindow(this.browserWindowOpt(this.config.appSize));
         //加载完毕后显示
         this.win.once('ready-to-show', () => this.win.show());
         //关闭后，这个事件会被触发。
@@ -79,10 +76,10 @@ class main {
                 return;
             }
             // 创建浏览器窗口。
-            let opt = this.browserWindowOpt(this.menuSize);
+            let opt = this.browserWindowOpt(this.config.menuSize);
             opt.x = menu_point.x - 12;
-            if ((opt.x + 300) > screen.getPrimaryDisplay().workAreaSize.width) opt.x = menu_point.x - (this.menuSize[0] - 13);
-            opt.y = menu_point.y - (this.menuSize[1] - 13);
+            if ((opt.x + 300) > screen.getPrimaryDisplay().workAreaSize.width) opt.x = menu_point.x - (this.config.menuSize[0] - 13);
+            opt.y = menu_point.y - (this.config.menuSize[1] - 13);
             this.menu = new BrowserWindow(opt);
             //window 加载完毕后显示
             this.menu.once('ready-to-show', () => this.menu.show());
@@ -112,15 +109,15 @@ class main {
                 return;
             }
         }
-        let opt = this.browserWindowOpt(this.dialogSize);
+        let opt = this.browserWindowOpt(this.config.dialogSize);
         if (typeof args.parent === 'string') {
             if (args.parent === 'win') opt.parent = this.win;
-            opt.x = this.win.getPosition()[0] + ((this.win.getBounds().width - this.dialogSize[0]) / 2);
-            opt.y = this.win.getPosition()[1] + ((this.win.getBounds().height - this.dialogSize[1]) / 2);
+            opt.x = this.win.getPosition()[0] + ((this.win.getBounds().width - this.config.dialogSize[0]) / 2);
+            opt.y = this.win.getPosition()[1] + ((this.win.getBounds().height - this.config.dialogSize[1]) / 2);
         } else if (typeof args.parent === 'number') {
             opt.parent = this.dialogs[args.parent];
-            opt.x = this.dialogs[args.parent].getPosition()[0] + ((this.dialogs[args.parent].getBounds().width - this.dialogSize[0]) / 2);
-            opt.y = this.dialogs[args.parent].getPosition()[1] + ((this.dialogs[args.parent].getBounds().height - this.dialogSize[1]) / 2);
+            opt.x = this.dialogs[args.parent].getPosition()[0] + ((this.dialogs[args.parent].getBounds().width - this.config.dialogSize[0]) / 2);
+            opt.y = this.dialogs[args.parent].getPosition()[1] + ((this.dialogs[args.parent].getBounds().height - this.config.dialogSize[1]) / 2);
         }
         opt.modal = args.modal;
         opt.resizable = args.resizable;
@@ -380,9 +377,19 @@ class main {
         const that = this;
         conf = conf ? JSON.parse(decodeURIComponent(conf)) : null;
         Vue.prototype.$config = that.config;
-        Vue.prototype.$util = _;
-        Vue.prototype.$util.remote = remote;
-        Vue.prototype.$util.ipcRenderer = ipcRenderer;
+        Vue.prototype.$util = {
+            remote,
+            ipcRenderer,
+            trim: _.trim,
+            isNull: _.isNull,
+            Random: _.Random,
+            swapArr: _.swapArr,
+            net: _.net,
+            loadCssJs: _.loadCssJs,
+            removeCssJs: _.removeCssJs,
+            storage: _.storage,
+            log: _.log
+        };
         const view = async (key, view) => {
             let v = require(view);
             if (v.components) {

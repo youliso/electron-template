@@ -1,7 +1,7 @@
 'use strict';
 const {existsSync, readdirSync, statSync, unlinkSync, rmdirSync, mkdirSync, writeFileSync, appendFileSync} = require('fs');
 const {resolve} = require('path');
-const {remote} = require('electron');
+const main = require('./main');
 
 class util {
     static getInstance() {
@@ -160,7 +160,7 @@ class util {
         let sendData = {
             headers: {
                 'Content-type': 'application/json;charset=utf-8',
-                'Authorization': remote.getGlobal('App_Data').Authorization || ''
+                'Authorization': main.Authorization || ''
             },
             outTime: 30000,
             mode: 'cors'
@@ -175,7 +175,7 @@ class util {
         let checkStatus = (res) => {
             if (res.status >= 200 && res.status < 300) {
                 let Authorization = res.headers.get('Authorization');
-                if (Authorization) remote.getGlobal('App_Data').Authorization = Authorization;
+                if (Authorization) main.Authorization = Authorization;
                 return res;
             }
             const error = new Error(res.statusText);

@@ -1,1 +1,52 @@
-{"devTools":true,"themeColor":"#333333","appUrl":"http://127.0.0.1:3000/","socketUrl":"http://127.0.0.1:3000/","updateUrl":"http://127.0.0.1:3000/","updateFileUrl":"http://127.0.0.1:3000/public/dist/","appSize":[800,500],"dialogSize":[400,150],"menuSize":[76,94],"views":{"app-global-components":["../views/app/components/global/test.js"],"app-components":{"head":"../views/app/components/local/head.js"},"app-views":{"app-home":"../views/app/home.js","app-info":"../views/app/info.js"},"dialog-global-components":["../views/dialog/components/global/head.js"],"dialog-components":{"head":"../views/dialog/components/local/head.js"},"dialog-views":{"dialog-exitprompt":"../views/dialog/exitprompt.js","dialog-message":"../views/dialog/message.js","dialog-settings":"../views/dialog/settings.js"},"menu-global-components":["../views/menu/components/global/head.js"],"menu-components":{"head":"../views/menu/components/local/head.js"},"menu-views":{"menu-home":"../views/menu/home.js"}}}
+{
+  "devTools": true,
+  "themeColor": "#333333",
+  "appUrl": "http://127.0.0.1:3000/",
+  "socketUrl": "http://127.0.0.1:3000/",
+  "updateUrl": "http://127.0.0.1:3000/",
+  "updateFileUrl": "http://127.0.0.1:3000/public/dist/",
+  "appSize": [
+    800,
+    500
+  ],
+  "dialogSize": [
+    400,
+    150
+  ],
+  "menuSize": [
+    76,
+    94
+  ],
+  "views": {
+    "app-global-components": [
+      "../views/app/components/global/test.js"
+    ],
+    "app-components": {
+      "head": "../views/app/components/local/head.js"
+    },
+    "app-views": {
+      "app-home": "../views/app/home.js",
+      "app-info": "../views/app/info.js"
+    },
+    "dialog-global-components": [
+      "../views/dialog/components/global/head.js"
+    ],
+    "dialog-components": {
+      "head": "../views/dialog/components/local/head.js"
+    },
+    "dialog-views": {
+      "dialog-exitprompt": "../views/dialog/exitprompt.js",
+      "dialog-message": "../views/dialog/message.js",
+      "dialog-settings": "../views/dialog/settings.js"
+    },
+    "menu-global-components": [
+      "../views/menu/components/global/head.js"
+    ],
+    "menu-components": {
+      "head": "../views/menu/components/local/head.js"
+    },
+    "menu-views": {
+      "menu-home": "../views/menu/home.js"
+    }
+  }
+}
