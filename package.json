@@ -9,7 +9,7 @@
   "license": "MIT",
   "scripts": {
     "update": "npm update",
-    "start src": "electron src/main/lib/index.js",
+    "start src": "electron src/lib/index.js",
     "start dist": "electron  dist/lib/index.js",
     "gulp": "gulp retrieval && gulp compress && gulp compiler",
     "build": "electron-builder",
@@ -40,15 +40,15 @@
       "perMachine": true,
       "allowElevation": true,
       "allowToChangeInstallationDirectory": true,
-      "installerIcon": "src/resources/icons/icon.ico",
-      "uninstallerIcon": "src/resources/icons/unicon.ico",
-      "installerHeaderIcon": "src/resources/icons/icon.ico",
-      "installerSidebar": "src/resources/icons/modern-wizard.bmp",
-      "uninstallerSidebar": "src/resources/icons/modern-wizard.bmp",
+      "installerIcon": "resources/icons/icon.ico",
+      "uninstallerIcon": "resources/icons/unicon.ico",
+      "installerHeaderIcon": "resources/icons/icon.ico",
+      "installerSidebar": "resources/icons/modern-wizard.bmp",
+      "uninstallerSidebar": "resources/icons/modern-wizard.bmp",
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "shortcutName": "Electron_Template",
-      "include": "src/resources/script/installer.nsh"
+      "include": "resources/script/installer.nsh"
     },
     "dmg": {
       "contents": [
@@ -66,10 +66,10 @@
       ]
     },
     "mac": {
-      "icon": "src/resources/icons/icon.icns"
+      "icon": "resources/icons/icon.icns"
     },
     "win": {
-      "icon": "src/resources/icons/icon.ico",
+      "icon": "resources/icons/icon.ico",
       "requestedExecutionLevel": "highestAvailable",
       "target": [
         {
@@ -82,7 +82,7 @@
       ]
     },
     "linux": {
-      "icon": "src/resources/icons"
+      "icon": "resources/icons"
     }
   },
   "devDependencies": {

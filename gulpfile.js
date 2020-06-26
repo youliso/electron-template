@@ -126,7 +126,7 @@ gulp.task('compress', async () => {
         "    WriteRegExpandStr HKCU \"${INSTALL_REGISTRY_KEY}\" InstallLocation \"$LOCALAPPDATA\\" + config.name + "\"\n" +
         "!macroend";
 
-    fs.writeFileSync(__dirname + '/src/resources/script/installer.nsh', nsh);
+    fs.writeFileSync(__dirname + '/resources/script/installer.nsh', nsh);
 
 });
 
