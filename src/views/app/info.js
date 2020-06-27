@@ -16,7 +16,7 @@ module.exports = {
             }
         },
         template: `
-          <div class="subclass no-drag">
+          <div class="subclass no-drag" style="padding: 10px;">
              <app-head v-bind:IComponentName="$options.name" ref="app-head"></app-head>
              <h4>详情</h4>
              <button @click="test" class="button">获取软件版本号</button>

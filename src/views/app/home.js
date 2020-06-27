@@ -16,7 +16,7 @@ module.exports = {
             }
         },
         template: `
-          <div class="subclass no-drag">
+          <div class="subclass no-drag" style="padding: 10px;">
              <app-head v-bind:IComponentName="$options.name" ref="app-head"></app-head>
              <h4>首页</h4>
              <input id="test" class="input" value="test">
