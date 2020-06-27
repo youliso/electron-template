@@ -379,6 +379,7 @@ class main {
         Vue.prototype.$util = _;
         Vue.prototype.$util.remote = remote;
         Vue.prototype.$util.ipcRenderer = ipcRenderer;
+        Vue.prototype.$srl = (srl) => that.config.appUrl + srl;
         const view = async (key, view) => {
             let v = require(view);
             if (v.components) {
