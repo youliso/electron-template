@@ -1,6 +1,7 @@
 'use strict';
 const {existsSync, readdirSync, statSync, unlinkSync, rmdirSync, mkdirSync, writeFileSync, appendFileSync} = require('fs');
 const {resolve} = require('path');
+const {ipcRenderer, remote} = require('electron');
 const main = require('./main');
 
 class util {
@@ -10,6 +11,8 @@ class util {
     }
 
     constructor() {
+        this.ipcRenderer = ipcRenderer;
+        this.remote = remote;
         this.logFile = resolve("./log");
         try {
             statSync(this.logFile);
@@ -23,22 +26,23 @@ class util {
      * 日志输出
      * */
     log() {
+        let that = this;
         return {
             info(val) {
                 try {
-                    statSync(this.logFile + '/info.log');
+                    statSync(that.logFile + '/info.log');
                 } catch (e) {
-                    writeFileSync(this.logFile + '/info.log', '');
+                    writeFileSync(that.logFile + '/info.log', '');
                 }
-                appendFileSync(this.logFile + '/info.log', `[${new Date()}] ${val}\n`);
+                appendFileSync(that.logFile + '/info.log', `[${new Date()}] ${val}\n`);
             },
             error(val) {
                 try {
-                    statSync(this.file + '/error.log');
+                    statSync(that.file + '/error.log');
                 } catch (e) {
-                    writeFileSync(this.file + '/error.log', '');
+                    writeFileSync(that.file + '/error.log', '');
                 }
-                appendFileSync(this.file + '/error.log', `[${new Date()}] ${val}\n`);
+                appendFileSync(that.file + '/error.log', `[${new Date()}] ${val}\n`);
             }
         }
     }

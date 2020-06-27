@@ -1,6 +1,6 @@
 'use strict';
 const {resolve} = require('path');
-const {shell, app, BrowserWindow, globalShortcut, ipcMain, screen, Tray, ipcRenderer, remote} = require('electron');
+const {shell, app, BrowserWindow, globalShortcut, ipcMain, screen, Tray} = require('electron');
 const _ = require('./util');
 
 class main {
@@ -377,8 +377,6 @@ class main {
         conf = conf ? JSON.parse(decodeURIComponent(conf)) : null;
         Vue.prototype.$config = that.config;
         Vue.prototype.$util = _;
-        Vue.prototype.$util.remote = remote;
-        Vue.prototype.$util.ipcRenderer = ipcRenderer;
         Vue.prototype.$srl = (srl) => that.config.appUrl + srl;
         const view = async (key, view) => {
             let v = require(view);
