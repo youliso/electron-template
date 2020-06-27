@@ -376,19 +376,9 @@ class main {
         const that = this;
         conf = conf ? JSON.parse(decodeURIComponent(conf)) : null;
         Vue.prototype.$config = that.config;
-        Vue.prototype.$util = {
-            remote,
-            ipcRenderer,
-            trim: _.trim,
-            isNull: _.isNull,
-            Random: _.Random,
-            swapArr: _.swapArr,
-            net: _.net,
-            loadCssJs: _.loadCssJs,
-            removeCssJs: _.removeCssJs,
-            storage: _.storage,
-            log: _.log
-        };
+        Vue.prototype.$util = _;
+        Vue.prototype.$util.remote = remote;
+        Vue.prototype.$util.ipcRenderer = ipcRenderer;
         const view = async (key, view) => {
             let v = require(view);
             if (v.components) {

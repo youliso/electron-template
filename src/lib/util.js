@@ -74,8 +74,20 @@ class util {
      * 判空
      * */
     isNull(arg) {
-        if (typeof arg === 'string') arg = trim(arg);
+        if (typeof arg === 'string') arg = this.trim(arg);
         return !arg && arg !== 0 && typeof arg !== "boolean" ? true : false;
+    }
+
+    /**
+     * isJson
+     * str : string
+     * */
+    toJSON(str) {
+        try {
+            return JSON.parse(str);
+        } catch (e) {
+            return str;
+        }
     }
 
     /**
@@ -94,21 +106,10 @@ class util {
     }
 
     /**
-     * isJson
-     * str : string
-     * */
-    toJSON(str) {
-        try {
-            return JSON.parse(str);
-        } catch (e) {
-            return str;
-        }
-    }
-
-    /**
      * 浏览器缓存
      * */
     storage() {
+        let that = this;
         return {
             set(key, value, sk) {
                 sk = sk ? 'sessionStorage' : 'localStorage';
@@ -118,8 +119,8 @@ class util {
             get(key, sk) {
                 sk = sk ? 'sessionStorage' : 'localStorage';
                 let data = eval(sk).getItem(key);
-                if (this.isNull(data)) return null;
-                return toJSON(data);
+                if (that.isNull(data)) return null;
+                return that.toJSON(data);
             },
             remove(key, sk) {
                 sk = sk ? 'sessionStorage' : 'localStorage';
@@ -194,7 +195,7 @@ class util {
                 fetch(url, sendData)
                     .then(checkStatus)
                     .then(res => res.text())
-                    .then(data => resolve(toJSON(data)))
+                    .then(data => resolve(this.toJSON(data)))
                     .catch(err => reject(err))
             });
         };
