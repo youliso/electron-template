@@ -63,20 +63,20 @@ gulp.task('retrieval', async () => {
         'menu-views': {}
     };
     for (let i of retrievals) {
-        fs.readdirSync(`src/main/views/${i}/components/global`).forEach((element) => {
+        fs.readdirSync(`src/views/${i}/components/global`).forEach((element) => {
             views[`${i}-global-components`].push(`../views/${i}/components/global/` + element);
         });
-        fs.readdirSync(`src/main/views/${i}/components/local`).forEach((element) => {
+        fs.readdirSync(`src/views/${i}/components/local`).forEach((element) => {
             views[`${i}-components`][element.slice(0, element.length - 3)] = `../views/${i}/components/local/` + element;
         });
-        fs.readdirSync(`src/main/views/${i}`).forEach((element) => {
+        fs.readdirSync(`src/views/${i}`).forEach((element) => {
             if (element !== 'components') {
                 views[`${i}-views`][`${i}-${element.slice(0, element.length - 3)}`] = `../views/${i}/` + element;
             }
         });
     }
     nConf.views = views;
-    fs.writeFileSync(__dirname + '/src/main/lib/cfg/config.json', JSON.stringify(nConf, null, 2));
+    fs.writeFileSync(__dirname + '/src/lib/cfg/config.json', JSON.stringify(nConf, null, 2));
     config.build.publish = [{
         "provider": "generic",
         "url": nConf.updateUrl
@@ -88,17 +88,17 @@ gulp.task('retrieval', async () => {
 
 gulp.task('compress', async () => {
     //cfg
-    gulp.src(['src/main/**/*.json', 'src/main/**/*.ico'])
+    gulp.src(['src/**/*.json', 'src/**/*.ico'])
         .pipe(gulp.dest(buildBasePath));
     //css
-    gulp.src('src/main/**/*.css')
+    gulp.src('src/**/*.css')
         .pipe(minifyCss())//压缩css到一样
         .pipe(gulp.dest(buildBasePath));//输出到css目录
     //js
-    gulp.src('src/main/**/*.js')
+    gulp.src('src/**/*.js')
         .pipe(gulp.dest(buildBasePath));
     //html
-    gulp.src('src/main/**/*.html')
+    gulp.src('src/**/*.html')
         .pipe(gulpRemoveHtml())//清除特定标签
         .pipe(removeEmptyLines({removeComments: true}))//清除空白行
         .pipe(htmlmin({
