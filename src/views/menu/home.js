@@ -2,7 +2,7 @@
 const execSync = require('child_process').execSync;
 module.exports = {
     keepAlive: true,
-    size:[],
+    size: [],
     lib: [],
     main: {
         data() {
@@ -26,12 +26,12 @@ module.exports = {
             //开启缓存后 切换卸载
         },
         methods: {
-            show(){
+            show() {
                 window.close();
                 this.$util.ipcRenderer.send('show');
             },
-            closed(){
-                MOUSE_LEAVE = () =>{};
+            closed() {
+                document.body.onmouseleave = null;
                 window.close();
                 this.closed_txt = "退出中";
                 this.$util.ipcRenderer.send('closed');

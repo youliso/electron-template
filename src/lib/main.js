@@ -56,6 +56,10 @@ class main {
         });
         // 打开开发者工具
         if (this.config.devTools) this.win.webContents.openDevTools();
+        //注入初始化代码
+        this.win.webContents.on("did-finish-load", () => {
+            this.win.webContents.send('dataJsonPort', encodeURIComponent(JSON.stringify({el: 'app'})));
+        });
         // 加载index.html文件
         await this.win.loadFile(resolve(__dirname, '../index.html'));
     }
@@ -96,8 +100,12 @@ class main {
             this.menu.setSkipTaskbar(true);
             //menu最顶层
             this.menu.setAlwaysOnTop(true, 'screen-saver');
+            //注入初始化代码
+            this.menu.webContents.on("did-finish-load", () => {
+                this.menu.webContents.send('dataJsonPort', encodeURIComponent(JSON.stringify({el: 'menu'})));
+            });
             // 加载index.html文件
-            await this.menu.loadFile(resolve(__dirname, '../menu.html'));
+            await this.menu.loadFile(resolve(__dirname, '../index.html'));
         })
     }
 
@@ -138,9 +146,12 @@ class main {
         //注入初始化代码
         this.dialogs[id].webContents.on("did-finish-load", () => {
             args.id = id;
-            this.dialogs[id].webContents.send('dataJsonPort', encodeURIComponent(JSON.stringify(args)));
+            this.dialogs[id].webContents.send('dataJsonPort', encodeURIComponent(JSON.stringify({
+                el: 'dialog',
+                data: args
+            })));
         });
-        await this.dialogs[id].loadFile(resolve(__dirname, '../dialog.html'));
+        await this.dialogs[id].loadFile(resolve(__dirname, '../index.html'));
         this.is_Dialogs[id] = true;
     }
 
@@ -374,7 +385,7 @@ class main {
      * */
     async vue(Vue, el, conf) {
         const that = this;
-        conf = conf ? JSON.parse(decodeURIComponent(conf)) : null;
+        document.title = _.remote.app.name;
         Vue.prototype.$config = that.config;
         Vue.prototype.$util = _;
         Vue.prototype.$srl = (srl) => that.config.appUrl + srl;
