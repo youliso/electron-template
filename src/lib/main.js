@@ -451,12 +451,12 @@ class main {
                             name: key
                         };
                         if (vi.size) size_ = vi.size;
-                        I_lib = vi.lib;
-                        if (this.LoadedComponents.length > 0) R_lib = this.IComponent.lib;
+                        I_lib = vi.lib.concat();
+                        if (this.LoadedComponents.length > 0) R_lib = this.IComponent.lib.concat();
                     } else {
                         size_ = this.AppComponents[key].size;
-                        I_lib = this.AppComponents[key].lib;
-                        R_lib = this.IComponent.lib;
+                        I_lib = this.AppComponents[key].lib.concat();
+                        R_lib = this.IComponent.lib.concat();
                     }
                     let repeat_Lib = Array.from([...new Set([...I_lib, ...R_lib].filter(i => [...I_lib, ...R_lib].indexOf(i) !== [...I_lib, ...R_lib].lastIndexOf(i)))]);
                     for (let i = 0, len = repeat_Lib.length; i < len; i++) {
