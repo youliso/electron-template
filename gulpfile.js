@@ -50,7 +50,7 @@ function findFileBySuffix(dirs, fileName) {
 
 
 gulp.task('retrieval', async () => {
-    let retrievals = ['app', 'dialog', 'menu']
+    let retrievals = ['app', 'dialog', 'menu'];
     let views = {
         'app-global-components': [],
         'app-components': {},
@@ -63,17 +63,14 @@ gulp.task('retrieval', async () => {
         'menu-views': {}
     };
     for (let i of retrievals) {
-        fs.readdirSync(`src/views/${i}/components/global`).forEach((element) => {
-            views[`${i}-global-components`].push(`../views/${i}/components/global/` + element);
-        });
-        fs.readdirSync(`src/views/${i}/components/local`).forEach((element) => {
-            views[`${i}-components`][element.slice(0, element.length - 3)] = `../views/${i}/components/local/` + element;
-        });
-        fs.readdirSync(`src/views/${i}`).forEach((element) => {
-            if (element !== 'components') {
-                views[`${i}-views`][`${i}-${element.slice(0, element.length - 3)}`] = `../views/${i}/` + element;
-            }
-        });
+        for (let s of findFileBySuffix(`src/views/${i}`, '.js')) {
+            s = s.split(isWin ? __dirname + `\\src` : __dirname + `/src`)[1];
+            let path = '..' + s.replace(/\\/g, '/');
+            let name = path.slice(path.lastIndexOf('/') + 1, path.length - 3);
+            if (path.indexOf(`${i}/components/global`) > -1) views[`${i}-global-components`].push(path);
+            else if (path.indexOf(`${i}/components/local`) > -1) views[`${i}-components`][name] = path;
+            else views[`${i}-views`][`${i}-${name}`] = path;
+        }
     }
     nConf.views = views;
     fs.writeFileSync(__dirname + '/src/lib/cfg/config.json', JSON.stringify(nConf, null, 2));
