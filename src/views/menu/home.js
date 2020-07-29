@@ -1,5 +1,4 @@
 'use strict';
-const execSync = require('child_process').execSync;
 module.exports = {
     keepAlive: true,
     size: [],

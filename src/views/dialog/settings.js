@@ -26,7 +26,7 @@ module.exports = {
             test() {
                 this.$parent.dialogInit({
                     name: '提示',
-                    v: 'message',
+                    v: 'dialog-subject-message',
                     data: {
                         text: '123'
                     }

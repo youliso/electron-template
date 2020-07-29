@@ -394,8 +394,8 @@ class main {
             if (v.components) {
                 v.main.components = {};
                 for (let i of v.components) {
-                    let {lib, main} = require(that.config['views'][`${el}-components`][i]);
-                    v.main.components[`${el}-${i}`] = main;
+                    let {lib, main} = require(that.config['views'][el]['local'][i]);
+                    v.main.components[i] = main;
                     v.lib = [...lib, ...v.lib];
                 }
             }
@@ -403,8 +403,9 @@ class main {
             return v;
         };
         let viewsList = [];
-        for (let i of that.config['views'][`${el}-global-components`]) {
-            viewsList.push(view(`${el}-${i.substring(i.lastIndexOf('/') + 1, i.lastIndexOf('.'))}`, i));
+        for (let i in that.config['views'][el]['global']) {
+            let item = that.config['views'][el]['global'][i];
+            viewsList.push(view(i, item));
         }
         await Promise.all(viewsList);
         let app_data = {
@@ -414,20 +415,20 @@ class main {
             themeColor: that.config.themeColor
         };
         if (conf) app_data.conf = conf;
-        app_data.headKey = el + '-';
+        app_data.category = el;
         return {
             el: `#${el}`,
             data: app_data,
             async created() {
-                switch (el) {
+                switch (this.category) {
                     case 'app':
-                        this.init('home');
+                        this.init('app-subject-home');
                         break;
                     case 'dialog':
                         this.init(this.conf.v);
                         break;
                     case 'menu':
-                        this.init('home');
+                        this.init('menu-subject-home');
                 }
             },
             updated() {
@@ -440,10 +441,14 @@ class main {
                     await this.switchComponent(componentName);
                 },
                 async switchComponent(key, args) {
+                    if (this.IComponent && this.IComponent.name === key) {
+                        this.args = args;
+                        if (this.$refs[key]) this.$refs[key].args = args;
+                        return;
+                    }
                     let size_ = [], I_lib = [], R_lib = [];
-                    key = this.headKey + key;
                     if (this.LoadedComponents.indexOf(key) < 0) {
-                        let vi = await view(key, this.$config['views'][`${this.headKey}views`][key]);
+                        let vi = await view(key, this.$config['views'][this.category]['subject'][key]);
                         this.AppComponents[key] = {
                             keepAlive: vi.keepAlive,
                             size: vi.size,
@@ -466,7 +471,7 @@ class main {
                     await this.$util.loadCssJs(I_lib);
                     await this.$util.removeCssJs(R_lib);
                     let Rectangle = {};
-                    switch (this.$el.id) {
+                    switch (this.category) {
                         case 'app':
                             Rectangle = {
                                 width: this.$config.appSize[0],
@@ -510,8 +515,8 @@ class main {
                         switch (req.code) {
                             case 0:
                                 let path = req.result.split('.');
-                                if (path.length === 1) this[this.headKey + path[0]] = req.data;
-                                if (path.length === 2) this.$refs[this.headKey + path[0]][path[1]] = req.data;
+                                if (path.length === 1) this[path[0]] = req.data;
+                                if (path.length === 2) this.$refs[path[0]][path[1]] = req.data;
                                 break;
                             case -1:
                                 console.log(req.msg);
@@ -554,6 +559,14 @@ class main {
                 },
                 dialogSend(args) {
                     this.$util.ipcRenderer.send('newWin-feedback', args);
+                },
+                eliminateComponent() {
+                    let Components = Object.getOwnPropertyNames(this.$refs).sort();
+                    let LoadedComponents = new Set([...this.LoadedComponents.concat()]);
+                    if (Components.length > 15) {
+                        let c = Array.from(new Set([...Components].filter(x => !new Set([...LoadedComponents]).has(x))));
+                        for (let i of c) if (this.$refs[i]) delete this.$refs[i];
+                    }
                 }
             },
             watch: {
@@ -561,6 +574,7 @@ class main {
                     let index1 = this.LoadedComponents.indexOf(val.name);
                     if (index1 < 0) this.LoadedComponents.unshift(val.name);
                     else this.$util.swapArr(this.LoadedComponents, index1, 0);
+                    setTimeout(() => this.eliminateComponent(), 1000);
                 }
             }
         }

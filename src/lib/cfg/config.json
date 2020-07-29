@@ -18,35 +18,37 @@
     94
   ],
   "views": {
-    "app-global-components": [
-      "../views/app/components/global/test.js"
-    ],
-    "app-components": {
-      "head": "../views/app/components/local/head.js"
+    "app": {
+      "global": {
+        "app-global-test": "../views/app/components/global/test.js"
+      },
+      "local": {
+        "app-local-head": "../views/app/components/local/head.js"
+      },
+      "subject": {
+        "app-subject-home": "../views/app/home.js",
+        "app-subject-info": "../views/app/info.js"
+      }
     },
-    "app-views": {
-      "app-home": "../views/app/home.js",
-      "app-info": "../views/app/info.js"
+    "dialog": {
+      "global": {
+        "dialog-global-head": "../views/dialog/components/global/head.js"
+      },
+      "local": {
+        "dialog-local-head": "../views/dialog/components/local/head.js"
+      },
+      "subject": {
+        "dialog-subject-exitprompt": "../views/dialog/exitprompt.js",
+        "dialog-subject-message": "../views/dialog/message.js",
+        "dialog-subject-settings": "../views/dialog/settings.js"
+      }
     },
-    "dialog-global-components": [
-      "../views/dialog/components/global/head.js"
-    ],
-    "dialog-components": {
-      "head": "../views/dialog/components/local/head.js"
-    },
-    "dialog-views": {
-      "dialog-exitprompt": "../views/dialog/exitprompt.js",
-      "dialog-message": "../views/dialog/message.js",
-      "dialog-settings": "../views/dialog/settings.js"
-    },
-    "menu-global-components": [
-      "../views/menu/components/global/head.js"
-    ],
-    "menu-components": {
-      "head": "../views/menu/components/local/head.js"
-    },
-    "menu-views": {
-      "menu-home": "../views/menu/home.js"
+    "menu": {
+      "global": {},
+      "local": {},
+      "subject": {
+        "menu-subject-home": "../views/menu/home.js"
+      }
     }
   }
 }

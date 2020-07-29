@@ -52,24 +52,30 @@ function findFileBySuffix(dirs, fileName) {
 gulp.task('retrieval', async () => {
     let retrievals = ['app', 'dialog', 'menu'];
     let views = {
-        'app-global-components': [],
-        'app-components': {},
-        'app-views': {},
-        'dialog-global-components': [],
-        'dialog-components': {},
-        'dialog-views': {},
-        'menu-global-components': [],
-        'menu-components': {},
-        'menu-views': {}
+        'app': {
+            'global': {},
+            'local': {},
+            'subject': {}
+        },
+        'dialog': {
+            'global': {},
+            'local': {},
+            'subject': {}
+        },
+        'menu': {
+            'global': {},
+            'local': {},
+            'subject': {}
+        }
     };
     for (let i of retrievals) {
         for (let s of findFileBySuffix(`src/views/${i}`, '.js')) {
             s = s.split(isWin ? __dirname + `\\src` : __dirname + `/src`)[1];
             let path = '..' + s.replace(/\\/g, '/');
             let name = path.slice(path.lastIndexOf('/') + 1, path.length - 3);
-            if (path.indexOf(`${i}/components/global`) > -1) views[`${i}-global-components`].push(path);
-            else if (path.indexOf(`${i}/components/local`) > -1) views[`${i}-components`][name] = path;
-            else views[`${i}-views`][`${i}-${name}`] = path;
+            if (path.indexOf(`${i}/components/global`) > -1) views[i]['global'][`${i}-global-${name}`] = path;
+            else if (path.indexOf(`${i}/components/local`) > -1) views[i]['local'][`${i}-local-${name}`] = path;
+            else views[i]['subject'][`${i}-subject-${name}`] = path;
         }
     }
     nConf.views = views;

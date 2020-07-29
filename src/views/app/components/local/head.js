@@ -34,7 +34,7 @@ module.exports = {
                 this.$parent.$parent.dialogInit(
                     {
                         name: '设置',
-                        v: 'settings',
+                        v: 'dialog-subject-settings',
                         r: this.r('d_settings')
                     }
                 );
@@ -45,7 +45,7 @@ module.exports = {
                     this.$parent.$parent.dialogInit(
                         {
                             name: '提示',
-                            v: 'exitprompt',
+                            v: 'dialog-subject-exitprompt',
                             r: this.r('d_settings')
                         }
                     );

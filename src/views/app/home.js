@@ -7,7 +7,7 @@ module.exports = {
         'lib/static/css/views/home.css'
     ],
     components: [
-        'head'
+        'app-local-head'
     ],
     main: {
         data() {
@@ -17,12 +17,12 @@ module.exports = {
         },
         template: `
           <div class="subclass no-drag" style="padding: 10px;">
-             <app-head v-bind:IComponentName="$options.name" ref="app-head"></app-head>
+             <app-local-head v-bind:IComponentName="$options.name" ref="app-local-head"></app-local-head>
              <h4>首页</h4>
              <input id="test" class="input" value="test">
              <select class="select"><option>123</option></select>
              <button @click="test" class="button yellow">获取软件版本号</button>
-             <button @click="$parent.switchComponent('info')" class="button green">详情</button>
+             <button @click="$parent.switchComponent('app-subject-info')" class="button green">详情</button>
           </div>
         `,
         async created() {
@@ -59,7 +59,7 @@ module.exports = {
                 data = this.$util.trim(data.slice(7).toString());
                 this.$parent.dialogInit({
                     name: '提示',
-                    v: 'message',
+                    v: 'dialog-subject-message',
                     data: {
                         text: name + '版本号：' + (data === '' ? '此应用未设置版本号' : data)
                     }

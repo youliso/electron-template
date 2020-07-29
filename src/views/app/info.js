@@ -7,7 +7,7 @@ module.exports = {
         'lib/static/css/views/home.css'
     ],
     components: [
-        'head'
+        'app-local-head'
     ],
     main: {
         data() {
@@ -17,10 +17,10 @@ module.exports = {
         },
         template: `
           <div class="subclass no-drag" style="padding: 10px;">
-             <app-head v-bind:IComponentName="$options.name" ref="app-head"></app-head>
+             <app-local-head v-bind:IComponentName="$options.name" ref="app-local-head"></app-local-head>
              <h4>详情</h4>
              <button @click="test" class="button">获取软件版本号</button>
-             <button @click="$parent.switchComponent('home')" class="button">返回</button>
+             <button @click="$parent.switchComponent('app-subject-home')" class="button">返回</button>
           </div>`,
         async created() {
         },
