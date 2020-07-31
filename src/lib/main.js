@@ -565,7 +565,7 @@ class main {
                     let LoadedComponents = new Set([...this.LoadedComponents.concat()]);
                     if (Components.length > 15) {
                         let c = Array.from(new Set([...Components].filter(x => !new Set([...LoadedComponents]).has(x))));
-                        for (let i of c) if (this.$refs[i]) delete this.$refs[i];
+                        for (let i of c) if (i.indexOf('global-') === -1 && this.$refs[i]) delete this.$refs[i];
                     }
                 }
             },
