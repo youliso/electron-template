@@ -10,17 +10,17 @@ class util {
         return util.instance;
     }
 
+    logFile = resolve("./log");
+    ipcRenderer = ipcRenderer;
+    remote = remote;
+
     constructor() {
-        this.ipcRenderer = ipcRenderer;
-        this.remote = remote;
-        this.logFile = resolve("./log");
         try {
             statSync(this.logFile);
         } catch (e) {
             mkdirSync(this.logFile, {recursive: true});
         }
     }
-
 
     /**
      * 日志输出

@@ -26,7 +26,7 @@ module.exports = {
           </div>
         `,
         async created() {
-            console.log(`${this.$options.name}: created`)
+            console.log(`${this.$options.name}: created`);
         },
         beforeDestroy() {
             //卸载
