@@ -156,7 +156,7 @@ class main {
     }
 
     async createSocket() {
-        this.socket = require('socket.io-client')(this.config.socketUrl, {query: `Authorization=${global['App_Data'].Authorization}`});
+        this.socket = require('socket.io-client')(this.config.socketUrl, {query: `Authorization=${this.Authorization}`});
         this.socket.on('connect', () => {
             this.win.webContents.executeJavaScript('console.log(\'[socket]connect\');');
             this.socketStatus = 1;
