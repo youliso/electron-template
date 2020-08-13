@@ -3,7 +3,7 @@
   "productName": "Electron_Template",
   "version": "0.1.0",
   "description": "Electron_Template",
-  "main": "dist/main.js",
+  "main": "dist/lib/index.js",
   "private": true,
   "author": "youliso@Hotmail.com",
   "license": "MIT",
