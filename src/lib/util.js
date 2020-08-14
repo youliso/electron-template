@@ -37,11 +37,11 @@ class util {
             },
             error(val) {
                 try {
-                    statSync(that.file + '/error.log');
+                    statSync(that.logFile + '/error.log');
                 } catch (e) {
-                    writeFileSync(that.file + '/error.log', '');
+                    writeFileSync(that.logFile + '/error.log', '');
                 }
-                appendFileSync(that.file + '/error.log', `[${new Date()}] ${val}\n`);
+                appendFileSync(that.logFile + '/error.log', `[${new Date()}] ${val}\n`);
             }
         }
     }
