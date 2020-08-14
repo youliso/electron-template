@@ -10,11 +10,10 @@ class util {
         return util.instance;
     }
 
-    logFile = resolve("./log");
-    ipcRenderer = ipcRenderer;
-    remote = remote;
-
     constructor() {
+        this.logFile = resolve("./log");
+        this.ipcRenderer = ipcRenderer;
+        this.remote = remote;
         try {
             statSync(this.logFile);
         } catch (e) {

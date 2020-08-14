@@ -35,7 +35,7 @@
             document.body.setAttribute('class', 'drag');
             document.body.onmouseleave = () => window.close();
         }
-        require('./lib/main').vue(Vue, e.el, e.data).then(lib => new Vue(lib))
+        require('./lib/view').vue(Vue, e.el, e.data).then(lib => new Vue(lib))
     });
 </script>
 </body>
