@@ -117,15 +117,16 @@ class main {
                 return;
             }
         }
-        let opt = this.browserWindowOpt(this.config.dialogSize);
+        //创建一个与父类窗口同大小、坐标的窗口
+        let opt = this.browserWindowOpt([args.width,args.height]);
         if (typeof args.parent === 'string') {
             if (args.parent === 'win') opt.parent = this.win;
-            opt.x = this.win.getPosition()[0] + ((this.win.getBounds().width - this.config.dialogSize[0]) / 2);
-            opt.y = this.win.getPosition()[1] + ((this.win.getBounds().height - this.config.dialogSize[1]) / 2);
+            opt.x = this.win.getPosition()[0] //+ ((this.win.getBounds().width - args.width) / 2);
+            opt.y = this.win.getPosition()[1] //+ ((this.win.getBounds().height - args.height) / 2);
         } else if (typeof args.parent === 'number') {
             opt.parent = this.dialogs[args.parent];
-            opt.x = this.dialogs[args.parent].getPosition()[0] + ((this.dialogs[args.parent].getBounds().width - this.config.dialogSize[0]) / 2);
-            opt.y = this.dialogs[args.parent].getPosition()[1] + ((this.dialogs[args.parent].getBounds().height - this.config.dialogSize[1]) / 2);
+            opt.x = this.dialogs[args.parent].getPosition()[0] //+ ((this.dialogs[args.parent].getBounds().width - args.width) / 2);
+            opt.y = this.dialogs[args.parent].getPosition()[1] //+ ((this.dialogs[args.parent].getBounds().height - args.height) / 2);
         }
         opt.modal = args.modal;
         opt.resizable = args.resizable;

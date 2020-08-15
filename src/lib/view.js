@@ -122,6 +122,7 @@ class view {
                                 height: this.$config.menuSize[1]
                             }
                     }
+                    //根据页面参数修正窗口大小和位置
                     if (size_ && size_.length > 0) {
                         Rectangle.width = size_[0];
                         Rectangle.height = size_[1];
@@ -164,6 +165,8 @@ class view {
                 },
                 dialogInit(data) {
                     let args = {
+                        width: this.$util.remote.getCurrentWindow().getBounds().width,
+                        height: this.$util.remote.getCurrentWindow().getBounds().height,
                         name: data.name, //名称
                         v: data.v, //页面id
                         resizable: false,// 是否支持调整窗口大小

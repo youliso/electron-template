@@ -1,6 +1,7 @@
 'use strict';
 const path = require('path');
 module.exports = {
+    size: [480, 230],
     lib: [],
     main: {
         data() {
@@ -32,9 +33,9 @@ module.exports = {
                     }
                 });
                 this.$parent.dialogSend({
-                    r:this.$parent.conf.r,
-                    data:{
-                        test:'测试'
+                    r: this.$parent.conf.r,
+                    data: {
+                        test: '测试'
                     }
                 })
             }

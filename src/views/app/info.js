@@ -49,7 +49,7 @@ module.exports = {
                 data = this.$util.trim(data.slice(7).toString());
                 this.$parent.dialogInit({
                     name: '提示',
-                    v: 'message',
+                    v: 'dialog-subject-message',
                     data: {
                         text: name + '版本号：' + (data === '' ? '此应用未设置版本号' : data)
                     }
