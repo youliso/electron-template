@@ -11,7 +11,7 @@
     "update": "npm update",
     "start src": "electron src/lib/index.js",
     "start dist": "electron  dist/lib/index.js",
-    "gulp": "gulp retrieval && gulp compress && gulp compiler",
+    "gulp": "npx gulp retrieval && npx gulp compress && npx gulp compiler",
     "build": "electron-builder",
     "build w": "electron-builder -w"
   },
@@ -98,7 +98,6 @@
   },
   "dependencies": {
     "electron-updater": "^4.3.1",
-    "socket.io-client": "^2.3.0",
-    "winax": "^1.20.0"
+    "socket.io-client": "^2.3.0"
   }
 }
