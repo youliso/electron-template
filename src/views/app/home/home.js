@@ -4,7 +4,7 @@ module.exports = {
     keepAlive: true,
     size: [],
     lib: [
-        'lib/static/css/views/home.css'
+        'views/app/home/home.css'
     ],
     components: [
         'app-local-head'
