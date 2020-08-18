@@ -209,7 +209,7 @@ class view {
                     let index1 = this.LoadedComponents.indexOf(val.name);
                     if (index1 < 0) this.LoadedComponents.unshift(val.name);
                     else this.$util.swapArr(this.LoadedComponents, index1, 0);
-                    setTimeout(() => this.eliminateComponent(), 1000);
+                    Vue.nextTick().then(() => this.eliminateComponent());
                 }
             }
         }
