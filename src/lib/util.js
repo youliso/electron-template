@@ -146,7 +146,7 @@ class util {
         let _result = [];
         for (let key in data) {
             let value = data[key];
-            if (value && value.constructor == Array) {
+            if (value?.constructor == Array) {
                 value.forEach(function (_value) {
                     _result.push(key + "=" + _value);
                 });
@@ -258,7 +258,7 @@ class util {
                 let item = suspects[s];
                 if (!item) continue;
                 let attrs = item[attr];
-                if (attrs != null && attrs.indexOf(items) > -1) item.parentNode.removeChild(item);
+                if (attrs?.indexOf(items) > -1) item.parentNode.removeChild(item);
             }
         }
     };

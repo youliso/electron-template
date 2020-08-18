@@ -12,6 +12,7 @@ module.exports = {
     main: {
         data() {
             return {
+                args: null,
                 listData: [1]
             }
         },
@@ -26,6 +27,7 @@ module.exports = {
           </div>
         `,
         async created() {
+            this.args = this.$parent.args; //获取传入参数
             console.log(`${this.$options.name}: created`);
         },
         beforeDestroy() {
@@ -34,7 +36,7 @@ module.exports = {
         },
         activated() {
             //开启缓存后 切换加载
-            console.log(`${this.$options.name}: activated`,document.getElementById('test').value)
+            console.log(`${this.$options.name}: activated`, document.getElementById('test').value)
         },
         deactivated() {
             //开启缓存后 切换卸载
@@ -67,6 +69,8 @@ module.exports = {
             }
         },
         watch: {
+            args(v) {//参数刷新后
+            },
             statusCode(v) {
                 console.log('statusCode')
             }
