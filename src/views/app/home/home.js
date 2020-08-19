@@ -47,7 +47,7 @@ module.exports = {
         },
         methods: {
             async test() {
-                let req = await this.$util.remote.dialog.showOpenDialog({
+                let req = await this.$remote.dialog.showOpenDialog({
                     properties: ['openFile'],
                     filters: [{name: '可运行文件', extensions: ['exe']}]
                 });
@@ -58,7 +58,7 @@ module.exports = {
             async getV(v) {
                 let name = v.substring(v.lastIndexOf('\\\\') + 2);
                 let data = execSync(`wmic datafile where "Name= '${v}'" get Version`);
-                data = this.$util.trim(data.slice(7).toString());
+                data = this.$general.trim(data.slice(7).toString());
                 this.$parent.dialogInit({
                     name: '提示',
                     v: 'dialog-subject-message',

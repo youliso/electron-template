@@ -23,7 +23,7 @@ module.exports = {
         },
         methods: {
             closed() {
-                this.$util.ipcRenderer.send('newWin-closed', this.$parent.conf.id)
+                this.$ipcRenderer.send('newWin-closed', this.$parent.conf.id)
             }
         }
     }

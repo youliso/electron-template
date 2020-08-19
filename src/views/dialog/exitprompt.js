@@ -29,10 +29,10 @@ module.exports = {
         },
         methods: {
             closed(is) {
-                if (is === 1) this.$util.ipcRenderer.send('closed')
+                if (is === 1) this.$ipcRenderer.send('closed')
                 else {
-                    this.$util.ipcRenderer.send('hide');
-                    this.$util.ipcRenderer.send('newWin-closed', this.$parent.conf.id);
+                    this.$ipcRenderer.send('hide');
+                    this.$ipcRenderer.send('newWin-closed', this.$parent.conf.id);
                 }
             }
         }

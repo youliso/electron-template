@@ -1,7 +1,9 @@
 'use strict';
 const {resolve} = require('path');
 const {shell, app, BrowserWindow, globalShortcut, ipcMain, screen, Tray} = require('electron');
-const _ = require('./util');
+const log = require('./util/log');
+const general = require('./util/general');
+const config = require('./cfg/config.json');
 
 class main {
     static getInstance() {
@@ -10,7 +12,6 @@ class main {
     }
 
     constructor() {
-        this.config = require('./cfg/config.json');
         this.Authorization = ""; //token
         this.win = null; //主窗口
         this.dialogs = []; //弹框组
@@ -37,14 +38,14 @@ class main {
             show: false,
             webPreferences: {
                 nodeIntegration: true,
-                devTools: this.config.devTools,
+                devTools: config.devTools,
                 webSecurity: false
             }
         }
     }
 
     async createWindow() {
-        this.win = new BrowserWindow(this.browserWindowOpt(this.config.appSize));
+        this.win = new BrowserWindow(this.browserWindowOpt(config.appSize));
         //加载完毕后显示
         this.win.once('ready-to-show', () => this.win.show());
         //关闭后，这个事件会被触发。
@@ -55,7 +56,7 @@ class main {
             shell.openExternal(url);
         });
         // 打开开发者工具
-        if (this.config.devTools) this.win.webContents.openDevTools();
+        if (config.devTools) this.win.webContents.openDevTools();
         //注入初始化代码
         this.win.webContents.on("did-finish-load", () => {
             this.win.webContents.send('dataJsonPort', encodeURIComponent(JSON.stringify({el: 'app'})));
@@ -80,10 +81,10 @@ class main {
                 return;
             }
             // 创建浏览器窗口。
-            let opt = this.browserWindowOpt(this.config.menuSize);
+            let opt = this.browserWindowOpt(config.menuSize);
             opt.x = menu_point.x - 12;
-            if ((opt.x + 300) > screen.getPrimaryDisplay().workAreaSize.width) opt.x = menu_point.x - (this.config.menuSize[0] - 13);
-            opt.y = menu_point.y - (this.config.menuSize[1] - 13);
+            if ((opt.x + 300) > screen.getPrimaryDisplay().workAreaSize.width) opt.x = menu_point.x - (config.menuSize[0] - 13);
+            opt.y = menu_point.y - (config.menuSize[1] - 13);
             this.menu = new BrowserWindow(opt);
             //window 加载完毕后显示
             this.menu.once('ready-to-show', () => this.menu.show());
@@ -95,7 +96,7 @@ class main {
                 shell.openExternal(url);
             });
             // 打开开发者工具
-            if (this.config.devTools) this.menu.webContents.openDevTools();
+            if (config.devTools) this.menu.webContents.openDevTools();
             //隐藏menu任务栏状态
             this.menu.setSkipTaskbar(true);
             //menu最顶层
@@ -143,7 +144,7 @@ class main {
             shell.openExternal(url);
         });
         // 打开开发者工具
-        if (this.config.devTools) this.dialogs[id].webContents.openDevTools();
+        if (config.devTools) this.dialogs[id].webContents.openDevTools();
         //注入初始化代码
         this.dialogs[id].webContents.on("did-finish-load", () => {
             args.id = id;
@@ -157,7 +158,7 @@ class main {
     }
 
     async createSocket() {
-        this.socket = require('socket.io-client')(this.config.socketUrl, {query: `Authorization=${this.Authorization}`});
+        this.socket = require('socket.io-client')(config.socketUrl, {query: `Authorization=${this.Authorization}`});
         this.socket.on('connect', () => {
             this.win.webContents.executeJavaScript('console.log(\'[socket]connect\');');
             this.socketStatus = 1;
@@ -194,7 +195,7 @@ class main {
         };
         // 这里的URL就是更新服务器的放置文件的地址
         const {autoUpdater} = require("electron-updater");
-        autoUpdater.setFeedURL(this.config.updateFileUrl);
+        autoUpdater.setFeedURL(config.updateFileUrl);
         autoUpdater.on('error', (error) => {
             this.win.webContents.send('update_message', message.error);
         });
@@ -224,7 +225,7 @@ class main {
         try {
             await autoUpdater.checkForUpdates();
         } catch (e) {
-            _.log().error(e);
+            log.error(e);
         }
     }
 
@@ -364,7 +365,7 @@ class main {
          * */
         //删除更新文件
         ipcMain.on('delUpdateFile', () => {
-            _.delDir('../kl-updater');
+            general.delDir('../kl-updater');
         });
         //检查更新
         ipcMain.on('update', () => {

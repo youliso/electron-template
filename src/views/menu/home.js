@@ -5,9 +5,7 @@ module.exports = {
     lib: [],
     main: {
         data() {
-            return {
-                listData: []
-            }
+            return {}
         },
         template: `<div class="subclass" style="padding:0;display: flex;flex-direction: column;justify-content: center;align-items: center;">
            <div style="display: flex;justify-content: center;"><button @click="show" class="button transparent">显示</button></div>
@@ -27,13 +25,12 @@ module.exports = {
         methods: {
             show() {
                 window.close();
-                this.$util.ipcRenderer.send('show');
+                this.$ipcRenderer.send('show');
             },
             closed() {
                 document.body.onmouseleave = null;
                 window.close();
-                this.closed_txt = "退出中";
-                this.$util.ipcRenderer.send('closed');
+                this.$ipcRenderer.send('closed');
             }
         }
     }

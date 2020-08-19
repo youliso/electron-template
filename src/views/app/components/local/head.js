@@ -16,7 +16,7 @@ module.exports = {
         },
         template: `<div class="head drag">
         <div>
-        <span>{{$util.remote.app.name}} {{$util.remote.app.getVersion()}}</span>
+        <span>{{$remote.app.name}} {{$remote.app.getVersion()}}</span>
         </div>
         <div class="no-drag">
         <i @click="settings" class="iconfont iconSettingscontrol no-drag cursor-pointer"></i>
@@ -40,7 +40,7 @@ module.exports = {
                 );
             },
             async system(channel) {
-                if (channel !== 'closed') this.$util.ipcRenderer.send(channel);
+                if (channel !== 'closed') this.$ipcRenderer.send(channel);
                 else {
                     this.$parent.$parent.dialogInit(
                         {
