@@ -18,14 +18,12 @@ class view {
      * 渲染进程
      * */
     async vue(Vue, el, conf) {
-        document.title = remote.app.name;
         Vue.prototype.$config = config;
         Vue.prototype.$remote = remote;
         Vue.prototype.$ipcRenderer = ipcRenderer;
         Vue.prototype.$general = general;
         Vue.prototype.$log = log;
         Vue.prototype.$storage = storage;
-
         const view = async (key, view) => {
             let v = require(view);
             if (v.components) {
