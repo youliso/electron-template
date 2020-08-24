@@ -1,5 +1,4 @@
 {
-  "devTools": true,
   "themeColor": "#333333",
   "appUrl": "http://127.0.0.1:3000/",
   "socketUrl": "http://127.0.0.1:3000/",

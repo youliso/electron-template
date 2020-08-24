@@ -38,7 +38,7 @@ class main {
             show: false,
             webPreferences: {
                 nodeIntegration: true,
-                devTools: config.devTools,
+                devTools: !app.isPackaged,
                 webSecurity: false
             }
         }
@@ -56,7 +56,7 @@ class main {
             shell.openExternal(url);
         });
         // 打开开发者工具
-        if (config.devTools) this.win.webContents.openDevTools();
+        if (!app.isPackaged) this.win.webContents.openDevTools();
         //注入初始化代码
         this.win.webContents.on("did-finish-load", () => {
             this.win.webContents.send('dataJsonPort', encodeURIComponent(JSON.stringify({el: 'app'})));
@@ -96,7 +96,7 @@ class main {
                 shell.openExternal(url);
             });
             // 打开开发者工具
-            if (config.devTools) this.menu.webContents.openDevTools();
+            if (!app.isPackaged) this.menu.webContents.openDevTools();
             //隐藏menu任务栏状态
             this.menu.setSkipTaskbar(true);
             //menu最顶层
@@ -144,7 +144,7 @@ class main {
             shell.openExternal(url);
         });
         // 打开开发者工具
-        if (config.devTools) this.dialogs[id].webContents.openDevTools();
+        if (!app.isPackaged) this.dialogs[id].webContents.openDevTools();
         //注入初始化代码
         this.dialogs[id].webContents.on("did-finish-load", () => {
             args.id = id;
