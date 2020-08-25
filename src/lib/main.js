@@ -1,8 +1,8 @@
 'use strict';
 const {resolve} = require('path');
+const {existsSync, readdirSync, statSync, unlinkSync, rmdirSync} = require('fs');
 const {shell, app, BrowserWindow, globalShortcut, ipcMain, screen, Tray} = require('electron');
 const log = require('./util/log');
-const general = require('./util/general');
 const config = require('./cfg/config.json');
 
 class main {
@@ -12,7 +12,6 @@ class main {
     }
 
     constructor() {
-        this.Authorization = ""; //token
         this.win = null; //主窗口
         this.dialogs = []; //弹框组
         this.is_Dialogs = []; //弹框组状态
@@ -22,8 +21,23 @@ class main {
         this.socketStatus = 0; // socket状态 0断开 1 连接
     }
 
-    global(key) {
-        return this[key];
+    /**
+     * 删除目录和内部文件
+     * */
+    delDir(path) {
+        let files = [];
+        if (existsSync(path)) {
+            files = readdirSync(path);
+            files.forEach((file, index) => {
+                let curPath = path + "/" + file;
+                if (statSync(curPath).isDirectory()) {
+                    this.delDir(curPath); //递归删除文件夹
+                } else {
+                    unlinkSync(curPath); //删除文件
+                }
+            });
+            rmdirSync(path);
+        }
     }
 
     browserWindowOpt(wh) {
@@ -119,7 +133,7 @@ class main {
             }
         }
         //创建一个与父类窗口同大小、坐标的窗口
-        let opt = this.browserWindowOpt([args.width,args.height]);
+        let opt = this.browserWindowOpt([args.width, args.height]);
         if (typeof args.parent === 'string') {
             if (args.parent === 'win') opt.parent = this.win;
             opt.x = this.win.getPosition()[0] //+ ((this.win.getBounds().width - args.width) / 2);
@@ -365,7 +379,7 @@ class main {
          * */
         //删除更新文件
         ipcMain.on('delUpdateFile', () => {
-            general.delDir('../kl-updater');
+            this.delDir(config.updateFilePath);
         });
         //检查更新
         ipcMain.on('update', () => {

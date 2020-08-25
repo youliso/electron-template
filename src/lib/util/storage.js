@@ -1,5 +1,4 @@
 'use strict';
-const general = require('./general');
 
 class storage {
     static getInstance() {
@@ -17,8 +16,12 @@ class storage {
 
     sessionGet(key) {
         let data = sessionStorage.getItem(key);
-        if (general.isNull(data)) return null;
-        return general.toJSON(data);
+        if (data === "" || data === null || data === undefined) return null;
+        try {
+            return JSON.parse(data);
+        } catch (e) {
+            return data;
+        }
     }
 
     sessionRemove(key) {
@@ -36,8 +39,12 @@ class storage {
 
     localGet(key) {
         let data = localStorage.getItem(key);
-        if (_.isNull(data)) return null;
-        return _.toJSON(data);
+        if (data === "" || data === null || data === undefined) return null;
+        try {
+            return JSON.parse(data);
+        } catch (e) {
+            return data;
+        }
     }
 
     localRemove(key) {

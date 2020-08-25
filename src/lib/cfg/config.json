@@ -1,9 +1,9 @@
 {
-  "themeColor": "#333333",
   "appUrl": "http://127.0.0.1:3000/",
   "socketUrl": "http://127.0.0.1:3000/",
   "updateUrl": "http://127.0.0.1:3000/",
   "updateFileUrl": "http://127.0.0.1:3000/public/dist/",
+  "updateFilePath": "../electron_template-updater",
   "appSize": [
     800,
     500

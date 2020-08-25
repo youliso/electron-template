@@ -1,6 +1,5 @@
 'use strict';
-const {existsSync, readdirSync, statSync, unlinkSync, rmdirSync} = require('fs');
-const main = require('../main');
+const storage = require('./storage');
 const config = require('../cfg/config.json');
 
 class general {
@@ -10,25 +9,6 @@ class general {
     }
 
     constructor() {
-    }
-
-    /**
-     * 删除目录和内部文件
-     * */
-    delDir(path) {
-        let files = [];
-        if (existsSync(path)) {
-            files = readdirSync(path);
-            files.forEach((file, index) => {
-                let curPath = path + "/" + file;
-                if (statSync(curPath).isDirectory()) {
-                    this.delDir(curPath); //递归删除文件夹
-                } else {
-                    unlinkSync(curPath); //删除文件
-                }
-            });
-            rmdirSync(path);
-        }
     }
 
     /**
@@ -47,18 +27,6 @@ class general {
     }
 
     /**
-     * isJson
-     * str : string
-     * */
-    toJSON(str) {
-        try {
-            return JSON.parse(str);
-        } catch (e) {
-            return str;
-        }
-    }
-
-    /**
      * 随机整数
      * 例如 6-10 （m-n）
      * */
@@ -71,24 +39,6 @@ class general {
      * */
     swapArr(arr, index1, index2) {
         [arr[index1], arr[index2]] = [arr[index2], arr[index1]];
-    }
-
-    /**
-     * 对象转url参数
-     * */
-    convertObj(data) {
-        let _result = [];
-        for (let key in data) {
-            let value = data[key];
-            if (value?.constructor == Array) {
-                value.forEach(function (_value) {
-                    _result.push(key + "=" + _value);
-                });
-            } else {
-                _result.push(key + '=' + value);
-            }
-        }
-        return _result.join('&');
     }
 
     /**
@@ -122,7 +72,7 @@ class general {
         return new Promise(resolve => {
             Promise.all(list).then(values => resolve(values));
         })
-    };
+    }
 
     /**
      * 移除已经加载过的css/js文件
@@ -143,7 +93,25 @@ class general {
                 if (attrs?.indexOf(items) > -1) item.parentNode.removeChild(item);
             }
         }
-    };
+    }
+
+    /**
+     * 对象转url参数
+     * */
+    convertObj(data) {
+        let _result = [];
+        for (let key in data) {
+            let value = data[key];
+            if (value?.constructor == Array) {
+                value.forEach(function (_value) {
+                    _result.push(key + "=" + _value);
+                });
+            } else {
+                _result.push(key + '=' + value);
+            }
+        }
+        return _result.join('&');
+    }
 
     /**
      * 网络请求
@@ -153,7 +121,7 @@ class general {
         let sendData = {
             headers: {
                 'Content-type': 'application/json;charset=utf-8',
-                'Authorization': main.Authorization || ''
+                'Authorization': storage.sessionGet('Authorization') || ''
             },
             outTime: 30000,
             mode: 'cors'
@@ -165,16 +133,6 @@ class general {
         sendData.method = param.method || 'GET';
         if (sendData.method === 'GET') url = url + this.convertObj(param.data);
         else sendData.body = JSON.stringify(param.data);
-        let checkStatus = (res) => {
-            if (res.status >= 200 && res.status < 300) {
-                let Authorization = res.headers.get('Authorization');
-                if (Authorization) main.Authorization = Authorization;
-                return res;
-            }
-            const error = new Error(res.statusText);
-            error.response = res;
-            throw error;
-        };
         let timeoutPromise = () => {
             return new Promise((resolve, reject) => {
                 setTimeout(() => {
@@ -185,9 +143,24 @@ class general {
         let fetchPromise = () => {
             return new Promise((resolve, reject) => {
                 fetch(url, sendData)
-                    .then(checkStatus)
+                    .then(res => {
+                        if (res.status >= 200 && res.status < 300) {
+                            let Authorization = res.headers.get('Authorization');
+                            if (Authorization) storage.sessionSet('Authorization', Authorization);
+                            return res;
+                        }
+                        const error = new Error(res.statusText);
+                        error.response = res;
+                        throw error;
+                    })
                     .then(res => res.text())
-                    .then(data => resolve(this.toJSON(data)))
+                    .then(data => {
+                        try {
+                            resolve(JSON.parse(data));
+                        } catch (e) {
+                            resolve(data);
+                        }
+                    })
                     .catch(err => reject(err))
             });
         };

@@ -21,12 +21,11 @@ const config = require('./package');
 const asar = false; //是否asar打包
 const allowToChangeInstallationDirectory = true; //是否允许用户修改安装为位置
 let nConf = {//基础配置
-    "devTools": true, //是否打开devTools
-    "themeColor": "#333333", //主题色
     "appUrl": "http://127.0.0.1:3000/", //程序主访问地址
     "socketUrl": "http://127.0.0.1:3000/",// 程序socket访问地址
     "updateUrl": "http://127.0.0.1:3000/", //更新地址
     "updateFileUrl": "http://127.0.0.1:3000/public/dist/", //更新文件地址
+    "updateFilePath": `../${config.name.toLowerCase()}-updater`, //更新文件目录
     "appSize": [800, 500],
     "dialogSize": [400, 150],
     "menuSize": [76, 94]
