@@ -117,7 +117,7 @@ class general {
      * 网络请求
      * */
     net(url, param) {
-        if (url.indexOf('http://') > -1 || url.indexOf('https://') > -1) url = config.appUrl + url;
+        if (url.indexOf('http://') === -1 && url.indexOf('https://') === -1) url = config.appUrl + url;
         let sendData = {
             headers: {
                 'Content-type': 'application/json;charset=utf-8',
