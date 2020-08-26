@@ -37,12 +37,20 @@ class view {
             Vue.component(key, v.main);
             return v;
         };
+
+        //注册全局组件
         let viewsList = [];
         for (let i in config['views'][el]['global']) {
             let item = config['views'][el]['global'][i];
             viewsList.push(Vue.prototype.$componentView(i, item));
         }
-        await Promise.all(viewsList);
+        let globalView = await Promise.all(viewsList);
+        let globalLib = [];
+        globalView.map(e => {
+            if (e?.lib) globalLib.push(...e.lib);
+        })
+        await general.loadCssJs(globalLib);
+
         let app_data = {
             IComponent: null,
             AppComponents: {},
