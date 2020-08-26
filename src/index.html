@@ -11,7 +11,7 @@
     </keep-alive>
     <component v-if="IComponent&&!IComponent.keepAlive" :is="IComponent.name" :ref="IComponent.name"></component>
 </div>
-<div id="dialog" style="display: none;" class="drag" :style="'--theme:'+themeColor">
+<div id="dialog" style="display: none;" class="drag">
     <keep-alive :max="10">
         <component v-if="IComponent&&IComponent.keepAlive" :is="IComponent.name" :ref="IComponent.name"></component>
     </keep-alive>
@@ -19,7 +19,7 @@
     <dialog-global-head v-if="IComponent" v-bind:IComponentName="IComponent.name"
                         ref="dialog-head"></dialog-global-head>
 </div>
-<div id="menu" style="display: none;width: 100%;height: 100%;" class="no-drag" :style="'--theme:'+themeColor">
+<div id="menu" style="display: none;width: 100%;height: 100%;" class="no-drag">
     <keep-alive :max="10">
         <component v-if="IComponent&&IComponent.keepAlive" :is="IComponent.name" :ref="IComponent.name"></component>
     </keep-alive>
