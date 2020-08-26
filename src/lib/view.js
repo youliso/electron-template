@@ -24,7 +24,7 @@ class view {
         Vue.prototype.$general = general;
         Vue.prototype.$log = log;
         Vue.prototype.$storage = storage;
-        const view = async (key, view) => {
+        Vue.prototype.$componentView = async (key, view) => {//页面组件注册
             let v = require(view);
             if (v.components) {
                 v.main.components = {};
@@ -40,7 +40,7 @@ class view {
         let viewsList = [];
         for (let i in config['views'][el]['global']) {
             let item = config['views'][el]['global'][i];
-            viewsList.push(view(i, item));
+            viewsList.push(Vue.prototype.$componentView(i, item));
         }
         await Promise.all(viewsList);
         let app_data = {
@@ -82,7 +82,7 @@ class view {
                     }
                     let size_ = [], I_lib = [], R_lib = [];
                     if (this.LoadedComponents.indexOf(key) < 0) {
-                        let vi = await view(key, this.$config['views'][this.category]['subject'][key]);
+                        let vi = await this.$componentView(key, this.$config['views'][this.category]['subject'][key]);
                         this.AppComponents[key] = {
                             keepAlive: vi.keepAlive,
                             size: vi.size,
