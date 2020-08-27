@@ -3,7 +3,7 @@ const {ipcRenderer, remote} = require('electron');
 const log = require('./util/log');
 const storage = require('./util/storage');
 const general = require('./util/general');
-const config = require('./cfg/config.json');
+const config = require('./static/cfg/config.json');
 
 class view {
     static getInstance() {

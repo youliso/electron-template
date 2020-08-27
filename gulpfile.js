@@ -78,7 +78,7 @@ gulp.task('retrieval', async () => {
         }
     }
     nConf.views = views;
-    fs.writeFileSync(__dirname + '/src/lib/cfg/config.json', JSON.stringify(nConf, null, 2));
+    fs.writeFileSync(__dirname + '/src/lib/static/cfg/config.json', JSON.stringify(nConf, null, 2));
     config.build.publish = [{
         "provider": "generic",
         "url": nConf.updateUrl

@@ -3,7 +3,7 @@ const {resolve} = require('path');
 const {existsSync, readdirSync, statSync, unlinkSync, rmdirSync} = require('fs');
 const {shell, app, BrowserWindow, globalShortcut, ipcMain, screen, Tray} = require('electron');
 const log = require('./util/log');
-const config = require('./cfg/config.json');
+const config = require('./static/cfg/config.json');
 
 class main {
     static getInstance() {

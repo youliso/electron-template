@@ -1,6 +1,6 @@
 'use strict';
 const storage = require('./storage');
-const config = require('../cfg/config.json');
+const config = require('../static/cfg/config.json');
 
 class general {
     static getInstance() {

@@ -26,7 +26,7 @@
       },
       "subject": {
         "app-subject-home": "../views/app/home/home.js",
-        "app-subject-info": "../views/app/info.js"
+        "app-subject-info": "../views/app/info/info.js"
       }
     },
     "dialog": {
