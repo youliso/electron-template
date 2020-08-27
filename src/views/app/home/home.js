@@ -60,8 +60,8 @@ module.exports = {
                 let data = execSync(`wmic datafile where "Name= '${v}'" get Version`);
                 data = this.$general.trim(data.slice(7).toString());
                 this.$parent.dialogInit({
-                    name: '提示',
-                    v: 'dialog-subject-message',
+                    dialogName: '提示',
+                    uniQueKey: 'dialog-subject-message',
                     data: {
                         text: name + '版本号：' + (data === '' ? '此应用未设置版本号' : data)
                     }

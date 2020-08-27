@@ -13,7 +13,7 @@ module.exports = {
         },
         template: `<div class="head drag">
         <div>
-        <span>{{$parent.conf.name}}</span>
+        <span>{{$parent.conf.dialogName}}</span>
         </div>
         <div>
          <i @click="closed" class="iconfont iconCancelcontrol no-drag cursor-pointer"></i>

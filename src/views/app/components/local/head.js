@@ -27,15 +27,15 @@ module.exports = {
         created() {
         },
         methods: {
-            r(v){
+            r(v) {
                 return `${this.$parent.$options.name}.${this.$options._componentTag}.${v}`;
             },
             async settings() {
                 this.$parent.$parent.dialogInit(
                     {
-                        name: '设置',
-                        v: 'dialog-subject-settings',
-                        r: this.r('d_settings')
+                        dialogName: '设置',
+                        uniQueKey: 'dialog-subject-settings',
+                        returnPath: this.r('d_settings')
                     }
                 );
             },
@@ -44,9 +44,9 @@ module.exports = {
                 else {
                     this.$parent.$parent.dialogInit(
                         {
-                            name: '提示',
-                            v: 'dialog-subject-exitprompt',
-                            r: this.r('d_settings')
+                            dialogName: '提示',
+                            uniQueKey: 'dialog-subject-exitprompt',
+                            returnPath: this.r('d_settings')
                         }
                     );
                 }

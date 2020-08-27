@@ -26,14 +26,14 @@ module.exports = {
         methods: {
             test() {
                 this.$parent.dialogInit({
-                    name: '提示',
-                    v: 'dialog-subject-message',
+                    dialogName: '提示',
+                    uniQueKey: 'dialog-subject-message',
                     data: {
                         text: '123'
                     }
                 });
                 this.$parent.dialogSend({
-                    r: this.$parent.conf.r,
+                    returnPath: this.$parent.conf.returnPath,
                     data: {
                         test: '测试'
                     }

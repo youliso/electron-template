@@ -8,6 +8,7 @@
   "author": "youliso@Hotmail.com",
   "license": "MIT",
   "scripts": {
+    "upgrade": "yarn upgrade-interactive --latest",
     "retrieval": "npx gulp retrieval",
     "gulp": "npx gulp retrieval && npx gulp compress && npx gulp compiler",
     "start": "electron src/lib/main.js",
@@ -84,7 +85,7 @@
     }
   },
   "devDependencies": {
-    "electron": "^9.2.1",
+    "electron": "^10.0.0",
     "electron-builder": "^22.8.0",
     "electron-rebuild": "^2.0.1",
     "google-closure-compiler": "^20200719.0.0",

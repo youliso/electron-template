@@ -1,5 +1,5 @@
 'use strict';
-const {ipcRenderer, remote} = require('electron');
+const {ipcRenderer, remote} = require('electron/renderer');
 const log = require('./util/log');
 const storage = require('./util/storage');
 const general = require('./util/general');
@@ -11,7 +11,8 @@ class view {
         return view.instance;
     }
 
-    constructor() {}
+    constructor() {
+    }
 
     /**
      * vue组件
@@ -67,7 +68,7 @@ class view {
                         this.init('app-subject-home');
                         break;
                     case 'dialog':
-                        this.init(this.conf.v);
+                        this.init(this.conf.uniQueKey);
                         break;
                     case 'menu':
                         this.init('menu-subject-home');
@@ -154,7 +155,7 @@ class view {
                     this.$ipcRenderer.send('socketInit', this.$config.socketUrl);
                 },
                 socketMessage() {
-                    this.$ipcRenderer.on('message', (event, req) => {
+                    this.$ipcRenderer.on('socketMessage', (event, req) => {
                         switch (req.code) {
                             case 0:
                                 let path = req.result.split('.');
@@ -173,22 +174,25 @@ class view {
                 socketSend(path, result, data) {
                     this.$ipcRenderer.send('socketSend', JSON.stringify({path, result, data}));
                 },
+                /**
+                 * 创建弹框
+                 * */
                 dialogInit(data) {
                     let args = {
                         width: this.$remote.getCurrentWindow().getBounds().width,
                         height: this.$remote.getCurrentWindow().getBounds().height,
-                        name: data.name, //名称
-                        v: data.v, //页面id
+                        dialogName: data.dialogName, //名称
+                        uniQueKey: data.uniQueKey, //页面key
                         resizable: false,// 是否支持调整窗口大小
                         data: data.data, //数据
-                        complex: false, //是否支持多窗口
+                        isComplex: false, //是否支持多窗口
                         parent: 'win', //父窗口
                         modal: true //父窗口置顶
                     };
                     if (this.conf) args.parent = this.conf.id;
-                    if (data.v === 'message') args.complex = true;
-                    if (data.r) args.r = data.r;
-                    if (data.complex) args.complex = data.complex;
+                    if (data.uniQueKey === 'message') args.isComplex = true;
+                    if (data.returnPath) args.returnPath = data.returnPath;
+                    if (data.isComplex) args.isComplex = data.isComplex;
                     if (data.parent) args.parent = data.parent;
                     if (data.modal) args.modal = data.modal;
                     if (data.resizable) args.resizable = data.resizable;
@@ -196,7 +200,7 @@ class view {
                 },
                 dialogMessage() {
                     this.$ipcRenderer.on('newWin-rbk', (event, req) => {
-                        let path = req.r.split('.');
+                        let path = req.returnPath.split('.');
                         if (path.length === 1) this[path[0]] = req.data;
                         if (path.length === 2) this.$refs[path[0]][path[1]] = req.data;
                         if (path.length === 3 && this.$refs[path[0]]) this.$refs[path[0]].$refs[path[1]][path[2]] = req.data;

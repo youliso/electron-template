@@ -29,9 +29,9 @@
 <script type="module">
     import Vue from './lib/util/vue.esm.browser.min.js';
 
-    require('electron').ipcRenderer.on('dataJsonPort', async (event, e) => {
+    require('electron/renderer').ipcRenderer.on('dataJsonPort', async (event, e) => {
         e = JSON.parse(decodeURIComponent(e));
-        document.title = require('electron').remote.app.name;
+        document.title = require('electron/renderer').remote.app.name;
         document.getElementById(e.el).style.display = null;
         if (e.el === 'menu') {
             document.body.setAttribute('class', 'drag');

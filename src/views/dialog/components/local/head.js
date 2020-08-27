@@ -25,15 +25,15 @@ module.exports = {
         </div>
     </div>`,
         created() {
-            console.log(this.$parent.$options.name,this.$options.name)
+            console.log(this.$parent.$options.name, this.$options.name)
         },
         methods: {
             async settings() {
                 this.$parent.dialogInit(
                     {
-                        name: '设置',
-                        v: 'settings',
-                        r: this.$options.name + '.d_settings'
+                        dialogName: '设置',
+                        uniQueKey: 'settings',
+                        returnPath: this.$options.name + '.d_settings'
                     }
                 );
             },
@@ -42,9 +42,9 @@ module.exports = {
                 else {
                     this.$parent.dialogInit(
                         {
-                            name: '提示',
-                            v: 'exitprompt',
-                            r: this.$options.name + '.d_exitprompt'
+                            dialogName: '提示',
+                            uniQueKey: 'exitprompt',
+                            returnPath: this.$options.name + '.d_exitprompt'
                         }
                     );
                 }
