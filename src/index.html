@@ -27,7 +27,7 @@
 </div>
 <!-- //unpkg.com/vue/dist/vue.esm.browser.min.js -->
 <script type="module">
-    import Vue from './lib/vue.esm.browser.min.js';
+    import Vue from './lib/util/vue.esm.browser.min.js';
 
     require('electron').ipcRenderer.on('dataJsonPort', async (event, e) => {
         e = JSON.parse(decodeURIComponent(e));
