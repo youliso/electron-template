@@ -124,6 +124,9 @@ class main {
         })
     }
 
+    /**
+     * 创建弹框
+     * */
     async createDialog(args) {
         let id = this.dialogs.length;
         for (let i of this.dialogs) {
@@ -171,6 +174,9 @@ class main {
         this.isDialogs[id] = true;
     }
 
+    /**
+     * 创建socket
+     * */
     async createSocket(Authorization) {
         this.socket = require('socket.io-client')(config.socketUrl, {query: `Authorization=${Authorization}`});
         this.socket.on('connect', () => {
@@ -186,7 +192,7 @@ class main {
         this.socket.on('disconnect', () => {
             this.win.webContents.executeJavaScript('console.log(\'[socket]disconnect\');');
             setTimeout(() => {
-                if (this.socket?.readyState === 'closed') this.socket.open()
+                if (this.socket?.io.readyState === 'closed') this.socket.open()
             }, 1000 * 60 * 3)
         });
         this.socket.on('close', () => {
@@ -194,6 +200,9 @@ class main {
         });
     }
 
+    /**
+     * 更新模块
+     * */
     async update() {
         let message = {
             error: {code: 0, msg: '检查更新出错'},
@@ -361,11 +370,11 @@ class main {
         });
         //重新连接
         ipcMain.on('socketReconnection', async (event, args) => {
-            if (this.socket?.readyState === 'closed') this.socket.open();
+            if (this.socket?.io.readyState === 'closed') this.socket.open();
         });
         //发消息
         ipcMain.on('socketSend', async (event, args) => {
-            if (this.socket?.readyState === 'open') this.socket.send(args);
+            if (this.socket?.io.readyState === 'open') this.socket.send(args);
         });
 
         /**
