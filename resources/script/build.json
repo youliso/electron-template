@@ -3,7 +3,7 @@
   "productName": "Electron_Template",
   "appId": "org.Electron_Template",
   "copyright": "MIT",
-  "asar": false,
+  "asar": true,
   "directories": {
     "output": "out"
   },
@@ -58,8 +58,7 @@
       {
         "target": "nsis",
         "arch": [
-          "x64",
-          "ia32"
+          "x64"
         ]
       }
     ]

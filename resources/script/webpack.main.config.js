@@ -1,5 +1,6 @@
 const path = require('path');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+const webpack = require("webpack");
+const _externals = require('externals-dependencies');
 
 const isEnvProduction = process.env.NODE_ENV === 'production';
 const isEnvDevelopment = process.env.NODE_ENV === 'development';
@@ -7,15 +8,19 @@ module.exports = {
     devtool: isEnvDevelopment ? 'source-map' : false,
     mode: isEnvProduction ? 'production' : 'development',
     target: "electron-main",
-    entry: './src/lib/main.ts',
+    externals: _externals(),
+    entry: {
+        main: './src/lib/main.ts'
+    },
     output: {
         filename: '[name].bundle.js',
-        chunkFilename: '[name].bundle.js',
+        chunkFilename: '[id].bundle.js',
         path: path.resolve('dist')
     },
     node: {
-        __filename: false,
-        __dirname: false
+        global: false,
+        __dirname: false,
+        __filename: false
     },
     module: {
         rules: [
@@ -23,20 +28,26 @@ module.exports = {
                 test: /\.tsx?$/,
                 use: 'ts-loader',
                 exclude: /node_modules/
+            },
+            {
+                test: /\.(png|svg|jpg|gif|ico)$/,
+                use: [
+                    'file-loader'
+                ]
             }
         ]
     },
     resolve: {
-        extensions: ['.tsx', '.ts', '.js']
+        extensions: ['.tsx', '.ts', '.js'],
+        alias: {
+            dist: path.resolve('dist')
+        }
     },
     plugins: [
-        new CopyWebpackPlugin({
-            patterns: [
-                {
-                    from: path.resolve('src/lib/static'),
-                    to: path.resolve('dist/static')
-                }
-            ]
+        new webpack.DefinePlugin({
+            'process.env': {
+                NODE_ENV: JSON.stringify('production')
+            }
         })
     ]
 };

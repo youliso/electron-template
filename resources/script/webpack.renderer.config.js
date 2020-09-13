@@ -1,6 +1,8 @@
 const path = require('path');
+const webpack = require("webpack");
+const {name} = require('../../package.json');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const _externals = require('externals-dependencies');
 
 const isEnvProduction = process.env.NODE_ENV === 'production';
 const isEnvDevelopment = process.env.NODE_ENV === 'development';
@@ -8,18 +10,22 @@ module.exports = {
     devtool: isEnvDevelopment ? 'source-map' : false,
     mode: isEnvProduction ? 'production' : 'development',
     target: "electron-renderer",
-    entry: './src/views/main.ts',
+    externals: _externals(),
+    entry: {
+        app: ['./src/views/app.tsx']
+    },
     output: {
         filename: '[name].bundle.view.js',
-        chunkFilename: '[name].bundle.view.js',
-        path: path.resolve('dist')
+        chunkFilename: '[id].bundle.view.js',
+        path: path.resolve('dist'),
+        library: 'IReact',
+        libraryTarget: 'umd'
     },
     module: {
         rules: [
             {
                 test: /\.tsx?$/,
-                use: 'ts-loader',
-                exclude: /node_modules/
+                loader: 'awesome-typescript-loader'
             },
             {
                 test: /\.css$/,
@@ -46,10 +52,13 @@ module.exports = {
         extensions: ['.tsx', '.ts', '.js']
     },
     plugins: [
-        new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
-            title: "Webpack App",
+            title: name,
             template: "./resources/script/index.html"
+        }),
+        new webpack.DefinePlugin({
+            'process.env.NODE_ENV': JSON.stringify('production')
         })
+
     ],
 };

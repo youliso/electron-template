@@ -8,14 +8,17 @@
   "author": "youliso@Hotmail.com",
   "license": "MIT",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development node resources/script/webpack.config.js",
+    "dev:sever": "webpack-dev-server --config ./resources/script/webpack.server.js",
+    "dev:start": "cross-env NODE_ENV=development webpack --config ./resources/script/webpack.main.config.js && electron dist/main.bundle.js",
     "prod": "cross-env NODE_ENV=production node resources/script/webpack.config.js",
     "start": "electron dist/main.bundle.js",
-    "build -cfg": "node resources/script/build.js",
-    "build": "electron-builder -c resources/script/build.json"
+    "build": "node resources/script/build.js && electron-builder -c resources/script/build.json"
   },
   "devDependencies": {
+    "@types/react": "^16.9.49",
+    "@types/react-dom": "^16.9.8",
     "@types/socket.io-client": "^1.4.33",
+    "awesome-typescript-loader": "^5.2.1",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^6.1.0",
     "cross-env": "^7.0.2",
@@ -23,15 +26,20 @@
     "electron": "^10.1.1",
     "electron-builder": "^22.8.0",
     "electron-rebuild": "^2.0.1",
+    "externals-dependencies": "^1.0.4",
     "file-loader": "^6.1.0",
     "html-webpack-plugin": "^4.4.1",
+    "style-loader": "^1.2.1",
     "ts-loader": "^8.0.3",
     "typescript": "^4.0.2",
     "webpack": "^4.44.1",
-    "webpack-cli": "^3.3.12"
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
     "electron-updater": "^4.3.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
     "socket.io-client": "^2.3.0"
   }
 }

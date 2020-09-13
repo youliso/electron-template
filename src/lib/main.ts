@@ -1,4 +1,3 @@
-'use strict';
 import {resolve} from "path";
 import {existsSync, readdirSync, statSync, unlinkSync, rmdirSync} from "fs";
 import {
@@ -8,12 +7,14 @@ import {
     globalShortcut,
     ipcMain,
     screen,
+    clipboard,
     Tray,
     BrowserWindowConstructorOptions
 } from "electron";
 import {autoUpdater} from "electron-updater";
 import * as Socket from 'socket.io-client';
 import Log from "./util/log";
+import ico from "./static/icon.ico";
 
 const config = require("./cfg/config.json");
 
@@ -39,12 +40,12 @@ interface DialogOpt {
 class Main {
     private static instance: Main;
 
-    private win: BrowserWindow | null = null; //主窗口
-    private dialogs: DialogBrowserWindow[] | null[] = []; //弹框组
+    private win: BrowserWindow = null; //主窗口
+    private dialogs: DialogBrowserWindow[] = []; //弹框组
     private dialogsType: boolean[] = []; //弹框组状态
-    private appTray: Tray | null = null; //托盘
-    private menu: BrowserWindow | null = null; //托盘窗口
-    private socket: SocketIOClient.Socket | null = null;
+    private appTray: Tray = null; //托盘
+    private menu: BrowserWindow = null; //托盘窗口
+    private socket: SocketIOClient.Socket = null;
 
     static getInstance() {
         if (!Main.instance) Main.instance = new Main();
@@ -89,7 +90,8 @@ class Main {
             webPreferences: {
                 nodeIntegration: true,
                 devTools: !app.isPackaged,
-                webSecurity: false
+                webSecurity: false,
+                enableRemoteModule: true
             }
         }
     }
@@ -99,8 +101,11 @@ class Main {
      * */
     async createWindow() {
         this.win = new BrowserWindow(this.browserWindowOpt(config.appSize));
-        //加载完毕后显示
-        this.win.once('ready-to-show', () => this.win.show());
+        // //加载完毕后显示
+        // this.win.once('ready-to-show', () => {
+        //     Log.info('ready-to-show');
+        //     this.win.show();
+        // });
         //关闭后，这个事件会被触发。
         this.win.on('closed', () => {
             this.win = null;
@@ -117,57 +122,65 @@ class Main {
             this.win.webContents.send('dataJsonPort', encodeURIComponent(JSON.stringify({el: 'app'})));
         });
         // 加载index.html文件
-        await this.win.loadFile(resolve(__dirname, './index.html'));
+        if (!app.isPackaged) await this.win.loadURL('http://localhost:2354').catch(err => Log.error(err));
+        else await this.win.loadFile(resolve(__dirname + '/index.html')).catch(err => Log.error(err));
     }
 
     /**
      * 创建托盘
      * */
     async createTray() {
-        this.appTray = new Tray(resolve(__dirname, './static/icon.ico'));
-        this.appTray.setToolTip(app.name);
-        let menu_point: Electron.Point | null = null;
-        this.appTray.on('mouse-move', (e, p) => menu_point = p);
-        this.appTray.on('double-click', () => {
-            for (let i of this.dialogs) if (i) i.show();
-            this.win.show();
-        })
-        this.appTray.on('right-click', async (e, b) => {
-            if (!menu_point) menu_point = b;
-            if (this.menu) {
-                this.menu.show();
-                return;
-            }
-            // 创建浏览器窗口。
-            let opt = this.browserWindowOpt(config.menuSize);
-            opt.x = menu_point.x - 12;
-            if ((opt.x + 300) > screen.getPrimaryDisplay().workAreaSize.width) opt.x = menu_point.x - (config.menuSize[0] - 13);
-            opt.y = menu_point.y - (config.menuSize[1] - 13);
-            this.menu = new BrowserWindow(opt);
-            //window 加载完毕后显示
-            this.menu.once('ready-to-show', () => this.menu.show());
-            // 当 window 被关闭，这个事件会被触发。
-            this.menu.on('closed', () => {
-                this.menu = null;
-            });
-            //默认浏览器打开跳转连接
-            this.menu.webContents.on('new-window', (event, url, frameName, disposition, options) => {
-                event.preventDefault();
-                shell.openExternal(url);
-            });
-            // 打开开发者工具
-            if (!app.isPackaged) this.menu.webContents.openDevTools();
-            //隐藏menu任务栏状态
-            this.menu.setSkipTaskbar(true);
-            //menu最顶层
-            this.menu.setAlwaysOnTop(true, 'screen-saver');
-            //注入初始化代码
-            this.menu.webContents.on("did-finish-load", () => {
-                this.menu.webContents.send('dataJsonPort', encodeURIComponent(JSON.stringify({el: 'menu'})));
-            });
-            // 加载index.html文件
-            await this.menu.loadFile(resolve(__dirname, './index.html'));
-        })
+        try {
+            this.appTray = new Tray(resolve(__dirname + `/${ico}`));
+            this.appTray.setToolTip(app.name);
+            let menu_point: Electron.Point | null = null;
+            this.appTray.on('mouse-move', (e, p) => menu_point = p);
+            this.appTray.on('double-click', () => {
+                for (let i of this.dialogs) if (i) i.show();
+                this.win.show();
+            })
+            this.appTray.on('right-click', async (e, b) => {
+                if (!menu_point) menu_point = b;
+                if (this.menu) {
+                    this.menu.show();
+                    return;
+                }
+                // 创建浏览器窗口。
+                let opt = this.browserWindowOpt(config.menuSize);
+                opt.x = menu_point.x - 12;
+                if ((opt.x + 300) > screen.getPrimaryDisplay().workAreaSize.width) opt.x = menu_point.x - (config.menuSize[0] - 13);
+                opt.y = menu_point.y - (config.menuSize[1] - 13);
+                this.menu = new BrowserWindow(opt);
+                // //window 加载完毕后显示
+                // this.menu.once('ready-to-show', () => {
+                //     this.menu.show();
+                // });
+                // 当 window 被关闭，这个事件会被触发。
+                this.menu.on('closed', () => {
+                    this.menu = null;
+                });
+                //默认浏览器打开跳转连接
+                this.menu.webContents.on('new-window', (event, url, frameName, disposition, options) => {
+                    event.preventDefault();
+                    shell.openExternal(url);
+                });
+                // 打开开发者工具
+                if (!app.isPackaged) this.menu.webContents.openDevTools();
+                //隐藏menu任务栏状态
+                this.menu.setSkipTaskbar(true);
+                //menu最顶层
+                this.menu.setAlwaysOnTop(true, 'screen-saver');
+                //注入初始化代码
+                this.menu.webContents.on("did-finish-load", () => {
+                    this.menu.webContents.send('dataJsonPort', encodeURIComponent(JSON.stringify({el: 'menu'})));
+                });
+                // 加载index.html文件
+                if (!app.isPackaged) await this.win.loadURL('http://localhost:2354').catch(err => Log.error(err));
+                else await this.win.loadFile(resolve(__dirname + '/index.html')).catch(err => Log.error(err));
+            })
+        } catch (e) {
+            Log.error(e);
+        }
     }
 
     /**
@@ -197,8 +210,8 @@ class Main {
         this.dialogs[id] = new BrowserWindow(opt);
         this.dialogs[id].uniQueKey = args.uniQueKey;
         this.dialogs[id].isMultiWindow = args.isMultiWindow;
-        //window加载完毕后显示
-        this.dialogs[id].once('ready-to-show', () => this.dialogs[id].show());
+        // //window加载完毕后显示
+        // this.dialogs[id].once('ready-to-show', () => this.dialogs[id].show());
         //window被关闭，这个事件会被触发。
         this.dialogs[id].on('closed', () => {
             this.dialogs[id] = null;
@@ -218,7 +231,8 @@ class Main {
                 data: args
             })));
         });
-        await this.dialogs[id].loadFile(resolve(__dirname, './index.html'));
+        if (!app.isPackaged) await this.win.loadURL('http://localhost:2354').catch(err => Log.error(err));
+        else await this.win.loadFile(resolve(__dirname + '/index.html')).catch(err => Log.error(err));
         this.dialogsType[id] = true;
     }
 
@@ -363,8 +377,23 @@ class Main {
         });
         //显示
         ipcMain.on('show', (event, args) => {
-            for (let i of this.dialogs) if (i) i.show();
-            this.win.show();
+            if (args === undefined) {
+                for (let i of this.dialogs) if (i) i.show();
+                this.win.show();
+                return;
+            }
+            switch (args.type) {
+                case 'win':
+                    this.win.show();
+                    break;
+                case 'dialog':
+                    this.dialogs[Number(args.id)].show();
+                    break;
+                case 'menu':
+                    this.menu.show();
+                    break;
+            }
+
         });
         //最小化
         ipcMain.on('mini', () => {

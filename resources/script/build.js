@@ -2,7 +2,7 @@ const fs = require('fs');
 const {name} = require('../../package.json');
 const config = require('./build.json');
 
-const asar = false; //是否asar打包
+const asar = true; //是否asar打包
 const allowToChangeInstallationDirectory = true; //是否允许用户修改安装为位置
 config.publish = [{ //更新地址
     provider: 'generic',
