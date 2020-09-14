@@ -6,12 +6,12 @@ interface NetSendOpt extends RequestInit {
     outTime?: number; //请求超时时间
 }
 
-class General {
-    private static instance: General;
+class Tool {
+    private static instance: Tool;
 
     static getInstance() {
-        if (!General.instance) General.instance = new General();
-        return General.instance;
+        if (!Tool.instance) Tool.instance = new Tool();
+        return Tool.instance;
     }
 
     constructor() {
@@ -184,4 +184,4 @@ class General {
     }
 }
 
-export default General.getInstance();
+export default Tool.getInstance();
