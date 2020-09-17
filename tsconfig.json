@@ -5,15 +5,10 @@
     "sourceMap": false,
     "outDir": "dist",
     "baseUrl": ".",
-    "paths": {
-      "*": ["node_modules/*"]
-    },
-    "target": "ES2019",
-    "allowJs": true,
-    "jsx": "react"
+    "target": "ES2019"
   },
   "include": [
     "src/**/*",
-    "images.d.ts"
+    "index.d.ts"
   ]
 }

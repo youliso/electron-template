@@ -12,20 +12,25 @@ module.exports = {
     target: "electron-renderer",
     externals: _externals(),
     entry: {
-        app: ['./src/views/app.tsx']
+        app: './src/views/main.ts'
     },
     output: {
         filename: '[name].bundle.view.js',
         chunkFilename: '[id].bundle.view.js',
-        path: path.resolve('dist'),
-        library: 'IReact',
-        libraryTarget: 'umd'
+        path: path.resolve('dist')
     },
     module: {
         rules: [
             {
-                test: /\.tsx?$/,
-                loader: 'awesome-typescript-loader'
+                test: /\.svelte$/,
+                use: {
+                    loader: 'svelte-loader',
+                    options: {
+                        emitCss: true,
+                        hotReload: true,
+                        preprocess: require('svelte-preprocess')({})
+                    }
+                }
             },
             {
                 test: /\.css$/,
@@ -49,7 +54,14 @@ module.exports = {
         ]
     },
     resolve: {
-        extensions: ['.tsx', '.ts', '.js']
+        alias: {
+            svelte: path.resolve('node_modules', 'svelte')
+        },
+        extensions: ['.tsx', '.ts', '.mjs', '.js', '.svelte'],
+        mainFields: ['svelte', 'browser', 'module', 'main']
+    },
+    optimization: {
+        minimize: true
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -59,6 +71,5 @@ module.exports = {
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify('production')
         })
-
     ],
 };

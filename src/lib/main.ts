@@ -102,10 +102,7 @@ class Main {
     async createWindow() {
         this.win = new BrowserWindow(this.browserWindowOpt(config.appSize));
         // //加载完毕后显示
-        // this.win.once('ready-to-show', () => {
-        //     Log.info('ready-to-show');
-        //     this.win.show();
-        // });
+        this.win.once('ready-to-show', () => this.win.show());
         //关闭后，这个事件会被触发。
         this.win.on('closed', () => {
             this.win = null;
@@ -152,9 +149,7 @@ class Main {
                 opt.y = menu_point.y - (config.menuSize[1] - 13);
                 this.menu = new BrowserWindow(opt);
                 // //window 加载完毕后显示
-                // this.menu.once('ready-to-show', () => {
-                //     this.menu.show();
-                // });
+                this.menu.once('ready-to-show', () => this.menu.show());
                 // 当 window 被关闭，这个事件会被触发。
                 this.menu.on('closed', () => {
                     this.menu = null;
@@ -211,7 +206,7 @@ class Main {
         this.dialogs[id].uniQueKey = args.uniQueKey;
         this.dialogs[id].isMultiWindow = args.isMultiWindow;
         // //window加载完毕后显示
-        // this.dialogs[id].once('ready-to-show', () => this.dialogs[id].show());
+        this.dialogs[id].once('ready-to-show', () => this.dialogs[id].show());
         //window被关闭，这个事件会被触发。
         this.dialogs[id].on('closed', () => {
             this.dialogs[id] = null;

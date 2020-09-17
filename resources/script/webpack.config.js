@@ -46,6 +46,6 @@ function deleteFolderRecursive(url) {
          */
         fs.rmdirSync(url);
     } else {
-        console.log("给定的路径不存在，请给出正确的路径");
+        console.log("...");
     }
 }

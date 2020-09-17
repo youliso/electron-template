@@ -25,7 +25,7 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.tsx?$/,
+                test: /\.ts$/,
                 use: 'ts-loader',
                 exclude: /node_modules/
             },
@@ -42,6 +42,9 @@ module.exports = {
         alias: {
             dist: path.resolve('dist')
         }
+    },
+    optimization: {
+        minimize: true
     },
     plugins: [
         new webpack.DefinePlugin({
