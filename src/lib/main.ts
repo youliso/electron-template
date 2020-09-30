@@ -6,8 +6,8 @@ import {
     BrowserWindow,
     globalShortcut,
     ipcMain,
-    screen,
-    clipboard,
+    // screen,
+    // clipboard,
     Tray,
     BrowserWindowConstructorOptions, Menu
 } from "electron";

@@ -2,7 +2,7 @@ import {writable, get, Writable} from 'svelte/store';
 
 class User {
     private static instance: User;
-    public Info: { [key: string]: Writable<unknown> } = {};
+    public Info: Writable<unknown> = undefined;
 
     static getInstance() {
         if (!User.instance) User.instance = new User();
@@ -10,11 +10,23 @@ class User {
     }
 
     constructor() {
-        this.Info.count = writable(0);
+        this.Info = writable({});
+    }
+
+    set(value: unknown) {
+        this.Info.set(value);
+    }
+
+    update(func: (value: unknown) => unknown) {
+        this.Info.update(func)
     }
 
     get(key: string) {
-        return get(this.Info[key]);
+        return this.Info === undefined ? undefined : get(this.Info);
+    }
+
+    subscribe(func: (value: unknown) => unknown) {
+        this.Info.subscribe(func)
     }
 }
 
