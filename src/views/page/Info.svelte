@@ -4,6 +4,6 @@
     export let params = {};
 </script>
 <main>
-    info {JSON.stringify(params)} User store {User.get('count')}
+    info {JSON.stringify(params)} User store {User.get()}
     <button class="no-drag cursor-pointer" on:click={()=>replace('/')}>返回</button>
 </main>

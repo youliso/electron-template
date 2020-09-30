@@ -12,8 +12,8 @@
         setInterval(() => {
             date = new Date();
         }, 1000);
-        console.log(User.get('count'))
-        User.Info.count.set(1)
+        console.log(User.get())
+        User.set(1)
     })
 
 </script>

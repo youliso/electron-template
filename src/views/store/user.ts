@@ -21,8 +21,8 @@ class User {
         this.Info.update(func)
     }
 
-    get(key: string) {
-        return this.Info === undefined ? undefined : get(this.Info);
+    get() {
+        return get(this.Info);
     }
 
     subscribe(func: (value: unknown) => unknown) {
