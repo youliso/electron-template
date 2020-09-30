@@ -4,19 +4,21 @@
 </script>
 
 <div class="head">
-    <div style="margin-right: 20px">
+    <div class="title">
         {$location} - {$querystring}
     </div>
-    <i on:click={()=>ipcRenderer.send('closed')} class="cuIcon-close no-drag cursor-pointer"></i>
+    <div>
+        <i on:click={()=>ipcRenderer.send('closed')} class="cuIcon-close no-drag cursor-pointer"></i>
+    </div>
 </div>
 
-<style>
-    .head {
-        height: 40px;
-        padding: 0 10px;
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        font-size: 20px;
-    }
+<style lang="scss">
+  .head {
+    height: 40px;
+    padding: 0 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 20px;
+  }
 </style>

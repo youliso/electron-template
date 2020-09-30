@@ -25,7 +25,15 @@ module.exports = {
         rules: [
             {
                 test: /\.svelte$/,
-                use: 'svelte-loader'
+                use: {
+                    loader: 'svelte-loader',
+                    options: {
+                        emitCss: true,
+                        preprocess: require("svelte-preprocess")({
+                            scss: true,
+                        })
+                    }
+                }
             },
             {
                 test: /\.ts$/,
