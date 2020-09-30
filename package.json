@@ -10,9 +10,7 @@
   "scripts": {
     "dev:sever": "webpack-dev-server --config ./resources/script/webpack.server.js",
     "dev:start": "cross-env NODE_ENV=development webpack --config ./resources/script/webpack.main.config.js && electron dist/main.bundle.js",
-    "prod": "cross-env NODE_ENV=production node resources/script/webpack.config.js",
-    "start": "electron dist/main.bundle.js",
-    "build": "node resources/script/build.js && electron-builder -c resources/script/build.json"
+    "build": "cross-env NODE_ENV=production node resources/script/webpack.config.js && node resources/script/build.js && electron-builder -c resources/script/build.json"
   },
   "devDependencies": {
     "@types/socket.io-client": "^1.4.33",
@@ -39,6 +37,7 @@
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
+    "electron-log": "^4.2.4",
     "electron-updater": "^4.3.1",
     "socket.io-client": "^2.3.0"
   }

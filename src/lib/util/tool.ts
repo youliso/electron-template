@@ -1,5 +1,3 @@
-import BrowserStorage from "./browserStorage";
-
 const config = require('../cfg/config.json');
 
 interface NetSendOpt extends RequestInit {
@@ -135,7 +133,7 @@ class Tool {
         let sendData: NetSendOpt = {
             headers: {
                 'Content-type': 'application/json;charset=utf-8',
-                'Authorization': BrowserStorage.sessionGet('Authorization') as string || ''
+                'Authorization': sessionStorage.getItem('Authorization') as string || ''
             },
             outTime: 30000,
             mode: 'cors'
@@ -160,7 +158,7 @@ class Tool {
                     .then(res => {
                         if (res.status >= 200 && res.status < 300) {
                             let Authorization = res.headers.get('Authorization');
-                            if (Authorization) BrowserStorage.sessionSet('Authorization', Authorization);
+                            if (Authorization) sessionStorage.setItem('Authorization', Authorization);
                             return res;
                         }
                         throw new Error(res.statusText);

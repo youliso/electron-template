@@ -1,39 +1,25 @@
-import {statSync, writeFileSync, mkdirSync, appendFileSync} from "fs";
-import {resolve} from "path";
+import log from 'electron-log';
 
 class Log {
     private static instance: Log;
-    private readonly logFile: string = resolve("./log");
 
     static getInstance() {
         if (!Log.instance) Log.instance = new Log();
         return Log.instance;
     }
 
-    constructor() {
-        try {
-            statSync(this.logFile);
-        } catch (e) {
-            mkdirSync(this.logFile, {recursive: true});
-        }
-    }
+    constructor() {}
 
     info(val: string) {
-        try {
-            statSync(this.logFile + '/info.log');
-        } catch (e) {
-            writeFileSync(this.logFile + '/info.log', '');
-        }
-        appendFileSync(this.logFile + '/info.log', `[${new Date()}] ${val}\r\n`);
+        log.info(val);
+    }
+
+    warn(val: string) {
+        log.warn(val);
     }
 
     error(val: string) {
-        try {
-            statSync(this.logFile + '/error.log');
-        } catch (e) {
-            writeFileSync(this.logFile + '/error.log', '');
-        }
-        appendFileSync(this.logFile + '/error.log', `[${new Date()}] ${val}\r\n`);
+        log.error(val);
     }
 }
 
