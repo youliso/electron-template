@@ -1,13 +1,15 @@
 <script>
     import {ipcRenderer,remote} from 'electron';
-    import './css/main.css';
+    import {push, pop, replace} from 'svelte-spa-router';
+
 </script>
 
 <main>
     <div class="head">
-        <i on:click="{()=>ipcRenderer.send('closed')}" class="cuIcon-close no-drag cursor-pointer"></i>
+        <i on:click={()=>ipcRenderer.send('closed')} class="cuIcon-close no-drag cursor-pointer"></i>
     </div>
     <div class="title">Hello {remote.app.name}!!</div>
+    <button class="no-drag cursor-pointer" on:click={()=>push('/Info/3')}>详情</button>
 </main>
 
 <style>

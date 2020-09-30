@@ -5,7 +5,8 @@
     "sourceMap": false,
     "outDir": "dist",
     "baseUrl": ".",
-    "target": "ES2019"
+    "target": "ES2019",
+    "allowJs": true
   },
   "include": [
     "src/**/*",

@@ -3,6 +3,8 @@ const webpack = require("webpack");
 const {name} = require('../../package.json');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const _externals = require('externals-dependencies');
+const miniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 const isEnvProduction = process.env.NODE_ENV === 'production';
 const isEnvDevelopment = process.env.NODE_ENV === 'development';
@@ -12,7 +14,7 @@ module.exports = {
     target: "electron-renderer",
     externals: _externals(),
     entry: {
-        app: './src/views/main.ts'
+        app: './src/views/index.ts'
     },
     output: {
         filename: '[name].bundle.view.js',
@@ -23,20 +25,19 @@ module.exports = {
         rules: [
             {
                 test: /\.svelte$/,
-                use: {
-                    loader: 'svelte-loader',
-                    options: {
-                        emitCss: true,
-                        hotReload: true,
-                        preprocess: require('svelte-preprocess')({})
-                    }
-                }
+                use: 'svelte-loader'
             },
             {
                 test: /\.css$/,
-                use: [
-                    'style-loader',
-                    'css-loader'
+                use: [{
+                        loader: miniCssExtractPlugin.loader,
+                        options: {
+                            // you can specify a publicPath here
+                            // by default it use publicPath in webpackOptions.output
+                            publicPath: '../'
+                        }
+                    },
+                    "css-loader"
                 ]
             },
             {
@@ -64,6 +65,13 @@ module.exports = {
         minimize: true
     },
     plugins: [
+        new miniCssExtractPlugin({
+            // Options similar to the same options in webpackOptions.output
+            // both options are optional
+            filename: "[name].css",
+            chunkFilename: "[id].css"
+        }),
+        new OptimizeCssAssetsPlugin(),
         new HtmlWebpackPlugin({
             title: name,
             template: "./resources/script/index.html"
