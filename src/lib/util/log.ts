@@ -1,3 +1,5 @@
+import {statSync, mkdirSync} from "fs";
+import {resolve} from 'path';
 import log from 'electron-log';
 
 class Log {
@@ -8,7 +10,14 @@ class Log {
         return Log.instance;
     }
 
-    constructor() {}
+    constructor() {
+        try {
+            statSync(resolve("./logs"));
+        } catch (e) {
+            mkdirSync(resolve("./logs"), {recursive: true});
+        }
+        log.transports.file.file = resolve("./logs/log");
+    }
 
     info(val: string) {
         log.info(val);
