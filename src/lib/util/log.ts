@@ -24,7 +24,7 @@ class Log {
         } catch (e) {
             writeFileSync(this.logFile + '/info.log', '');
         }
-        appendFileSync(this.logFile + '/info.log', `[${new Date()}] ${val}\n`);
+        appendFileSync(this.logFile + '/info.log', `[${new Date()}] ${val}\r\n`);
     }
 
     error(val: string) {
@@ -33,7 +33,7 @@ class Log {
         } catch (e) {
             writeFileSync(this.logFile + '/error.log', '');
         }
-        appendFileSync(this.logFile + '/error.log', `[${new Date()}] ${val}\n`);
+        appendFileSync(this.logFile + '/error.log', `[${new Date()}] ${val}\r\n`);
     }
 }
 

@@ -9,7 +9,7 @@ import {
     screen,
     clipboard,
     Tray,
-    BrowserWindowConstructorOptions
+    BrowserWindowConstructorOptions, Menu
 } from "electron";
 import {autoUpdater} from "electron-updater";
 import * as Socket from 'socket.io-client';
@@ -128,51 +128,64 @@ class Main {
      * */
     async createTray() {
         try {
+            const contextMenu = Menu.buildFromTemplate([{
+                label: '显示',
+                click: () => {
+                    for (let i of this.dialogs) if (i) i.show();
+                    this.win.show();
+                }
+            }, {
+                label: '退出',
+                click: () => {
+                    app.quit();
+                }
+            }]);
             this.appTray = new Tray(resolve(__dirname + `/${ico}`));
+            this.appTray.setContextMenu(contextMenu);
             this.appTray.setToolTip(app.name);
-            let menu_point: Electron.Point | null = null;
-            this.appTray.on('mouse-move', (e, p) => menu_point = p);
             this.appTray.on('double-click', () => {
                 for (let i of this.dialogs) if (i) i.show();
                 this.win.show();
             })
-            this.appTray.on('right-click', async (e, b) => {
-                if (!menu_point) menu_point = b;
-                if (this.menu) {
-                    this.menu.show();
-                    return;
-                }
-                // 创建浏览器窗口。
-                let opt = this.browserWindowOpt(config.menuSize);
-                opt.x = menu_point.x - 12;
-                if ((opt.x + 300) > screen.getPrimaryDisplay().workAreaSize.width) opt.x = menu_point.x - (config.menuSize[0] - 13);
-                opt.y = menu_point.y - (config.menuSize[1] - 13);
-                this.menu = new BrowserWindow(opt);
-                // //window 加载完毕后显示
-                this.menu.once('ready-to-show', () => this.menu.show());
-                // 当 window 被关闭，这个事件会被触发。
-                this.menu.on('closed', () => {
-                    this.menu = null;
-                });
-                //默认浏览器打开跳转连接
-                this.menu.webContents.on('new-window', (event, url, frameName, disposition, options) => {
-                    event.preventDefault();
-                    shell.openExternal(url);
-                });
-                // 打开开发者工具
-                if (!app.isPackaged) this.menu.webContents.openDevTools();
-                //隐藏menu任务栏状态
-                this.menu.setSkipTaskbar(true);
-                //menu最顶层
-                this.menu.setAlwaysOnTop(true, 'screen-saver');
-                //注入初始化代码
-                this.menu.webContents.on("did-finish-load", () => {
-                    this.menu.webContents.send('dataJsonPort', encodeURIComponent(JSON.stringify({el: 'menu'})));
-                });
-                // 加载index.html文件
-                if (!app.isPackaged) await this.win.loadURL('http://localhost:2354').catch(err => Log.error(err));
-                else await this.win.loadFile(resolve(__dirname + '/index.html')).catch(err => Log.error(err));
-            })
+            // let menu_point: Electron.Point | null = null;
+            // this.appTray.on('mouse-move', (e, p) => menu_point = p);
+            // this.appTray.on('right-click', async (e, b) => {
+            //     if (!menu_point) menu_point = b;
+            //     if (this.menu) {
+            //         this.menu.show();
+            //         return;
+            //     }
+            //     // 创建浏览器窗口。
+            //     let opt = this.browserWindowOpt(config.menuSize);
+            //     opt.x = menu_point.x - 12;
+            //     if ((opt.x + 300) > screen.getPrimaryDisplay().workAreaSize.width) opt.x = menu_point.x - (config.menuSize[0] - 13);
+            //     opt.y = menu_point.y - (config.menuSize[1] - 13);
+            //     this.menu = new BrowserWindow(opt);
+            //     // //window 加载完毕后显示
+            //     this.menu.once('ready-to-show', () => this.menu.show());
+            //     // 当 window 被关闭，这个事件会被触发。
+            //     this.menu.on('closed', () => {
+            //         this.menu = null;
+            //     });
+            //     //默认浏览器打开跳转连接
+            //     this.menu.webContents.on('new-window', (event, url, frameName, disposition, options) => {
+            //         event.preventDefault();
+            //         shell.openExternal(url);
+            //     });
+            //     // 打开开发者工具
+            //     if (!app.isPackaged) this.menu.webContents.openDevTools();
+            //     //隐藏menu任务栏状态
+            //     this.menu.setSkipTaskbar(true);
+            //     //menu最顶层
+            //     this.menu.setAlwaysOnTop(true, 'screen-saver');
+            //     //注入初始化代码
+            //     this.menu.webContents.on("did-finish-load", () => {
+            //         this.menu.webContents.send('dataJsonPort', encodeURIComponent(JSON.stringify({el: 'menu'})));
+            //     });
+            //     // 加载index.html文件
+            //     if (!app.isPackaged) await this.win.loadURL('http://localhost:2354').catch(err => Log.error(err));
+            //     else await this.win.loadFile(resolve(__dirname + '/index.html')).catch(err => Log.error(err));
+            // })
         } catch (e) {
             Log.error(e);
         }
