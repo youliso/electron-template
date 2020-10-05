@@ -1,5 +1,5 @@
-import {resolve} from "path";
-import {existsSync, readdirSync, statSync, unlinkSync, rmdirSync} from "fs";
+import { resolve } from "path";
+import { existsSync, readdirSync, statSync, unlinkSync, rmdirSync } from "fs";
 import {
     shell,
     app,
@@ -11,7 +11,7 @@ import {
     Tray,
     BrowserWindowConstructorOptions, Menu
 } from "electron";
-import {autoUpdater} from "electron-updater";
+import { autoUpdater } from "electron-updater";
 import * as Socket from 'socket.io-client';
 import Log from "./util/log";
 import ico from "./static/icon.ico";
@@ -116,7 +116,7 @@ class Main {
         if (!app.isPackaged) this.win.webContents.openDevTools();
         //注入初始化代码
         this.win.webContents.on("did-finish-load", () => {
-            this.win.webContents.send('dataJsonPort', encodeURIComponent(JSON.stringify({el: 'app'})));
+            this.win.webContents.send('dataJsonPort', encodeURIComponent(JSON.stringify({ el: 'app' })));
         });
         // 加载index.html文件
         if (!app.isPackaged) await this.win.loadURL('http://localhost:2354').catch(err => Log.error(err));
@@ -248,7 +248,7 @@ class Main {
      * 创建Socket
      * */
     async createSocket(Authorization: string) {
-        this.socket = Socket(config.socketUrl, {query: `Authorization=${Authorization}`});
+        this.socket = Socket(config.socketUrl, { query: `Authorization=${Authorization}` });
         this.socket.on('connect', () => {
             this.win.webContents.executeJavaScript('console.log(\'[socket]connect\');');
         });
@@ -259,8 +259,8 @@ class Main {
         });
         // @ts-ignore
         this.socket.on('error', msg => {
-            this.win.webContents.send('socketMessage', {code: -2, msg});
-            for (let i of this.dialogs) if (i) i.webContents.send('socketMessage', {code: -2, msg});
+            this.win.webContents.send('socketMessage', { code: -2, msg });
+            for (let i of this.dialogs) if (i) i.webContents.send('socketMessage', { code: -2, msg });
         });
         this.socket.on('disconnect', () => {
             this.win.webContents.executeJavaScript('console.log(\'[socket]disconnect\');');
@@ -269,7 +269,7 @@ class Main {
             }, 1000 * 60 * 3)
         });
         this.socket.on('close', () => {
-            this.win.webContents.send('socketMessage', {code: -1, msg: '[socket]close'});
+            this.win.webContents.send('socketMessage', { code: -1, msg: '[socket]close' });
         });
     }
 
@@ -278,10 +278,10 @@ class Main {
      * */
     async update() {
         let message = {
-            error: {code: 0, msg: '检查更新出错'},
-            checking: {code: 1, msg: '正在检查更新'},
-            updateAva: {code: 2, msg: '检测到新版本，正在下载'},
-            updateNotAva: {code: 3, msg: '现在使用的就是最新版本，不用更新'}
+            error: { code: 0, msg: '检查更新出错' },
+            checking: { code: 1, msg: '正在检查更新' },
+            updateAva: { code: 2, msg: '检测到新版本，正在下载' },
+            updateNotAva: { code: 3, msg: '现在使用的就是最新版本，不用更新' }
         };
         // 这里的URL就是更新服务器的放置文件的地址
         autoUpdater.setFeedURL(config.updateFileUrl);
@@ -420,7 +420,7 @@ class Main {
         });
         //重启
         ipcMain.on('relaunch', () => {
-            app.relaunch({args: process.argv.slice(1)});
+            app.relaunch({ args: process.argv.slice(1) });
         });
 
         /**

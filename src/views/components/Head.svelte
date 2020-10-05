@@ -20,5 +20,10 @@
     justify-content: space-between;
     align-items: center;
     font-size: 20px;
+
+    .title{
+      margin-left: 20px;
+    }
+    
   }
 </style>

@@ -1,5 +1,5 @@
 // @ts-ignore
-import {wrap} from 'svelte-spa-router/wrap'
+import { wrap } from 'svelte-spa-router/wrap'
 
 export const routes = {
     '/': wrap({

@@ -1,31 +1,27 @@
 <script>
-    import {ipcRenderer, remote} from 'electron';
-    import {push, pop, replace} from 'svelte-spa-router';
-    import {onMount} from 'svelte';
-    import User from '../store/user';
+    import { ipcRenderer, remote } from "electron";
+    import { push, pop, replace } from "svelte-spa-router";
+    import { onMount, onDestroy } from "svelte";
+    import User from "../store/user";
     import Info from "./Info.svelte";
     import Head from "../components/Head.svelte";
 
-    console.log('home')
+    console.log("home");
     let date;
     onMount(() => {
-        console.log('home onMount')
+        console.log("home onMount");
         date = new Date();
         setInterval(() => {
             date = new Date();
         }, 1000);
-        console.log(User.get())
-        User.set(1)
-    })
+        console.log(User.get());
+        User.set(1);
+    });
 
+    onDestroy(() => {
+        console.log("onDestroy");
+    });
 </script>
-
-<main>
-    <Head/>
-    <div class="title">Hello {remote.app.name}!!</div>
-    <div>{date}</div>
-    <button class="no-drag cursor-pointer" on:click={()=>replace('/Info/3')}>详情</button>
-</main>
 
 <style>
     .title {
@@ -35,3 +31,12 @@
         font-weight: 100;
     }
 </style>
+
+<main>
+    <Head />
+    <div class="title">Hello {remote.app.name}!!</div>
+    <div>{date}</div>
+    <button
+        class="no-drag cursor-pointer"
+        on:click={() => replace('/Info/3')}>详情</button>
+</main>
