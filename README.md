@@ -1,2 +1,2 @@
 # Electron_Template
-electron模板
+electron & vue

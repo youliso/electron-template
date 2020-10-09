@@ -10,7 +10,7 @@ module.exports = {
     target: "electron-main",
     externals: _externals(),
     entry: {
-        main: './src/lib/main.ts'
+        main: './src/main/main.ts'
     },
     output: {
         filename: '[name].bundle.js',
