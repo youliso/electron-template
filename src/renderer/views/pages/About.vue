@@ -1,19 +1,19 @@
 <template>
   <div class="main">
+    <Head></Head>
     <div class="about">
       <h1>This is an about page</h1>
     </div>
-    <HelloWorld></HelloWorld>
   </div>
 </template>
 
 <script lang="ts">
 import {defineComponent} from 'vue';
-import HelloWorld from '../../components/HelloWorld.vue';
+import Head from '../../components/Head.vue';
 
 export default defineComponent({
-  components:{
-    HelloWorld
+  components: {
+    Head
   },
   name: 'About',
   created() {
@@ -25,8 +25,8 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.about{
-  h1{
+.about {
+  h1 {
     padding: 20px;
   }
 }
