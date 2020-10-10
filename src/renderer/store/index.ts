@@ -1,9 +1,9 @@
-import { state } from './state';
-import {createStore} from 'vuex';
+import {reactive, provide, inject} from 'vue';
 
-export default createStore({
-    state,
-    mutations: {},
-    actions: {},
-    modules: {},
-});
+export const argsSymbol = Symbol('args');
+export const createArgs = (args?: DialogOpt) => reactive(args);
+export const argsState = (): DialogOpt => inject(argsSymbol);
+export const provideArgsState = (args?: DialogOpt) => provide(
+    argsSymbol,
+    createArgs(args)
+);

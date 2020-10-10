@@ -1,12 +1,13 @@
 <template>
   <div class="main">
     <Head></Head>
-    {{$Args.data}}
+    {{args.data}}
   </div>
 </template>
 
 <script lang="ts">
 import {defineComponent} from 'vue';
+import {argsState} from "../../store";
 import Ipc from '../../utils/ipc';
 import Head from '../components/Head.vue';
 
@@ -15,8 +16,9 @@ export default defineComponent({
     Head
   },
   name: "Message",
-  created() {
+  setup() {
     Ipc.setBounds([400, 150]);
+    return {args:argsState()};
   }
 });
 </script>

@@ -7,15 +7,19 @@
 <script lang="ts">
 import {defineComponent} from 'vue';
 import {ipcRenderer} from "electron";
+import {argsState} from "../../store";
 import Tool from '../../utils/tool';
 
 export default defineComponent({
   name: 'Head',
-  methods: {
-    close() {
-      if (Tool.isNull(this.$Args)) ipcRenderer.send("closed");
-      else ipcRenderer.send("dialog-closed", this.$Args.key);
+  setup() {
+    let args = argsState();
+    const close = () => {
+      console.log(args)
+      if (Tool.isNull(args)) ipcRenderer.send("closed");
+      else ipcRenderer.send("dialog-closed", args.key);
     }
+    return {close}
   }
 });
 </script>

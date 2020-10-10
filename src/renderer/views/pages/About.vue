@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from 'vue';
+import {defineComponent, onActivated} from 'vue';
 import Head from '../components/Head.vue';
 import Ipc from '../../utils/ipc';
 
@@ -18,11 +18,10 @@ export default defineComponent({
     Head
   },
   name: 'About',
-  created() {
-  },
-  activated() {
-    console.log("activated")
-    Ipc.setBounds([300,200])
+  setup() {
+    onActivated(() => {
+      Ipc.setBounds([300, 200]);
+    });
   }
 });
 </script>
