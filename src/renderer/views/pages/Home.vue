@@ -9,6 +9,7 @@
 
 <script lang="ts">
 import {defineComponent} from 'vue';
+import {join, resolve} from 'path';
 import Ipc from '../../utils/ipc';
 import Head from '../components/Head.vue';
 
@@ -17,8 +18,11 @@ export default defineComponent({
     Head
   },
   name: 'Home',
+  data() {
+    return {}
+  },
   created() {
-    Ipc.setBounds([600, 300]);
+    Ipc.setBounds([700, 300]);
   },
   methods: {
     test() {
