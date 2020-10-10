@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import {defineComponent} from 'vue';
-import Head from '../../components/Head.vue';
+import Head from '../components/Head.vue';
 import Ipc from '../../utils/ipc';
 
 export default defineComponent({
