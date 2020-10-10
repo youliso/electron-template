@@ -32,12 +32,16 @@ fs.writeFileSync('./resources/script/installer.nsh', nsh);
 
 /**  config配置  **/
 let nConf = {//基础配置
-    "appPort":cfg.port,
+    "appPort": cfg.port,
     "appUrl": "http://175.24.76.246:3000/", //程序主访问地址
     "socketUrl": "http://175.24.76.246:3000/",// 程序socket访问地址
     "updateUrl": "http://175.24.76.246:3000/", //更新地址
     "updateFileUrl": "http://175.24.76.246:3000/public/kl/", //更新文件地址
     "updateFilePath": `../${name.toLowerCase()}-updater`, //更新文件目录
+    "appSize": [
+        500,
+        350
+    ],
     "menuSize": [76, 94]
 };
-fs.writeFileSync('./src/cfg/config.json', JSON.stringify(nConf, null, 2));
+fs.writeFileSync('./src/lib/cfg/config.json', JSON.stringify(nConf, null, 2));

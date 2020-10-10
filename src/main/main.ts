@@ -11,9 +11,10 @@ import {
 } from "electron";
 import {autoUpdater} from "electron-updater";
 import * as Socket from 'socket.io-client';
+import Log from "../lib/log";
 import ico from "./assets/icon.ico";
 
-const config = require("../cfg/config.json");
+const config = require("../lib/cfg/config.json");
 
 declare global {
     namespace NodeJS {
@@ -92,7 +93,7 @@ class Main {
      * 创建主窗口
      * */
     async createWindow() {
-        this.win = new BrowserWindow(this.browserWindowOpt([1, 1]));
+        this.win = new BrowserWindow(this.browserWindowOpt(config.appSize));
         // //加载完毕后显示
         this.win.once('ready-to-show', () => this.win.show());
         //关闭后，这个事件会被触发。
@@ -115,8 +116,8 @@ class Main {
             this.win.webContents.send('window-load', encodeURIComponent(JSON.stringify({el: 'app'})));
         });
         // 加载index.html文件
-        if (!app.isPackaged) await this.win.loadURL(`http://localhost:${config.appPort}`).catch(err => console.error(err));
-        else await this.win.loadFile(join(__dirname, './index.html')).catch(err => console.error(err));
+        if (!app.isPackaged) await this.win.loadURL(`http://localhost:${config.appPort}`).catch(err => Log.error(err));
+        else await this.win.loadFile(join(__dirname, './index.html')).catch(err => Log.error(err));
     }
 
     /**
@@ -144,7 +145,7 @@ class Main {
                 this.win.show();
             })
         } catch (e) {
-            console.error(e);
+            Log.error(e);
         }
     }
 
@@ -204,8 +205,8 @@ class Main {
                 data: args
             })));
         });
-        if (!app.isPackaged) await this.dialogs[key].loadURL(`http://localhost:${config.appPort}`).catch(err => console.error(err));
-        else await this.dialogs[key].loadFile(join(__dirname, './index.html')).catch(err => console.error(err));
+        if (!app.isPackaged) await this.dialogs[key].loadURL(`http://localhost:${config.appPort}`).catch(err => Log.error(err));
+        else await this.dialogs[key].loadFile(join(__dirname, './index.html')).catch(err => Log.error(err));
     }
 
     /**
@@ -285,7 +286,7 @@ class Main {
         try {
             await autoUpdater.checkForUpdates();
         } catch (e) {
-            console.error(e);
+            Log.error(e);
         }
     }
 
@@ -327,7 +328,7 @@ class Main {
         });
         //失去焦点时发出
         app.on('browser-window-blur', () => {
-            // 注销快捷键
+            // 注销关闭刷新
             globalShortcut.unregister('CommandOrControl+R');
         });
         //协议调起

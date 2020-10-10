@@ -7,7 +7,7 @@
 <script lang="ts">
 import {defineComponent} from 'vue';
 import {ipcRenderer} from "electron";
-import Tool from '../lib/tool';
+import Tool from '../utils/tool';
 
 export default defineComponent({
   name: 'Head',

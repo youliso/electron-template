@@ -108,15 +108,16 @@ module.exports = {
             patterns:
                 [
                     {
-                        from: './src/renderer/lib/**/*',
+                        from: './src/lib/**/*',
                         to: './lib',
                         transformPath(targetPath, absolutePath) {
                             let path = targetPath.replace(/\\/g, '/')
-                            return path.replace('src/renderer/lib', '')
+                            return path.replace('src/lib', '')
                         },
                         globOptions: {
                             ignore: [
-                                '**/*.ts'
+                                '**/*.ts',
+                                '**/*.json'
                             ]
                         }
                     }

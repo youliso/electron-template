@@ -5,13 +5,6 @@
     </keep-alive>
   </router-view>
 </template>
-<script lang="ts">
-export default {
-  created() {
-    if (this.$Args) this.$router.replace(this.$Args.route)
-  }
-}
-</script>
 <style>
 @import "assets/main.css";
 </style>

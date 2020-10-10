@@ -5,6 +5,10 @@
   "updateUrl": "http://175.24.76.246:3000/",
   "updateFileUrl": "http://175.24.76.246:3000/public/kl/",
   "updateFilePath": "../kl-updater",
+  "appSize": [
+    500,
+    350
+  ],
   "menuSize": [
     76,
     94

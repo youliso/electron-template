@@ -1,4 +1,4 @@
-const config = require('../../cfg/config.json');
+const config = require('../../lib/cfg/config.json');
 
 interface NetSendOpt extends RequestInit {
     outTime?: number; //请求超时时间
@@ -65,7 +65,7 @@ class Tool {
         for (let k in o)
             if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) as string : (("00" + o[k]).substr(("" + o[k]).length)));
         return fmt;
-    };
+    }
 
     /**
      * 动态加载css/js文件
