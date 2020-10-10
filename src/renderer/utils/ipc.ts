@@ -64,14 +64,13 @@ class Ipc {
         let args: DialogOpt = {
             width: remote.getCurrentWindow().getBounds().width,
             height: remote.getCurrentWindow().getBounds().height,
-            dialogName: data.dialogName, //名称
             route: data.route, // 页面路由
             resizable: false,// 是否支持调整窗口大小
             data: data.data, //数据
             isMultiWindow: false, //是否支持多窗口
             modal: true //父窗口置顶
         };
-        if (data.route === '#/Message') args.parent = 'win'; //置顶于父窗口
+        if (data.route === '/Message') args.parent = 'win'; //置顶于父窗口
         if (parent) args.parent = parent;
         if (data.returnPath) args.returnPath = data.returnPath;
         if (data.isMultiWindow) args.isMultiWindow = data.isMultiWindow;

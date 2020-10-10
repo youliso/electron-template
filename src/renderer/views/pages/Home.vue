@@ -23,8 +23,7 @@ export default defineComponent({
   methods: {
     test() {
       let data: DialogOpt = {
-        dialogName: "提示",
-        route: '#/Message',
+        route: '/Message',
         data: {text: "key不能为空"},
       };
       Ipc.dialogInit(data);
