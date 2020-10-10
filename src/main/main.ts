@@ -18,7 +18,7 @@ const config = require("../cfg/config.json");
 declare global {
     namespace NodeJS {
         interface Global {
-            sharedObject: { [key: number]: unknown }
+            sharedObject: { [key: string]: unknown }
         }
     }
 }
@@ -403,7 +403,6 @@ class Main {
         ipcMain.on('dialog-closed', (event, key) => {
             this.dialogs[key].close();
             delete this.dialogs[key];
-            console.log(this.dialogs)
         });
         //最小化
         ipcMain.on('dialog-mini', (event, key) => {
