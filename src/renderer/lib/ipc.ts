@@ -25,7 +25,7 @@ class Ipc {
     /**
      * 消息反馈 (i)
      */
-    Message(v: unknown) {
+    message(v: unknown) {
         return ipcRenderer.on('message-back', (event, args: IpcMessageOpt) => {
             v = args;
         })
@@ -40,7 +40,7 @@ class Ipc {
 
     /**
      * 设置窗口大小
-     * @param size number[]
+     * @param {number[]}size
      */
     setBounds(size: number[]) {
         return new Promise((resolve, reject) => {
@@ -58,23 +58,21 @@ class Ipc {
     }
 
     /**
-     * 创建弹框
+     * 创建弹框 （dialogs）
      */
-    dialogInit(data: DialogOpt) {
+    dialogInit(data: DialogOpt, parent?: number) {
         let args: DialogOpt = {
             width: remote.getCurrentWindow().getBounds().width,
             height: remote.getCurrentWindow().getBounds().height,
             dialogName: data.dialogName, //名称
-            uniQueKey: data.uniQueKey, //页面key
-            route: data.route,
+            route: data.route, // 页面路由
             resizable: false,// 是否支持调整窗口大小
             data: data.data, //数据
             isMultiWindow: false, //是否支持多窗口
-            parent: 'win', //父窗口
             modal: true //父窗口置顶
         };
-        // if (parent) args.parent = parent['id'];
-        if (data.uniQueKey === 'Message') args.isMultiWindow = true;
+        if (data.route === '#/Message') args.parent = 'win'; //置顶于父窗口
+        if (parent) args.parent = parent;
         if (data.returnPath) args.returnPath = data.returnPath;
         if (data.isMultiWindow) args.isMultiWindow = data.isMultiWindow;
         if (data.parent) args.parent = data.parent;

@@ -1,9 +1,8 @@
 declare interface DialogOpt {
-    id?: number;
+    key?: string; //唯一key
     width?: number; //父类窗口宽度
     height?: number; //父类窗口高度
     dialogName?: string; //窗口名称
-    uniQueKey?: string; //窗口key
     route?: string; // 页面路由
     resizable?: boolean; //是否支持调整窗口大小
     data?: object; //数据

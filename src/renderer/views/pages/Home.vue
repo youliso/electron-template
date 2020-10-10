@@ -22,11 +22,12 @@ export default defineComponent({
   },
   methods: {
     test() {
-      Ipc.dialogInit({
+      let data: DialogOpt = {
         dialogName: "提示",
-        uniQueKey: "Message",
+        route: '#/Message',
         data: {text: "key不能为空"},
-      })
+      };
+      Ipc.dialogInit(data);
     }
   }
 });

@@ -1,5 +1,5 @@
-export const state: { [key:string]:unknown } = {
-    include:'About',
-    exclude:'',
-    keepAliveMax:10
+export const state: { [key: string]: unknown } = {
+    include: ['About'],
+    exclude: [],
+    keepAliveMax: 10
 };

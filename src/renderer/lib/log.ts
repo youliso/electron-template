@@ -25,7 +25,7 @@ class Log {
         } catch (e) {
             writeFileSync(this.logFile + `/info-${Tool.format()}.log`, '');
         }
-        appendFileSync(this.logFile + `/info-${Tool.format()}.log`, `[${Tool.format('yyyy-MM-dd hh:mm:ss')}] ${val}\r\n`);
+        appendFileSync(this.logFile + `/info-${Tool.format()}.log`, `[${Tool.format('yyyy-MM-dd hh:mm:ss')}] [info] ${val}\r\n`);
     }
 
     error(val: string) {
@@ -34,7 +34,7 @@ class Log {
         } catch (e) {
             writeFileSync(this.logFile + `/error-${Tool.format()}.log`, '');
         }
-        appendFileSync(this.logFile + `/error-${Tool.format()}.log`, `[${Tool.format('yyyy-MM-dd hh:mm:ss')}] ${val}\r\n`);
+        appendFileSync(this.logFile + `/error-${Tool.format()}.log`, `[${Tool.format('yyyy-MM-dd hh:mm:ss')}] [error] ${val}\r\n`);
     }
 }
 

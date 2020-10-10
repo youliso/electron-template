@@ -14,7 +14,7 @@ export default defineComponent({
   methods: {
     close() {
       if (Tool.isNull(this.$Args)) ipcRenderer.send("closed");
-      else ipcRenderer.send("dialog-closed", this.$Args.id);
+      else ipcRenderer.send("dialog-closed", this.$Args.key);
     }
   }
 });

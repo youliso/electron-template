@@ -18,7 +18,7 @@ const config = require("../cfg/config.json");
 declare global {
     namespace NodeJS {
         interface Global {
-            sharedObject: { [key: string]: unknown }
+            sharedObject: { [key: number]: unknown }
         }
     }
 }
@@ -26,7 +26,7 @@ declare global {
 global.sharedObject = {};
 
 interface DialogBrowserWindow extends BrowserWindow {
-    uniQueKey?: string; //父窗口key
+    route?: string; //父窗口key
     isMultiWindow?: boolean; //是否支持多窗口
 }
 
@@ -34,8 +34,7 @@ class Main {
     private static instance: Main;
 
     private win: BrowserWindow = null; //主窗口
-    private dialogs: DialogBrowserWindow[] = []; //弹框组
-    private dialogsType: boolean[] = []; //弹框组状态
+    private dialogs: { [key: string]: DialogBrowserWindow } = {}; //弹框组
     private appTray: Tray = null; //托盘
     private menu: BrowserWindow = null; //托盘窗口
     private socket: SocketIOClient.Socket = null; //socket
@@ -128,7 +127,7 @@ class Main {
             const contextMenu = Menu.buildFromTemplate([{
                 label: '显示',
                 click: () => {
-                    for (let i of this.dialogs) if (i) i.show();
+                    for (let i in this.dialogs) if (this.dialogs[i]) this.dialogs[i].show();
                     this.win.show();
                 }
             }, {
@@ -141,7 +140,7 @@ class Main {
             this.appTray.setContextMenu(contextMenu);
             this.appTray.setToolTip(app.name);
             this.appTray.on('double-click', () => {
-                for (let i of this.dialogs) if (i) i.show();
+                for (let i in this.dialogs) if (this.dialogs[i]) this.dialogs[i].show();
                 this.win.show();
             })
         } catch (e) {
@@ -153,57 +152,60 @@ class Main {
      * 创建弹框
      * */
     async createDialog(args: DialogOpt) {
-        let id = this.dialogs.length;
-        for (let i of this.dialogs) {
-            if (i && i.uniQueKey === args.uniQueKey && !i.isMultiWindow) {
-                i.focus();
+        let is = true, key = new Date().getTime().toString();
+        while (is) {
+            if (!this.dialogs[key]) is = false;
+            else key = new Date().getTime().toString();
+        }
+        for (let i in this.dialogs) {
+            if (this.dialogs[i] && this.dialogs[i].route === args.route && !this.dialogs[i].isMultiWindow) {
+                this.dialogs[i].focus();
                 return;
             }
         }
         //创建一个与父类窗口同大小、坐标的窗口
         let opt = this.browserWindowOpt([args.width, args.height]);
-        if (typeof args.parent === 'string') {
-            if (args.parent === 'win') opt.parent = this.win;
-            opt.x = this.win.getPosition()[0] //+ ((this.win.getBounds().width - args.width) / 2);
-            opt.y = this.win.getPosition()[1] //+ ((this.win.getBounds().height - args.height) / 2);
-        } else if (typeof args.parent === 'number') {
+        if (args.parent === 'win') {
+            opt.parent = this.win;
+            opt.x = this.win.getPosition()[0];
+            opt.y = this.win.getPosition()[1];
+        } else {
             opt.parent = this.dialogs[args.parent];
-            opt.x = this.dialogs[args.parent].getPosition()[0] //+ ((this.dialogs[args.parent].getBounds().width - args.width) / 2);
-            opt.y = this.dialogs[args.parent].getPosition()[1] //+ ((this.dialogs[args.parent].getBounds().height - args.height) / 2);
+            opt.x = this.dialogs[args.parent].getPosition()[0];
+            opt.y = this.dialogs[args.parent].getPosition()[1];
         }
         opt.modal = args.modal;
         opt.resizable = args.resizable;
-        this.dialogs[id] = new BrowserWindow(opt);
-        this.dialogs[id].uniQueKey = args.uniQueKey;
-        this.dialogs[id].isMultiWindow = args.isMultiWindow;
+        this.dialogs[key] = new BrowserWindow(opt);
+        this.dialogs[key].route = args.route;
+        this.dialogs[key].isMultiWindow = args.isMultiWindow;
         // //window加载完毕后显示
-        this.dialogs[id].once('ready-to-show', () => this.dialogs[id].show());
+        this.dialogs[key].once('ready-to-show', () => this.dialogs[key].show());
         //window被关闭，这个事件会被触发。
-        this.dialogs[id].on('closed', () => {
-            this.dialogs[id] = null;
+        this.dialogs[key].on('closed', () => {
+            this.dialogs[key] = null;
         });
         //调整窗口大小后触发
-        this.dialogs[id].on('resize', () => {
-            this.dialogs[id].webContents.send('window-resize');
+        this.dialogs[key].on('resize', () => {
+            this.dialogs[key].webContents.send('window-resize');
         });
         //默认浏览器打开跳转连接
-        this.dialogs[id].webContents.on('new-window', (event, url, frameName, disposition, options) => {
+        this.dialogs[key].webContents.on('new-window', (event, url, frameName, disposition, options) => {
             event.preventDefault();
             shell.openExternal(url);
         });
         // 打开开发者工具
-        if (!app.isPackaged) this.dialogs[id].webContents.openDevTools();
+        if (!app.isPackaged) this.dialogs[key].webContents.openDevTools();
         //注入初始化代码
-        this.dialogs[id].webContents.on("did-finish-load", () => {
-            args.id = id;
-            this.dialogs[id].webContents.send('window-load', encodeURIComponent(JSON.stringify({
+        this.dialogs[key].webContents.on("did-finish-load", () => {
+            args.key = key;
+            this.dialogs[key].webContents.send('window-load', encodeURIComponent(JSON.stringify({
                 el: 'dialog',
                 data: args
             })));
         });
-        if (!app.isPackaged) await this.dialogs[id].loadURL(`http://localhost:${config.appPort}`).catch(err => console.error(err));
-        else await this.dialogs[id].loadFile(join(__dirname, './index.html')).catch(err => console.error(err));
-        this.dialogsType[id] = true;
+        if (!app.isPackaged) await this.dialogs[key].loadURL(`http://localhost:${config.appPort}`).catch(err => console.error(err));
+        else await this.dialogs[key].loadFile(join(__dirname, './index.html')).catch(err => console.error(err));
     }
 
     /**
@@ -217,12 +219,15 @@ class Main {
         // @ts-ignore
         this.socket.on('message', data => {
             this.win.webContents.send('message-back', data);
-            for (let i of this.dialogs) if (i) i.webContents.send('message-back', data);
+            for (let i in this.dialogs) if (this.dialogs[i]) this.dialogs[i].webContents.send('message-back', data);
         });
         // @ts-ignore
         this.socket.on('error', msg => {
             this.win.webContents.send('message-back', {key: 'socket-error', value: msg});
-            for (let i of this.dialogs) if (i) i.webContents.send('message-back', {key: 'socket-error', value: msg});
+            for (let i in this.dialogs) if (this.dialogs[i]) this.dialogs[i].webContents.send('message-back', {
+                key: 'socket-error',
+                value: msg
+            });
         });
         this.socket.on('disconnect', () => {
             this.win.webContents.executeJavaScript('console.log(\'[socket]disconnect\');');
@@ -232,7 +237,7 @@ class Main {
         });
         this.socket.on('close', () => {
             this.win.webContents.send('message-back', {key: 'socket-close', value: '[socket]close'});
-            for (let i of this.dialogs) if (i) i.webContents.send('message-back', {
+            for (let i in this.dialogs) if (this.dialogs[i]) this.dialogs[i].webContents.send('message-back', {
                 key: 'socket-close',
                 value: '[socket]close'
             });
@@ -338,21 +343,19 @@ class Main {
          * */
         //关闭
         ipcMain.on('closed', (event, args) => {
-            for (let i of this.dialogs) if (i) i.close();
-            this.dialogs = [];
-            this.dialogsType = [];
+            for (let i in this.dialogs) if (this.dialogs[i]) this.dialogs[i].close();
             if (this.menu) this.menu.close();
             this.win.close();
         });
         //隐藏
         ipcMain.on('hide', (event, args) => {
-            for (let i of this.dialogs) if (i) i.hide();
+            for (let i in this.dialogs) if (this.dialogs[i]) this.dialogs[i].hide();
             this.win.hide();
         });
         //显示
         ipcMain.on('show', (event, args) => {
             if (args === undefined) {
-                for (let i of this.dialogs) if (i) i.show();
+                for (let i in this.dialogs) if (this.dialogs[i]) this.dialogs[i].show();
                 this.win.show();
                 return;
             }
@@ -371,17 +374,17 @@ class Main {
         });
         //最小化
         ipcMain.on('mini', () => {
-            for (let i of this.dialogs) if (i) i.minimize();
+            for (let i in this.dialogs) if (this.dialogs[i]) this.dialogs[i].minimize();
             this.win.minimize();
         });
         //复原
         ipcMain.on('restore', () => {
-            for (let i of this.dialogs) if (i) i.restore();
+            for (let i in this.dialogs) if (this.dialogs[i]) this.dialogs[i].restore();
             this.win.restore();
         });
         //重载
         ipcMain.on('reload', () => {
-            for (let i of this.dialogs) if (i) i.reload();
+            for (let i in this.dialogs) if (this.dialogs[i]) this.dialogs[i].reload();
             this.win.reload();
         });
         //重启
@@ -397,20 +400,14 @@ class Main {
             this.createDialog(args);
         });
         //关闭
-        ipcMain.on('dialog-closed', (event, id) => {
-            this.dialogsType[id] = false;
-            this.dialogs[id].close();
-            delete this.dialogs[id];
-            let is = true;
-            for (let i = 0, len = this.dialogsType.length; i < len; i++) if (this.dialogsType[i]) is = false;
-            if (is) {
-                this.dialogs = [];
-                this.dialogsType = [];
-            }
+        ipcMain.on('dialog-closed', (event, key) => {
+            this.dialogs[key].close();
+            delete this.dialogs[key];
+            console.log(this.dialogs)
         });
         //最小化
-        ipcMain.on('dialog-mini', (event, id) => {
-            this.dialogs[id].minimize();
+        ipcMain.on('dialog-mini', (event, key) => {
+            this.dialogs[key].minimize();
         });
 
         /**
@@ -450,7 +447,7 @@ class Main {
         ipcMain.on('message-send', (event, args) => {
             switch (args.type) {
                 case 'dialog':
-                    for (let i of this.dialogs) if (i) i.webContents.send('message-back', args);
+                    for (let i in this.dialogs) if (this.dialogs[i]) this.dialogs[i].webContents.send('message-back', args);
                     this.win.webContents.send('message-back', args);
                     break;
                 case 'socket':

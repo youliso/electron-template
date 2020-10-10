@@ -4,6 +4,7 @@
     <div class="about">
       <h1>This is an about page</h1>
     </div>
+    <router-link class="no-drag" to="/">首页</router-link>
   </div>
 </template>
 
