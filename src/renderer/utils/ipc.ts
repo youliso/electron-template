@@ -1,4 +1,5 @@
 import {ipcRenderer, remote} from "electron";
+import {addMessageData} from '../store';
 
 class Ipc {
     private static instance: Ipc;
@@ -16,8 +17,9 @@ class Ipc {
      * */
     async Init() {
         return new Promise((resolve, reject) => {
+            this.message();
             ipcRenderer.once('window-load', async (event, args) => {
-                resolve(JSON.parse(decodeURIComponent(args)))
+                resolve(JSON.parse(decodeURIComponent(args)));
             })
         })
     }
@@ -25,9 +27,9 @@ class Ipc {
     /**
      * 消息反馈 (i)
      */
-    message(v: unknown) {
+    message() {
         return ipcRenderer.on('message-back', (event, args: IpcMessageOpt) => {
-            v = args;
+            addMessageData(args.key, args.value);
         })
     }
 

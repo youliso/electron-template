@@ -1,6 +1,6 @@
 <template>
   <router-view v-slot="{ Component }">
-    <keep-alive :include="include.join(',')" :exclude="exclude.join(',')" :max="keepAliveMax">
+    <keep-alive :include="include" :exclude="exclude" :max="keepAliveMax">
       <component :is="Component"/>
     </keep-alive>
   </router-view>
@@ -9,7 +9,7 @@
 import {toRefs} from 'vue';
 import {useRouter} from "vue-router";
 import {argsState} from "./store";
-import {state} from "./store/state";
+import {state} from "./store";
 
 export default {
   setup() {

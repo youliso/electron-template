@@ -1,7 +1,8 @@
 <template>
   <div class="main">
     <Head></Head>
-    {{args.data}}
+    <div>{{ args.data }}</div>
+    <button class="no-drag" @click="test">test</button>
   </div>
 </template>
 
@@ -18,7 +19,16 @@ export default defineComponent({
   name: "Message",
   setup() {
     Ipc.setBounds([400, 150]);
-    return {args:argsState()};
+    let cons = 0;
+    const test = () => {//测试发送 为主窗口发送消息
+      let data: IpcMessageOpt = {
+        type: 'dialog',
+        key: 'test',
+        value: cons++
+      };
+      Ipc.send(data);
+    }
+    return {args: argsState(), test};
   }
 });
 </script>
