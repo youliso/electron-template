@@ -1,28 +1,28 @@
 import {reactive, provide, inject} from 'vue';
 
 /**
- * 组件页面
+ * 组件页面配置
  * */
-export const state = reactive({
+export const kAOpt = reactive({
     include: ['About'],
     exclude: [],
-    keepAliveMax: 10
+    max: 10
 });
 
 export const addInclude = (key: string) => {
-    if (state.include.indexOf(key) === -1) state.include.push(key);
+    if (kAOpt.include.indexOf(key) === -1) kAOpt.include.push(key);
 };
 
 export const delInclude = (key: string) => {
-    if (state.include.indexOf(key) > -1) state.include.splice(state.include.indexOf(key), 1);
+    if (kAOpt.include.indexOf(key) > -1) kAOpt.include.splice(kAOpt.include.indexOf(key), 1);
 };
 
 export const addExclude = (key: string) => {
-    if (state.exclude.indexOf(key) === -1) state.exclude.push(key);
+    if (kAOpt.exclude.indexOf(key) === -1) kAOpt.exclude.push(key);
 };
 
 export const delExclude = (key: string) => {
-    if (state.exclude.indexOf(key) > -1) state.exclude.splice(state.exclude.indexOf(key), 1);
+    if (kAOpt.exclude.indexOf(key) > -1) kAOpt.exclude.splice(kAOpt.exclude.indexOf(key), 1);
 };
 
 /**
