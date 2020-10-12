@@ -10,7 +10,6 @@ export const message = () => {
     })
 }
 
-
 /**
  * 渲染进程初始化 (i)
  * */
