@@ -6,10 +6,9 @@
   </router-view>
 </template>
 <script lang="ts">
-import {toRefs} from 'vue';
+import {toRefs} from "vue";
 import {useRouter} from "vue-router";
-import {argsState} from "./store";
-import {kAOpt} from "./store";
+import {argsState,kAOpt} from "./store";
 
 export default {
   setup() {

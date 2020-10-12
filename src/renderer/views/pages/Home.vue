@@ -7,25 +7,25 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, watch} from 'vue';
-import {setBounds,dialogInit} from '../../utils/ipc';
-import Head from '../components/Head.vue';
-import {messageData} from '../../store';
+import {defineComponent, watch} from "vue";
+import {setBounds,dialogInit} from "../../utils/ipc";
+import Head from "../components/Head.vue";
+import {messageData} from "../../store";
 
 export default defineComponent({
   components: {
     Head
   },
-  name: 'Home',
+  name: "Home",
   setup() {
     setBounds([700, 300]);
 
-    watch(() => messageData['test'], (n, o) => { // o 为新赋值 n为旧值
+    watch(() => messageData["test"], (n, o) => { // o 为新赋值 n为旧值
       console.log(n, o)
     })
     const test = () => {
       let data: DialogOpt = {
-        route: '/Message',
+        route: "/message",
         data: {text: "key不能为空"},
       };
       dialogInit(data);

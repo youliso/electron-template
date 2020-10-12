@@ -9,15 +9,15 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, onActivated} from 'vue';
-import Head from '../components/Head.vue';
-import {setBounds} from '../../utils/ipc';
+import {defineComponent, onActivated} from "vue";
+import Head from "../components/Head.vue";
+import {setBounds} from "../../utils/ipc";
 
 export default defineComponent({
   components: {
     Head
   },
-  name: 'About',
+  name: "About",
   setup() {
     onActivated(() => {
       setBounds([300, 200]);

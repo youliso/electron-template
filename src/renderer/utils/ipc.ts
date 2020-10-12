@@ -1,14 +1,14 @@
 import {ipcRenderer, remote} from "electron";
-import {addMessageData} from '../store';
+import {addMessageData} from "../store";
 
 /**
  * 消息反馈 (i)
  */
 export const message = () => {
-    return ipcRenderer.on('message-back', (event, args: IpcMessageOpt) => {
+    return ipcRenderer.on("message-back", (event, args: IpcMessageOpt) => {
         addMessageData(args.key, args.value);
     })
-}
+};
 
 /**
  * 渲染进程初始化 (i)
@@ -16,7 +16,7 @@ export const message = () => {
 export const Init = async () => {
     return new Promise((resolve, reject) => {
         message();
-        ipcRenderer.once('window-load', async (event, args) => {
+        ipcRenderer.once("window-load", async (event, args) => {
             resolve(JSON.parse(decodeURIComponent(args)));
         })
     })
@@ -26,7 +26,7 @@ export const Init = async () => {
  * 消息发送
  */
 export const send = (args: IpcMessageOpt) => {
-    ipcRenderer.send('message-send', args);
+    ipcRenderer.send("message-send", args);
 };
 
 /**
@@ -41,7 +41,7 @@ export const setBounds = (size: number[]) => {
             x: Math.floor(remote.getCurrentWindow().getPosition()[0] + ((remote.getCurrentWindow().getBounds().width - size[0]) / 2)),
             y: Math.floor(remote.getCurrentWindow().getPosition()[1] + ((remote.getCurrentWindow().getBounds().height - size[1]) / 2))
         }
-        ipcRenderer.once('window-resize', () => {
+        ipcRenderer.once("window-resize", () => {
             resolve();
         });
         remote.getCurrentWindow().setBounds(Rectangle);
@@ -61,28 +61,28 @@ export const dialogInit = (data: DialogOpt, parent ?: number) => {
         isMultiWindow: false, //是否支持多窗口
         modal: true //父窗口置顶
     };
-    if (data.route === '/Message') args.parent = 'win'; //置顶于父窗口
+    if (data.route === "/message") args.parent = "win"; //置顶于父窗口
     if (parent) args.parent = parent;
     if (data.returnPath) args.returnPath = data.returnPath;
     if (data.isMultiWindow) args.isMultiWindow = data.isMultiWindow;
     if (data.parent) args.parent = data.parent;
     if (data.modal) args.modal = data.modal;
     if (data.resizable) args.resizable = data.resizable;
-    ipcRenderer.send('dialog-new', args);
+    ipcRenderer.send("dialog-new", args);
 };
 
 /**
  * socket 初始化
  */
 export const socketInit = (Authorization: string) => {
-    ipcRenderer.send('socket-init', Authorization);
+    ipcRenderer.send("socket-init", Authorization);
 };
 
 /**
  * socket 重连
  */
 export const socketReconnection = () => {
-    ipcRenderer.send('socket-reconnection');
+    ipcRenderer.send("socket-reconnection");
 };
 
 

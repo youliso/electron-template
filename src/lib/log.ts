@@ -28,7 +28,7 @@ class Log {
         try {
             statSync(this.logFile + `/info-${this.format()}.log`);
         } catch (e) {
-            writeFileSync(this.logFile + `/info-${this.format()}.log`, '');
+            writeFileSync(this.logFile + `/info-${this.format()}.log`, "");
         }
         appendFileSync(this.logFile + `/info-${this.format()}.log`, `[${this.format(true)}] [info] ${val}\r\n`);
     }
@@ -37,7 +37,7 @@ class Log {
         try {
             statSync(this.logFile + `/error-${this.format()}.log`);
         } catch (e) {
-            writeFileSync(this.logFile + `/error-${this.format()}.log`, '');
+            writeFileSync(this.logFile + `/error-${this.format()}.log`, "");
         }
         appendFileSync(this.logFile + `/error-${this.format()}.log`, `[${this.format(true)}] [error] ${val}\r\n`);
     }

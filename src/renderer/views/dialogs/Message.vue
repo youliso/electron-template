@@ -7,10 +7,10 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from 'vue';
+import {defineComponent} from "vue";
 import {argsState} from "../../store";
-import {setBounds, send} from '../../utils/ipc';
-import Head from '../components/Head.vue';
+import {setBounds, send} from "../../utils/ipc";
+import Head from "../components/Head.vue";
 
 export default defineComponent({
   components: {
@@ -22,8 +22,8 @@ export default defineComponent({
     let cons = 0;
     const test = () => {//测试发送 为主窗口发送消息
       let data: IpcMessageOpt = {
-        type: 'dialog',
-        key: 'test',
+        type: "dialog",
+        key: "test",
         value: cons++
       };
       send(data);

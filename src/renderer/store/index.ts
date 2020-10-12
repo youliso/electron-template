@@ -1,10 +1,10 @@
-import {reactive, provide, inject} from 'vue';
+import {reactive, provide, inject} from "vue";
 
 /**
  * 组件页面配置
  * */
 export const kAOpt = reactive({
-    include: ['About'],
+    include: ["About"],
     exclude: [],
     max: 10
 });
@@ -24,7 +24,7 @@ export const delExclude = (key: string) => {
 /**
  * 窗口初始化参数
  * */
-export const argsSymbol = Symbol('args');
+export const argsSymbol = Symbol("args");
 export const createArgs = (args?: DialogOpt) => reactive(args);
 export const argsState = (): DialogOpt => inject(argsSymbol);
 export const provideArgsState = (args?: DialogOpt) => provide(

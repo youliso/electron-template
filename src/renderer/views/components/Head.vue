@@ -5,13 +5,13 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from 'vue';
+import {defineComponent} from "vue";
 import {ipcRenderer} from "electron";
 import {argsState} from "../../store";
-import {isNull} from '../../utils/tool';
+import {isNull} from "../../utils/tool";
 
 export default defineComponent({
-  name: 'Head',
+  name: "Head",
   setup() {
     let args = argsState();
     const close = () => {

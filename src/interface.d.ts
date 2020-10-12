@@ -12,7 +12,7 @@ declare interface DialogOpt {
 }
 
 declare interface IpcMessageOpt {
-    type?: string;
+    type: "dialog" | "socket";
     key?: string;
     value?: unknown;
 }

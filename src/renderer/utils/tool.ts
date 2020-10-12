@@ -9,7 +9,7 @@ interface NetSendOpt extends RequestInit {
  * */
 export const trim = (str: string) => {
     return str.replace(/^\s*|\s*$/g, "");
-}
+};
 
 /**
  * 判空
@@ -17,7 +17,7 @@ export const trim = (str: string) => {
 export const isNull = (arg: unknown) => {
     if (typeof arg === 'string') arg = trim(arg);
     return !arg && arg !== 0 && typeof arg !== "boolean" ? true : false;
-}
+};
 
 /**
  * 随机整数
@@ -25,14 +25,14 @@ export const isNull = (arg: unknown) => {
  * */
 export const ranDom = (m: number, n: number) => {
     return Math.floor(Math.random() * (n - m)) + m;
-}
+};
 
 /**
  * 数组元素互换
  * */
 export const swapArr = (arr: unknown[], index1: number, index2: number) => {
     [arr[index1], arr[index2]] = [arr[index2], arr[index1]];
-}
+};
 
 /**
  * 日期转换
@@ -54,85 +54,25 @@ export const format = (fmt: string = 'yyyy-MM-dd') => {
     for (let k in o)
         if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) as string : (("00" + o[k]).substr(("" + o[k]).length)));
     return fmt;
-}
-
-/**
- * 动态加载css/js文件
- * */
-export const loadCssJs = (srcList: string[]) => {
-    srcList = srcList || [];
-    let list: unknown[] = [];
-    for (let i = 0, len = srcList.length; i < len; i++) {
-        let item = srcList[i];
-        if (!item) continue;
-        let type = item.split('.')[1];
-        let dom = document.createElement(type === 'css' ? 'link' : 'script');
-        let node = (type === 'css') ? document.getElementsByTagName("head")[0] : document.body;
-        if (type === 'css') {
-            dom.setAttribute('rel', 'stylesheet');
-            dom.setAttribute('href', item);
-        } else {
-            dom.setAttribute('type', 'text/javascript');
-            dom.setAttribute('src', item);
-        }
-        node.appendChild(dom);
-        list.push(new Promise(resolve => {
-            // @ts-ignore
-            if (dom.readyState) {
-                // @ts-ignore
-                dom.onreadystatechange = () => {
-                    // @ts-ignore
-                    if (dom.readyState === 'complete' || dom.readyState === 'loaded') resolve();
-                }
-            } else dom.onload = () => resolve();
-        }))
-    }
-    return new Promise(resolve => {
-        Promise.all(list).then(values => resolve(values));
-    })
-}
-
-/**
- * 移除已经加载过的css/js文件
- * */
-export const removeCssJs = (srcList: string[]) => {
-    srcList = srcList || [];
-    for (let i = 0, len = srcList.length; i < len; i++) {
-        let items = srcList[i];
-        if (!items) continue;
-        let type = items.split('.')[1];
-        let element = (type === 'css') ? 'link' : 'script';
-        let attr = (type === 'css') ? 'href' : 'src';
-        let suspects = document.getElementsByTagName(element);
-        for (let s = 0, len = suspects.length; s < len; s++) {
-            let item = suspects[s];
-            if (!item) continue;
-            // @ts-ignore
-            let attrs = item[attr];
-            if (attrs && attrs.indexOf(items) > -1) item.parentNode.removeChild(item);
-        }
-    }
-}
+};
 
 /**
  * 对象转url参数
  * */
-export const convertObj = (data: unknown) => {
+export const convertObj = (data: any) => {
     let _result = [];
-    // @ts-ignore
     for (let key in data) {
-        // @ts-ignore
-        let value = data[key];
+        let value = data[key] as Array<any>;
         if (value && value.constructor == Array) {
-            value.forEach(function (_value) {
+            value.forEach((_value) => {
                 _result.push(key + "=" + _value);
             });
         } else {
-            _result.push(key + '=' + value);
+            _result.push(key + "=" + value);
         }
     }
-    return _result.join('&');
-}
+    return _result.join("&");
+};
 
 /**
  * url参数转对象
@@ -140,17 +80,17 @@ export const convertObj = (data: unknown) => {
 export const GetQueryJson2 = (url: string) => {
     let arr = []; // 存储参数的数组
     let res: { [key: string]: unknown } = {}; // 存储最终JSON结果对象
-    arr = url.split('&'); // 获取浏览器地址栏中的参数
+    arr = url.split("&"); // 获取浏览器地址栏中的参数
     for (let i = 0; i < arr.length; i++) { // 遍历参数
-        if (arr[i].indexOf('=') != -1) { // 如果参数中有值
-            let str = arr[i].split('=');
+        if (arr[i].indexOf("=") != -1) { // 如果参数中有值
+            let str = arr[i].split("=");
             res[str[0]] = str[1];
         } else { // 如果参数中无值
-            res[arr[i]] = '';
+            res[arr[i]] = "";
         }
     }
     return res;
-}
+};
 
 /**
  * 网络请求
@@ -158,26 +98,26 @@ export const GetQueryJson2 = (url: string) => {
  * @param param NetSendOpt
  * */
 export const net = (url: string, param: NetSendOpt) => {
-    if (url.indexOf('http://') === -1 && url.indexOf('https://') === -1) url = config.appUrl + url;
+    if (url.indexOf("http://") === -1 && url.indexOf("https://") === -1) url = config.appUrl + url;
     let sendData: NetSendOpt = {
         headers: {
-            'Content-type': 'application/json;charset=utf-8',
-            'Authorization': sessionStorage.getItem('Authorization') as string || ''
+            "Content-type": "application/json;charset=utf-8",
+            "Authorization": sessionStorage.getItem("Authorization") as string || ""
         },
         outTime: 30000,
-        mode: 'cors'
+        mode: "cors"
     };
     param = param || {};
     if (param.headers) sendData.headers = param.headers;
     if (param.outTime) sendData.outTime = param.outTime;
     if (param.mode) sendData.mode = param.mode;
-    sendData.method = param.method || 'GET';
-    if (sendData.method === 'GET') url = url + convertObj(param.body);
+    sendData.method = param.method || "GET";
+    if (sendData.method === "GET") url = url + convertObj(param.body);
     else sendData.body = JSON.stringify(param.body);
     let timeoutPromise = () => {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
-                reject({code: -1, msg: '超时'});
+                reject({code: -1, msg: "超时"});
             }, sendData.outTime);
         });
     };
@@ -186,8 +126,8 @@ export const net = (url: string, param: NetSendOpt) => {
             fetch(url, sendData)
                 .then(res => {
                     if (res.status >= 200 && res.status < 300) {
-                        let Authorization = res.headers.get('Authorization');
-                        if (Authorization) sessionStorage.setItem('Authorization', Authorization);
+                        let Authorization = res.headers.get("Authorization");
+                        if (Authorization) sessionStorage.setItem("Authorization", Authorization);
                         return res;
                     }
                     throw new Error(res.statusText);
@@ -208,4 +148,4 @@ export const net = (url: string, param: NetSendOpt) => {
             .then(data => resolve(data))
             .catch(err => reject(err))
     });
-}
+};

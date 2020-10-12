@@ -1,11 +1,11 @@
-import appRoutes from './app';
-import dialogRoutes from './dialogs';
+import appRoutes from "./app";
+import dialogRoutes from "./dialogs";
 
 const router = (el: string) => {
     switch (el) {
-        case 'app':
+        case "app":
             return appRoutes;
-        case 'dialog':
+        case "dialog":
             return dialogRoutes;
     }
 }
