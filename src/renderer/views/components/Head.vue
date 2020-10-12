@@ -8,7 +8,7 @@
 import {defineComponent} from 'vue';
 import {ipcRenderer} from "electron";
 import {argsState} from "../../store";
-import Tool from '../../utils/tool';
+import {isNull} from '../../utils/tool';
 
 export default defineComponent({
   name: 'Head',
@@ -16,7 +16,7 @@ export default defineComponent({
     let args = argsState();
     const close = () => {
       console.log(args)
-      if (Tool.isNull(args)) ipcRenderer.send("closed");
+      if (isNull(args)) ipcRenderer.send("closed");
       else ipcRenderer.send("dialog-closed", args.key);
     }
     return {close}

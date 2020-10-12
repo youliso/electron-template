@@ -8,10 +8,9 @@
 
 <script lang="ts">
 import {defineComponent, watch} from 'vue';
-import Ipc from '../../utils/ipc';
+import {setBounds,dialogInit} from '../../utils/ipc';
 import Head from '../components/Head.vue';
-
-import {messageData} from '../../store/index';
+import {messageData} from '../../store';
 
 export default defineComponent({
   components: {
@@ -19,7 +18,7 @@ export default defineComponent({
   },
   name: 'Home',
   setup() {
-    Ipc.setBounds([700, 300]);
+    setBounds([700, 300]);
 
     watch(() => messageData['test'], (n, o) => { // o 为新赋值 n为旧值
       console.log(n, o)
@@ -29,7 +28,7 @@ export default defineComponent({
         route: '/Message',
         data: {text: "key不能为空"},
       };
-      Ipc.dialogInit(data);
+      dialogInit(data);
     }
     return {test}
   }

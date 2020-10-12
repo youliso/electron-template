@@ -11,7 +11,7 @@
 <script lang="ts">
 import {defineComponent, onActivated} from 'vue';
 import Head from '../components/Head.vue';
-import Ipc from '../../utils/ipc';
+import {setBounds} from '../../utils/ipc';
 
 export default defineComponent({
   components: {
@@ -20,7 +20,7 @@ export default defineComponent({
   name: 'About',
   setup() {
     onActivated(() => {
-      Ipc.setBounds([300, 200]);
+      setBounds([300, 200]);
     });
   }
 });

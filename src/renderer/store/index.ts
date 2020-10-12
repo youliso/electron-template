@@ -8,19 +8,15 @@ export const kAOpt = reactive({
     exclude: [],
     max: 10
 });
-
 export const addInclude = (key: string) => {
     if (kAOpt.include.indexOf(key) === -1) kAOpt.include.push(key);
 };
-
 export const delInclude = (key: string) => {
     if (kAOpt.include.indexOf(key) > -1) kAOpt.include.splice(kAOpt.include.indexOf(key), 1);
 };
-
 export const addExclude = (key: string) => {
     if (kAOpt.exclude.indexOf(key) === -1) kAOpt.exclude.push(key);
 };
-
 export const delExclude = (key: string) => {
     if (kAOpt.exclude.indexOf(key) > -1) kAOpt.exclude.splice(kAOpt.exclude.indexOf(key), 1);
 };
