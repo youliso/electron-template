@@ -1,8 +1,8 @@
 {
   "appPort": 3344,
-  "appUrl": "http://175.24.76.246:3000/",
-  "socketUrl": "http://175.24.76.246:3000/",
-  "updateUrl": "http://175.24.76.246:3000/",
-  "updateFileUrl": "http://175.24.76.246:3000/public/kl/",
+  "appUrl": "http://127.0.0.1:3000/",
+  "socketUrl": "http://127.0.0.1:3000/",
+  "updateUrl": "http://127.0.0.1:3000/",
+  "updateFileUrl": "http://127.0.0.1:3000/public/kl/",
   "updateFilePath": "../kl-updater"
 }
