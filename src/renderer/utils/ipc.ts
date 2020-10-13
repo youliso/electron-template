@@ -25,6 +25,11 @@ export const setBounds = (size: number[], center?: boolean) => {
             x: parseInt((remote.getCurrentWindow().getPosition()[0] + ((remote.getCurrentWindow().getBounds().width - size[0]) / 2)).toString()),
             y: parseInt((remote.getCurrentWindow().getPosition()[1] + ((remote.getCurrentWindow().getBounds().height - size[1]) / 2)).toString())
         };
+        if (Rectangle.width === remote.getCurrentWindow().getBounds().width &&
+            Rectangle.height === remote.getCurrentWindow().getBounds().height) {
+            resolve();
+            return;
+        }
         ipcRenderer.once("window-resize", () => {
             resolve()
             if (center) remote.getCurrentWindow().center();
