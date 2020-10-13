@@ -93,7 +93,7 @@ class Main {
      * 创建主窗口
      * */
     async createWindow() {
-        this.win = new BrowserWindow(this.browserWindowOpt(config.appSize));
+        this.win = new BrowserWindow(this.browserWindowOpt([0,0]));
         // //加载完毕后显示
         this.win.once("ready-to-show", () => this.win.show());
         //关闭后，这个事件会被触发。

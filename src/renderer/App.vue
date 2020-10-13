@@ -9,9 +9,11 @@
 import {toRefs} from "vue";
 import {useRouter} from "vue-router";
 import {argsState,kAOpt} from "./store";
+import {setBounds} from "./utils/ipc";
 
 export default {
   setup() {
+    setBounds([500, 300], true);
     let args = argsState();
     if (args) useRouter().replace(args.route);
     return {...toRefs(kAOpt)};

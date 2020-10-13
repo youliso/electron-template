@@ -2,47 +2,32 @@ import {ipcRenderer, remote} from "electron";
 import {addMessageData} from "../store";
 
 /**
- * 消息反馈 (i)
- */
-export const message = () => {
-    return ipcRenderer.on("message-back", (event, args: IpcMessageOpt) => {
-        addMessageData(args.key, args.value);
-    })
-};
-
-/**
  * 渲染进程初始化 (i)
  * */
 export const Init = async () => {
-    return new Promise((resolve, reject) => {
-        message();
-        ipcRenderer.once("window-load", async (event, args) => {
-            resolve(JSON.parse(decodeURIComponent(args)));
-        })
-    })
+    ipcRenderer.on("message-back", (event, args: IpcMessageOpt) => addMessageData(args.key, args.value)); //消息反馈 (i)
+    return new Promise(resolve => ipcRenderer.once("window-load", async (event, args) => resolve(JSON.parse(decodeURIComponent(args)))))
 };
 
 /**
  * 消息发送
  */
-export const send = (args: IpcMessageOpt) => {
-    ipcRenderer.send("message-send", args);
-};
+export const send = (args: IpcMessageOpt) => ipcRenderer.send("message-send", args);
 
 /**
  * 设置窗口大小
- * @param {number[]}size
  */
-export const setBounds = (size: number[]) => {
-    return new Promise((resolve, reject) => {
+export const setBounds = (size: number[], center?: boolean) => {
+    return new Promise(resolve => {
         let Rectangle = {
-            width: Math.floor(size[0]),
-            height: Math.floor(size[1]),
-            x: Math.floor(remote.getCurrentWindow().getPosition()[0] + ((remote.getCurrentWindow().getBounds().width - size[0]) / 2)),
-            y: Math.floor(remote.getCurrentWindow().getPosition()[1] + ((remote.getCurrentWindow().getBounds().height - size[1]) / 2))
-        }
+            width: parseInt(size[0].toString()),
+            height: parseInt(size[1].toString()),
+            x: parseInt((remote.getCurrentWindow().getPosition()[0] + ((remote.getCurrentWindow().getBounds().width - size[0]) / 2)).toString()),
+            y: parseInt((remote.getCurrentWindow().getPosition()[1] + ((remote.getCurrentWindow().getBounds().height - size[1]) / 2)).toString())
+        };
         ipcRenderer.once("window-resize", () => {
-            resolve();
+            resolve()
+            if (center) remote.getCurrentWindow().center();
         });
         remote.getCurrentWindow().setBounds(Rectangle);
     })
@@ -74,15 +59,11 @@ export const dialogInit = (data: DialogOpt, parent ?: number) => {
 /**
  * socket 初始化
  */
-export const socketInit = (Authorization: string) => {
-    ipcRenderer.send("socket-init", Authorization);
-};
+export const socketInit = (Authorization: string) => ipcRenderer.send("socket-init", Authorization);
 
 /**
  * socket 重连
  */
-export const socketReconnection = () => {
-    ipcRenderer.send("socket-reconnection");
-};
+export const socketReconnection = () => ipcRenderer.send("socket-reconnection");
 
 

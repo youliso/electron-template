@@ -7,8 +7,8 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, watch} from "vue";
-import {setBounds,dialogInit} from "../../utils/ipc";
+import {defineComponent, onUnmounted, watch} from "vue";
+import {setBounds, dialogInit} from "../../utils/ipc";
 import Head from "../components/Head.vue";
 import {messageData} from "../../store";
 
@@ -18,11 +18,10 @@ export default defineComponent({
   },
   name: "Home",
   setup() {
-    setBounds([700, 300]);
-
-    watch(() => messageData["test"], (n, o) => { // o 为新赋值 n为旧值
+    setBounds([500, 300]);
+    let watchTest = watch(() => messageData["test"], (n, o) => { // o 为新赋值 n为旧值
       console.log(n, o)
-    })
+    });
     const test = () => {
       let data: DialogOpt = {
         route: "/message",
@@ -30,6 +29,9 @@ export default defineComponent({
       };
       dialogInit(data);
     }
+    onUnmounted(() => {
+      watchTest()
+    })
     return {test}
   }
 });
