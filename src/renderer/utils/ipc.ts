@@ -30,9 +30,9 @@ export const setBounds = (size: number[], center?: boolean) => {
             resolve();
             return;
         }
-        ipcRenderer.once("window-resize", () => {
-            resolve()
+        remote.getCurrentWindow().once("resize", () => {
             if (center) remote.getCurrentWindow().center();
+            resolve();
         });
         remote.getCurrentWindow().setBounds(Rectangle);
     })

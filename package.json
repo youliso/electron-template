@@ -1,8 +1,8 @@
 {
-  "name": "KL",
-  "productName": "KL",
+  "name": "Electron_Template",
+  "productName": "Electron_Template",
   "version": "0.1.0",
-  "description": "KL",
+  "description": "Electron_Template",
   "main": "dist/main.bundle.js",
   "private": true,
   "author": "youliso@Hotmail.com",

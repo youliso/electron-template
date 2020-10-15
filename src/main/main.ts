@@ -100,10 +100,6 @@ class Main {
         this.win.on("closed", () => {
             this.win = null;
         });
-        //调整窗口大小后触发
-        this.win.on("resize", () => {
-            this.win.webContents.send("window-resize");
-        });
         //默认浏览器打开跳转连接
         this.win.webContents.on("new-window", (event, url) => {
             event.preventDefault();
@@ -185,10 +181,6 @@ class Main {
         //window被关闭，这个事件会被触发。
         this.dialogs[key].on("closed", () => {
             this.dialogs[key] = null;
-        });
-        //调整窗口大小后触发
-        this.dialogs[key].on("resize", () => {
-            this.dialogs[key].webContents.send("window-resize");
         });
         //默认浏览器打开跳转连接
         this.dialogs[key].webContents.on("new-window", (event, url) => {
