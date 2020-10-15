@@ -19,4 +19,8 @@ npm run dev:all
 ```
 
 ## electron builder 配置
-位于 resources/script/build.js
+位于 resources/script/build.js  
+打包命令
+```shell
+npm run build
+```
