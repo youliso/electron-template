@@ -1,44 +1,47 @@
+import {remote} from "electron";
+
 const config = require('../../lib/cfg/config.json');
 
 interface NetSendOpt extends RequestInit {
+    data?: unknown;
     outTime?: number; //请求超时时间
 }
 
 /**
  * 去除空格
  * */
-export const trim = (str: string) => {
+export function trim(str: string): string {
     return str.replace(/^\s*|\s*$/g, "");
-};
+}
 
 /**
  * 判空
  * */
-export const isNull = (arg: unknown) => {
+export function isNull(arg: unknown) {
     if (typeof arg === 'string') arg = trim(arg);
     return !arg && arg !== 0 && typeof arg !== "boolean" ? true : false;
-};
+}
 
 /**
  * 随机整数
  * 例如 6-10 （m-n）
  * */
-export const ranDom = (m: number, n: number) => {
+export function ranDom(m: number, n: number) {
     return Math.floor(Math.random() * (n - m)) + m;
-};
+}
 
 /**
  * 数组元素互换
  * */
-export const swapArr = (arr: unknown[], index1: number, index2: number) => {
+export function swapArr<T>(arr: T[], index1: number, index2: number) {
     [arr[index1], arr[index2]] = [arr[index2], arr[index1]];
-};
+}
 
 /**
  * 日期转换
  * @param fmt yy-MM-dd Hh:mm:ss
  * */
-export const format = (fmt: string = 'yyyy-MM-dd') => {
+export function format(fmt: string = 'yyyy-MM-dd') {
     let date = new Date();
     let o: { [key: string]: unknown } = {
         "M+": date.getMonth() + 1, //月份
@@ -54,12 +57,12 @@ export const format = (fmt: string = 'yyyy-MM-dd') => {
     for (let k in o)
         if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) as string : (("00" + o[k]).substr(("" + o[k]).length)));
     return fmt;
-};
+}
 
 /**
  * 对象转url参数
  * */
-export const convertObj = (data: any) => {
+export function convertObj(data: any) {
     let _result = [];
     for (let key in data) {
         let value = data[key] as Array<any>;
@@ -72,12 +75,12 @@ export const convertObj = (data: any) => {
         }
     }
     return _result.join("&");
-};
+}
 
 /**
  * url参数转对象
  */
-export const GetQueryJson2 = (url: string) => {
+export function GetQueryJson2(url: string) {
     let arr = []; // 存储参数的数组
     let res: { [key: string]: unknown } = {}; // 存储最终JSON结果对象
     arr = url.split("&"); // 获取浏览器地址栏中的参数
@@ -90,17 +93,18 @@ export const GetQueryJson2 = (url: string) => {
         }
     }
     return res;
-};
+}
 
 /**
  * 网络请求
  * @param url string
  * @param param NetSendOpt
  * */
-export const net = (url: string, param: NetSendOpt) => {
+export function net(url: string, param: NetSendOpt): any {
     if (url.indexOf("http://") === -1 && url.indexOf("https://") === -1) url = config.appUrl + url;
     let sendData: NetSendOpt = {
         headers: {
+            "user-agent": `${remote.app.name}/${remote.app.getVersion()}`,
             "Content-type": "application/json;charset=utf-8",
             "Authorization": sessionStorage.getItem("Authorization") as string || ""
         },
@@ -112,8 +116,8 @@ export const net = (url: string, param: NetSendOpt) => {
     if (param.outTime) sendData.outTime = param.outTime;
     if (param.mode) sendData.mode = param.mode;
     sendData.method = param.method || "GET";
-    if (sendData.method === "GET") url = url + convertObj(param.body);
-    else sendData.body = JSON.stringify(param.body);
+    if (sendData.method === "GET") url = url + convertObj(param.data);
+    else sendData.body = JSON.stringify(param.data);
     let timeoutPromise = () => {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
@@ -143,9 +147,29 @@ export const net = (url: string, param: NetSendOpt) => {
                 .catch(err => reject(err))
         });
     };
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject): any => {
         Promise.race([timeoutPromise(), fetchPromise()])
-            .then(data => resolve(data))
-            .catch(err => reject(err))
+            .then((data: any) => resolve(data))
+            .catch((err: any) => reject(err))
     });
-};
+}
+
+/**
+ * 深拷贝
+ * @param obj
+ */
+export function deepCopy(obj: any) {
+    let objArray: any = Array.isArray(obj) ? [] : {};
+    if (obj && typeof obj === "object") {
+        for (let key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                if (obj[key] && typeof obj[key] === "object") {
+                    objArray[key] = deepCopy(obj[key]);
+                } else {
+                    objArray[key] = obj[key];
+                }
+            }
+        }
+    }
+    return objArray;
+}

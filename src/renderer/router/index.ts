@@ -1,7 +1,7 @@
 import appRoutes from "./app";
 import dialogRoutes from "./dialogs";
 
-const router = (el: string) => {
+export function router(el: string) {
     switch (el) {
         case "app":
             return appRoutes;
@@ -9,5 +9,3 @@ const router = (el: string) => {
             return dialogRoutes;
     }
 }
-
-export {router, appRoutes, dialogRoutes};

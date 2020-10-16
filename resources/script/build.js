@@ -10,6 +10,7 @@ config.publish = [{ //更新地址
     url: 'http://175.24.76.246:3000/'
 }]
 config.productName = name;
+config.nsis.shortcutName = name;
 config.appId = `org.${name}`;
 config.asar = asar;
 config.nsis.allowToChangeInstallationDirectory = allowToChangeInstallationDirectory;

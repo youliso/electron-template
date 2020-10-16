@@ -4,20 +4,22 @@ import {addMessageData} from "../store";
 /**
  * 渲染进程初始化 (i)
  * */
-export const Init = async () => {
+export async function Init() {
     ipcRenderer.on("message-back", (event, args: IpcMessageOpt) => addMessageData(args.key, args.value)); //消息反馈 (i)
     return new Promise(resolve => ipcRenderer.once("window-load", async (event, args) => resolve(JSON.parse(decodeURIComponent(args)))))
-};
+}
 
 /**
  * 消息发送
  */
-export const send = (args: IpcMessageOpt) => ipcRenderer.send("message-send", args);
+export function send(args: IpcMessageOpt) {
+    ipcRenderer.send("message-send", args);
+}
 
 /**
  * 设置窗口大小
  */
-export const setBounds = (size: number[], center?: boolean) => {
+export function setBounds(size: number[], center?: boolean) {
     return new Promise(resolve => {
         let Rectangle = {
             width: parseInt(size[0].toString()),
@@ -36,12 +38,12 @@ export const setBounds = (size: number[], center?: boolean) => {
         });
         remote.getCurrentWindow().setBounds(Rectangle);
     })
-};
+}
 
 /**
  * 创建弹框 （dialogs）
  */
-export const dialogInit = (data: DialogOpt, parent ?: number) => {
+export function dialogInit(data: DialogOpt, parent ?: number) {
     let args: DialogOpt = {
         width: remote.getCurrentWindow().getBounds().width,
         height: remote.getCurrentWindow().getBounds().height,
@@ -59,16 +61,21 @@ export const dialogInit = (data: DialogOpt, parent ?: number) => {
     if (data.modal) args.modal = data.modal;
     if (data.resizable) args.resizable = data.resizable;
     ipcRenderer.send("dialog-new", args);
-};
+}
 
 /**
  * socket 初始化
  */
-export const socketInit = (Authorization: string) => ipcRenderer.send("socket-init", Authorization);
+export function socketInit(Authorization: string) {
+    ipcRenderer.send("socket-init", Authorization);
+}
 
 /**
  * socket 重连
  */
-export const socketReconnection = () => ipcRenderer.send("socket-reconnection");
+export function socketReconnection() {
+    ipcRenderer.send("socket-reconnection");
+}
+
 
 
