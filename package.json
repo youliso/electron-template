@@ -1,8 +1,8 @@
 {
-  "name": "Electron_Template",
-  "productName": "Electron_Template",
+  "name": "electrontemplate",
+  "productName": "electrontemplate",
   "version": "0.1.0",
-  "description": "Electron_Template",
+  "description": "electron template",
   "main": "dist/main.bundle.js",
   "private": true,
   "author": "youliso@Hotmail.com",
