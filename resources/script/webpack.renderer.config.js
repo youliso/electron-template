@@ -4,8 +4,7 @@ const {name} = require('../../package.json');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const _externals = require('externals-dependencies');
-const miniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const miniCssExtractPlugin = require('mini-css-extract-plugin')
 const {VueLoaderPlugin} = require('vue-loader');
 
 const isEnvProduction = process.env.NODE_ENV === 'production';
@@ -129,7 +128,6 @@ module.exports = {
             filename: "[name].css",
             chunkFilename: "[id].css"
         }),
-        new OptimizeCssAssetsPlugin(),
         new HtmlWebpackPlugin({
             title: name,
             template: "./resources/script/index.html"
