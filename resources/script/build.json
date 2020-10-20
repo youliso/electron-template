@@ -1,7 +1,7 @@
 {
   "compression": "maximum",
-  "productName": "Electron_Template",
-  "appId": "org.Electron_Template",
+  "productName": "electrontemplate",
+  "appId": "org.electrontemplate",
   "copyright": "MIT",
   "asar": true,
   "directories": {
@@ -30,7 +30,7 @@
     "uninstallerSidebar": "resources/icons/modern-wizard.bmp",
     "createDesktopShortcut": true,
     "createStartMenuShortcut": true,
-    "shortcutName": "Electron_Template",
+    "shortcutName": "electrontemplate",
     "include": "resources/script/installer.nsh"
   },
   "dmg": {
