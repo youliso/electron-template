@@ -8,7 +8,7 @@
   "author": "youliso@Hotmail.com",
   "license": "MIT",
   "scripts": {
-    "dev:renderer": "npx webpack-dev-server --config ./resources/script/webpack.server.js",
+    "dev:renderer": "npx webpack serve --config ./resources/script/webpack.server.js",
     "dev:main": "npx node resources/script/build.js && npx cross-env NODE_ENV=development webpack --config ./resources/script/webpack.main.config.js && electron dist/main.bundle.js",
     "dev:all": "concurrently -n=renderer,main -c=green,blue \"npm run dev:renderer\" \"npm run dev:main\"",
     "build": "npx node resources/script/build.js && npx cross-env NODE_ENV=production node resources/script/webpack.config.js && electron-builder -c resources/script/build.json"
@@ -33,17 +33,17 @@
     "sass-loader": "^10.0.3",
     "style-loader": "^1.2.1",
     "ts-loader": "^8.0.6",
-    "typescript": "^4.0.2",
+    "typescript": "^4.0.3",
     "vue-loader": "^16.0.0-beta.8",
     "vue-router": "^4.0.0-beta.13",
     "vue-style-loader": "^4.1.2",
-    "webpack": "^4.44.1",
-    "webpack-cli": "^3.3.12",
+    "webpack": "^5.1.3",
+    "webpack-cli": "^4.1.0",
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
     "electron-updater": "^4.3.1",
     "socket.io-client": "^2.3.0",
-    "vue": "^3.0.1"
+    "vue": "^3.0.0"
   }
 }
