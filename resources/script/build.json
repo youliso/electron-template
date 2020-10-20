@@ -1,7 +1,7 @@
 {
   "compression": "maximum",
-  "productName": "KL",
-  "appId": "org.KL",
+  "productName": "Electron_Template",
+  "appId": "org.Electron_Template",
   "copyright": "MIT",
   "asar": true,
   "directories": {
