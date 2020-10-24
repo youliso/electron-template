@@ -2,14 +2,14 @@
   <div class="main">
     <Head></Head>
     <div class="info">
-      <h1>This is an about page</h1>
+      <h5>This is an about page</h5>
       <button @click="toHome">首页</button>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import {defineComponent, onActivated} from "vue";
+import {defineComponent} from "vue";
 import Head from "../components/Head.vue";
 import {closeWindow, createWindow, setBounds} from "../../utils/ipc";
 import {argsState} from "../../store";
