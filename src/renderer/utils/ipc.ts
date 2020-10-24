@@ -83,5 +83,19 @@ export function socketReconnection() {
     ipcRenderer.send("socket-reconnection");
 }
 
+/**
+ * 设置全局参数
+ */
+export function sendGlobal(key: string, value: unknown) {
+    ipcRenderer.send("global-sharedObject", {key, value});
+}
+
+/**
+ * 获取全局参数
+ */
+export function getGlobal(key: string) {
+    return remote.getGlobal("sharedObject")[key];
+}
+
 
 

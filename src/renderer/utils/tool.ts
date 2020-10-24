@@ -1,4 +1,5 @@
 import {remote} from "electron";
+import {sendGlobal, getGlobal} from "./ipc";
 
 const config = require('../../lib/cfg/config.json');
 
@@ -106,7 +107,7 @@ export function net(url: string, param: NetSendOpt): any {
         headers: {
             "user-agent": `${remote.app.name}/${remote.app.getVersion()}`,
             "Content-type": "application/json;charset=utf-8",
-            "Authorization": sessionStorage.getItem("Authorization") as string || ""
+            "Authorization": getGlobal("Authorization") as string || ""
         },
         outTime: 30000,
         mode: "cors"
@@ -131,7 +132,7 @@ export function net(url: string, param: NetSendOpt): any {
                 .then(res => {
                     if (res.status >= 200 && res.status < 300) {
                         let Authorization = res.headers.get("Authorization");
-                        if (Authorization) sessionStorage.setItem("Authorization", Authorization);
+                        if (Authorization) sendGlobal("Authorization", Authorization);
                         return res;
                     }
                     throw new Error(res.statusText);
