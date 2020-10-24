@@ -98,14 +98,14 @@ class Main {
             }
             //创建一个与父类窗口同大小、坐标的窗口
             let opt = this.browserWindowOpt([args.width, args.height]);
+            if (this.mainWin) {
+                opt.x = this.mainWin.getPosition()[0];
+                opt.y = this.mainWin.getPosition()[1];
+            }
             if (args.parentId) {
                 opt.parent = BrowserWindow.fromId(args.parentId);
                 opt.x = BrowserWindow.fromId(args.parentId).getPosition()[0];
                 opt.y = BrowserWindow.fromId(args.parentId).getPosition()[1];
-            } else if (this.mainWin) {
-                opt.parent = this.mainWin;
-                opt.x = this.mainWin.getPosition()[0];
-                opt.y = this.mainWin.getPosition()[1];
             }
             opt.modal = args.modal || false;
             opt.resizable = args.resizable || false;
