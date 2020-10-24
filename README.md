@@ -1,5 +1,6 @@
 # electron-vue3
-electron & vue3 
+electron & vue3   
+一个多窗口模式的脚手架
 
 ## 安装依赖
 运行命令
