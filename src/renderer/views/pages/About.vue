@@ -4,14 +4,15 @@
     <div class="about">
       <h1>This is an about page</h1>
     </div>
-    <router-link class="no-drag" to="/">首页</router-link>
+    <button class="no-drag" @click="toHome">首页</button>
   </div>
 </template>
 
 <script lang="ts">
 import {defineComponent, onActivated} from "vue";
 import Head from "../components/Head.vue";
-import {setBounds} from "../../utils/ipc";
+import {closeWindow, createWindow, setBounds} from "../../utils/ipc";
+import {argsState} from "../../store";
 
 export default defineComponent({
   components: {
@@ -19,9 +20,20 @@ export default defineComponent({
   },
   name: "About",
   setup() {
-    onActivated(() => {
-      setBounds([300, 200]);
-    });
+    const args = argsState();
+    setBounds([300, 200]);
+    const toHome = () => {
+      closeWindow(args.id);
+      let data: WindowOpt = {
+        route: "/",
+        isMainWin: true
+      };
+      createWindow(data);
+    }
+
+    return {
+      toHome
+    }
   }
 });
 </script>

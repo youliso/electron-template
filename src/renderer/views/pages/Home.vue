@@ -1,14 +1,14 @@
 <template>
   <div class="main">
     <Head></Head>
-    <router-link class="no-drag" to="/about">手机</router-link>
+    <button class="no-drag" @click="toAbout">关于</button>
     <button class="no-drag" @click="test">弹个框</button>
   </div>
 </template>
 
 <script lang="ts">
 import {defineComponent, onUnmounted, watch} from "vue";
-import {setBounds, createWindow} from "../../utils/ipc";
+import {setBounds, createWindow, closeWindow} from "../../utils/ipc";
 import Head from "../components/Head.vue";
 import {argsState, messageData} from "../../store";
 
@@ -31,10 +31,18 @@ export default defineComponent({
       };
       createWindow(data);
     }
+    const toAbout = () => {
+      closeWindow(args.id);
+      let data: WindowOpt = {
+        route: "/about",
+        isMainWin: true
+      };
+      createWindow(data);
+    }
     onUnmounted(() => {
       watchTest()
     })
-    return {test}
+    return {test, toAbout}
   }
 });
 </script>

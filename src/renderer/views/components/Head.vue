@@ -6,17 +6,17 @@
 
 <script lang="ts">
 import {defineComponent} from "vue";
-import {ipcRenderer} from "electron";
 import {argsState} from "../../store";
 import {isNull} from "../../utils/tool";
+import {closeWindow} from "../../utils/ipc";
 
 export default defineComponent({
   name: "Head",
   setup() {
     const args = argsState();
     const close = () => {
-      if (isNull(args)) ipcRenderer.send("closed");
-      else ipcRenderer.send("closed", args.id);
+      if (isNull(args)) closeWindow();
+      else closeWindow(args.id);
     }
     return {close}
   }

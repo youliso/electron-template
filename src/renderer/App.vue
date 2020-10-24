@@ -14,7 +14,7 @@ import {setBounds} from "./utils/ipc";
 export default {
   setup() {
     setBounds([500, 300]);
-    let args = argsState();
+    const args = argsState();
     if (args) useRouter().replace(args.route);
     return {...toRefs(keepAliveOpt)};
   }

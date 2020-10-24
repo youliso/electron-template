@@ -63,6 +63,13 @@ export function createWindow(data: WindowOpt) {
 }
 
 /**
+ * 关闭窗口 (传id则关闭对应窗口否则退出程序)
+ */
+export function closeWindow(id?: number) {
+    ipcRenderer.send("closed", id);
+}
+
+/**
  * socket 初始化
  */
 export function socketInit(Authorization: string) {
