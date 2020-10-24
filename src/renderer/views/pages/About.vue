@@ -1,10 +1,10 @@
 <template>
   <div class="main">
     <Head></Head>
-    <div class="about">
+    <div class="info">
       <h1>This is an about page</h1>
+      <button @click="toHome">首页</button>
     </div>
-    <button class="no-drag" @click="toHome">首页</button>
   </div>
 </template>
 
@@ -21,7 +21,7 @@ export default defineComponent({
   name: "About",
   setup() {
     const args = argsState();
-    setBounds([300, 200]);
+    setBounds([300, 300]);
     const toHome = () => {
       closeWindow(args.id);
       let data: WindowOpt = {
@@ -38,10 +38,10 @@ export default defineComponent({
 });
 </script>
 
-<style scoped lang="scss">
-.about {
-  h1 {
-    padding: 20px;
-  }
+<style lang="scss">
+.info {
+  width: 100%;
+  height: 100%;
+  padding: 25px 10px 10px;
 }
 </style>

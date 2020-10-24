@@ -1,8 +1,10 @@
 <template>
   <div class="main">
     <Head></Head>
-    <button class="no-drag" @click="toAbout">关于</button>
-    <button class="no-drag" @click="test">弹个框</button>
+    <div class="info">
+      <button @click="toAbout">关于</button>
+      <button @click="test">弹个框</button>
+    </div>
   </div>
 </template>
 
@@ -42,11 +44,18 @@ export default defineComponent({
     onUnmounted(() => {
       watchTest()
     })
-    return {test, toAbout}
+    return {
+      test,
+      toAbout
+    }
   }
 });
 </script>
 
-<style scoped>
-
+<style lang="scss">
+.info {
+  width: 100%;
+  height: 100%;
+  padding: 25px 10px 10px;
+}
 </style>

@@ -1,6 +1,11 @@
 <template>
   <div class="head">
-    <span @click="close" class="no-drag cursor-pointer">x</span>
+    <div class="title">
+      标题
+    </div>
+    <div class="events">
+      <div @click="close" class="event close no-drag cursor-pointer"></div>
+    </div>
   </div>
 </template>
 
@@ -26,12 +31,49 @@ export default defineComponent({
 <style lang="scss">
 .head {
   position: absolute;
-  top: 5px;
+  top: 4px;
+  left: 5px;
   right: 5px;
+  z-index: 999;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
-  span {
-    margin-left: 4px;
+  .title {
+    font: bolder 13px sans-serif;
+
+    span {
+      margin-left: 4px;
+    }
+  }
+
+  .events {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .event {
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+      width: 15px;
+      height: 15px;
+      margin-left: 4px;
+    }
+
+    .event:hover {
+      opacity: .9;
+    }
+
+    .event:active {
+      opacity: .7;
+    }
+
+    .close {
+      background-color: var(--red);
+    }
+
+    .setting {
+      background-color: var(--cyan);
+    }
   }
 }
-
 </style>
