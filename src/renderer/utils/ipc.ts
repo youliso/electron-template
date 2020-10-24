@@ -41,26 +41,25 @@ export function setBounds(size: number[], center?: boolean) {
 }
 
 /**
- * 创建弹框 （dialogs）
+ * 创建窗口
  */
-export function dialogInit(data: DialogOpt, parent ?: number) {
-    let args: DialogOpt = {
+export function createWindow(data: WindowOpt) {
+    let args: WindowOpt = {
         width: remote.getCurrentWindow().getBounds().width,
         height: remote.getCurrentWindow().getBounds().height,
         route: data.route, // 页面路由
         resizable: false,// 是否支持调整窗口大小
         data: data.data, //数据
         isMultiWindow: false, //是否支持多窗口
+        isMainWin: false, //是否主窗口
         modal: true //父窗口置顶
     };
-    if (data.route === "/message") args.parent = "win"; //置顶于父窗口
-    if (parent) args.parent = parent;
-    if (data.returnPath) args.returnPath = data.returnPath;
     if (data.isMultiWindow) args.isMultiWindow = data.isMultiWindow;
-    if (data.parent) args.parent = data.parent;
+    if (data.isMainWin) args.isMainWin = data.isMainWin;
+    if (data.parentId) args.parentId = data.parentId;
     if (data.modal) args.modal = data.modal;
     if (data.resizable) args.resizable = data.resizable;
-    ipcRenderer.send("dialog-new", args);
+    ipcRenderer.send("window-new", args);
 }
 
 /**

@@ -1,11 +1,18 @@
-import appRoutes from "./app";
-import dialogRoutes from "./dialogs";
+import {createRouter, createWebHashHistory} from "vue-router";
 
-export function router(el: string) {
-    switch (el) {
-        case "app":
-            return appRoutes;
-        case "dialog":
-            return dialogRoutes;
-    }
-}
+export default createRouter({
+    history: createWebHashHistory(),
+    routes: [{
+        path: "/",
+        name: "Home",
+        component: () => import(/* webpackChunkName: "home" */ "../views/pages/Home.vue")
+    }, {
+        path: "/about",
+        name: "About",
+        component: () => import(/* webpackChunkName: "about" */ "../views/pages/About.vue")
+    }, {
+        path: "/message",
+        name: "Message",
+        component: () => import(/* webpackChunkName: "message" */ "../views/pages/dialogs/Message.vue")
+    }]
+});

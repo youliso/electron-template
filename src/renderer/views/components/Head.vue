@@ -13,11 +13,10 @@ import {isNull} from "../../utils/tool";
 export default defineComponent({
   name: "Head",
   setup() {
-    let args = argsState();
+    const args = argsState();
     const close = () => {
-      console.log(args)
       if (isNull(args)) ipcRenderer.send("closed");
-      else ipcRenderer.send("dialog-closed", args.key);
+      else ipcRenderer.send("closed", args.id);
     }
     return {close}
   }

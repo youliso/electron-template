@@ -26,18 +26,12 @@ declare global {
 
 global.sharedObject = {};
 
-interface DialogBrowserWindow extends BrowserWindow {
-    route?: string; //父窗口key
-    isMultiWindow?: boolean; //是否支持多窗口
-}
-
 class Main {
     private static instance: Main;
 
-    private win: BrowserWindow = null; //主窗口
-    private dialogs: { [key: string]: DialogBrowserWindow } = {}; //弹框组
+    private mainWin: BrowserWindow = null; //当前主页
+    private windows: { [id: number]: WindowOpt } = {}; //窗口组
     private appTray: Tray = null; //托盘
-    private menu: BrowserWindow = null; //托盘窗口
     private socket: SocketIOClient.Socket = null; //socket
 
     static getInstance() {
@@ -90,30 +84,52 @@ class Main {
     }
 
     /**
-     * 创建主窗口
+     * 创建窗口
      * */
-    async createWindow() {
-        this.win = new BrowserWindow(this.browserWindowOpt([0,0]));
-        // //加载完毕后显示
-        this.win.once("ready-to-show", () => this.win.show());
-        //关闭后，这个事件会被触发。
-        this.win.on("closed", () => {
-            this.win = null;
-        });
-        //默认浏览器打开跳转连接
-        this.win.webContents.on("new-window", (event, url) => {
-            event.preventDefault();
-            shell.openExternal(url);
-        });
-        // 打开开发者工具
-        if (!app.isPackaged) this.win.webContents.openDevTools();
-        //注入初始化代码
-        this.win.webContents.on("did-finish-load", () => {
-            this.win.webContents.send("window-load", encodeURIComponent(JSON.stringify({el: "app"})));
-        });
-        // 加载index.html文件
-        if (!app.isPackaged) await this.win.loadURL(`http://localhost:${config.appPort}`).catch(err => Log.error(err));
-        else await this.win.loadFile(join(__dirname, "./index.html")).catch(err => Log.error(err));
+    async createWindow(args: WindowOpt) {
+        try {
+            for (let i in this.windows) {
+                if (this.windows[i] &&
+                    this.windows[i].route === args.route &&
+                    !this.windows[i].isMultiWindow) {
+                    BrowserWindow.fromId(Number(i)).focus();
+                    return;
+                }
+            }
+            //创建一个与父类窗口同大小、坐标的窗口
+            let opt = this.browserWindowOpt([args.width, args.height]);
+            if (args.parentId) {
+                opt.parent = BrowserWindow.fromId(args.parentId);
+                opt.x = BrowserWindow.fromId(args.parentId).getPosition()[0];
+                opt.y = BrowserWindow.fromId(args.parentId).getPosition()[1];
+            }
+            opt.modal = args.modal || false;
+            opt.resizable = args.resizable || false;
+            let win = new BrowserWindow(opt);
+            if (args.isMainWin) this.mainWin = win; //是否主窗口
+            this.windows[win.id] = {
+                route: args.route,
+                isMultiWindow: args.isMultiWindow
+            }
+            // //window加载完毕后显示
+            win.once("ready-to-show", () => win.show());
+            //默认浏览器打开跳转连接
+            win.webContents.on("new-window", (event, url) => {
+                event.preventDefault();
+                shell.openExternal(url);
+            });
+            // 打开开发者工具
+            if (!app.isPackaged) win.webContents.openDevTools();
+            //注入初始化代码
+            win.webContents.on("did-finish-load", () => {
+                args.id = win.id;
+                win.webContents.send("window-load", encodeURIComponent(JSON.stringify(args)));
+            });
+            if (!app.isPackaged) await win.loadURL(`http://localhost:${config.appPort}`).catch(err => Log.error(err));
+            else await win.loadFile(join(__dirname, "./index.html")).catch(err => Log.error(err));
+        } catch (e) {
+            Log.error(e.toString())
+        }
     }
 
     /**
@@ -124,8 +140,7 @@ class Main {
             const contextMenu = Menu.buildFromTemplate([{
                 label: "显示",
                 click: () => {
-                    for (let i in this.dialogs) if (this.dialogs[i]) this.dialogs[i].show();
-                    this.win.show();
+                    for (let i in this.windows) if (this.windows[i]) BrowserWindow.fromId(Number(i)).show();
                 }
             }, {
                 label: "退出",
@@ -137,8 +152,7 @@ class Main {
             this.appTray.setContextMenu(contextMenu);
             this.appTray.setToolTip(app.name);
             this.appTray.on("double-click", () => {
-                for (let i in this.dialogs) if (this.dialogs[i]) this.dialogs[i].show();
-                this.win.show();
+                for (let i in this.windows) if (this.windows[i]) BrowserWindow.fromId(Number(i)).show();
             })
         } catch (e) {
             Log.error(e);
@@ -146,91 +160,30 @@ class Main {
     }
 
     /**
-     * 创建弹框
-     * */
-    async createDialog(args: DialogOpt) {
-        let is = true, key = new Date().getTime().toString();
-        while (is) {
-            if (!this.dialogs[key]) is = false;
-            else key = new Date().getTime().toString();
-        }
-        for (let i in this.dialogs) {
-            if (this.dialogs[i] && this.dialogs[i].route === args.route && !this.dialogs[i].isMultiWindow) {
-                this.dialogs[i].focus();
-                return;
-            }
-        }
-        //创建一个与父类窗口同大小、坐标的窗口
-        let opt = this.browserWindowOpt([args.width, args.height]);
-        if (args.parent === "win") {
-            opt.parent = this.win;
-            opt.x = this.win.getPosition()[0];
-            opt.y = this.win.getPosition()[1];
-        } else {
-            opt.parent = this.dialogs[args.parent];
-            opt.x = this.dialogs[args.parent].getPosition()[0];
-            opt.y = this.dialogs[args.parent].getPosition()[1];
-        }
-        opt.modal = args.modal;
-        opt.resizable = args.resizable;
-        this.dialogs[key] = new BrowserWindow(opt);
-        this.dialogs[key].route = args.route;
-        this.dialogs[key].isMultiWindow = args.isMultiWindow;
-        // //window加载完毕后显示
-        this.dialogs[key].once("ready-to-show", () => this.dialogs[key].show());
-        //window被关闭，这个事件会被触发。
-        this.dialogs[key].on("closed", () => {
-            this.dialogs[key] = null;
-        });
-        //默认浏览器打开跳转连接
-        this.dialogs[key].webContents.on("new-window", (event, url) => {
-            event.preventDefault();
-            shell.openExternal(url);
-        });
-        // 打开开发者工具
-        if (!app.isPackaged) this.dialogs[key].webContents.openDevTools();
-        //注入初始化代码
-        this.dialogs[key].webContents.on("did-finish-load", () => {
-            args.key = key;
-            this.dialogs[key].webContents.send("window-load", encodeURIComponent(JSON.stringify({
-                el: "dialog",
-                data: args
-            })));
-        });
-        if (!app.isPackaged) await this.dialogs[key].loadURL(`http://localhost:${config.appPort}`).catch(err => Log.error(err));
-        else await this.dialogs[key].loadFile(join(__dirname, "./index.html")).catch(err => Log.error(err));
-    }
-
-    /**
      * 创建Socket
      * */
     async createSocket(Authorization: string) {
         this.socket = Socket.connect(config.socketUrl, {query: `Authorization=${Authorization}`});
-        this.socket.on("connect", () => {
-            this.win.webContents.executeJavaScript("console.log(\"[socket]connect\");");
-        });
+        this.socket.on("connect", () => Log.info("[Socket]connect"));
         // @ts-ignore
         this.socket.on("message", data => {
-            this.win.webContents.send("message-back", data);
-            for (let i in this.dialogs) if (this.dialogs[i]) this.dialogs[i].webContents.send("message-back", data);
+            for (let i in this.windows) if (this.windows[i]) BrowserWindow.fromId(Number(i)).webContents.send("message-back", data);
         });
         // @ts-ignore
         this.socket.on("error", msg => {
-            this.win.webContents.send("message-back", {key: "socket-error", value: msg});
-            for (let i in this.dialogs) if (this.dialogs[i]) this.dialogs[i].webContents.send("message-back", {
+            for (let i in this.windows) if (this.windows[i]) BrowserWindow.fromId(Number(i)).webContents.send("message-back", {
                 key: "socket-error",
                 value: msg
             });
         });
         this.socket.on("disconnect", () => {
-            this.win.webContents.executeJavaScript("console.log(\"[socket]disconnect\");");
+            Log.info("[Socket]disconnect");
             setTimeout(() => {
                 if (this.socket && this.socket.io.readyState === "closed") this.socket.open()
             }, 1000 * 60 * 3)
         });
         this.socket.on("close", () => {
-            this.win.webContents.send("message-back", {key: "socket-close", value: "[socket]close"});
-            for (let i in this.dialogs) if (this.dialogs[i]) this.dialogs[i].webContents.send("message-back", {
+            for (let i in this.windows) if (this.windows[i]) BrowserWindow.fromId(Number(i)).webContents.send("message-back", {
                 key: "socket-close",
                 value: "[socket]close"
             });
@@ -240,7 +193,8 @@ class Main {
     /**
      * 更新模块
      * */
-    async update() {
+    async update(winId: number) {
+        let win = BrowserWindow.fromId(winId);
         let message = {
             error: {code: 0, msg: "检查更新出错"},
             checking: {code: 1, msg: "正在检查更新"},
@@ -250,20 +204,20 @@ class Main {
         // 这里的URL就是更新服务器的放置文件的地址
         autoUpdater.setFeedURL(config.updateFileUrl);
         autoUpdater.on("error", () => {
-            this.win.webContents.send("update-message", message.error);
+            win.webContents.send("update-message", message.error);
         });
         autoUpdater.on("checking-for-update", () => {
-            this.win.webContents.send("update-message", message.checking);
+            win.webContents.send("update-message", message.checking);
         });
         autoUpdater.on("update-available", () => {
-            this.win.webContents.send("update-message", message.updateAva);
+            win.webContents.send("update-message", message.updateAva);
         });
         autoUpdater.on("update-not-available", () => {
-            this.win.webContents.send("update-message", message.updateNotAva);
+            win.webContents.send("update-message", message.updateNotAva);
         });
         // 更新下载进度事件
         autoUpdater.on("download-progress", (progressObj) => {
-            this.win.webContents.send("download-progress", progressObj)
+            win.webContents.send("download-progress", progressObj)
         })
         // 下载完成事件
         autoUpdater.on("update-downloaded", () => {
@@ -272,7 +226,7 @@ class Main {
                 autoUpdater.quitAndInstall();
             });
             // 通知渲染进程现在完成
-            this.win.webContents.send("update-downloaded");
+            win.webContents.send("update-downloaded");
         });
         //执行自动更新检查
         try {
@@ -292,14 +246,14 @@ class Main {
         } else {
             app.on("second-instance", () => {
                 // 当运行第二个实例时,将会聚焦到myWindow这个窗口
-                if (this.win) {
-                    if (this.win.isMinimized()) this.win.restore();
-                    this.win.focus();
+                if (this.mainWin) {
+                    if (this.mainWin.isMinimized()) this.mainWin.restore();
+                    this.mainWin.focus();
                 }
             })
         }
         app.whenReady().then(() => {
-            this.createWindow();
+            this.createWindow({isMainWin: true});
             this.createTray();
         });
         app.on("window-all-closed", () => {
@@ -309,7 +263,7 @@ class Main {
         })
         app.on("activate", () => {
             if (BrowserWindow.getAllWindows().length === 0) {
-                this.createWindow();
+                this.createWindow({isMainWin: true});
             }
         })
         //获得焦点时发出
@@ -335,69 +289,60 @@ class Main {
          * 主体
          * */
         //关闭
-        ipcMain.on("closed", () => {
-            for (let i in this.dialogs) if (this.dialogs[i]) this.dialogs[i].close();
-            if (this.menu) this.menu.close();
-            this.win.close();
+        ipcMain.on("closed", (event, winId) => {
+            if (winId) {
+                BrowserWindow.fromId(Number(winId)).close();
+                if (this.windows[Number(winId)]) delete this.windows[Number(winId)];
+            } else {
+                for (let i in this.windows) if (this.windows[i]) BrowserWindow.fromId(Number(i)).close();
+            }
         });
         //隐藏
-        ipcMain.on("hide", () => {
-            for (let i in this.dialogs) if (this.dialogs[i]) this.dialogs[i].hide();
-            this.win.hide();
+        ipcMain.on("hide", (event, winId) => {
+            if (winId) {
+                BrowserWindow.fromId(Number(winId)).hide();
+            } else {
+                for (let i in this.windows) if (this.windows[i]) BrowserWindow.fromId(Number(i)).hide();
+            }
         });
         //显示
-        ipcMain.on("show", (event, args) => {
-            if (args === undefined) {
-                for (let i in this.dialogs) if (this.dialogs[i]) this.dialogs[i].show();
-                this.win.show();
-                return;
+        ipcMain.on("show", (event, winId) => {
+            if (winId) {
+                BrowserWindow.fromId(Number(winId)).show();
+            } else {
+                for (let i in this.windows) if (this.windows[i]) BrowserWindow.fromId(Number(i)).show();
             }
-            switch (args.type) {
-                case "win":
-                    this.win.show();
-                    break;
-                case "dialog":
-                    this.dialogs[args.key].show();
-                    break;
-                case "menu":
-                    this.menu.show();
-                    break;
-            }
-
         });
         //最小化
-        ipcMain.on("mini", () => {
-            for (let i in this.dialogs) if (this.dialogs[i]) this.dialogs[i].minimize();
-            this.win.minimize();
+        ipcMain.on("mini", (event, winId) => {
+            if (winId) {
+                BrowserWindow.fromId(Number(winId)).minimize();
+            } else {
+                for (let i in this.windows) if (this.windows[i]) BrowserWindow.fromId(Number(i)).minimize();
+            }
         });
         //复原
-        ipcMain.on("restore", () => {
-            for (let i in this.dialogs) if (this.dialogs[i]) this.dialogs[i].restore();
-            this.win.restore();
+        ipcMain.on("restore", (event, winId) => {
+            if (winId) {
+                BrowserWindow.fromId(Number(winId)).restore();
+            } else {
+                for (let i in this.windows) if (this.windows[i]) BrowserWindow.fromId(Number(i)).restore();
+            }
         });
         //重载
-        ipcMain.on("reload", () => {
-            for (let i in this.dialogs) if (this.dialogs[i]) this.dialogs[i].reload();
-            this.win.reload();
+        ipcMain.on("reload", (event, winId) => {
+            if (winId) {
+                BrowserWindow.fromId(Number(winId)).reload();
+            } else {
+                for (let i in this.windows) if (this.windows[i]) BrowserWindow.fromId(Number(i)).reload();
+            }
         });
         //重启
         ipcMain.on("relaunch", () => {
             app.relaunch({args: process.argv.slice(1)});
         });
-
-        /**
-         * 弹框
-         * */
-        //创建
-        ipcMain.on("dialog-new", (event, args) => this.createDialog(args));
-        //关闭
-        ipcMain.on("dialog-closed", (event, key) => {
-            this.dialogs[key].close();
-            delete this.dialogs[key];
-        });
-        //最小化
-        ipcMain.on("dialog-mini", (event, key) => this.dialogs[key].minimize());
-
+        //创建窗口
+        ipcMain.on("window-new", (event, args) => this.createWindow(args));
         /**
          * socket
          * */
@@ -416,7 +361,7 @@ class Main {
         //删除更新文件
         ipcMain.on("update-delFile", () => this.delDir(config.updateFilePath));
         //检查更新
-        ipcMain.on("update", () => this.update());
+        ipcMain.on("update", (event, winId) => this.update(winId));
 
         /**
          * 全局变量赋值
@@ -428,9 +373,8 @@ class Main {
          */
         ipcMain.on("message-send", (event, args) => {
             switch (args.type) {
-                case "dialog":
-                    for (let i in this.dialogs) if (this.dialogs[i]) this.dialogs[i].webContents.send("message-back", args);
-                    this.win.webContents.send("message-back", args);
+                case "win":
+                    for (let i in this.windows) if (this.windows[i]) BrowserWindow.fromId(Number(i)).webContents.send("message-back", args);
                     break;
                 case "socket":
                     if (this.socket && this.socket.io.readyState === "open") this.socket.send(args);
