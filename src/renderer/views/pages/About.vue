@@ -11,7 +11,7 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import Head from "../components/Head.vue";
-import {closeWindow, createWindow, setBounds} from "../../utils/ipc";
+import {closeWindow, createWindow} from "../../utils/ipc";
 import {argsState} from "../../store";
 
 export default defineComponent({
@@ -21,14 +21,14 @@ export default defineComponent({
   name: "About",
   setup() {
     const args = argsState();
-    setBounds([300, 300]);
     const toHome = () => {
       closeWindow(args.id);
-      let data: WindowOpt = {
+      createWindow({
         route: "/",
+        width: 500,
+        height: 300,
         isMainWin: true
-      };
-      createWindow(data);
+      });
     }
 
     return {

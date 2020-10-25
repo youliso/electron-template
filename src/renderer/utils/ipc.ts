@@ -45,8 +45,8 @@ export function setBounds(size: number[], center?: boolean) {
  */
 export function createWindow(data: WindowOpt) {
     let args: WindowOpt = {
-        width: remote.getCurrentWindow().getBounds().width,
-        height: remote.getCurrentWindow().getBounds().height,
+        width: data.width || remote.getCurrentWindow().getBounds().width,
+        height: data.height || remote.getCurrentWindow().getBounds().height,
         route: data.route, // 页面路由
         resizable: false,// 是否支持调整窗口大小
         data: data.data, //数据
