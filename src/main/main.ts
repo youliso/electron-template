@@ -164,8 +164,8 @@ class Main {
     /**
      * 创建Socket
      * */
-    async createSocket(Authorization: string) {
-        this.socket = Socket.connect(config.socketUrl, {query: `Authorization=${Authorization}`});
+    async createSocket() {
+        this.socket = Socket.connect(config.socketUrl, {query: `Authorization=${global.sharedObject["Authorization"]}`});
         this.socket.on("connect", () => Log.info("[Socket]connect"));
         // @ts-ignore
         this.socket.on("message", data => {
@@ -349,8 +349,8 @@ class Main {
          * socket
          * */
         //初始化
-        ipcMain.on("socket-init", async (event, Authorization) => {
-            if (!this.socket) await this.createSocket(Authorization);
+        ipcMain.on("socket-init", async () => {
+            if (!this.socket) await this.createSocket();
         });
         //重新连接
         ipcMain.on("socket-reconnection", async () => {

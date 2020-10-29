@@ -72,8 +72,8 @@ export function closeWindow(id?: number) {
 /**
  * socket 初始化
  */
-export function socketInit(Authorization: string) {
-    ipcRenderer.send("socket-init", Authorization);
+export function socketInit() {
+    ipcRenderer.send("socket-init");
 }
 
 /**
