@@ -182,7 +182,7 @@ class Main {
         this.socket.on("connect", () => Log.info("[Socket]connect"));
         // @ts-ignore
         this.socket.on("message", data => {
-            if (data.key === SocketMsgType.error) {
+            if (data.key === SocketMsgType.SOCKET_ERROR) {
                 this.createWindow({
                     route: "/message",
                     data: {
@@ -199,7 +199,7 @@ class Main {
         // @ts-ignore
         this.socket.on("error", msg => {
             for (let i in this.windows) if (this.windows[i]) BrowserWindow.fromId(Number(i)).webContents.send("message-back", {
-                key: SocketMsgType.error,
+                key: SocketMsgType.SOCKET_ERROR,
                 value: msg
             });
         });
@@ -211,7 +211,7 @@ class Main {
         });
         this.socket.on("close", () => {
             for (let i in this.windows) if (this.windows[i]) BrowserWindow.fromId(Number(i)).webContents.send("message-back", {
-                key: SocketMsgType.close,
+                key: SocketMsgType.SOCKET_CLOSE,
                 value: "[socket]close"
             });
         });
@@ -400,10 +400,10 @@ class Main {
          */
         ipcMain.on("message-send", (event, args) => {
             switch (args.type) {
-                case IpcType.win:
+                case IpcType.WIN:
                     for (let i in this.windows) if (this.windows[i]) BrowserWindow.fromId(Number(i)).webContents.send("message-back", args);
                     break;
-                case IpcType.socket:
+                case IpcType.SOCKET:
                     if (this.socket && this.socket.io.readyState === "open") this.socket.send(args);
                     break;
             }

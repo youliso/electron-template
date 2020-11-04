@@ -18,8 +18,8 @@ declare interface IpcMessageOpt {
 }
 
 declare enum IpcType {
-    win,
-    socket
+    WIN,
+    SOCKET
 }
 
 declare interface socketMsg {
@@ -28,8 +28,8 @@ declare interface socketMsg {
 }
 
 declare enum SocketMsgType {
-    error,
-    success,
-    init,
-    close
+    SOCKET_ERROR ,
+    SOCKET_SUCCESS,
+    SOCKET_INIT,
+    SOCKET_CLOSE
 }
