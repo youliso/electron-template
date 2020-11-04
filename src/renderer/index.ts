@@ -4,7 +4,7 @@ import {argsSymbol, createArgs} from "./store";
 import router from "./router";
 import {Init} from "./utils/ipc";
 
-Init().then((Args: WindowOpt) => {
+Init().then((Args) => {
     createApp(App)
         .use(router)
         .provide(argsSymbol, createArgs(Args))

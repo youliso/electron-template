@@ -1,11 +1,12 @@
 import {ipcRenderer, remote} from "electron";
 import {addMessageData} from "../store";
+import {IpcMessageOpt, WindowOpt} from "../../lib/interface";
 
 /**
  * 渲染进程初始化 (i)
  * */
 export async function Init() {
-    ipcRenderer.on("message-back", (event, args: IpcMessageOpt) => addMessageData(args.key, args.value)); //消息反馈 (i)
+    ipcRenderer.on("message-back", (event, args) => addMessageData(args.key, args.value)); //消息反馈 (i)
     return new Promise(resolve => ipcRenderer.once("window-load", async (event, args) => resolve(JSON.parse(decodeURIComponent(args)))))
 }
 

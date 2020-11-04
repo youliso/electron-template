@@ -13,6 +13,7 @@ import {autoUpdater} from "electron-updater";
 import * as Socket from "socket.io-client";
 import Log from "../lib/log";
 import ico from "./assets/icon.ico";
+import {IpcMessageType, SocketMsgType, WindowOpt} from "../lib/interface";
 
 const config = require("../lib/cfg/config.json");
 
@@ -182,7 +183,7 @@ class Main {
         this.socket.on("connect", () => Log.info("[Socket]connect"));
         // @ts-ignore
         this.socket.on("message", data => {
-            if (data.key === SocketMsgType.SOCKET_ERROR) {
+            if (data.type === SocketMsgType.SOCKET_ERROR) {
                 this.createWindow({
                     route: "/message",
                     data: {
@@ -198,10 +199,7 @@ class Main {
         });
         // @ts-ignore
         this.socket.on("error", msg => {
-            for (let i in this.windows) if (this.windows[i]) BrowserWindow.fromId(Number(i)).webContents.send("message-back", {
-                key: SocketMsgType.SOCKET_ERROR,
-                value: msg
-            });
+            Log.info(`[Socket]error ${msg.toString()}`);
         });
         this.socket.on("disconnect", () => {
             Log.info("[Socket]disconnect");
@@ -210,10 +208,7 @@ class Main {
             }, 1000 * 60 * 3)
         });
         this.socket.on("close", () => {
-            for (let i in this.windows) if (this.windows[i]) BrowserWindow.fromId(Number(i)).webContents.send("message-back", {
-                key: SocketMsgType.SOCKET_CLOSE,
-                value: "[socket]close"
-            });
+            Log.info("[Socket]close");
         });
     }
 
@@ -400,10 +395,10 @@ class Main {
          */
         ipcMain.on("message-send", (event, args) => {
             switch (args.type) {
-                case IpcType.WIN:
+                case IpcMessageType.WIN:
                     for (let i in this.windows) if (this.windows[i]) BrowserWindow.fromId(Number(i)).webContents.send("message-back", args);
                     break;
-                case IpcType.SOCKET:
+                case IpcMessageType.SOCKET:
                     if (this.socket && this.socket.io.readyState === "open") this.socket.send(args);
                     break;
             }
