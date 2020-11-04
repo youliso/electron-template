@@ -12,7 +12,12 @@ declare interface WindowOpt {
 }
 
 declare interface IpcMessageOpt {
-    type: "win" | "socket";
+    type: IpcType;
     key?: string;
     value?: unknown;
+}
+
+declare enum IpcType {
+    win,
+    socket
 }

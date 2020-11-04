@@ -381,10 +381,10 @@ class Main {
          */
         ipcMain.on("message-send", (event, args) => {
             switch (args.type) {
-                case "win":
+                case IpcType.win:
                     for (let i in this.windows) if (this.windows[i]) BrowserWindow.fromId(Number(i)).webContents.send("message-back", args);
                     break;
-                case "socket":
+                case IpcType.socket:
                     if (this.socket && this.socket.io.readyState === "open") this.socket.send(args);
                     break;
             }
