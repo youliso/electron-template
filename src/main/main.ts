@@ -108,7 +108,13 @@ class Main {
             opt.modal = args.modal || false;
             opt.resizable = args.resizable || false;
             let win = new BrowserWindow(opt);
-            if (args.isMainWin) this.mainWin = win; //是否主窗口
+            if (args.isMainWin) { //是否主窗口
+                if (this.mainWin) {
+                    delete this.windows[this.mainWin.id];
+                    this.mainWin.close();
+                }
+                this.mainWin = win;
+            }
             this.windows[win.id] = {
                 route: args.route,
                 isMultiWindow: args.isMultiWindow

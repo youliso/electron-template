@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import {defineComponent, onUnmounted, watch} from "vue";
-import {createWindow, closeWindow} from "../../utils/ipc";
+import {createWindow} from "../../utils/ipc";
 import Head from "../components/Head.vue";
 import {argsState, messageData} from "../../store";
 
@@ -32,7 +32,7 @@ export default defineComponent({
       });
     }
     const toAbout = () => {
-      closeWindow(args.id);
+      console.log("123")
       createWindow({
         route: "/about",
         width: 300,

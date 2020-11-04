@@ -22,7 +22,6 @@ export default defineComponent({
   setup() {
     const args = argsState();
     const toHome = () => {
-      closeWindow(args.id);
       createWindow({
         route: "/",
         width: 500,
