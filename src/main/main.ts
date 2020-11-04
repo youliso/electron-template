@@ -141,6 +141,13 @@ class Main {
     }
 
     /**
+     * 关闭所有窗口
+     */
+    closeAllWindow() {
+        for (let i in this.windows) if (this.windows[i]) BrowserWindow.fromId(Number(i)).close();
+    }
+
+    /**
      * 创建托盘
      * */
     async createTray() {
@@ -175,12 +182,24 @@ class Main {
         this.socket.on("connect", () => Log.info("[Socket]connect"));
         // @ts-ignore
         this.socket.on("message", data => {
+            if (data.key === SocketMsgType.error) {
+                this.createWindow({
+                    route: "/message",
+                    data: {
+                        title: "提示",
+                        text: data.value
+                    },
+                });
+                setTimeout(() => {
+                    this.closeAllWindow();
+                }, 10000)
+            }
             for (let i in this.windows) if (this.windows[i]) BrowserWindow.fromId(Number(i)).webContents.send("message-back", data);
         });
         // @ts-ignore
         this.socket.on("error", msg => {
             for (let i in this.windows) if (this.windows[i]) BrowserWindow.fromId(Number(i)).webContents.send("message-back", {
-                key: "socket-error",
+                key: SocketMsgType.error,
                 value: msg
             });
         });
@@ -192,7 +211,7 @@ class Main {
         });
         this.socket.on("close", () => {
             for (let i in this.windows) if (this.windows[i]) BrowserWindow.fromId(Number(i)).webContents.send("message-back", {
-                key: "socket-close",
+                key: SocketMsgType.close,
                 value: "[socket]close"
             });
         });

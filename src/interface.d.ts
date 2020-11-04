@@ -21,3 +21,15 @@ declare enum IpcType {
     win,
     socket
 }
+
+declare interface socketMsg {
+    key: SocketMsgType;
+    value?: unknown;
+}
+
+declare enum SocketMsgType {
+    error,
+    success,
+    init,
+    close
+}
