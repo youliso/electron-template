@@ -11,13 +11,13 @@ export interface WindowOpt {
     modal?: boolean; //父窗口置顶
 }
 
-export interface IpcMessageOpt {
-    type: IpcMessageType;
+export interface IpcMsg {
+    type: IpcMsgType;
     key?: string;
     value?: unknown;
 }
 
-export enum IpcMessageType {
+export enum IpcMsgType {
     WIN,
     SOCKET
 }

@@ -1,6 +1,6 @@
 import {ipcRenderer, remote} from "electron";
 import {addMessageData} from "../store";
-import {IpcMessageOpt, WindowOpt} from "../../lib/interface";
+import {IpcMsg, WindowOpt} from "../../lib/interface";
 
 /**
  * 渲染进程初始化 (i)
@@ -13,7 +13,7 @@ export async function Init() {
 /**
  * 消息发送
  */
-export function send(args: IpcMessageOpt) {
+export function send(args: IpcMsg) {
     ipcRenderer.send("message-send", args);
 }
 
