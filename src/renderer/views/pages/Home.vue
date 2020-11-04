@@ -21,7 +21,7 @@ export default defineComponent({
   name: "Home",
   setup() {
     const args = argsState();
-    let watchTest = watch(() => messageData["test"], (n, o) => { // o 为新赋值 n为旧值
+    let watchTest = watch(() => messageData["test"], (n, o) => { // n 为新赋值 o为旧值
       console.log(n, o)
     });
     const test = () => {
@@ -32,7 +32,6 @@ export default defineComponent({
       });
     }
     const toAbout = () => {
-      console.log("123")
       createWindow({
         route: "/about",
         width: 300,
