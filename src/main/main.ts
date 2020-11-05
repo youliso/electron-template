@@ -87,7 +87,7 @@ class Main {
     /**
      * 创建窗口
      * */
-    async createWindow(args: WindowOpt) {
+    createWindow(args: WindowOpt) {
         try {
             for (let i in this.windows) {
                 if (this.windows[i] &&
@@ -109,17 +109,6 @@ class Main {
             opt.modal = args.modal || false;
             opt.resizable = args.resizable || false;
             let win = new BrowserWindow(opt);
-            if (args.isMainWin) { //是否主窗口
-                if (this.mainWin) {
-                    delete this.windows[this.mainWin.id];
-                    this.mainWin.close();
-                }
-                this.mainWin = win;
-            }
-            this.windows[win.id] = {
-                route: args.route,
-                isMultiWindow: args.isMultiWindow
-            }
             // //window加载完毕后显示
             win.once("ready-to-show", () => win.show());
             //默认浏览器打开跳转连接
@@ -134,8 +123,15 @@ class Main {
                 args.id = win.id;
                 win.webContents.send("window-load", encodeURIComponent(JSON.stringify(args)));
             });
-            if (!app.isPackaged) await win.loadURL(`http://localhost:${config.appPort}`).catch(err => Log.error(err));
-            else await win.loadFile(join(__dirname, "./index.html")).catch(err => Log.error(err));
+            if (!app.isPackaged) win.loadURL(`http://localhost:${config.appPort}`).catch(err => Log.error(err));
+            else win.loadFile(join(__dirname, "./index.html")).catch(err => Log.error(err));
+            if (args.isMainWin) { //是否主窗口
+                if (this.mainWin) {
+                    delete this.windows[this.mainWin.id];
+                    this.mainWin.close();
+                }
+                this.mainWin = win;
+            }
         } catch (e) {
             Log.error(e.toString())
         }
