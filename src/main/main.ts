@@ -109,6 +109,10 @@ class Main {
             opt.modal = args.modal || false;
             opt.resizable = args.resizable || false;
             let win = new BrowserWindow(opt);
+            this.windows[win.id] = {
+                route: args.route,
+                isMultiWindow: args.isMultiWindow
+            };
             // //window加载完毕后显示
             win.once("ready-to-show", () => win.show());
             //默认浏览器打开跳转连接
