@@ -12,24 +12,24 @@ export interface WindowOpt {
 }
 
 export interface IpcMsg {
-    type: IpcMsgType;
+    type: IPC_MSG_TYPE;
     key?: string;
     value?: unknown;
 }
 
-export enum IpcMsgType {
+export interface SocketMsg {
+    key: SOCKET_MSG_TYPE;
+    value?: unknown;
+}
+
+export enum IPC_MSG_TYPE {
     WIN,
     SOCKET
 }
 
-export interface socketMsg {
-    key: SocketMsgType;
-    value?: unknown;
-}
-
-export enum SocketMsgType {
-    SOCKET_ERROR,
-    SOCKET_SUCCESS,
-    SOCKET_INIT,
-    SOCKET_CLOSE
+export enum SOCKET_MSG_TYPE {
+    ERROR,
+    SUCCESS,
+    INIT,
+    CLOSE
 }

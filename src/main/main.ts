@@ -13,7 +13,7 @@ import {autoUpdater} from "electron-updater";
 import * as Socket from "socket.io-client";
 import Log from "../lib/log";
 import ico from "./assets/icon.ico";
-import {IpcMsgType, SocketMsgType, WindowOpt} from "../lib/interface";
+import {IPC_MSG_TYPE, SOCKET_MSG_TYPE, WindowOpt} from "../lib/interface";
 
 const config = require("../lib/cfg/config.json");
 
@@ -183,7 +183,7 @@ class Main {
         this.socket.on("connect", () => Log.info("[Socket]connect"));
         // @ts-ignore
         this.socket.on("message", data => {
-            if (data.type === SocketMsgType.SOCKET_ERROR) {
+            if (data.type === SOCKET_MSG_TYPE.ERROR) {
                 this.createWindow({
                     route: "/message",
                     isMainWin: true,
@@ -396,10 +396,10 @@ class Main {
          */
         ipcMain.on("message-send", (event, args) => {
             switch (args.type) {
-                case IpcMsgType.WIN:
+                case IPC_MSG_TYPE.WIN:
                     for (let i in this.windows) if (this.windows[i]) BrowserWindow.fromId(Number(i)).webContents.send("message-back", args);
                     break;
-                case IpcMsgType.SOCKET:
+                case IPC_MSG_TYPE.SOCKET:
                     if (this.socket && this.socket.io.readyState === "open") this.socket.send(args);
                     break;
             }

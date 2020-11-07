@@ -16,7 +16,7 @@ import {defineComponent} from "vue";
 import {argsState} from "../../../store";
 import {closeWindow, send, setBounds} from "../../../utils/ipc";
 import Head from "../../components/Head.vue";
-import {IpcMsg, IpcMsgType} from "../../../../lib/interface";
+import {IpcMsg, IPC_MSG_TYPE} from "../../../../lib/interface";
 
 export default defineComponent({
   components: {
@@ -29,7 +29,7 @@ export default defineComponent({
     let cons = 0;
     const test = () => {//测试发送 为主窗口发送消息
       let data: IpcMsg = {
-        type: IpcMsgType.WIN,
+        type: IPC_MSG_TYPE.WIN,
         key: "test",
         value: cons++
       };
