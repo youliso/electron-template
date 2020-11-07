@@ -186,6 +186,7 @@ class Main {
             if (data.type === SocketMsgType.SOCKET_ERROR) {
                 this.createWindow({
                     route: "/message",
+                    isMainWin: true,
                     data: {
                         title: "提示",
                         text: data.value
