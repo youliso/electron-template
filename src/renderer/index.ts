@@ -5,7 +5,7 @@ import router from "./router";
 import {Init} from "./utils/ipc";
 
 Init().then((Args) => {
-    createApp(App)
+    createApp(App as any)
         .use(router)
         .provide(argsSymbol, createArgs(Args))
         .mount("#app");
