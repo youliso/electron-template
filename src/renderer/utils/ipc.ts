@@ -87,15 +87,19 @@ export function socketReconnection() {
 /**
  * 设置全局参数
  */
-export function sendGlobal(key: string, value: unknown) {
-    ipcRenderer.send("global-sharedObject", {key, value});
+export async function sendGlobal(key: string, value: unknown) {
+    ipcRenderer.send("global-set", {key, value});
 }
 
 /**
  * 获取全局参数
  */
-export function getGlobal(key: string) {
-    return remote.getGlobal("sharedObject")[key];
+export async function getGlobal(key: string) {
+    return new Promise((resolve, reject) => {
+        ipcRenderer.once("global-get", async (data) => {
+            resolve(data);
+        })
+    })
 }
 
 

@@ -17,16 +17,6 @@ import {IPC_MSG_TYPE, SOCKET_MSG_TYPE, WindowOpt} from "../lib/interface";
 
 const config = require("../lib/cfg/config.json");
 
-declare global {
-    namespace NodeJS {
-        interface Global {
-            sharedObject: { [key: string]: unknown }
-        }
-    }
-}
-
-global.sharedObject = {};
-
 class Main {
     private static instance: Main;
 
@@ -34,6 +24,7 @@ class Main {
     private windows: { [id: number]: WindowOpt } = {}; //窗口组
     private appTray: Tray = null; //托盘
     private socket: SocketIOClient.Socket = null; //socket
+    private globalValue: { [key: string]: unknown } = {}; //主进程全局变量
 
     static getInstance() {
         if (!Main.instance) Main.instance = new Main();
@@ -76,6 +67,7 @@ class Main {
             frame: false,
             show: false,
             webPreferences: {
+                contextIsolation: false,
                 nodeIntegration: true,
                 devTools: !app.isPackaged,
                 webSecurity: false,
@@ -179,7 +171,7 @@ class Main {
      * 创建Socket
      * */
     async createSocket() {
-        this.socket = Socket.connect(config.socketUrl, {query: `Authorization=${global.sharedObject["Authorization"]}`});
+        this.socket = Socket.connect(config.socketUrl, {query: `Authorization=${this.globalValue["Authorization"]}`});
         this.socket.on("connect", () => Log.info("[Socket]connect"));
         // @ts-ignore
         this.socket.on("message", data => {
@@ -387,9 +379,12 @@ class Main {
         ipcMain.on("update", (event, winId) => this.update(winId));
 
         /**
-         * 全局变量赋值
+         * 全局变量
          */
-        ipcMain.on("global-sharedObject", (event, args) => global.sharedObject[args.key] = args.value);
+        //赋值
+        ipcMain.on("global-set", (event, args) => this.globalValue[args.key] = args.value);
+        //获取
+        ipcMain.on("global-get", (event, args) => this.globalValue[args.key]);
 
         /**
          * 消息反馈
