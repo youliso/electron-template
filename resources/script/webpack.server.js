@@ -8,8 +8,6 @@ module.exports = {
     ...renderer,
     devServer: {
         contentBase: path.resolve("dist"),
-        compress: true,
-        hot: true,
         port: cfg.port
     }
 };

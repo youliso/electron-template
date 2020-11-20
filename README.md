@@ -2,7 +2,7 @@
 electron & vue3   
 一个多窗口模式的脚手架
 
-❗注意  `vue`安装3.0.0版本 or `vue-router`安装4.0.0-beta.13版本
+❗注意  `vue` or `vue-router` 版本
 
 ## 安装依赖
 运行命令
