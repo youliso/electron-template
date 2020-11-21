@@ -30,7 +30,6 @@ let nConf = {
     "appPort": cfg.port,
     "appUrl": "http://127.0.0.1:3000/", //程序主访问地址
     "socketUrl": "http://127.0.0.1:3000/",// 程序socket访问地址
-    "updateUrl": "http://127.0.0.1:3000/", //更新地址
     "updateFileUrl": "http://127.0.0.1:3000/public/kl/", //更新文件地址
     "updateFilePath": `../${name.toLowerCase()}-updater` //更新文件目录
 };
