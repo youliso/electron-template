@@ -17,6 +17,16 @@ import {IPC_MSG_TYPE, SOCKET_MSG_TYPE, WindowOpt} from "../lib/interface";
 
 const config = require("../lib/cfg/config.json");
 
+declare global {
+    namespace NodeJS {
+        interface Global {
+            sharedObject: { [key: string]: unknown }
+        }
+    }
+}
+
+global.sharedObject = {};
+
 class Main {
     private static instance: Main;
 
@@ -24,7 +34,6 @@ class Main {
     private windows: { [id: number]: WindowOpt } = {}; //窗口组
     private appTray: Tray = null; //托盘
     private socket: SocketIOClient.Socket = null; //socket
-    private globalValue: { [key: string]: unknown } = {}; //主进程全局变量
 
     static getInstance() {
         if (!Main.instance) Main.instance = new Main();
@@ -41,7 +50,7 @@ class Main {
         let files = [];
         if (existsSync(path)) {
             files = readdirSync(path);
-            files.forEach((file, index) => {
+            files.forEach((file) => {
                 let curPath = path + "/" + file;
                 if (statSync(curPath).isDirectory()) {
                     this.delDir(curPath); //递归删除文件夹
@@ -108,9 +117,9 @@ class Main {
             // //window加载完毕后显示
             win.once("ready-to-show", () => win.show());
             //默认浏览器打开跳转连接
-            win.webContents.on("new-window", (event, url) => {
+            win.webContents.on("new-window", async (event, url) => {
                 event.preventDefault();
-                shell.openExternal(url);
+                await shell.openExternal(url);
             });
             // 打开开发者工具
             if (!app.isPackaged) win.webContents.openDevTools();
@@ -171,7 +180,7 @@ class Main {
      * 创建Socket
      * */
     async createSocket() {
-        this.socket = Socket.connect(config.socketUrl, {query: `Authorization=${this.globalValue["Authorization"]}`});
+        this.socket = Socket.connect(config.socketUrl, {query: `Authorization=${global.sharedObject["Authorization"]}`});
         this.socket.on("connect", () => Log.info("[Socket]connect"));
         // @ts-ignore
         this.socket.on("message", data => {
@@ -379,12 +388,9 @@ class Main {
         ipcMain.on("update", (event, winId) => this.update(winId));
 
         /**
-         * 全局变量
+         * 全局变量赋值
          */
-        //赋值
-        ipcMain.on("global-set", (event, args) => this.globalValue[args.key] = args.value);
-        //获取
-        ipcMain.on("global-get", (event, args) => this.globalValue[args.key]);
+        ipcMain.on("global-sharedObject", (event, args) => global.sharedObject[args.key] = args.value);
 
         /**
          * 消息反馈

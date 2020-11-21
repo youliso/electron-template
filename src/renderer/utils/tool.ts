@@ -101,13 +101,13 @@ export function GetQueryJson2(url: string) {
  * @param url string
  * @param param NetSendOpt
  * */
-export async function net(url: string, param: NetSendOpt) {
+export function net(url: string, param: NetSendOpt): any {
     if (url.indexOf("http://") === -1 && url.indexOf("https://") === -1) url = config.appUrl + url;
     let sendData: NetSendOpt = {
         headers: {
             "user-agent": `${remote.app.name}/${remote.app.getVersion()}`,
             "Content-type": "application/json;charset=utf-8",
-            "Authorization": await getGlobal("Authorization") as string || ""
+            "Authorization": getGlobal("Authorization") as string || ""
         },
         outTime: 30000,
         mode: "cors"
