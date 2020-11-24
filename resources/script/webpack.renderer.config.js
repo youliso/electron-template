@@ -1,26 +1,26 @@
-const path = require('path');
+const path = require("path");
 const webpack = require("webpack");
-const {name} = require('../../package.json');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const _externals = require('externals-dependencies');
-const miniCssExtractPlugin = require('mini-css-extract-plugin')
-const {VueLoaderPlugin} = require('vue-loader');
+const { name } = require("../../package.json");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+const _externals = require("externals-dependencies");
+const miniCssExtractPlugin = require("mini-css-extract-plugin");
+const { VueLoaderPlugin } = require("vue-loader");
 
-const isEnvProduction = process.env.NODE_ENV === 'production';
-const isEnvDevelopment = process.env.NODE_ENV === 'development';
+const isEnvProduction = process.env.NODE_ENV === "production";
+const isEnvDevelopment = process.env.NODE_ENV === "development";
 module.exports = {
-    devtool: isEnvDevelopment ? 'source-map' : false,
-    mode: isEnvProduction ? 'production' : 'development',
+    devtool: isEnvDevelopment ? "source-map" : false,
+    mode: isEnvProduction ? "production" : "development",
     target: "electron-renderer",
     externals: _externals(),
     entry: {
-        app: './src/renderer/index.ts'
+        app: "./src/renderer/index.ts"
     },
     output: {
-        filename: '[name].bundle.view.js',
-        chunkFilename: '[id].bundle.view.js',
-        path: path.resolve('dist')
+        filename: "[name].bundle.view.js",
+        chunkFilename: "[id].bundle.view.js",
+        path: path.resolve("dist")
     },
     node: {
         global: false,
@@ -31,10 +31,10 @@ module.exports = {
         rules: [
             {
                 test: /\.vue$/,
-                loader: 'vue-loader',
+                loader: "vue-loader",
                 options: {
                     loader: {
-                        scss: 'vue-style-loader!css-loader!sass-loader'
+                        scss: "vue-style-loader!css-loader!sass-loader"
                     }
                 }
             },
@@ -42,7 +42,7 @@ module.exports = {
                 test: /\.ts$/,
                 use: {
                     loader: "ts-loader",
-                    options: {appendTsSuffixTo: [/\.vue$/]}
+                    options: { appendTsSuffixTo: [/\.vue$/] }
                 },
                 exclude: /node_modules/
             },
@@ -53,7 +53,7 @@ module.exports = {
                     options: {
                         // you can specify a publicPath here
                         // by default it use publicPath in webpackOptions.output
-                        publicPath: '../'
+                        publicPath: "../"
                     }
                 },
                     "css-loader"
@@ -68,35 +68,35 @@ module.exports = {
                         options: {
                             // you can specify a publicPath here
                             // by default it use publicPath in webpackOptions.output
-                            publicPath: '../'
+                            publicPath: "../"
                         }
                     },
                     {
-                        loader: 'css-loader'
+                        loader: "css-loader"
                     },
                     {
-                        loader: 'sass-loader'
+                        loader: "sass-loader"
                     }
                 ]
             },
             {
                 test: /\.(png|svg|jpg|gif|ico)$/,
                 use: [
-                    'file-loader'
+                    "file-loader"
                 ]
             },
             {
                 test: /\.(woff|woff2|eot|ttf|otf)$/,
                 use: [
-                    'file-loader'
+                    "file-loader"
                 ]
             }
         ]
     },
     resolve: {
-        extensions: ['.ts', '.js', '.vue', '.json'],
+        extensions: [".ts", ".js", ".vue", ".json"],
         alias: {
-            'vue': '@vue/runtime-dom'
+            "vue": "@vue/runtime-dom"
         }
     },
     optimization: {
@@ -107,16 +107,16 @@ module.exports = {
             patterns:
                 [
                     {
-                        from: './src/lib/**/*',
-                        to: './lib',
+                        from: "./src/lib/**/*",
+                        to: "./lib",
                         transformPath(targetPath, absolutePath) {
-                            let path = targetPath.replace(/\\/g, '/')
-                            return path.replace('src/lib', '')
+                            let path = targetPath.replace(/\\/g, "/");
+                            return path.replace("src/lib", "");
                         },
                         globOptions: {
                             ignore: [
-                                '**/*.ts',
-                                '**/*.json'
+                                "**/*.ts",
+                                "**/*.json"
                             ]
                         }
                     }
@@ -134,7 +134,10 @@ module.exports = {
         }),
         new VueLoaderPlugin(),
         new webpack.DefinePlugin({
-            'process.env.NODE_ENV': JSON.stringify('production')
+            "process.env": {
+                NODE_ENV: JSON.stringify("production")
+            },
+            "__VUE_PROD_DEVTOOLS__": JSON.stringify(false)
         })
-    ],
+    ]
 };

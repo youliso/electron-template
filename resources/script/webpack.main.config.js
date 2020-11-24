@@ -1,21 +1,21 @@
-const path = require('path');
+const path = require("path");
 const webpack = require("webpack");
-const _externals = require('externals-dependencies');
+const _externals = require("externals-dependencies");
 
-const isEnvProduction = process.env.NODE_ENV === 'production';
-const isEnvDevelopment = process.env.NODE_ENV === 'development';
+const isEnvProduction = process.env.NODE_ENV === "production";
+const isEnvDevelopment = process.env.NODE_ENV === "development";
 module.exports = {
-    devtool: isEnvDevelopment ? 'source-map' : false,
-    mode: isEnvProduction ? 'production' : 'development',
+    devtool: isEnvDevelopment ? "source-map" : false,
+    mode: isEnvProduction ? "production" : "development",
     target: "electron-main",
     externals: _externals(),
     entry: {
-        main: './src/main/main.ts'
+        main: "./src/main/main.ts"
     },
     output: {
-        filename: '[name].bundle.js',
-        chunkFilename: '[id].bundle.js',
-        path: path.resolve('dist')
+        filename: "[name].bundle.js",
+        chunkFilename: "[id].bundle.js",
+        path: path.resolve("dist")
     },
     node: {
         global: false,
@@ -26,21 +26,21 @@ module.exports = {
         rules: [
             {
                 test: /\.ts$/,
-                use: 'ts-loader',
+                use: "ts-loader",
                 exclude: /node_modules/
             },
             {
                 test: /\.(png|svg|jpg|gif|ico)$/,
                 use: [
-                    'file-loader'
+                    "file-loader"
                 ]
             }
         ]
     },
     resolve: {
-        extensions: ['.tsx', '.ts', '.js'],
+        extensions: [".tsx", ".ts", ".js"],
         alias: {
-            dist: path.resolve('dist')
+            dist: path.resolve("dist")
         }
     },
     optimization: {
@@ -48,9 +48,10 @@ module.exports = {
     },
     plugins: [
         new webpack.DefinePlugin({
-            'process.env': {
-                NODE_ENV: JSON.stringify('production')
-            }
+            "process.env": {
+                NODE_ENV: JSON.stringify("production")
+            },
+            "__VUE_PROD_DEVTOOLS__": JSON.stringify(false)
         })
     ]
 };
