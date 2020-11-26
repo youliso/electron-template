@@ -1,5 +1,4 @@
 import {resolve, join} from "path";
-import {existsSync, readdirSync, statSync, unlinkSync, rmdirSync} from "fs";
 import {
     shell,
     app,
@@ -9,11 +8,11 @@ import {
     Tray,
     BrowserWindowConstructorOptions, Menu
 } from "electron";
-import {autoUpdater} from "electron-updater";
 import * as Socket from "socket.io-client";
 import Log from "../lib/log";
 import ico from "./assets/icon.ico";
 import {IPC_MSG_TYPE, SOCKET_MSG_TYPE, WindowOpt} from "../lib/interface";
+import {Update} from "./update";
 
 const config = require("../lib/cfg/config.json");
 
@@ -41,25 +40,6 @@ class Main {
     }
 
     constructor() {
-    }
-
-    /**
-     * 删除目录和内部文件
-     * */
-    delDir(path: string) {
-        let files = [];
-        if (existsSync(path)) {
-            files = readdirSync(path);
-            files.forEach((file) => {
-                let curPath = path + "/" + file;
-                if (statSync(curPath).isDirectory()) {
-                    this.delDir(curPath); //递归删除文件夹
-                } else {
-                    unlinkSync(curPath); //删除文件
-                }
-            });
-            rmdirSync(path);
-        }
     }
 
     /**
@@ -215,52 +195,6 @@ class Main {
     }
 
     /**
-     * 更新模块
-     * */
-    async update(winId: number) {
-        let win = BrowserWindow.fromId(winId);
-        let message = {
-            error: {code: 0, msg: "检查更新出错"},
-            checking: {code: 1, msg: "正在检查更新"},
-            updateAva: {code: 2, msg: "检测到新版本，正在下载"},
-            updateNotAva: {code: 3, msg: "现在使用的就是最新版本，不用更新"}
-        };
-        // 这里的URL就是更新服务器的放置文件的地址
-        autoUpdater.setFeedURL(config.updateFileUrl);
-        autoUpdater.on("error", () => {
-            win.webContents.send("update-message", message.error);
-        });
-        autoUpdater.on("checking-for-update", () => {
-            win.webContents.send("update-message", message.checking);
-        });
-        autoUpdater.on("update-available", () => {
-            win.webContents.send("update-message", message.updateAva);
-        });
-        autoUpdater.on("update-not-available", () => {
-            win.webContents.send("update-message", message.updateNotAva);
-        });
-        // 更新下载进度事件
-        autoUpdater.on("download-progress", (progressObj) => {
-            win.webContents.send("download-progress", progressObj)
-        })
-        // 下载完成事件
-        autoUpdater.on("update-downloaded", () => {
-            ipcMain.on("update-downloaded", () => {
-                // 关闭程序安装新的软件
-                autoUpdater.quitAndInstall();
-            });
-            // 通知渲染进程现在完成
-            win.webContents.send("update-downloaded");
-        });
-        //执行自动更新检查
-        try {
-            await autoUpdater.checkForUpdates();
-        } catch (e) {
-            Log.error(e);
-        }
-    }
-
-    /**
      * 初始化并加载
      * */
     async init() {
@@ -380,12 +314,9 @@ class Main {
         });
 
         /**
-         * update
+         * 检查更新
          * */
-        //删除更新文件
-        ipcMain.on("update-delFile", () => this.delDir(config.updateFilePath));
-        //检查更新
-        ipcMain.on("update", (event, winId) => this.update(winId));
+        ipcMain.on("update", (event, winId) => new Update(winId));
 
         /**
          * 全局变量赋值

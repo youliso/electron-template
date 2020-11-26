@@ -135,7 +135,7 @@ module.exports = {
         new VueLoaderPlugin(),
         new webpack.DefinePlugin({
             "process.env": {
-                NODE_ENV: JSON.stringify("production")
+                NODE_ENV: JSON.stringify(isEnvProduction ? "production" : "development")
             },
             "__VUE_PROD_DEVTOOLS__": JSON.stringify(false)
         })
