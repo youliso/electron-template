@@ -1,7 +1,7 @@
-const fs = require('fs');
-const cfg = require('./cfg.json');
-const {name} = require('../../package.json');
-const config = require('./build.json');
+const fs = require("fs");
+const cfg = require("./cfg.json");
+const { name } = require("../../package.json");
+const config = require("./build.json");
 
 config.productName = name;
 config.nsis.shortcutName = name;
@@ -11,9 +11,9 @@ config.appId = `org.${name}`;
 config.asar = true;//是否asar打包
 config.nsis.allowToChangeInstallationDirectory = true;//是否允许用户修改安装为位置
 config.publish = [{ //更新地址
-    provider: 'generic',
-    url: 'http://175.24.76.246:3000/'
-}]
+    provider: "generic",
+    url: "http://175.24.76.246:3000/"
+}];
 let nConf = {
     "appPort": cfg.port,
     "appUrl": "http://127.0.0.1:3000/", //程序主访问地址
@@ -25,25 +25,24 @@ let nConf = {
 /**  nsis配置  **/
 let nsh = "";
 if (config.nsis.allowToChangeInstallationDirectory) {
-    nsh = "    !macro customHeader\n" +
+    nsh = "!macro customHeader\n" +
         "\n" +
-        "    !macroend\n" +
+        "!macroend\n" +
         "\n" +
-        "    !macro preInit\n" +
+        "!macro preInit\n" +
         "\n" +
-        "    !macroend\n" +
+        "!macroend\n" +
         "\n" +
-        "    !macro customInit\n" +
-        "            # guid=7e51495b-3f4d-5235-aadd-5636863064f0\n" +
-        "            ReadRegStr $0 HKLM \"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{7e51495b-3f4d-5235-aadd-5636863064f0}\" \"" + name + "\"\n" +
-        "            ${If} $0 != \"\"\n" +
-        "                # ExecWait $0 $1\n" +
-        "            ${EndIf}\n" +
-        "    !macroend\n" +
+        "!macro customInit\n" +
+        "    ReadRegStr $0 HKLM \"Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{GUID}\" \"UninstallString\"\n" +
+        "    ${If} $0 != \"\"\n" +
+        "       # ExecWait $0 $1\n" +
+        "    ${EndIf}\n" +
+        "!macroend\n" +
         "\n" +
-        "    !macro customInstall\n" +
+        "!macro customInstall\n" +
         "\n" +
-        "    !macroend\n" +
+        "!macroend\n" +
         "\n" +
         "!macro customInstallMode\n" +
         "   # set $isForceMachineInstall or $isForceCurrentInstall\n" +
@@ -64,6 +63,6 @@ if (config.nsis.allowToChangeInstallationDirectory) {
         "!macroend";
 }
 
-fs.writeFileSync('./resources/script/build.json', JSON.stringify(config, null, 2));
-fs.writeFileSync('./resources/script/installer.nsh', nsh);
-fs.writeFileSync('./src/lib/cfg/config.json', JSON.stringify(nConf, null, 2));
+fs.writeFileSync("./resources/script/build.json", JSON.stringify(config, null, 2));
+fs.writeFileSync("./resources/script/installer.nsh", nsh);
+fs.writeFileSync("./src/lib/cfg/config.json", JSON.stringify(nConf, null, 2));
