@@ -7,7 +7,7 @@
 !macroend
 
 !macro customInit
-    ReadRegStr $0 HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\{GUID}" "UninstallString"
+    ReadRegStr $0 HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall" "UninstallString"
     ${If} $0 != ""
        # ExecWait $0 $1
     ${EndIf}

@@ -34,7 +34,7 @@ if (config.nsis.allowToChangeInstallationDirectory) {
         "!macroend\n" +
         "\n" +
         "!macro customInit\n" +
-        "    ReadRegStr $0 HKLM \"Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{GUID}\" \"UninstallString\"\n" +
+        "    ReadRegStr $0 HKLM \"Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\" \"UninstallString\"\n" +
         "    ${If} $0 != \"\"\n" +
         "       # ExecWait $0 $1\n" +
         "    ${EndIf}\n" +
