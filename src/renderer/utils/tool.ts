@@ -1,7 +1,7 @@
 import {remote} from "electron";
 import {sendGlobal, getGlobal} from "./ipc";
 
-const config = require('../../lib/cfg/config.json');
+const config = require('@/lib/cfg/config.json');
 
 export interface NetSendOpt extends RequestInit {
     data?: unknown;
