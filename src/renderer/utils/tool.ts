@@ -113,14 +113,14 @@ export function GetQueryJson2(url: string): { [key: string]: unknown } {
 export async function net(url: string, param: NetSendOpt = {}): Promise<any> {
     if (url.indexOf("http://") === -1 && url.indexOf("https://") === -1) url = config.appUrl + url;
     let sendData: NetSendOpt = {
-        headers: {
+        headers: param.headers || {
             "user-agent": `${remote.app.name}/${remote.app.getVersion()}`,
             "Content-type": "application/json;charset=utf-8",
             "Authorization": getGlobal("Authorization") as string || ""
         },
         outTime: param.outTime || 30000,
         type: param.type || NET_RESPONSE_TYPE.TEXT,
-        mode: "cors"
+        mode: param.mode || "cors"
     };
     param = param || {};
     if (param.headers) sendData.headers = param.headers;
