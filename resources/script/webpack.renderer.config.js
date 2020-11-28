@@ -99,7 +99,8 @@ const config = {
     resolve: {
         extensions: [".ts", ".js", ".vue", ".json"],
         alias: {
-            "vue": "@vue/runtime-dom"
+            "vue": "@vue/runtime-dom",
+            "@": path.resolve("src")
         }
     },
     optimization: {
@@ -147,7 +148,7 @@ try {
         }));
     }
 } catch (e) {
-    console.log("... 无外部引入依赖 ...")
+    console.log("... 无外部引入依赖 ...");
 }
 
 module.exports = config;

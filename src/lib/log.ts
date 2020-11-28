@@ -18,13 +18,13 @@ class Log {
         }
     }
 
-    format(is?: boolean) {
+    format(is?: boolean): string {
         let date = new Date();
         if (is) return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
         else return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
     }
 
-    info(val: string) {
+    info(val: string): void {
         try {
             statSync(this.logFile + `/info-${this.format()}.log`);
         } catch (e) {
@@ -33,7 +33,7 @@ class Log {
         appendFileSync(this.logFile + `/info-${this.format()}.log`, `[${this.format(true)}] [info] ${val}\r\n`);
     }
 
-    error(val: string) {
+    error(val: string): void {
         try {
             statSync(this.logFile + `/error-${this.format()}.log`);
         } catch (e) {

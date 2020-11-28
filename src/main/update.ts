@@ -1,10 +1,10 @@
 import {BrowserWindow, ipcMain} from "electron";
 import {join} from "path";
 import {autoUpdater} from "electron-updater";
-import Log from "../lib/log";
-import {delDir} from "../lib";
+import Log from "@/lib/log";
+import {delDir} from "@/lib";
 
-const config = require("../lib/cfg/config.json");
+const config = require("@/lib/cfg/config.json");
 
 /**
  * 更新模块

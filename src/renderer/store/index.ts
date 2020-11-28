@@ -1,5 +1,5 @@
 import {reactive, provide, inject} from "vue";
-import {WindowOpt} from "../../lib/interface";
+import {WindowOpt} from "@/lib/interface";
 
 /**
  * 组件页面配置

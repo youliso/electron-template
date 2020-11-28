@@ -40,7 +40,8 @@ module.exports = {
     resolve: {
         extensions: [".tsx", ".ts", ".js"],
         alias: {
-            dist: path.resolve("dist")
+            "dist": path.resolve("dist"),
+            "@": path.resolve("src")
         }
     },
     optimization: {

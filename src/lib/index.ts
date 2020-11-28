@@ -5,7 +5,7 @@ import {remote} from "electron";
 /**
  * 删除目录和内部文件
  * */
-export function delDir(path: string) {
+export function delDir(path: string): void {
     let files = [];
     if (existsSync(path)) {
         files = readdirSync(path);
@@ -25,6 +25,6 @@ export function delDir(path: string) {
  * 获取外部依赖文件路径(！文件必须都存放在lib/extern下 针对打包后外部依赖文件路径问题)
  * @param path lib/extern为起点的相对路径
  * */
-export function getExternPath(path: string) {
+export function getExternPath(path: string): string {
     return remote.app.isPackaged ? resolve(__dirname, './lib/extern/' + path) : resolve('./src/lib/extern/' + path);
 }

@@ -11,10 +11,10 @@
 
 <script lang="ts">
 import {defineComponent, onUnmounted, watch} from "vue";
-import {createWindow} from "../../utils/ipc";
 import Head from "../components/Head.vue";
-import {argsState, messageData} from "../../store";
-import {getExternPath} from "../../../lib";
+import {argsState, messageData} from "@/renderer/store";
+import {createWindow} from "@/renderer/utils/ipc";
+import {getExternPath} from "@/lib";
 
 export default defineComponent({
   components: {
@@ -44,6 +44,7 @@ export default defineComponent({
     onUnmounted(() => {
       watchTest()
     })
+
     return {
       getExternPath,
       test,

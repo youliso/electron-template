@@ -3,9 +3,18 @@ import {sendGlobal, getGlobal} from "./ipc";
 
 const config = require('../../lib/cfg/config.json');
 
-interface NetSendOpt extends RequestInit {
+export interface NetSendOpt extends RequestInit {
     data?: unknown;
     outTime?: number; //请求超时时间
+    type?: NET_RESPONSE_TYPE; //返回数据类型
+}
+
+export enum NET_RESPONSE_TYPE {
+    TEXT,
+    JSON,
+    BUFFER,
+    BLOB,
+    FORM_DATA
 }
 
 /**
@@ -18,7 +27,7 @@ export function trim(str: string): string {
 /**
  * 判空
  * */
-export function isNull(arg: unknown) {
+export function isNull(arg: unknown): boolean {
     if (typeof arg === 'string') arg = trim(arg);
     return !arg && arg !== 0 && typeof arg !== "boolean" ? true : false;
 }
@@ -27,14 +36,14 @@ export function isNull(arg: unknown) {
  * 随机整数
  * 例如 6-10 （m-n）
  * */
-export function ranDom(m: number, n: number) {
+export function ranDom(m: number, n: number): number {
     return Math.floor(Math.random() * (n - m)) + m;
 }
 
 /**
  * 数组元素互换
  * */
-export function swapArr<T>(arr: T[], index1: number, index2: number) {
+export function swapArr<T>(arr: T[], index1: number, index2: number): void {
     [arr[index1], arr[index2]] = [arr[index2], arr[index1]];
 }
 
@@ -42,7 +51,7 @@ export function swapArr<T>(arr: T[], index1: number, index2: number) {
  * 日期转换
  * @param fmt yy-MM-dd Hh:mm:ss
  * */
-export function format(fmt: string = 'yyyy-MM-dd') {
+export function format(fmt: string = 'yyyy-MM-dd'): string {
     let date = new Date();
     let o: { [key: string]: unknown } = {
         "M+": date.getMonth() + 1, //月份
@@ -63,7 +72,7 @@ export function format(fmt: string = 'yyyy-MM-dd') {
 /**
  * 对象转url参数
  * */
-export function convertObj(data: any) {
+export function convertObj(data: any): string {
     let _result = [];
     for (let key in data) {
         let value = data[key] as Array<any>;
@@ -81,7 +90,7 @@ export function convertObj(data: any) {
 /**
  * url参数转对象
  */
-export function GetQueryJson2(url: string) {
+export function GetQueryJson2(url: string): { [key: string]: unknown } {
     let arr = []; // 存储参数的数组
     let res: { [key: string]: unknown } = {}; // 存储最终JSON结果对象
     arr = url.split("&"); // 获取浏览器地址栏中的参数
@@ -101,7 +110,7 @@ export function GetQueryJson2(url: string) {
  * @param url string
  * @param param NetSendOpt
  * */
-export function net(url: string, param: NetSendOpt): any {
+export async function net(url: string, param: NetSendOpt = {}): Promise<any> {
     if (url.indexOf("http://") === -1 && url.indexOf("https://") === -1) url = config.appUrl + url;
     let sendData: NetSendOpt = {
         headers: {
@@ -109,7 +118,8 @@ export function net(url: string, param: NetSendOpt): any {
             "Content-type": "application/json;charset=utf-8",
             "Authorization": getGlobal("Authorization") as string || ""
         },
-        outTime: 30000,
+        outTime: param.outTime || 30000,
+        type: param.type || NET_RESPONSE_TYPE.TEXT,
         mode: "cors"
     };
     param = param || {};
@@ -127,39 +137,38 @@ export function net(url: string, param: NetSendOpt): any {
         });
     };
     let fetchPromise = () => {
-        return new Promise((resolve, reject) => {
-            fetch(url, sendData)
-                .then(res => {
-                    if (res.status >= 200 && res.status < 300) {
-                        let Authorization = res.headers.get("Authorization");
-                        if (Authorization) sendGlobal("Authorization", Authorization);
-                        return res;
-                    }
-                    throw new Error(res.statusText);
-                })
-                .then(res => res.text())
-                .then(data => {
-                    try {
-                        resolve(JSON.parse(data));
-                    } catch (e) {
-                        resolve(data);
-                    }
-                })
-                .catch(err => reject(err))
-        });
+        return fetch(url, sendData)
+            .then(res => {
+                if (res.status >= 200 && res.status < 300) {
+                    let Authorization = res.headers.get("Authorization");
+                    if (Authorization) sendGlobal("Authorization", Authorization);
+                    return res;
+                }
+                throw new Error(res.statusText);
+            })
+            .then(async (res) => {
+                switch (sendData.type) {
+                    case NET_RESPONSE_TYPE.TEXT:
+                        return await res.text();
+                    case NET_RESPONSE_TYPE.JSON:
+                        return await res.json();
+                    case NET_RESPONSE_TYPE.BUFFER:
+                        return await res.arrayBuffer();
+                    case NET_RESPONSE_TYPE.BLOB:
+                        return await res.blob();
+                    case NET_RESPONSE_TYPE.FORM_DATA:
+                        return await res.formData()
+                }
+            })
     };
-    return new Promise((resolve, reject): any => {
-        Promise.race([timeoutPromise(), fetchPromise()])
-            .then((data: any) => resolve(data))
-            .catch((err: any) => reject(err))
-    });
+    return Promise.race([timeoutPromise(), fetchPromise()])
 }
 
 /**
  * 深拷贝
  * @param obj
  */
-export function deepCopy(obj: any) {
+export function deepCopy<T>(obj: T): T {
     let objArray: any = Array.isArray(obj) ? [] : {};
     if (obj && typeof obj === "object") {
         for (let key in obj) {

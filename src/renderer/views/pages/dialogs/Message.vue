@@ -13,10 +13,10 @@
 
 <script lang="ts">
 import {defineComponent} from "vue";
-import {argsState} from "../../../store";
-import {closeWindow, send, setBounds} from "../../../utils/ipc";
+import {argsState} from "@/renderer/store";
+import {closeWindow, send, setBounds} from "@/renderer/utils/ipc";
 import Head from "../../components/Head.vue";
-import {IpcMsg, IPC_MSG_TYPE} from "../../../../lib/interface";
+import {IpcMsg, IPC_MSG_TYPE} from "@/lib/interface";
 
 export default defineComponent({
   components: {

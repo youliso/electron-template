@@ -11,9 +11,9 @@
 
 <script lang="ts">
 import {defineComponent} from "vue";
-import {argsState} from "../../store";
-import {isNull} from "../../utils/tool";
-import {closeWindow} from "../../utils/ipc";
+import {argsState} from "@/renderer/store";
+import {isNull} from "@/renderer/utils/tool";
+import {closeWindow} from "@/renderer/utils/ipc";
 
 export default defineComponent({
   name: "Head",

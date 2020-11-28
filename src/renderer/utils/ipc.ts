@@ -1,6 +1,6 @@
 import {ipcRenderer, remote} from "electron";
 import {setMessageData} from "../store";
-import {IpcMsg, WindowOpt} from "../../lib/interface";
+import {IpcMsg, WindowOpt} from "@/lib/interface";
 
 /**
  * 渲染进程初始化 (i)
