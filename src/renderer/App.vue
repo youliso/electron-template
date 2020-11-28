@@ -21,5 +21,5 @@ export default {
 }
 </script>
 <style>
-@import "assets/main.css";
+@import "../assets/main.css";
 </style>

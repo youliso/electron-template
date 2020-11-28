@@ -10,7 +10,7 @@ import {
 } from "electron";
 import * as Socket from "socket.io-client";
 import Log from "../lib/log";
-import ico from "./assets/icon.ico";
+import ico from "../assets/icon.ico";
 import {IPC_MSG_TYPE, SOCKET_MSG_TYPE, WindowOpt} from "../lib/interface";
 import {Update} from "./update";
 

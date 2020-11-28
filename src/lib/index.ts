@@ -1,4 +1,6 @@
 import {existsSync, readdirSync, rmdirSync, statSync, unlinkSync} from "fs";
+import {resolve} from "path";
+import {remote} from "electron";
 
 /**
  * 删除目录和内部文件
@@ -17,4 +19,12 @@ export function delDir(path: string) {
         });
         rmdirSync(path);
     }
+}
+
+/**
+ * 获取外部依赖文件路径(！文件必须都存放在lib/extern下 针对打包后外部依赖文件路径问题)
+ * @param path lib/extern为起点的相对路径
+ * */
+export function getExternPath(path: string) {
+    return remote.app.isPackaged ? resolve(__dirname, './lib/extern/' + path) : resolve('./src/lib/extern/' + path);
 }

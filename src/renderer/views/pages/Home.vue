@@ -2,6 +2,7 @@
   <div class="main">
     <Head></Head>
     <div class="info">
+      <div>当前文件路径: {{ getExternPath("t.txt") }}</div>
       <button @click="toAbout">关于</button>
       <button @click="test">弹个框</button>
     </div>
@@ -13,6 +14,7 @@ import {defineComponent, onUnmounted, watch} from "vue";
 import {createWindow} from "../../utils/ipc";
 import Head from "../components/Head.vue";
 import {argsState, messageData} from "../../store";
+import {getExternPath} from "../../../lib";
 
 export default defineComponent({
   components: {
@@ -43,6 +45,7 @@ export default defineComponent({
       watchTest()
     })
     return {
+      getExternPath,
       test,
       toAbout
     }
