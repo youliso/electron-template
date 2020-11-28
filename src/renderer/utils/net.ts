@@ -126,7 +126,6 @@ export async function net(url: string, param: NetOpt = {}): Promise<any> {
         type: param.type || NET_RESPONSE_TYPE.TEXT,
         mode: param.mode || "cors"
     };
-    param = param || {};
     if (param.headers) sendData.headers = param.headers;
     if (param.outTime) sendData.outTime = param.outTime;
     if (param.mode) sendData.mode = param.mode;
