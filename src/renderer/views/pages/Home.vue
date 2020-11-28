@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, onUnmounted, watch} from "vue";
+import {defineComponent, onMounted, onUnmounted, watch} from "vue";
 import Head from "../components/Head.vue";
 import {argsState, messageData} from "@/renderer/store";
 import {createWindow} from "@/renderer/utils/ipc";
@@ -41,6 +41,10 @@ export default defineComponent({
         isMainWin: true
       });
     }
+
+    onMounted(async () => {
+    })
+
     onUnmounted(() => {
       watchTest()
     })
