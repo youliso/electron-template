@@ -6,7 +6,7 @@ electron & vue3
 
 ## 引入外部依赖问题
 所有外部依赖放入到 `src/lib/extern`  
-调用 `src/lib/index.ts`  内`getExternPath()` 方法可获取对应调试和打包后对应路径
+调用 `src/lib/index.ts`  内`getExternPath()` 方法可获取 调试和打包 对应路径
 
 ## 安装依赖
 运行命令
