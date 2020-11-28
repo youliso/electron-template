@@ -37,10 +37,10 @@ export const provideArgsState = (args?: WindowOpt) => provide(
  * 窗口通信消息内容
  * */
 export const messageData = reactive(<{ [key: string]: unknown }>{});
-export const addMessageData = (key: string, value: unknown) => {
+export const setMessageData = (key: string, value: unknown) => {
     messageData[key] = value;
 };
-export const delMessageData = (key: string) => {
+export const removeMessageData = (key: string) => {
     delete messageData[key];
 };
 
