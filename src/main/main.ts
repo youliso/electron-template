@@ -106,7 +106,7 @@ class Main {
             //注入初始化代码
             win.webContents.on("did-finish-load", () => {
                 args.id = win.id;
-                win.webContents.send("window-load", encodeURIComponent(JSON.stringify(args)));
+                win.webContents.send("window-load", args);
             });
             if (!app.isPackaged) win.loadURL(`http://localhost:${config.appPort}`).catch(err => Log.error(err));
             else win.loadFile(join(__dirname, "./index.html")).catch(err => Log.error(err));
