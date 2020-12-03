@@ -30,8 +30,7 @@ export function setBounds(size: number[], center?: boolean) {
         };
         if (Rectangle.width === remote.getCurrentWindow().getBounds().width &&
             Rectangle.height === remote.getCurrentWindow().getBounds().height) {
-            resolve(0);
-            return;
+            return resolve(0);
         }
         remote.getCurrentWindow().once("resize", () => {
             if (center) remote.getCurrentWindow().center();
