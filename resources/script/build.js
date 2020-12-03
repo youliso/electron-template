@@ -22,7 +22,17 @@ let nConf = {
     "updaterCacheDirName": `${name.toLowerCase()}-updater` //更新文件名称
 };
 
-/**  nsis配置  **/
+/** win打包配置 */
+config.win.requestedExecutionLevel = ["asInvoker", "highestAvailable"][0]; //应用权限
+config.win.target = [];
+config.win.target.push({ //单文件
+    "target": "portable"
+    // "arch": ["x64"]
+});
+config.win.target.push({ //nsis打包
+    "target": "nsis"
+    // "arch": ["x64"]
+});
 let nsh = "";
 if (config.nsis.allowToChangeInstallationDirectory) {
     nsh = "!macro customHeader\n" +

@@ -53,13 +53,13 @@
   },
   "win": {
     "icon": "resources/icons/icon.ico",
-    "requestedExecutionLevel": "highestAvailable",
+    "requestedExecutionLevel": "asInvoker",
     "target": [
       {
-        "target": "nsis",
-        "arch": [
-          "x64"
-        ]
+        "target": "portable"
+      },
+      {
+        "target": "nsis"
       }
     ]
   },
