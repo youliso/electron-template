@@ -1,16 +1,8 @@
 /**
- * 去除空格
- * */
-export function trim(str: string): string {
-    return str.replace(/^\s*|\s*$/g, "");
-}
-
-/**
  * 判空
  * */
-export function isNull(arg: unknown): boolean {
-    if (typeof arg === 'string') arg = trim(arg);
-    return !arg && arg !== 0 && typeof arg !== "boolean" ? true : false;
+export function isNull(o: unknown): boolean {
+    return o === "" || o === undefined || o === null || o === "undefined" || o === "null";
 }
 
 /**

@@ -12,7 +12,7 @@ export function delDir(path: string): void {
         files.forEach((file) => {
             let curPath = path + "/" + file;
             if (statSync(curPath).isDirectory()) {
-                this.delDir(curPath); //递归删除文件夹
+                delDir(curPath); //递归删除文件夹
             } else {
                 unlinkSync(curPath); //删除文件
             }
