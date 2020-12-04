@@ -7,6 +7,7 @@ const config = require("./build.json");
 config.productName = name;
 config.nsis.shortcutName = name;
 config.appId = `org.${name}`;
+config.npmRebuild = true; //是否Rebuild编译
 config.asar = true;//是否asar打包
 config.nsis.allowToChangeInstallationDirectory = true;//是否允许用户修改安装为位置
 config.publish = [{ //更新地址

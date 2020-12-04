@@ -81,5 +81,6 @@
   },
   "linux": {
     "icon": "resources/icons"
-  }
+  },
+  "npmRebuild": true
 }
