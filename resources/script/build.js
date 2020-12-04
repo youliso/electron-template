@@ -1,7 +1,10 @@
 const fs = require("fs");
 const cfg = require("./cfg.json");
-const { name } = require("../../package.json");
+const {name} = require("../../package.json");
 const config = require("./build.json");
+
+/** 调试配置 **/
+cfg.port = 3345; //本地调试渲染进程端口
 
 /**  config配置  **/
 config.productName = name;
@@ -12,7 +15,7 @@ config.asar = true;//是否asar打包
 config.nsis.allowToChangeInstallationDirectory = true;//是否允许用户修改安装为位置
 config.publish = [{ //更新地址
     provider: "generic",
-    url: "http://175.24.76.246:3000/"
+    url: "http://127.0.0.1:3000/"
 }];
 let nConf = {
     "appPort": cfg.port,
@@ -72,7 +75,7 @@ if (config.nsis.allowToChangeInstallationDirectory) {
         "    WriteRegExpandStr HKCU \"${INSTALL_REGISTRY_KEY}\" InstallLocation \"$LOCALAPPDATA\\" + name + "\"\n" +
         "!macroend";
 }
-
+fs.writeFileSync("./resources/script/cfg.json", JSON.stringify(cfg));
 fs.writeFileSync("./resources/script/build.json", JSON.stringify(config, null, 2));
 fs.writeFileSync("./resources/script/installer.nsh", nsh);
 fs.writeFileSync("./src/lib/cfg/config.json", JSON.stringify(nConf, null, 2));
