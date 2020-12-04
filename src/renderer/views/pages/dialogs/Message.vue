@@ -27,7 +27,8 @@ export default defineComponent({
     const args = argsState();
     setBounds([400, 150]);
     let cons = 0;
-    const test = () => {//测试发送 为主窗口发送消息
+
+    function test() {//测试发送 为主窗口发送消息
       let data: IpcMsg = {
         type: IPC_MSG_TYPE.WIN,
         key: "test",
@@ -36,9 +37,9 @@ export default defineComponent({
       send(data);
     }
 
-    const close = () => {
+    function close() {
       closeWindow(args.id);
-    };
+    }
 
     return {
       args: argsState(),

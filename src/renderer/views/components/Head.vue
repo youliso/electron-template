@@ -19,10 +19,12 @@ export default defineComponent({
   name: "Head",
   setup() {
     const args = argsState();
-    const close = () => {
+
+    function close() {
       if (isNull(args)) closeWindow();
       else closeWindow(args.id);
     }
+
     return {close}
   }
 });

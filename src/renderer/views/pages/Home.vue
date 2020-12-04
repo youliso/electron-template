@@ -15,6 +15,7 @@ import Head from "../components/Head.vue";
 import {argsState, messageData} from "@/renderer/store";
 import {createWindow} from "@/renderer/utils/ipc";
 import {getExternPath} from "@/lib";
+import {WindowOpt} from "@/lib/interface";
 
 export default defineComponent({
   components: {
@@ -26,20 +27,24 @@ export default defineComponent({
     let watchTest = watch(() => messageData["test"], (n, o) => { // n 为新赋值 o为旧值
       console.log(n, o)
     });
-    const test = () => {
-      createWindow({
+
+    function test() {
+      let data: WindowOpt = {
         route: "/message",
         parentId: args.id,
-        data: {text: "key不能为空"},
-      });
+        data: {text: "key不能为空"}
+      }
+      createWindow(data);
     }
-    const toAbout = () => {
-      createWindow({
+
+    function toAbout() {
+      let data: WindowOpt = {
         route: "/about",
         width: 300,
         height: 300,
         isMainWin: true
-      });
+      }
+      createWindow(data);
     }
 
     onMounted(async () => {
