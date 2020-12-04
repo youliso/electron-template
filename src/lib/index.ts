@@ -23,7 +23,7 @@ export function delDir(path: string): void {
 
 /**
  * 获取内部依赖文件路径(！文件必须都存放在lib/inside 针对打包后内部依赖文件路径问题)
- * @param path lib/extern为起点的相对路径
+ * @param path lib/inside为起点的相对路径
  * */
 export function getInsidePath(path: string): string {
     return remote.app.isPackaged ? resolve(__dirname, '../inside/' + path) : resolve('./src/lib/inside/' + path);
