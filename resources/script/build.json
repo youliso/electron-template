@@ -81,6 +81,5 @@
   },
   "linux": {
     "icon": "resources/icons"
-  },
-  "nodeGypRebuild": false
+  }
 }

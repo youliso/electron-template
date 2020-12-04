@@ -7,7 +7,6 @@ const config = require("./build.json");
 config.productName = name;
 config.nsis.shortcutName = name;
 config.appId = `org.${name}`;
-config.nodeGypRebuild = false; //是否执行 node-gyp rebuild
 config.asar = true;//是否asar打包
 config.nsis.allowToChangeInstallationDirectory = true;//是否允许用户修改安装为位置
 config.publish = [{ //更新地址
