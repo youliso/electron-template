@@ -7,12 +7,12 @@
   "author": "youliso@Hotmail.com",
   "license": "MIT",
   "scripts": {
-    "dev:renderer": "npx cross-env NODE_ENV=development webpack serve --config ./resources/script/webpack.server.js",
-    "dev:main": "npx node resources/script/build.js && npx cross-env NODE_ENV=development webpack --config ./resources/script/webpack.main.config.js && electron dist/main.bundle.js",
+    "dev:renderer": "cross-env NODE_ENV=development webpack serve --config ./resources/script/webpack.server.js",
+    "dev:main": "node resources/script/build.js && cross-env NODE_ENV=development webpack --config ./resources/script/webpack.main.config.js && electron dist/main.bundle.js",
     "dev:all": "concurrently -k -n=renderer,main -c=green,blue \"yarn run dev:renderer\" \"yarn run dev:main\"",
-    "build --win": "npx node resources/script/build.js && npx cross-env NODE_ENV=production node resources/script/webpack.config.js && electron-builder -c resources/script/build.json --win",
-    "build --linux": "npx node resources/script/build.js && npx cross-env NODE_ENV=production node resources/script/webpack.config.js && electron-builder -c resources/script/build.json --linux",
-    "build --mac": "npx node resources/script/build.js && npx cross-env NODE_ENV=production node resources/script/webpack.config.js && electron-builder -c resources/script/build.json --mac"
+    "build --win": "node resources/script/build.js && cross-env NODE_ENV=production node resources/script/webpack.config.js && electron-builder -c resources/script/build.json --win",
+    "build --linux": "node resources/script/build.js && cross-env NODE_ENV=production node resources/script/webpack.config.js && electron-builder -c resources/script/build.json --linux",
+    "build --mac": "node resources/script/build.js && cross-env NODE_ENV=production node resources/script/webpack.config.js && electron-builder -c resources/script/build.json --mac"
   },
   "devDependencies": {
     "@types/socket.io-client": "^1.4.33",
