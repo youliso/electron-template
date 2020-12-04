@@ -5,8 +5,7 @@
   "copyright": "MIT",
   "asar": true,
   "directories": {
-    "output": "out",
-    "buildResources": "lib"
+    "output": "out"
   },
   "publish": [
     {
