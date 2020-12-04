@@ -5,7 +5,8 @@
   "copyright": "MIT",
   "asar": true,
   "directories": {
-    "output": "out"
+    "output": "out",
+    "buildResources": "lib"
   },
   "publish": [
     {
@@ -16,7 +17,23 @@
   "files": [
     "out/electron/**/*",
     "node_modules/",
-    "dist/"
+    "dist/",
+    {
+      "from": "src/lib/inside",
+      "to": "inside/",
+      "filter": [
+        "**/*"
+      ]
+    }
+  ],
+  "extraResources": [
+    {
+      "from": "src/lib/extern",
+      "to": "extern/",
+      "filter": [
+        "**/*"
+      ]
+    }
   ],
   "nsis": {
     "oneClick": false,
@@ -65,5 +82,6 @@
   },
   "linux": {
     "icon": "resources/icons"
-  }
+  },
+  "nodeGypRebuild": false
 }

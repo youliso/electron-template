@@ -1,12 +1,17 @@
-# electron-vue3
-electron & vue3   
-一个多窗口模式的脚手架
+# electron-vue3 
+一个基于 `electron` & `vue3` 多窗口模式的脚手架
 
 ❗注意  `vue` or `vue-router` 版本
 
-## 引入外部依赖问题
+## 引入依赖问题
+- `外部`不会被打包进asar包内:  
 所有外部依赖放入到 `src/lib/extern`  
-调用 `src/lib/index.ts`  内`getExternPath()` 方法可获取 调试和打包 对应路径
+调用 `src/lib/index.ts`  内`getExternPath()` 方法可获取 调试和打包 对应路径   
+  
+
+- `内部` 会被打包进asar包内:  
+  所有外部依赖放入到 `src/lib/inside`  
+  调用 `src/lib/index.ts`  内`getInsidePath()` 方法可获取 调试和打包 对应路径
 
 ## 安装依赖
 运行命令

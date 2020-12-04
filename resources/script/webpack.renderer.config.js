@@ -3,7 +3,6 @@ const fs = require("fs");
 const webpack = require("webpack");
 const { name } = require("../../package.json");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
 const _externals = require("externals-dependencies");
 const miniCssExtractPlugin = require("mini-css-extract-plugin");
 const { VueLoaderPlugin } = require("vue-loader");
@@ -126,29 +125,5 @@ const config = {
         })
     ]
 };
-
-try {
-    if (fs.statSync(path.join(__dirname, "../../src/lib/extern"))) {
-        config.plugins.unshift(new CopyWebpackPlugin({
-            patterns:
-                [
-                    {
-                        from: "./src/lib/extern/**/*",
-                        to: "./lib/extern",
-                        transformPath(targetPath, absolutePath) {
-                            try {
-                                let path = targetPath.replace(/\\/g, "/");
-                                return path.replace("src/lib/extern", "");
-                            } catch (e) {
-                                return false;
-                            }
-                        }
-                    }
-                ]
-        }));
-    }
-} catch (e) {
-    console.log("... 无外部引入依赖 ...");
-}
 
 module.exports = config;

@@ -2,7 +2,8 @@
   <div class="main">
     <Head></Head>
     <div class="info">
-      <div>当前文件路径: {{ getExternPath("t.txt") }}</div>
+      <div>内部资源内容: {{ readFileSync(getInsidePath("t.txt")).toString() }}</div>
+      <div>外部资源内容: {{ readFileSync(getExternPath("t.txt")).toString() }}</div>
       <button @click="toAbout">关于</button>
       <button @click="test">弹个框</button>
     </div>
@@ -12,9 +13,10 @@
 <script lang="ts">
 import {defineComponent, onMounted, onUnmounted, watch} from "vue";
 import Head from "../components/Head.vue";
+import {readFileSync} from "fs";
 import {argsState, messageData} from "@/renderer/store";
 import {createWindow} from "@/renderer/utils/ipc";
-import {getExternPath} from "@/lib";
+import {getInsidePath,getExternPath} from "@/lib";
 import {WindowOpt} from "@/lib/interface";
 
 export default defineComponent({
@@ -55,6 +57,8 @@ export default defineComponent({
     })
 
     return {
+      readFileSync,
+      getInsidePath,
       getExternPath,
       test,
       toAbout
