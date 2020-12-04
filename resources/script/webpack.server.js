@@ -6,6 +6,7 @@ module.exports = {
     ...renderer,
     devServer: {
         contentBase: path.resolve("dist"),
+        hot: true,
         port: cfg.port
     }
 };
