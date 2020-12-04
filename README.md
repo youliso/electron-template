@@ -1,7 +1,7 @@
 # electron-vue3 
 一个基于 `electron` & `vue3` 多窗口模式的脚手架
 
-❗注意  `vue` or `vue-router` 版本
+❗注意  `vue` or `vue-router` 版本 使用的`yarn`进行管理 可自行换`npm`
 
 ## 引入依赖问题
 - `外部`不会被打包进asar包内:  
@@ -16,23 +16,23 @@
 ## 安装依赖
 运行命令
 ```shell
-npm install or yarn
+yarn
 ```
 ### 安装中的网络问题
 - `electron`:
 ```shell
-npm/yarn config set electron_mirror https://npm.taobao.org/mirrors/electron/
+yarn config set electron_mirror https://npm.taobao.org/mirrors/electron/
 ```
 
 ## 运行调试
 运行命令
 ```shell
-npm/yarn run dev:all
+yarn run dev:all
 ```
 
 ## electron builder 配置
 位于 resources/script/build.js  
 打包命令
 ```shell
-npm/yarn run build
+yarn run build
 ```

@@ -25,6 +25,7 @@ export default defineComponent({
   },
   name: "Home",
   setup() {
+    console.log(process.platform)
     const args = argsState();
     let watchTest = watch(() => messageData["test"], (n, o) => { // n 为新赋值 o为旧值
       console.log(n, o)
