@@ -80,7 +80,9 @@
     ]
   },
   "linux": {
-    "icon": "resources/icons"
+    "icon": "resources/icons",
+    "target": "pacman",
+    "executableName": "electrontemplate"
   },
   "npmRebuild": true
 }

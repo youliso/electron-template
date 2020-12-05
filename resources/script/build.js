@@ -75,6 +75,11 @@ if (config.nsis.allowToChangeInstallationDirectory) {
         "    WriteRegExpandStr HKCU \"${INSTALL_REGISTRY_KEY}\" InstallLocation \"$LOCALAPPDATA\\" + name + "\"\n" +
         "!macroend";
 }
+
+/** linux配置 **/
+config.linux.target = ["AppImage", "snap", "deb", "rpm", "pacman"][4];
+config.linux.executableName = name;
+
 fs.writeFileSync("./resources/script/cfg.json", JSON.stringify(cfg));
 fs.writeFileSync("./resources/script/build.json", JSON.stringify(config, null, 2));
 fs.writeFileSync("./resources/script/installer.nsh", nsh);

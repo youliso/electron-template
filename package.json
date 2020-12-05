@@ -4,7 +4,10 @@
   "version": "0.1.3",
   "description": "electron template",
   "main": "dist/main.bundle.js",
-  "author": "youliso@Hotmail.com",
+  "author": {
+    "name": "youliso",
+    "email": "youliso@Hotmail.com"
+  },
   "license": "MIT",
   "scripts": {
     "dev:renderer": "cross-env NODE_ENV=development webpack serve --config ./resources/script/webpack.server.js",

@@ -31,8 +31,5 @@ yarn run dev:all
 ```
 
 ## electron builder 配置
-位于 resources/script/build.js  
-打包命令
-```shell
-yarn run build
-```
+位于 resources/script/build.js 根据自己需求更改即可   
+请参考 [electron-builder](https://www.electron.build/) 文档
