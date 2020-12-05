@@ -8,11 +8,9 @@ cfg.port = 3345; //本地调试渲染进程端口
 
 /**  config配置  **/
 config.productName = name;
-config.nsis.shortcutName = name;
 config.appId = `org.${name}`;
 config.npmRebuild = true; //是否Rebuild编译
 config.asar = true;//是否asar打包
-config.nsis.allowToChangeInstallationDirectory = true;//是否允许用户修改安装为位置
 config.publish = [{ //更新地址
     provider: "generic",
     url: "http://127.0.0.1:3000/"
@@ -25,16 +23,20 @@ let nConf = {
     "updaterCacheDirName": `${name.toLowerCase()}-updater` //更新文件名称
 };
 
-/** win打包配置 */
+/** win配置 */
+config.nsis.displayLanguageSelector = false //安装包语言提示
+config.nsis.menuCategory = false; //是否创建开始菜单目录
+config.nsis.shortcutName = name;
+config.nsis.allowToChangeInstallationDirectory = true;//是否允许用户修改安装为位置
 config.win.requestedExecutionLevel = ["asInvoker", "highestAvailable"][0]; //应用权限
 config.win.target = [];
-config.win.target.push({ //单文件
-    "target": "portable"
-    // "arch": ["x64"]
-});
+// config.win.target.push({ //单文件
+//     "target": "portable"
+//     // "arch": ["x64"]
+// });
 config.win.target.push({ //nsis打包
-    "target": "nsis"
-    // "arch": ["x64"]
+    "target": "nsis",
+    "arch": ["x64"]
 });
 let nsh = "";
 if (config.nsis.allowToChangeInstallationDirectory) {

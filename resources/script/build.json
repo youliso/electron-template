@@ -47,7 +47,9 @@
     "createDesktopShortcut": true,
     "createStartMenuShortcut": true,
     "shortcutName": "electrontemplate",
-    "include": "resources/script/installer.nsh"
+    "include": "resources/script/installer.nsh",
+    "menuCategory": false,
+    "displayLanguageSelector": false
   },
   "dmg": {
     "contents": [
@@ -72,10 +74,10 @@
     "requestedExecutionLevel": "asInvoker",
     "target": [
       {
-        "target": "portable"
-      },
-      {
-        "target": "nsis"
+        "target": "nsis",
+        "arch": [
+          "x64"
+        ]
       }
     ]
   },
