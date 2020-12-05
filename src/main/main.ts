@@ -105,18 +105,18 @@ class Main {
             if (!app.isPackaged) win.webContents.openDevTools();
             //注入初始化代码
             win.webContents.on("did-finish-load", () => {
+                if (args.isMainWin) { //是否主窗口
+                    if (this.mainWin) {
+                        delete this.windows[this.mainWin.id];
+                        this.mainWin.close();
+                    }
+                    this.mainWin = win;
+                }
                 args.id = win.id;
                 win.webContents.send("window-load", args);
             });
             if (!app.isPackaged) win.loadURL(`http://localhost:${config.appPort}`).catch(err => Log.error(err));
             else win.loadFile(join(__dirname, "./index.html")).catch(err => Log.error(err));
-            if (args.isMainWin) { //是否主窗口
-                if (this.mainWin) {
-                    delete this.windows[this.mainWin.id];
-                    this.mainWin.close();
-                }
-                this.mainWin = win;
-            }
         } catch (e) {
             Log.error(e.toString())
         }
