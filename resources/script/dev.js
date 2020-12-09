@@ -47,8 +47,9 @@ function startElectron() {
         "--inspect=5858",
         "dist/main.bundle.js",
     ];
-
     electronProcess = spawn(electron, args);
+    electronProcess.stdout.on("data", data => console.log("[main:stdout]",data.toString()));
+    electronProcess.stderr.on("data", data => console.log("[main:stderr]",data.toString()))
 }
 
 async function init() {

@@ -69,57 +69,53 @@ class Main {
      * 创建窗口
      * */
     createWindow(args: WindowOpt) {
-        try {
-            for (let i in this.windows) {
-                if (this.windows[i] &&
-                    this.windows[i].route === args.route &&
-                    !this.windows[i].isMultiWindow) {
-                    BrowserWindow.fromId(Number(i)).focus();
-                    return;
-                }
+        for (let i in this.windows) {
+            if (this.windows[i] &&
+                this.windows[i].route === args.route &&
+                !this.windows[i].isMultiWindow) {
+                BrowserWindow.fromId(Number(i)).focus();
+                return;
             }
-            let opt = this.browserWindowOpt([args.width || config.appW, args.height || config.appH]);
-            if (args.parentId) {
-                opt.parent = BrowserWindow.fromId(args.parentId);
-                opt.x = parseInt((BrowserWindow.fromId(args.parentId).getPosition()[0] + ((BrowserWindow.fromId(args.parentId).getBounds().width - (args.width || args.currentWidth)) / 2)).toString());
-                opt.y = parseInt((BrowserWindow.fromId(args.parentId).getPosition()[1] + ((BrowserWindow.fromId(args.parentId).getBounds().height - (args.height || args.currentHeight)) / 2)).toString());
-            } else if (this.mainWin) {
-                opt.x = parseInt((this.mainWin.getPosition()[0] + ((this.mainWin.getBounds().width - opt.width) / 2)).toString());
-                opt.y = parseInt((this.mainWin.getPosition()[1] + ((this.mainWin.getBounds().height - opt.height) / 2)).toString());
-            }
-            opt.modal = args.modal || false;
-            opt.resizable = args.resizable || false;
-            let win = new BrowserWindow(opt);
-            this.windows[win.id] = {
-                route: args.route,
-                isMultiWindow: args.isMultiWindow
-            };
-            // //window加载完毕后显示
-            win.once("ready-to-show", () => win.show());
-            //默认浏览器打开跳转连接
-            win.webContents.on("new-window", async (event, url) => {
-                event.preventDefault();
-                await shell.openExternal(url);
-            });
-            // 打开开发者工具
-            if (!app.isPackaged) win.webContents.openDevTools();
-            //注入初始化代码
-            win.webContents.on("did-finish-load", () => {
-                if (args.isMainWin) { //是否主窗口
-                    if (this.mainWin) {
-                        delete this.windows[this.mainWin.id];
-                        this.mainWin.close();
-                    }
-                    this.mainWin = win;
-                }
-                args.id = win.id;
-                win.webContents.send("window-load", args);
-            });
-            if (!app.isPackaged) win.loadURL(`http://localhost:${config.appPort}`).catch(err => Log.error(err));
-            else win.loadFile(join(__dirname, "./index.html")).catch(err => Log.error(err));
-        } catch (e) {
-            Log.error(e.toString())
         }
+        let opt = this.browserWindowOpt([args.width || config.appW, args.height || config.appH]);
+        if (args.parentId) {
+            opt.parent = BrowserWindow.fromId(args.parentId);
+            opt.x = parseInt((BrowserWindow.fromId(args.parentId).getPosition()[0] + ((BrowserWindow.fromId(args.parentId).getBounds().width - (args.width || args.currentWidth)) / 2)).toString());
+            opt.y = parseInt((BrowserWindow.fromId(args.parentId).getPosition()[1] + ((BrowserWindow.fromId(args.parentId).getBounds().height - (args.height || args.currentHeight)) / 2)).toString());
+        } else if (this.mainWin) {
+            opt.x = parseInt((this.mainWin.getPosition()[0] + ((this.mainWin.getBounds().width - opt.width) / 2)).toString());
+            opt.y = parseInt((this.mainWin.getPosition()[1] + ((this.mainWin.getBounds().height - opt.height) / 2)).toString());
+        }
+        opt.modal = args.modal || false;
+        opt.resizable = args.resizable || false;
+        let win = new BrowserWindow(opt);
+        this.windows[win.id] = {
+            route: args.route,
+            isMultiWindow: args.isMultiWindow
+        };
+        // //window加载完毕后显示
+        win.once("ready-to-show", () => win.show());
+        //默认浏览器打开跳转连接
+        win.webContents.on("new-window", async (event, url) => {
+            event.preventDefault();
+            await shell.openExternal(url);
+        });
+        // 打开开发者工具
+        if (!app.isPackaged) win.webContents.openDevTools();
+        //注入初始化代码
+        win.webContents.on("did-finish-load", () => {
+            if (args.isMainWin) { //是否主窗口
+                if (this.mainWin) {
+                    delete this.windows[this.mainWin.id];
+                    this.mainWin.close();
+                }
+                this.mainWin = win;
+            }
+            args.id = win.id;
+            win.webContents.send("window-load", args);
+        });
+        if (!app.isPackaged) win.loadURL(`http://localhost:${config.appPort}`).catch(err => Log.error(err));
+        else win.loadFile(join(__dirname, "./index.html")).catch(err => Log.error(err));
     }
 
     /**
@@ -133,27 +129,23 @@ class Main {
      * 创建托盘
      * */
     async createTray() {
-        try {
-            const contextMenu = Menu.buildFromTemplate([{
-                label: "显示",
-                click: () => {
-                    for (let i in this.windows) if (this.windows[i]) BrowserWindow.fromId(Number(i)).show();
-                }
-            }, {
-                label: "退出",
-                click: () => {
-                    app.quit();
-                }
-            }]);
-            this.appTray = new Tray(join(__dirname, `./${ico}`));
-            this.appTray.setContextMenu(contextMenu);
-            this.appTray.setToolTip(app.name);
-            this.appTray.on("double-click", () => {
+        const contextMenu = Menu.buildFromTemplate([{
+            label: "显示",
+            click: () => {
                 for (let i in this.windows) if (this.windows[i]) BrowserWindow.fromId(Number(i)).show();
-            })
-        } catch (e) {
-            Log.error(e);
-        }
+            }
+        }, {
+            label: "退出",
+            click: () => {
+                app.quit();
+            }
+        }]);
+        this.appTray = new Tray(join(__dirname, `./${ico}`));
+        this.appTray.setContextMenu(contextMenu);
+        this.appTray.setToolTip(app.name);
+        this.appTray.on("double-click", () => {
+            for (let i in this.windows) if (this.windows[i]) BrowserWindow.fromId(Number(i)).show();
+        })
     }
 
     /**
