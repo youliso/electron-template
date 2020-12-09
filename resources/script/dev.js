@@ -44,12 +44,14 @@ async function startMain() {
 
 function startElectron() {
     const args = [
-        "--inspect=5858",
         "dist/main.bundle.js",
     ];
     electronProcess = spawn(electron, args);
-    electronProcess.stdout.on("data", data => console.log("[main:stdout]",data.toString()));
-    electronProcess.stderr.on("data", data => console.log("[main:stderr]",data.toString()))
+    electronProcess.stdout.on("data", data => console.log("[main:stdout]", data.toString()));
+    electronProcess.stderr.on("data", data => console.log("[main:stderr]", data.toString()))
+    electronProcess.on("close", (e) => {
+        if (e === 0) startElectron();
+    });
 }
 
 async function init() {
