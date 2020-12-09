@@ -1,12 +1,14 @@
 export interface WindowOpt {
     id?: number; //唯一id
-    width?: number; //父类窗口宽度
-    height?: number; //父类窗口高度
+    currentWidth?: number; //父类窗口宽度
+    currentHeight?: number; //父类窗口高度
+    width?: number;
+    height?: number;
     route?: string; // 页面路由
     resizable?: boolean; //是否支持调整窗口大小
     data?: unknown; //数据
     isMultiWindow?: boolean; //是否支持多窗口
-    isMainWin?: boolean; //是否主窗口
+    isMainWin?: boolean; //是否主窗口(当为true时会替代当前主窗口)
     parentId?: number; //父窗口id
     modal?: boolean; //父窗口置顶
 }

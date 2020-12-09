@@ -78,14 +78,14 @@ class Main {
                     return;
                 }
             }
-            let opt = this.browserWindowOpt([args.width, args.height]);
+            let opt = this.browserWindowOpt([args.width || config.appW, args.height || config.appH]);
             if (args.parentId) {
                 opt.parent = BrowserWindow.fromId(args.parentId);
-                opt.x = parseInt((BrowserWindow.fromId(args.parentId).getPosition()[0] + ((BrowserWindow.fromId(args.parentId).getBounds().width - args.width) / 2)).toString());
-                opt.y = parseInt((BrowserWindow.fromId(args.parentId).getPosition()[1] + ((BrowserWindow.fromId(args.parentId).getBounds().height - args.height) / 2)).toString());
+                opt.x = parseInt((BrowserWindow.fromId(args.parentId).getPosition()[0] + ((BrowserWindow.fromId(args.parentId).getBounds().width - (args.width || args.currentWidth)) / 2)).toString());
+                opt.y = parseInt((BrowserWindow.fromId(args.parentId).getPosition()[1] + ((BrowserWindow.fromId(args.parentId).getBounds().height - (args.height || args.currentHeight)) / 2)).toString());
             } else if (this.mainWin) {
-                opt.x = parseInt((this.mainWin.getPosition()[0] + ((this.mainWin.getBounds().width - args.width) / 2)).toString());
-                opt.y = parseInt((this.mainWin.getPosition()[1] + ((this.mainWin.getBounds().height - args.height) / 2)).toString());
+                opt.x = parseInt((this.mainWin.getPosition()[0] + ((this.mainWin.getBounds().width - opt.width) / 2)).toString());
+                opt.y = parseInt((this.mainWin.getPosition()[1] + ((this.mainWin.getBounds().height - opt.height) / 2)).toString());
             }
             opt.modal = args.modal || false;
             opt.resizable = args.resizable || false;
@@ -211,7 +211,7 @@ class Main {
             })
         }
         app.whenReady().then(() => {
-            this.createWindow({isMainWin: true, width: 0, height: 0});
+            this.createWindow({isMainWin: true});
             this.createTray();
         });
         app.on("window-all-closed", () => {
@@ -221,7 +221,7 @@ class Main {
         })
         app.on("activate", () => {
             if (BrowserWindow.getAllWindows().length === 0) {
-                this.createWindow({isMainWin: true, width: 0, height: 0});
+                this.createWindow({isMainWin: true});
             }
         })
         //获得焦点时发出

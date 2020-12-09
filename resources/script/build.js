@@ -2,6 +2,10 @@ const fs = require("fs");
 const cfg = require("./cfg.json");
 const {name} = require("../../package.json");
 const config = require("./build.json");
+const webpack = require("webpack");
+const path = require('path');
+const main = require('./webpack.main.config'); //主进程
+const renderer = require('./webpack.renderer.config'); //子进程
 
 /** 调试配置 **/
 cfg.port = 3345; //本地调试渲染进程端口
@@ -16,6 +20,8 @@ config.publish = [{ //更新地址
     url: "http://127.0.0.1:3000/"
 }];
 let nConf = {
+    "appW": 800, //app默认宽
+    "appH": 600, //app默认高
     "appPort": cfg.port,
     "appUrl": "http://127.0.0.1:3000/", //程序主访问地址
     "socketUrl": "http://127.0.0.1:3000/",// 程序socket访问地址
@@ -26,7 +32,7 @@ let nConf = {
 /** win配置 */
 config.nsis.displayLanguageSelector = false //安装包语言提示
 config.nsis.menuCategory = false; //是否创建开始菜单目录
-config.nsis.shortcutName = name;
+config.nsis.shortcutName = name; //快捷方式名称(可中文)
 config.nsis.allowToChangeInstallationDirectory = true;//是否允许用户修改安装为位置
 config.win.requestedExecutionLevel = ["asInvoker", "highestAvailable"][0]; //应用权限
 config.win.target = [];
@@ -86,3 +92,32 @@ fs.writeFileSync("./resources/script/cfg.json", JSON.stringify(cfg));
 fs.writeFileSync("./resources/script/build.json", JSON.stringify(config, null, 2));
 fs.writeFileSync("./resources/script/installer.nsh", nsh);
 fs.writeFileSync("./src/lib/cfg/config.json", JSON.stringify(nConf, null, 2));
+
+function deleteFolderRecursive(url) {
+    let files = [];
+    if (fs.existsSync(url)) {
+        files = fs.readdirSync(url);
+        files.forEach(function (file, index) {
+            let curPath = path.join(url, file);
+            if (fs.statSync(curPath).isDirectory()) { // recurse
+                deleteFolderRecursive(curPath);
+            } else {
+                fs.unlinkSync(curPath);
+            }
+        });
+        fs.rmdirSync(url);
+    } else {
+        console.log("...");
+    }
+}
+deleteFolderRecursive(path.resolve('dist'));//清除dist
+webpack([
+    {...main},
+    {...renderer}
+], (err, stats) => {
+    if (err || stats.hasErrors()) {
+        // 在这里处理错误
+        throw err;
+    }
+    console.log('ok')
+});

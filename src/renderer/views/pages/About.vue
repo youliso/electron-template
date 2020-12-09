@@ -25,8 +25,6 @@ export default defineComponent({
     function toHome() {
       createWindow({
         route: "/",
-        width: 500,
-        height: 300,
         isMainWin: true
       });
     }

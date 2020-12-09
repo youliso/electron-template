@@ -24,7 +24,7 @@ class Log {
         else return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
     }
 
-    info(val: string): void {
+    info<T>(val: T): void {
         try {
             statSync(this.logFile + `/info-${this.format()}.log`);
         } catch (e) {
@@ -33,7 +33,7 @@ class Log {
         appendFileSync(this.logFile + `/info-${this.format()}.log`, `[${this.format(true)}] [info] ${val}\r\n`);
     }
 
-    error(val: string): void {
+    error<T>(val: T): void {
         try {
             statSync(this.logFile + `/error-${this.format()}.log`);
         } catch (e) {
