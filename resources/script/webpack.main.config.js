@@ -1,11 +1,8 @@
 const path = require("path");
-const webpack = require("webpack");
 const _externals = require("externals-dependencies");
-
 const isEnvProduction = process.env.NODE_ENV === "production";
 const isEnvDevelopment = process.env.NODE_ENV === "development";
-module.exports = {
-    devtool: isEnvDevelopment ? "source-map" : false,
+const config = {
     mode: isEnvProduction ? "production" : "development",
     target: "electron-main",
     externals: _externals(),
@@ -46,13 +43,7 @@ module.exports = {
     },
     optimization: {
         minimize: true
-    },
-    plugins: [
-        new webpack.DefinePlugin({
-            "process.env": {
-                NODE_ENV: JSON.stringify(isEnvProduction ? "production" : "development")
-            },
-            "__VUE_PROD_DEVTOOLS__": JSON.stringify(false)
-        })
-    ]
+    }
 };
+if (isEnvDevelopment) config.devtool = "source-map";
+module.exports = config;

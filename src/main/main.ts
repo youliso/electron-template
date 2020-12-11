@@ -32,6 +32,7 @@ class Main {
     private mainWin: BrowserWindow = null; //当前主页
     private windows: { [id: number]: WindowOpt } = {}; //窗口组
     private appTray: Tray = null; //托盘
+    // @ts-ignore
     private socket: SocketIOClient.Socket = null; //socket
 
     static getInstance() {
@@ -152,6 +153,7 @@ class Main {
      * 创建Socket
      * */
     async createSocket() {
+        // @ts-ignore
         this.socket = Socket.connect(config.socketUrl, {query: `Authorization=${global.sharedObject["Authorization"]}`});
         this.socket.on("connect", () => Log.info("[Socket]connect"));
         // @ts-ignore

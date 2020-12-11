@@ -17,7 +17,6 @@
     "build:mac": "cross-env NODE_ENV=production node resources/script/build.js && electron-builder -c resources/script/build.json --mac"
   },
   "devDependencies": {
-    "@types/socket.io-client": "^1.4.34",
     "@vue/compiler-sfc": "^3.0.4",
     "cross-env": "^7.0.2",
     "css-loader": "^5.0.1",
