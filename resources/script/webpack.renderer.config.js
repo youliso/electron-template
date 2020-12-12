@@ -2,7 +2,6 @@ const path = require("path");
 const webpack = require("webpack");
 const {name} = require("../../package.json");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const _externals = require("externals-dependencies");
 const miniCssExtractPlugin = require("mini-css-extract-plugin");
 const {VueLoaderPlugin} = require("vue-loader");
 const isEnvProduction = process.env.NODE_ENV === "production";
@@ -10,7 +9,6 @@ const isEnvDevelopment = process.env.NODE_ENV === "development";
 const config = {
     mode: isEnvProduction ? "production" : "development",
     target: "electron-renderer",
-    externals: _externals(),
     entry: {
         app: "./src/renderer/index.ts"
     },

@@ -1,11 +1,9 @@
 const path = require("path");
-const _externals = require("externals-dependencies");
 const isEnvProduction = process.env.NODE_ENV === "production";
 const isEnvDevelopment = process.env.NODE_ENV === "development";
 const config = {
     mode: isEnvProduction ? "production" : "development",
     target: "electron-main",
-    externals: _externals(),
     entry: {
         main: "./src/main/main.ts"
     },
