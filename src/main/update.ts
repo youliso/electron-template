@@ -46,10 +46,10 @@ export class Updates {
             provider: 'generic',
             url: config.updateFileUrl
         });
-        this.autoUpdater.on("error", () => messageBack.call(message.error));
-        this.autoUpdater.on("checking-for-update", () => messageBack.call(message.checking));
-        this.autoUpdater.on("update-available", () => messageBack.call(message.updateAva));
-        this.autoUpdater.on("update-not-available", () => messageBack.call(message.updateNotAva));
+        this.autoUpdater.on("error", () => messageBack(message.error));
+        this.autoUpdater.on("checking-for-update", () => messageBack(message.checking));
+        this.autoUpdater.on("update-available", () => messageBack(message.updateAva));
+        this.autoUpdater.on("update-not-available", () => messageBack(message.updateNotAva));
         // 更新下载进度事件
         this.autoUpdater.on("download-progress", (progressObj) => messageBack({
             key: "update-download",
