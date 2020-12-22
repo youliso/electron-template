@@ -296,7 +296,7 @@ class Main {
             })
         });
         //重新检查更新 isDel 是否删除历史更新缓存
-        ipcMain.on("update-recheck", async (event, isDel) => this.updates.checkUpdate(isDel));
+        ipcMain.on("update-recheck", (event, isDel) => this.updates.checkUpdate(isDel));
         // 关闭程序安装新的软件 isSilent 是否静默更新
         ipcMain.on("update-quit-install", (event, isSilent) => this.updates.updateQuitInstall(isSilent));
 
