@@ -8,11 +8,11 @@ import {
     Tray,
     BrowserWindowConstructorOptions, Menu
 } from "electron";
-import * as Socket from "socket.io-client";
 import Log from "@/lib/log";
 import ico from "@/assets/icon.ico";
 import {IPC_MSG_TYPE, SOCKET_MSG_TYPE, WindowOpt} from "@/lib/interface";
-import {Update} from "./update";
+import {Updates} from "./update";
+import {Sockets} from "./socket";
 
 const config = require("@/lib/cfg/config.json");
 
@@ -32,8 +32,8 @@ class Main {
     private mainWin: BrowserWindow = null; //当前主页
     private windows: { [id: number]: WindowOpt } = {}; //窗口组
     private appTray: Tray = null; //托盘
-    // @ts-ignore
-    private socket: SocketIOClient.Socket = null; //socket
+    private socket = new Sockets();
+    private updates = new Updates();
 
     static getInstance() {
         if (!Main.instance) Main.instance = new Main();
@@ -150,45 +150,6 @@ class Main {
     }
 
     /**
-     * 创建Socket
-     * */
-    async createSocket() {
-        // @ts-ignore
-        this.socket = Socket.connect(config.socketUrl, {query: `Authorization=${global.sharedObject["Authorization"]}`});
-        this.socket.on("connect", () => Log.info("[Socket]connect"));
-        // @ts-ignore
-        this.socket.on("message", data => {
-            if (data.type === SOCKET_MSG_TYPE.ERROR) {
-                this.createWindow({
-                    route: "/message",
-                    isMainWin: true,
-                    data: {
-                        title: "提示",
-                        text: data.value
-                    },
-                });
-                setTimeout(() => {
-                    this.closeAllWindow();
-                }, 10000)
-            }
-            for (let i in this.windows) if (this.windows[i]) BrowserWindow.fromId(Number(i)).webContents.send("message-back", data);
-        });
-        // @ts-ignore
-        this.socket.on("error", msg => {
-            Log.info(`[Socket]error ${msg.toString()}`);
-        });
-        this.socket.on("disconnect", () => {
-            Log.info("[Socket]disconnect");
-            setTimeout(() => {
-                if (this.socket && this.socket.io.readyState === "closed") this.socket.open()
-            }, 1000 * 60 * 3)
-        });
-        this.socket.on("close", () => {
-            Log.info("[Socket]close");
-        });
-    }
-
-    /**
      * 初始化并加载
      * */
     async init() {
@@ -295,22 +256,49 @@ class Main {
         });
         //创建窗口
         ipcMain.on("window-new", (event, args) => this.createWindow(args));
+
         /**
          * socket
          * */
         //初始化
-        ipcMain.on("socket-init", async () => {
-            if (!this.socket) await this.createSocket();
+        ipcMain.on("socket-open", async () => {
+            if (!this.socket) {
+                this.socket.open((data: any) => {
+                    if (data.type === SOCKET_MSG_TYPE.ERROR) {
+                        this.createWindow({
+                            route: "/message",
+                            isMainWin: true,
+                            data: {
+                                title: "提示",
+                                text: data.value
+                            },
+                        });
+                        setTimeout(() => {
+                            this.closeAllWindow();
+                        }, 10000)
+                    }
+                    for (let i in this.windows) if (this.windows[i]) BrowserWindow.fromId(Number(i)).webContents.send("message-back", data);
+                })
+            }
         });
         //重新连接
-        ipcMain.on("socket-reconnection", async () => {
-            if (this.socket && this.socket.io.readyState === "closed") this.socket.open();
-        });
+        ipcMain.on("socket-reconnection", async () => this.socket.reconnection());
+        //关闭
+        ipcMain.on("socket-reconnection", async () => this.socket.close());
 
         /**
          * 检查更新
          * */
-        ipcMain.on("update", (event, winId) => new Update(winId));
+        //开启更新监听
+        ipcMain.on("update-check", () => {
+            this.updates.checkForUpdates((data: any) => { //更新消息
+                for (let i in this.windows) if (this.windows[i]) BrowserWindow.fromId(Number(i)).webContents.send("message-back", data);
+            })
+        });
+        //重新检查更新 isDel 是否删除历史更新缓存
+        ipcMain.on("update-recheck", async (event, isDel) => this.updates.checkUpdate(isDel));
+        // 关闭程序安装新的软件 isSilent 是否静默更新
+        ipcMain.on("update-quit-install", (event, isSilent) => this.updates.updateQuitInstall(isSilent));
 
         /**
          * 全局变量赋值
@@ -326,7 +314,7 @@ class Main {
                     for (let i in this.windows) if (this.windows[i]) BrowserWindow.fromId(Number(i)).webContents.send("message-back", args);
                     break;
                 case IPC_MSG_TYPE.SOCKET:
-                    if (this.socket && this.socket.io.readyState === "open") this.socket.send(args);
+                    if (this.socket.io && this.socket.io.io._readyState === "open") this.socket.io.send(args);
                     break;
             }
         });
