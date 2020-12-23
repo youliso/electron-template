@@ -11,7 +11,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "cross-env NODE_ENV=development node ./resources/script/dev.js",
-    "rebuild": "cross-env NODE_ENV=development node ./resources/script/rebuild.js",
+    "npm:rebuild": "cross-env NODE_ENV=npm node ./resources/script/rebuild.js",
+    "electron:rebuild": "cross-env NODE_ENV=electron node ./resources/script/rebuild.js",
     "build:win": "cross-env NODE_ENV=production node resources/script/build.js && electron-builder -c resources/script/build.json --win",
     "build:linux": "cross-env NODE_ENV=production node resources/script/build.js && electron-builder -c resources/script/build.json --linux",
     "build:mac": "cross-env NODE_ENV=production node resources/script/build.js && electron-builder -c resources/script/build.json --mac"
@@ -22,6 +23,7 @@
     "css-loader": "^5.0.1",
     "electron": "^11.1.1",
     "electron-builder": "^22.9.1",
+    "electron-rebuild": "^2.3.4",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^4.5.0",
     "mini-css-extract-plugin": "^1.3.3",
