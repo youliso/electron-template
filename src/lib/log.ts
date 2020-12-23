@@ -1,5 +1,6 @@
 import {statSync, writeFileSync, mkdirSync, appendFileSync} from "fs";
 import {resolve} from "path";
+import {dateFormat} from "./"
 
 class Log {
     private static instance: Log;
@@ -18,28 +19,24 @@ class Log {
         }
     }
 
-    format(is?: boolean): string {
-        let date = new Date();
-        if (is) return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
-        else return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-    }
-
     info<T>(val: T): void {
+        let date = dateFormat();
         try {
-            statSync(this.logFile + `/info-${this.format()}.log`);
+            statSync(this.logFile + `/info-${date}.log`);
         } catch (e) {
-            writeFileSync(this.logFile + `/info-${this.format()}.log`, "");
+            writeFileSync(this.logFile + `/info-${date}.log`, "");
         }
-        appendFileSync(this.logFile + `/info-${this.format()}.log`, `[${this.format(true)}] [info] ${val}\r\n`);
+        appendFileSync(this.logFile + `/info-${date}.log`, `[${dateFormat('yy-MM-dd hh:mm:ss')}] [info] ${val}\r\n`);
     }
 
     error<T>(val: T): void {
+        let date = dateFormat();
         try {
-            statSync(this.logFile + `/error-${this.format()}.log`);
+            statSync(this.logFile + `/error-${date}.log`);
         } catch (e) {
-            writeFileSync(this.logFile + `/error-${this.format()}.log`, "");
+            writeFileSync(this.logFile + `/error-${date}.log`, "");
         }
-        appendFileSync(this.logFile + `/error-${this.format()}.log`, `[${this.format(true)}] [error] ${val}\r\n`);
+        appendFileSync(this.logFile + `/error-${date}.log`, `[${dateFormat('yy-MM-dd hh:mm:ss')}] [error] ${val}\r\n`);
     }
 }
 

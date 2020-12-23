@@ -12,7 +12,7 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import {argsState} from "@/renderer/store";
-import {isNull} from "@/renderer/utils/tool";
+import {isNull} from "@/lib";
 import {closeWindow} from "@/renderer/utils/ipc";
 
 export default defineComponent({
