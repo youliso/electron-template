@@ -28,10 +28,17 @@ export const delExclude = (key: string) => {
 export const argsSymbol = Symbol("args");
 export const createArgs = (args?: WindowOpt) => reactive(args);
 export const argsState = (): WindowOpt => inject(argsSymbol);
-export const provideArgsState = (args?: WindowOpt) => provide(
-    argsSymbol,
-    createArgs(args)
+
+/**
+ * 创建全局provide
+ * @param key 唯一标识
+ * @param args
+ */
+export const provideState = (key: symbol, args: { [key: string]: unknown }) => provide(
+    key,
+    reactive(args)
 );
+export const getProvideState = (key: symbol) => inject(key);
 
 /**
  * 窗口通信消息内容
