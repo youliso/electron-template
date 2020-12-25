@@ -10,7 +10,7 @@
   
 
 - `内部` 会被打包进asar包内:  
-  所有外部依赖放入到 `src/lib/inside`  
+  所有内部依赖放入到 `src/lib/inside`  
   调用 `src/lib/index.ts`  内`getInsidePath()` 方法可获取 调试和打包 对应路径
 
 ## 安装依赖
