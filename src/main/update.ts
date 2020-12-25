@@ -37,10 +37,10 @@ export class Updates {
             updateAva: {key: "update-message", value: {code: 2, msg: "检测到新版本,正在下载"}},
             updateNotAva: {key: "update-message", value: {code: 3, msg: "现在使用的就是最新版本,不用更新"}}
         };
-        // 本地开发环境，改变app-update.yml地址
-        if (process.env.NODE_ENV === 'development' && !(process.platform === 'darwin')) {
-            this.autoUpdater.updateConfigPath = join(__dirname, 'out/win-unpacked/resources/app-update.yml')
-        }
+        // // 本地开发环境，改变app-update.yml地址
+        // if (process.env.NODE_ENV === 'development' && !(process.platform === 'darwin')) {
+        //     this.autoUpdater.updateConfigPath = join(__dirname, 'out/win-unpacked/resources/app-update.yml')
+        // }
         // 这里的URL就是更新服务器的放置文件的地址
         this.autoUpdater.setFeedURL({
             provider: 'generic',

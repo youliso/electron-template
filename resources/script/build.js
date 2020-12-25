@@ -15,10 +15,6 @@ config.productName = name;
 config.appId = `org.${name}`;
 config.npmRebuild = true; //是否Rebuild编译
 config.asar = true;//是否asar打包
-config.publish = [{ //更新地址
-    provider: "generic",
-    url: "http://127.0.0.1:3000/"
-}];
 let nConf = {
     "appW": 800, //app默认宽
     "appH": 600, //app默认高
