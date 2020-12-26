@@ -87,19 +87,18 @@ export function readLine(path: string, index?: number): Promise<string | any[]> 
     if (path.substr(0, 1) !== "/") path = resolve(path);
     const io = createInterface({
         input: fs.createReadStream(path)
-    })
-    switch (index) {
-        case -1:
-            return new Promise((resolve) => {
+    });
+    return new Promise((resolve) => {
+        switch (index) {
+            case -1:
                 io.on('line', (line) => {
                     line = line.replace(/(^\s*)|(\s*$)/g, "");
                     io.close();
                     if (isNull(line)) line = null;
                     resolve(line);
                 });
-            });
-        default:
-            return new Promise((resolve) => {
+                break;
+            default:
                 let indes = 0;
                 let data: any[] = [];
                 io.on('line', (line) => {
@@ -113,17 +112,15 @@ export function readLine(path: string, index?: number): Promise<string | any[]> 
                     }
                 });
                 io.on('close', () => resolve(data));
-            })
-    }
+        }
+    });
 }
-
 
 /**
  * 覆盖数据到文件
  * @return 0 失败 1 成功
  */
 export async function writeFile(path: string, data: string | Buffer, options?: { encoding?: BufferEncoding; mode?: number | string; flag?: string; }) {
-    console.log(data)
     if (path.substr(0, 1) !== "/") path = resolve(path);
     if (await access(path) === 0) fs.mkdirSync(dirname(path), {recursive: true});
     return new Promise((resolve) =>
