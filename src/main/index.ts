@@ -1,10 +1,5 @@
 import {resolve} from "path";
-import {
-    app,
-    BrowserWindow,
-    globalShortcut,
-    ipcMain,
-} from "electron";
+import {app, globalShortcut, ipcMain} from "electron";
 import {IPC_MSG_TYPE, SOCKET_MSG_TYPE} from "@/lib/interface";
 import {Window} from "./window";
 import {Updates} from "./update";
@@ -55,7 +50,7 @@ class Init {
             }
         })
         app.on("activate", () => {
-            if (BrowserWindow.getAllWindows().length === 0) {
+            if (this.window.getAllWindows().length === 0) {
                 this.window.createWindow({isMainWin: true});
             }
         })
