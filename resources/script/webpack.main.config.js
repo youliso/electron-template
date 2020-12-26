@@ -5,7 +5,7 @@ const config = {
     mode: isEnvProduction ? "production" : "development",
     target: "electron-main",
     entry: {
-        main: "./src/main/main.ts"
+        main: "./src/main/index.ts"
     },
     output: {
         filename: "[name].bundle.js",

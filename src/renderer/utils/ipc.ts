@@ -5,8 +5,7 @@ import {IpcMsg, WindowOpt} from "@/lib/interface";
 /**
  * 渲染进程初始化 (i)
  * */
-export async function Init() {
-    messageBack();
+export async function windowLoad() {
     return new Promise(resolve => ipcRenderer.once("window-load", async (event, args) => resolve(args)))
 }
 
