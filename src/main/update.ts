@@ -1,7 +1,7 @@
 import {join} from "path";
 import {AppUpdater, autoUpdater} from "electron-updater";
 import Log from "@/lib/log";
-import {delDir} from "@/lib";
+import {delDir} from "@/lib/file";
 
 const config = require("@/lib/cfg/config.json");
 

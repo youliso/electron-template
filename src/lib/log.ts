@@ -1,6 +1,7 @@
 import {statSync, writeFileSync, mkdirSync, appendFileSync} from "fs";
 import {resolve} from "path";
-import {dateFormat} from "./"
+import {dateFormat} from "./";
+import {EOL} from "os";
 
 class Log {
     private static instance: Log;
@@ -26,7 +27,7 @@ class Log {
         } catch (e) {
             writeFileSync(this.logFile + `/info-${date}.log`, "");
         }
-        appendFileSync(this.logFile + `/info-${date}.log`, `[${dateFormat('yy-MM-dd hh:mm:ss')}] [info] ${val}\r\n`);
+        appendFileSync(this.logFile + `/info-${date}.log`, `[${dateFormat('yy-MM-dd hh:mm:ss')}] [info] ${val}${EOL}`);
     }
 
     error<T>(val: T): void {
@@ -36,7 +37,7 @@ class Log {
         } catch (e) {
             writeFileSync(this.logFile + `/error-${date}.log`, "");
         }
-        appendFileSync(this.logFile + `/error-${date}.log`, `[${dateFormat('yy-MM-dd hh:mm:ss')}] [error] ${val}\r\n`);
+        appendFileSync(this.logFile + `/error-${date}.log`, `[${dateFormat('yy-MM-dd hh:mm:ss')}] [error] ${val}${EOL}`);
     }
 }
 
