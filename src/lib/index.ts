@@ -1,21 +1,24 @@
-import {existsSync, readdirSync, rmdirSync, statSync, unlinkSync} from "fs";
 import {resolve} from "path";
 import {remote} from "electron";
 
 /**
  * 获取内部依赖文件路径(！文件必须都存放在lib/inside 针对打包后内部依赖文件路径问题)
  * @param path lib/inside为起点的相对路径
+ * @param isMain 是否主进程
  * */
-export function getInsidePath(path: string): string {
-    return remote.app.isPackaged ? resolve(__dirname, '../inside/' + path) : resolve('./src/lib/inside/' + path);
+export function getInsidePath(path: string, isMain: boolean = false): string {
+    if (isMain) return global.sharedObject["isPackaged"] ? resolve(__dirname, '../inside/' + path) : resolve('./src/lib/inside/' + path);
+    else return remote.getGlobal("sharedObject")["isPackaged"] ? resolve(__dirname, '../inside/' + path) : resolve('./src/lib/inside/' + path);
 }
 
 /**
  * 获取外部依赖文件路径(！文件必须都存放在lib/extern下 针对打包后外部依赖文件路径问题)
  * @param path lib/extern为起点的相对路径
+ * @param isMain 是否主进程
  * */
-export function getExternPath(path: string): string {
-    return remote.app.isPackaged ? resolve(__dirname, '../../extern/' + path) : resolve('./src/lib/extern/' + path);
+export function getExternPath(path: string, isMain: boolean = false): string {
+    if (isMain) return global.sharedObject["isPackaged"] ? resolve(__dirname, '../../extern/' + path) : resolve('./src/lib/extern/' + path);
+    else return remote.getGlobal("sharedObject")["isPackaged"] ? resolve(__dirname, '../../extern/' + path) : resolve('./src/lib/extern/' + path);
 }
 
 /**
@@ -47,13 +50,13 @@ export function swapArr<T>(arr: T[], index1: number, index2: number): void {
 export function dateFormat(fmt: string = 'yyyy-MM-dd'): string {
     let date = new Date();
     let o: { [key: string]: unknown } = {
-        "M+" : date.getMonth()+1,                 //月份
-        "d+" : date.getDate(),                    //日
-        "h+" : date.getHours(),                   //小时
-        "m+" : date.getMinutes(),                 //分
-        "s+" : date.getSeconds(),                 //秒
-        "q+" : Math.floor((date.getMonth()+3)/3), //季度
-        "S"  : date.getMilliseconds()             //毫秒
+        "M+": date.getMonth() + 1,                 //月份
+        "d+": date.getDate(),                    //日
+        "h+": date.getHours(),                   //小时
+        "m+": date.getMinutes(),                 //分
+        "s+": date.getSeconds(),                 //秒
+        "q+": Math.floor((date.getMonth() + 3) / 3), //季度
+        "S": date.getMilliseconds()             //毫秒
     };
     if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
     for (let k in o)

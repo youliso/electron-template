@@ -11,12 +11,12 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, onMounted, onUnmounted, watch} from "vue";
+import {defineComponent, onUnmounted, watch} from "vue";
 import Head from "../components/Head.vue";
 import {readFileSync} from "fs";
 import {argsState, messageData} from "@/renderer/store";
-import {createWindow} from "@/renderer/utils/ipc";
-import {getInsidePath,getExternPath} from "@/lib";
+import {createWindow, getGlobal} from "@/renderer/utils/ipc";
+import {getInsidePath, getExternPath} from "@/lib";
 import {WindowOpt} from "@/lib/interface";
 
 export default defineComponent({
@@ -25,7 +25,6 @@ export default defineComponent({
   },
   name: "Home",
   setup() {
-    console.log(process.platform)
     const args = argsState();
     let watchTest = watch(() => messageData["test"], (n, o) => { // n 为新赋值 o为旧值
       console.log(n, o)
@@ -35,7 +34,7 @@ export default defineComponent({
       let data: WindowOpt = {
         route: "/message",
         parentId: args.id,
-        data: {text: "key不能为空"}
+        data: {text: getGlobal("setting")}
       }
       createWindow(data);
     }
@@ -49,9 +48,6 @@ export default defineComponent({
       }
       createWindow(data);
     }
-
-    onMounted(async () => {
-    })
 
     onUnmounted(() => {
       watchTest()

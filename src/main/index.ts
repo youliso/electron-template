@@ -4,6 +4,9 @@ import {IPC_MSG_TYPE, SOCKET_MSG_TYPE} from "@/lib/interface";
 import {Window} from "./window";
 import {Updates} from "./update";
 import {Sockets} from "./socket";
+import Log from "@/lib/log";
+import {getExternPath} from "@/lib";
+import {readFile} from "@/lib/file";
 
 declare global {
     namespace NodeJS {
@@ -13,7 +16,9 @@ declare global {
     }
 }
 
-global.sharedObject = {};
+global.sharedObject = {
+    isPackaged: app.isPackaged //是否打包
+};
 
 class Init {
 
@@ -203,5 +208,12 @@ class Init {
 (async () => {
     const app = new Init();
     await app.ipc();
+    try {
+        const setting = await readFile(getExternPath("setting.json", true));
+        global.sharedObject["setting"] = JSON.parse(setting as string);
+    } catch (e) {
+        Log.error(e);
+        global.sharedObject["setting"] = {};
+    }
     await app.init();
 })()
