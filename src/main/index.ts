@@ -210,7 +210,7 @@ class Init {
         const setting = await readFile(getExternPath("setting.json", true));
         global.sharedObject["setting"] = JSON.parse(setting as string);
     } catch (e) {
-        Log.error(e);
+        Log.error("[setting]", e);
         global.sharedObject["setting"] = {};
     }
     const app = new Init();

@@ -20,24 +20,26 @@ class Log {
         }
     }
 
-    info<T>(val: T): void {
-        let date = dateFormat();
+    info(...val: any): void {
+        let data = "", date = dateFormat();
+        val.forEach((e: any) => data += e.toString());
         try {
             statSync(this.logFile + `/info-${date}.log`);
         } catch (e) {
             writeFileSync(this.logFile + `/info-${date}.log`, "");
         }
-        appendFileSync(this.logFile + `/info-${date}.log`, `[${dateFormat('yy-MM-dd hh:mm:ss')}] [info] ${val}${EOL}`);
+        appendFileSync(this.logFile + `/info-${date}.log`, `[${dateFormat('yy-MM-dd hh:mm:ss')}] [info] ${data}${EOL}`);
     }
 
-    error<T>(val: T): void {
-        let date = dateFormat();
+    error(...val: any): void {
+        let data = "", date = dateFormat();
+        val.forEach((e: any) => data += e.toString());
         try {
             statSync(this.logFile + `/error-${date}.log`);
         } catch (e) {
             writeFileSync(this.logFile + `/error-${date}.log`, "");
         }
-        appendFileSync(this.logFile + `/error-${date}.log`, `[${dateFormat('yy-MM-dd hh:mm:ss')}] [error] ${val}${EOL}`);
+        appendFileSync(this.logFile + `/error-${date}.log`, `[${dateFormat('yy-MM-dd hh:mm:ss')}] [error] ${data}${EOL}`);
     }
 }
 

@@ -57,7 +57,7 @@ export class Updates {
         }));
         // 下载完成事件
         this.autoUpdater.on("update-downloaded", () => messageBack({key: "update-download", value: "downloaded"}));
-        this.autoUpdater.checkForUpdates().catch(e => Log.error(e));
+        this.autoUpdater.checkForUpdates().catch(e => Log.error("[checkForUpdates]", e));
     }
 
     /**
@@ -66,7 +66,7 @@ export class Updates {
      */
     checkUpdate(isDel: boolean) {
         if (isDel) this.handleUpdate();
-        this.autoUpdater.checkForUpdates().catch(e => Log.error(e));
+        this.autoUpdater.checkForUpdates().catch(e => Log.error("[checkUpdate|checkForUpdates]", e));
     }
 
     /**

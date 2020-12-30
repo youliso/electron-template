@@ -108,7 +108,7 @@ export function readLine(path: string, index?: number): Promise<string | any[]> 
                         line = line.replace(/(^\s*)|(\s*$)/g, "");
                         if (!isNull(line)) data.push(line);
                     } catch (e) {
-                        Log.error(e);
+                        Log.error("[readLine]", e);
                     }
                 });
                 io.on('close', () => resolve(data));
@@ -126,7 +126,7 @@ export async function writeFile(path: string, data: string | Buffer, options?: {
     return new Promise((resolve) =>
         fs.writeFile(path, data, options, (err) => {
             if (err) {
-                Log.error(err);
+                Log.error("[writeFile]", err);
                 resolve(0);
             }
             resolve(1);
@@ -144,7 +144,7 @@ export async function appendFile(path: string, data: string | Uint8Array, option
     return new Promise((resolve) =>
         fs.appendFile(path, data, options, (err) => {
             if (err) {
-                Log.error(err);
+                Log.error("[appendFile]", err);
                 resolve(0);
             }
             resolve(1);
