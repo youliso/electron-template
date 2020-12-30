@@ -206,8 +206,6 @@ class Init {
  * 启动
  * */
 (async () => {
-    const app = new Init();
-    await app.ipc();
     try {
         const setting = await readFile(getExternPath("setting.json", true));
         global.sharedObject["setting"] = JSON.parse(setting as string);
@@ -215,5 +213,7 @@ class Init {
         Log.error(e);
         global.sharedObject["setting"] = {};
     }
+    const app = new Init();
+    await app.ipc();
     await app.init();
 })()
