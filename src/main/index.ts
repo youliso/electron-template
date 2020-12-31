@@ -182,8 +182,12 @@ class Init {
 
         /**
          * 全局变量赋值
+         * 返回1代表完成
          */
-        ipcMain.on("global-sharedObject", (event, args) => global.sharedObject[args.key] = args.value);
+        ipcMain.on("global-sharedObject", (event, args) => {
+            global.sharedObject[args.key] = args.value;
+            event.returnValue = 1;
+        });
 
         /**
          * 消息反馈

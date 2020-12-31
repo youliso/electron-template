@@ -1,5 +1,5 @@
 import {resolve} from "path";
-import {remote} from "electron";
+import {ipcRenderer, remote} from "electron";
 
 /**
  * 获取内部依赖文件路径(！文件必须都存放在lib/inside 针对打包后内部依赖文件路径问题)
@@ -19,6 +19,25 @@ export function getInsidePath(path: string, isMain: boolean = false): string {
 export function getExternPath(path: string, isMain: boolean = false): string {
     if (isMain) return global.sharedObject["isPackaged"] ? resolve(__dirname, '../../extern/' + path) : resolve('./src/lib/extern/' + path);
     else return remote.getGlobal("sharedObject")["isPackaged"] ? resolve(__dirname, '../../extern/' + path) : resolve('./src/lib/extern/' + path);
+}
+
+/**
+ * 设置全局参数
+ * @param key 键
+ * @param value 值
+ * @param isMain 是否主进程
+ */
+export function sendGlobal(key: string, value: unknown, isMain: boolean = false) {
+    isMain ? global.sharedObject[key] = value : ipcRenderer.sendSync("global-sharedObject", {key, value});
+}
+
+/**
+ * 获取全局参数
+ * @param key 键
+ * @param isMain 是否主进程
+ */
+export function getGlobal(key: string, isMain: boolean = false) {
+    return isMain ? global.sharedObject[key] : remote.getGlobal("sharedObject")[key];
 }
 
 /**

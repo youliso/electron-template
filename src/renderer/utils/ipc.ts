@@ -78,20 +78,6 @@ export function closeWindow(id?: number) {
 }
 
 /**
- * 设置全局参数
- */
-export function sendGlobal(key: string, value: unknown) {
-    ipcRenderer.send("global-sharedObject", {key, value});
-}
-
-/**
- * 获取全局参数
- */
-export function getGlobal(key: string) {
-    return remote.getGlobal("sharedObject")[key];
-}
-
-/**
  * socket 打开 (注: 只需调用一次,多次调用会造成socket模块多次监听)
  */
 export function socketOpen() {

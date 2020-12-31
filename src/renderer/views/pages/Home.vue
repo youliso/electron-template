@@ -15,8 +15,8 @@ import {defineComponent, onUnmounted, watch} from "vue";
 import Head from "../components/Head.vue";
 import {readFileSync} from "fs";
 import {argsState, messageData} from "@/renderer/store";
-import {createWindow, getGlobal} from "@/renderer/utils/ipc";
-import {getInsidePath, getExternPath} from "@/lib";
+import {createWindow} from "@/renderer/utils/ipc";
+import {getInsidePath, getExternPath, getGlobal} from "@/lib";
 import {WindowOpt} from "@/lib/interface";
 
 export default defineComponent({

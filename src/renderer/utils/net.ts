@@ -1,5 +1,5 @@
 import {remote} from "electron";
-import {getGlobal, sendGlobal} from "@/renderer/utils/ipc";
+import {getGlobal, sendGlobal} from "@/lib";
 
 const config = require('@/lib/cfg/config.json');
 
