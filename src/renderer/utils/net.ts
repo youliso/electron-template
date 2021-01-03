@@ -1,7 +1,7 @@
 import {remote} from "electron";
 import {getGlobal, sendGlobal} from "@/lib";
 
-const config = require('@/lib/cfg/config.json');
+const config = require('@/cfg/config.json');
 
 export interface NetOpt extends RequestInit {
     data?: unknown;

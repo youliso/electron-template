@@ -1,7 +1,7 @@
 import Log from "@/lib/log";
 import {io, Socket} from "socket.io-client";
 
-const config = require("@/lib/cfg/config.json");
+const config = require("@/cfg/config.json");
 
 /**
  * Socket模块

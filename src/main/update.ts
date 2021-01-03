@@ -3,7 +3,7 @@ import {AppUpdater, autoUpdater} from "electron-updater";
 import Log from "@/lib/log";
 import {delDir} from "@/lib/file";
 
-const config = require("@/lib/cfg/config.json");
+const config = require("@/cfg/config.json");
 
 /**
  * 更新模块

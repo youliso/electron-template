@@ -87,7 +87,7 @@ config.linux.executableName = name;
 fs.writeFileSync("./resources/script/cfg.json", JSON.stringify(cfg));
 fs.writeFileSync("./resources/script/build.json", JSON.stringify(config, null, 2));
 fs.writeFileSync("./resources/script/installer.nsh", nsh);
-fs.writeFileSync("./src/lib/cfg/config.json", JSON.stringify(nConf, null, 2));
+fs.writeFileSync("./src/cfg/config.json", JSON.stringify(nConf, null, 2));
 
 function deleteFolderRecursive(url) {
     let files = [];

@@ -13,6 +13,6 @@ export default createRouter({
     }, {
         path: "/message",
         name: "Message",
-        component: () => import(/* webpackChunkName: "message" */ "../views/pages/dialogs/Message.vue")
+        component: () => import(/* webpackChunkName: "message" */ "../views/dialogs/Message.vue")
     }]
 });

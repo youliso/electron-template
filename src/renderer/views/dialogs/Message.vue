@@ -15,7 +15,7 @@
 import {defineComponent} from "vue";
 import {argsState} from "@/renderer/store";
 import {closeWindow, messageSend, setBounds} from "@/renderer/utils/ipc";
-import Head from "../../components/Head.vue";
+import Head from "../components/Head.vue";
 import {IpcMsg, IPC_MSG_TYPE} from "@/lib/interface";
 
 export default defineComponent({
@@ -56,6 +56,7 @@ export default defineComponent({
   width: 100%;
   height: 100%;
   padding: 25px 10px 10px;
+  background-color: var(--darkGray);
 
   .text {
     font: normal 16px sans-serif;

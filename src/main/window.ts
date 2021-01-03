@@ -2,9 +2,9 @@ import {join} from "path";
 import {shell, app, BrowserWindow, BrowserWindowConstructorOptions, Menu, Tray} from "electron";
 import Log from "@/lib/log";
 import {WindowOpt} from "@/lib/interface";
-import ico from "@/assets/icon.ico";
+import ico from "./assets/icon.ico";
 
-const config = require("@/lib/cfg/config.json");
+const config = require("@/cfg/config.json");
 
 export class Window {
 
@@ -76,7 +76,7 @@ export class Window {
             opt.y = parseInt((this.main.getPosition()[1] + ((this.main.getBounds().height - opt.height) / 2)).toString());
         }
         opt.modal = args.modal || false;
-        opt.resizable = args.resizable || false;
+        opt.resizable = args.resizable || opt.resizable;
         let win = new BrowserWindow(opt);
         this.group[win.id] = {
             route: args.route,
