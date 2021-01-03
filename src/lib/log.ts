@@ -22,7 +22,14 @@ class Log {
 
     info(...val: any): void {
         let data = "", date = dateFormat();
-        val.forEach((e: any) => data += e.toString());
+        val.forEach((e: any) => {
+            try {
+                if (typeof e === "object") data += JSON.stringify(e);
+                else data += e.toString();
+            } catch (e) {
+                data += e;
+            }
+        });
         try {
             statSync(this.logFile + `/info-${date}.log`);
         } catch (e) {
@@ -33,7 +40,14 @@ class Log {
 
     error(...val: any): void {
         let data = "", date = dateFormat();
-        val.forEach((e: any) => data += e.toString());
+        val.forEach((e: any) => {
+            try {
+                if (typeof e === "object") data += JSON.stringify(e);
+                else data += e.toString();
+            } catch (e) {
+                data += e;
+            }
+        });
         try {
             statSync(this.logFile + `/error-${date}.log`);
         } catch (e) {
