@@ -75,8 +75,8 @@ export class Window {
             opt.x = parseInt((this.main.getPosition()[0] + ((this.main.getBounds().width - opt.width) / 2)).toString());
             opt.y = parseInt((this.main.getPosition()[1] + ((this.main.getBounds().height - opt.height) / 2)).toString());
         }
-        opt.modal = args.modal || false;
-        opt.resizable = args.resizable || opt.resizable;
+        if (typeof args.modal === "boolean") opt.modal = args.modal;
+        if (typeof args.resizable === "boolean") opt.resizable = args.resizable;
         let win = new BrowserWindow(opt);
         this.group[win.id] = {
             route: args.route,
