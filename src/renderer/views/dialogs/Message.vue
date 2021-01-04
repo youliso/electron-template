@@ -56,7 +56,6 @@ export default defineComponent({
   width: 100%;
   height: 100%;
   padding: 25px 10px 10px;
-  background-color: var(--darkGray);
 
   .text {
     font: normal 16px sans-serif;
