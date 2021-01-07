@@ -1,5 +1,5 @@
 import {join} from "path";
-import {shell, app, BrowserWindow, BrowserWindowConstructorOptions, Menu, Tray} from "electron";
+import {shell, app, screen, BrowserWindow, BrowserWindowConstructorOptions, Menu, Tray} from "electron";
 import Log from "@/lib/log";
 import {WindowOpt} from "@/lib/interface";
 import ico from "./assets/icon.ico";
@@ -69,8 +69,13 @@ export class Window {
         let opt = this.browserWindowOpt([args.width || config.appW, args.height || config.appH]);
         if (args.parentId) {
             opt.parent = this.getWindow(args.parentId);
-            opt.x = parseInt((this.getWindow(args.parentId).getPosition()[0] + ((this.getWindow(args.parentId).getBounds().width - (args.width || args.currentWidth)) / 2)).toString());
-            opt.y = parseInt((this.getWindow(args.parentId).getPosition()[1] + ((this.getWindow(args.parentId).getBounds().height - (args.height || args.currentHeight)) / 2)).toString());
+            if (args.currentMaximized) {
+                opt.x = parseInt(((screen.getPrimaryDisplay().workAreaSize.width - args.width) / 2).toString())
+                opt.y = parseInt(((screen.getPrimaryDisplay().workAreaSize.height - args.height) / 2).toString())
+            } else {
+                opt.x = parseInt((this.getWindow(args.parentId).getPosition()[0] + ((this.getWindow(args.parentId).getBounds().width - (args.width || args.currentWidth)) / 2)).toString());
+                opt.y = parseInt((this.getWindow(args.parentId).getPosition()[1] + ((this.getWindow(args.parentId).getBounds().height - (args.height || args.currentHeight)) / 2)).toString());
+            }
         } else if (this.main) {
             opt.x = parseInt((this.main.getPosition()[0] + ((this.main.getBounds().width - opt.width) / 2)).toString());
             opt.y = parseInt((this.main.getPosition()[1] + ((this.main.getBounds().height - opt.height) / 2)).toString());
@@ -82,7 +87,8 @@ export class Window {
             route: args.route,
             isMultiWindow: args.isMultiWindow
         };
-        // //window加载完毕后显示
+        win.setMaximumSize(screen.getPrimaryDisplay().workAreaSize.width, screen.getPrimaryDisplay().workAreaSize.height);
+        //window加载完毕后显示
         win.once("ready-to-show", () => win.show());
         //默认浏览器打开跳转连接
         win.webContents.on("new-window", async (event, url) => {

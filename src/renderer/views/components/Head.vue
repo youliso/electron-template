@@ -4,6 +4,8 @@
       标题
     </div>
     <div class="events">
+      <div v-if="isMain" @click="min" class="event min no-drag cursor-pointer"></div>
+      <div v-if="isMain" @click="maxMin" class="event maxmin no-drag cursor-pointer"></div>
       <div @click="close" class="event close no-drag cursor-pointer"></div>
     </div>
   </div>
@@ -12,20 +14,28 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import {argsState} from "@/renderer/store";
-import {isNull} from "@/lib";
-import {closeWindow} from "@/renderer/utils/ipc";
+import {minWindow, maxMinWindow, closeWindow} from "@/renderer/utils/ipc";
 
 export default defineComponent({
   name: "Head",
   setup() {
     const args = argsState();
+    const isMain = args.isMainWin || false;
+
+    function min() {
+      minWindow();
+    }
+
+    function maxMin() {
+      maxMinWindow();
+    }
 
     function close() {
-      if (isNull(args)) closeWindow();
+      if (isMain) closeWindow();
       else closeWindow(args.id);
     }
 
-    return {close}
+    return {min, maxMin, close, isMain}
   }
 });
 </script>
@@ -58,7 +68,7 @@ export default defineComponent({
       clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
       width: 15px;
       height: 15px;
-      margin-left: 4px;
+      margin-left: 10px;
     }
 
     .event:hover {
@@ -73,7 +83,11 @@ export default defineComponent({
       background-color: var(--red);
     }
 
-    .setting {
+    .min {
+      background-color: var(--grey);
+    }
+
+    .maxmin {
       background-color: var(--cyan);
     }
   }

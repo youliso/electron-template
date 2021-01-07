@@ -95,9 +95,6 @@ const config = {
             "@": path.resolve("src")
         }
     },
-    optimization: {
-        minimize: true
-    },
     plugins: [
         new miniCssExtractPlugin({
             // Options similar to the same options in webpackOptions.output
@@ -114,7 +111,11 @@ const config = {
             "__VUE_OPTIONS_API__": "false",
             "__VUE_PROD_DEVTOOLS__": "false"
         })
-    ]
+    ],
+    optimization: {
+        minimize: false
+    }
 };
 if (isEnvDevelopment) config.devtool = "source-map";
+if (isEnvProduction) config.optimization = {minimize: true};
 module.exports = config;

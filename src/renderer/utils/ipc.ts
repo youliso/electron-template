@@ -53,8 +53,9 @@ export function createWindow(data: WindowOpt) {
     let args: WindowOpt = {
         currentWidth: remote.getCurrentWindow().getBounds().width,
         currentHeight: remote.getCurrentWindow().getBounds().height,
-        width: data.width || null,
-        height: data.height || null,
+        currentMaximized: remote.getCurrentWindow().isMaximized(),
+        width: data.width || 0,
+        height: data.height || 0,
         route: data.route, // 页面路由
         resizable: false,// 是否支持调整窗口大小
         data: data.data, //数据
@@ -71,7 +72,34 @@ export function createWindow(data: WindowOpt) {
 }
 
 /**
- * 关闭窗口 (传id则关闭对应窗口否则退出程序)
+ * 最大化&最小化当前窗口
+ */
+export function maxMinWindow() {
+    if (remote.getCurrentWindow().isMaximized()) {
+        remote.getCurrentWindow().unmaximize();
+        remote.getCurrentWindow().movable = true;
+    } else {
+        remote.getCurrentWindow().movable = false;
+        remote.getCurrentWindow().maximize();
+    }
+}
+
+/**
+ * 最小化窗口 (传id则对应窗口否则全部窗口)
+ */
+export function minWindow(id?: number) {
+    ipcRenderer.send("mini", id);
+}
+
+/**
+ * 最大化窗口 (传id则对应窗口否则全部窗口)
+ */
+export function maxWindow(id?: number) {
+    ipcRenderer.send("max", id);
+}
+
+/**
+ * 关闭窗口 (传id则对应窗口否则全部窗口)
  */
 export function closeWindow(id?: number) {
     ipcRenderer.send("closed", id);
@@ -119,4 +147,13 @@ export function updateReCheck(isDel: boolean) {
  */
 export function updateQuitInstall(isSilent: boolean) {
     ipcRenderer.send("update-quit-install", isSilent);
+}
+
+/**
+ * 发送ipc消息
+ * @param key
+ * @param value
+ */
+export function ipcSend(key: string, value?: unknown) {
+    ipcRenderer.send(key, value);
 }

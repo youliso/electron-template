@@ -114,6 +114,14 @@ class Init {
                 for (let i in this.window.group) if (this.window.group[i]) this.window.getWindow(Number(i)).minimize();
             }
         });
+        //最大化
+        ipcMain.on("max", (event, winId) => {
+            if (winId) {
+                this.window.getWindow(Number(winId)).maximize();
+            } else {
+                for (let i in this.window.group) if (this.window.group[i]) this.window.getWindow(Number(i)).maximize();
+            }
+        });
         //复原
         ipcMain.on("restore", (event, winId) => {
             if (winId) {

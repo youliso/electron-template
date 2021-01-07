@@ -25,7 +25,7 @@ export default defineComponent({
   name: "Message",
   setup() {
     const args = argsState();
-    setBounds([400, 150]);
+    setBounds([400, 150], args.currentMaximized);
     let cons = 0;
 
     function test() {//测试发送 为主窗口发送消息

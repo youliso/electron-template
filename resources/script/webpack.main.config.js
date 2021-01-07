@@ -40,8 +40,11 @@ const config = {
         }
     },
     optimization: {
-        minimize: true
+        minimize: false
     }
 };
 if (isEnvDevelopment) config.devtool = "source-map";
+if (isEnvProduction) config.optimization = {
+    minimize: true
+};
 module.exports = config;

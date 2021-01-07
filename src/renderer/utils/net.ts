@@ -87,8 +87,8 @@ function fetchPromise(url: string, sendData: NetOpt): Promise<any> {
     return fetch(url, sendData)
         .then(res => {
             if (res.status >= 200 && res.status < 300) {
-                const Authorization = res.headers.get("Authorization");
-                if (Authorization) sendGlobal("Authorization", Authorization);
+                const authorization = res.headers.get("authorization");
+                if (authorization) sendGlobal("authorization", authorization);
                 return res;
             }
             throw new Error(res.statusText);
@@ -120,7 +120,7 @@ export async function net(url: string, param: NetOpt = {}): Promise<any> {
         headers: param.headers || {
             "user-agent": `${remote.app.name}/${remote.app.getVersion()}`,
             "Content-type": "application/json;charset=utf-8",
-            "Authorization": getGlobal("Authorization") as string || ""
+            "authorization": getGlobal("authorization") as string || ""
         },
         outTime: param.outTime || 30000,
         type: param.type || NET_RESPONSE_TYPE.TEXT,
