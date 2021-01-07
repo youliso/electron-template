@@ -24,6 +24,13 @@ export function messageSend(args: IpcMsg) {
 }
 
 /**
+ * 设置窗口最小大小
+ */
+export function setMinSize(size: number[]) {
+    remote.getCurrentWindow().setMinimumSize(size[0], size[1]);
+}
+
+/**
  * 设置窗口大小
  */
 export function setBounds(size: number[], center: boolean = false) {
@@ -34,7 +41,8 @@ export function setBounds(size: number[], center: boolean = false) {
         };
         if (Rectangle.width === remote.getCurrentWindow().getBounds().width &&
             Rectangle.height === remote.getCurrentWindow().getBounds().height) {
-            return resolve(0);
+            resolve(0);
+            return;
         }
         if (!center) {
             Rectangle["x"] = parseInt((remote.getCurrentWindow().getPosition()[0] + ((remote.getCurrentWindow().getBounds().width - size[0]) / 2)).toString());
