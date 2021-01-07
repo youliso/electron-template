@@ -24,8 +24,9 @@ export class Window {
             height: wh[1],
             transparent: true,
             autoHideMenuBar: true,
-            resizable: false,
-            maximizable: false,
+            resizable: true,
+            minimizable: true,
+            maximizable: true,
             frame: false,
             show: false,
             webPreferences: {
