@@ -12,6 +12,7 @@ export interface WindowOpt {
     isMainWin?: boolean; //是否主窗口(当为true时会替代当前主窗口)
     parentId?: number; //父窗口id
     modal?: boolean; //父窗口置顶
+    platform?: NodeJS.Platform; //当前运行系统
 }
 
 export interface IpcMsg {

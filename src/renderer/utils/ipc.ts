@@ -67,17 +67,13 @@ export function createWindow(data: WindowOpt) {
         width: data.width || 0,
         height: data.height || 0,
         route: data.route, // 页面路由
-        resizable: false,// 是否支持调整窗口大小
+        resizable: data.resizable || false,// 是否支持调整窗口大小
         data: data.data, //数据
-        isMultiWindow: false, //是否支持多窗口
-        isMainWin: false, //是否主窗口
-        modal: true //父窗口置顶
+        isMultiWindow: data.isMultiWindow || false, //是否支持多窗口
+        isMainWin: data.isMainWin || false, //是否主窗口
+        modal: data.modal || true //父窗口置顶
     };
-    if (data.isMultiWindow) args.isMultiWindow = data.isMultiWindow;
-    if (data.isMainWin) args.isMainWin = data.isMainWin;
     if (data.parentId) args.parentId = data.parentId;
-    if (data.modal) args.modal = data.modal;
-    if (data.resizable) args.resizable = data.resizable;
     ipcRenderer.send("window-new", args);
 }
 
