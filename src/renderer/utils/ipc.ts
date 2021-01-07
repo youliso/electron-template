@@ -26,17 +26,19 @@ export function messageSend(args: IpcMsg) {
 /**
  * 设置窗口大小
  */
-export function setBounds(size: number[], center?: boolean) {
+export function setBounds(size: number[], center: boolean = false) {
     return new Promise(resolve => {
-        let Rectangle = {
+        let Rectangle: { [key: string]: number } = {
             width: parseInt(size[0].toString()),
-            height: parseInt(size[1].toString()),
-            x: parseInt((remote.getCurrentWindow().getPosition()[0] + ((remote.getCurrentWindow().getBounds().width - size[0]) / 2)).toString()),
-            y: parseInt((remote.getCurrentWindow().getPosition()[1] + ((remote.getCurrentWindow().getBounds().height - size[1]) / 2)).toString())
+            height: parseInt(size[1].toString())
         };
         if (Rectangle.width === remote.getCurrentWindow().getBounds().width &&
             Rectangle.height === remote.getCurrentWindow().getBounds().height) {
             return resolve(0);
+        }
+        if (!center) {
+            Rectangle["x"] = parseInt((remote.getCurrentWindow().getPosition()[0] + ((remote.getCurrentWindow().getBounds().width - size[0]) / 2)).toString());
+            Rectangle["y"] = parseInt((remote.getCurrentWindow().getPosition()[1] + ((remote.getCurrentWindow().getBounds().height - size[1]) / 2)).toString());
         }
         remote.getCurrentWindow().once("resize", () => {
             if (center) remote.getCurrentWindow().center();
