@@ -11,7 +11,7 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import Head from "../components/Head.vue";
-import {createWindow} from "@/renderer/utils/ipc";
+import {createWindow} from "@/renderer/utils";
 import {argsState} from "@/renderer/store";
 
 export default defineComponent({

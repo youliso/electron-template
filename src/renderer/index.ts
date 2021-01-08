@@ -2,7 +2,7 @@ import {createApp} from "vue";
 import App from "./App.vue";
 import {argsSymbol, createArgs} from "./store";
 import router from "./router";
-import {windowLoad, messageBack} from "./utils/ipc";
+import {windowLoad, messageBack} from "./utils";
 
 (async () => {
     messageBack();

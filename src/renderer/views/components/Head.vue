@@ -14,7 +14,7 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import {argsState} from "@/renderer/store";
-import {minWindow, maxMinWindow, closeWindow} from "@/renderer/utils/ipc";
+import {minWindow, maxMinWindow, closeWindow} from "@/renderer/utils";
 
 export default defineComponent({
   name: "Head",
