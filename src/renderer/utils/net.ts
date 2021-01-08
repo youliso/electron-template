@@ -63,7 +63,7 @@ export function GetQueryJson2(url: string): { [key: string]: unknown } {
  * 错误信息包装
  */
 export function errorReturn(msg: string): { [key: string]: unknown } {
-    return {code: -1, msg};
+    return {code: 400, msg};
 }
 
 /**
@@ -117,19 +117,18 @@ function fetchPromise(url: string, sendData: NetOpt): Promise<any> {
 export async function net(url: string, param: NetOpt = {}): Promise<any> {
     if (url.indexOf("http://") === -1 && url.indexOf("https://") === -1) url = config.appUrl + url;
     let sendData: NetOpt = {
-        headers: param.headers || {
+        headers: {
             "user-agent": `${remote.app.name}/${remote.app.getVersion()}`,
             "Content-type": "application/json;charset=utf-8",
             "authorization": getGlobal("authorization") as string || ""
         },
         outTime: param.outTime || 30000,
         type: param.type || NET_RESPONSE_TYPE.TEXT,
-        mode: param.mode || "cors"
+        mode: param.mode || "cors",
+        method: param.method || "GET",
+        signal: param.signal || null
     };
-    if (param.headers) sendData.headers = param.headers;
-    if (param.outTime) sendData.outTime = param.outTime;
-    if (param.mode) sendData.mode = param.mode;
-    sendData.method = param.method || "GET";
+    if (param.headers) Object.assign(sendData.headers, param.headers);
     if (sendData.method === "GET") url = url + convertObj(param.data);
     else sendData.body = JSON.stringify(param.data);
     return Promise.race([timeoutPromise(sendData.outTime), fetchPromise(url, sendData)])
