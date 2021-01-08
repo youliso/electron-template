@@ -18,6 +18,7 @@ import {argsState, messageData} from "@/renderer/store";
 import {createWindow} from "@/renderer/utils/ipc";
 import {getInsidePath, getExternPath, getGlobal} from "@/lib";
 import {WindowOpt} from "@/lib/interface";
+import {net} from "@/lib/net"
 
 export default defineComponent({
   components: {

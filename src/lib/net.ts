@@ -1,11 +1,12 @@
 import {remote} from "electron";
+import fetch, {RequestInit} from "node-fetch";
+import AbortController from 'node-abort-controller'
 import {getGlobal, sendGlobal} from "@/lib";
 
 const config = require('@/cfg/config.json');
 
 export interface NetOpt extends RequestInit {
     data?: unknown;
-    outTime?: number; //请求超时时间
     type?: NET_RESPONSE_TYPE; //返回数据类型
 }
 
@@ -13,8 +14,14 @@ export enum NET_RESPONSE_TYPE {
     TEXT,
     JSON,
     BUFFER,
-    BLOB,
-    FORM_DATA
+    BLOB
+}
+
+/**
+ * 创建 AbortController
+ */
+export function AbortSignal() {
+    return new AbortController();
 }
 
 /**
@@ -103,8 +110,6 @@ function fetchPromise(url: string, sendData: NetOpt): Promise<any> {
                     return await res.arrayBuffer();
                 case NET_RESPONSE_TYPE.BLOB:
                     return await res.blob();
-                case NET_RESPONSE_TYPE.FORM_DATA:
-                    return await res.formData()
             }
         })
 }
@@ -122,15 +127,14 @@ export async function net(url: string, param: NetOpt = {}): Promise<any> {
             "Content-type": "application/json;charset=utf-8",
             "authorization": getGlobal("authorization") as string || ""
         },
-        outTime: param.outTime || 30000,
+        timeout: param.timeout || 30000,
         type: param.type || NET_RESPONSE_TYPE.TEXT,
-        mode: param.mode || "cors",
         method: param.method || "GET",
         signal: param.signal || null
     };
     if (param.headers) Object.assign(sendData.headers, param.headers);
     if (sendData.method === "GET") url = url + convertObj(param.data);
     else sendData.body = JSON.stringify(param.data);
-    return Promise.race([timeoutPromise(sendData.outTime), fetchPromise(url, sendData)])
+    return Promise.race([timeoutPromise(sendData.timeout), fetchPromise(url, sendData)])
         .catch(err => errorReturn(err.message));
 }
