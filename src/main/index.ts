@@ -5,7 +5,7 @@ import {Window} from "./window";
 import {Updates} from "./update";
 import {Sockets} from "./socket";
 import Log from "@/lib/log";
-import {getExternPath} from "@/lib";
+import {getExternPath, getGlobal} from "@/lib";
 import {readFile} from "@/lib/file";
 
 declare global {
@@ -17,7 +17,12 @@ declare global {
 }
 
 global.sharedObject = {
-    isPackaged: app.isPackaged //是否打包
+    isPackaged: app.isPackaged, //是否打包
+    platform: process.platform, //当前运行平台
+    appInfo: { //应用信息
+        name: app.name,
+        version: app.getVersion()
+    }
 };
 
 class Init {
@@ -219,7 +224,7 @@ class Init {
  * */
 (async () => {
     try {
-        const setting = await readFile(getExternPath("setting.json", true));
+        const setting = await readFile(getExternPath("setting.json"));
         global.sharedObject["setting"] = JSON.parse(setting as string);
     } catch (e) {
         Log.error("[setting]", e);

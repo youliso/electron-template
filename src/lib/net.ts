@@ -1,5 +1,4 @@
-import {remote} from "electron";
-import fetch, {RequestInit} from "node-fetch";
+import fetch, {RequestInit, Headers} from "node-fetch";
 import AbortController from 'node-abort-controller'
 import {getGlobal, sendGlobal} from "@/lib";
 
@@ -122,17 +121,16 @@ function fetchPromise(url: string, sendData: NetOpt): Promise<any> {
 export async function net(url: string, param: NetOpt = {}): Promise<any> {
     if (url.indexOf("http://") === -1 && url.indexOf("https://") === -1) url = config.appUrl + url;
     let sendData: NetOpt = {
-        headers: {
-            "user-agent": `${remote.app.name}/${remote.app.getVersion()}`,
-            "Content-type": "application/json;charset=utf-8",
-            "authorization": getGlobal("authorization") as string || ""
-        },
+        headers: new Headers(Object.assign({
+                "Content-type": "application/json;charset=utf-8",
+                "authorization": getGlobal("authorization") as string || ""
+            },
+            param.headers || {})),
         timeout: param.timeout || 30000,
         type: param.type || NET_RESPONSE_TYPE.TEXT,
         method: param.method || "GET",
         signal: param.signal || null
     };
-    if (param.headers) Object.assign(sendData.headers, param.headers);
     if (sendData.method === "GET") url = url + convertObj(param.data);
     else sendData.body = JSON.stringify(param.data);
     return Promise.race([timeoutPromise(sendData.timeout), fetchPromise(url, sendData)])

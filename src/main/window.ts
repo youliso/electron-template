@@ -108,7 +108,6 @@ export class Window {
                 this.main = win;
             }
             args.id = win.id;
-            args.platform = process.platform;
             win.webContents.send("window-load", args);
         });
         if (!app.isPackaged) win.loadURL(`http://localhost:${config.appPort}`).catch(err => Log.error("[createWindow]", err));

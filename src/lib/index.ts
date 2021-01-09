@@ -4,20 +4,18 @@ import {ipcRenderer, remote} from "electron";
 /**
  * 获取内部依赖文件路径(！文件必须都存放在lib/inside 针对打包后内部依赖文件路径问题)
  * @param path lib/inside为起点的相对路径
- * @param isMain 是否主进程
  * */
-export function getInsidePath(path: string, isMain: boolean = false): string {
-    if (isMain) return global.sharedObject["isPackaged"] ? resolve(__dirname, '../inside/' + path) : resolve('./src/lib/inside/' + path);
+export function getInsidePath(path: string): string {
+    if (global.sharedObject) return global.sharedObject["isPackaged"] ? resolve(__dirname, '../inside/' + path) : resolve('./src/lib/inside/' + path);
     else return remote.getGlobal("sharedObject")["isPackaged"] ? resolve(__dirname, '../inside/' + path) : resolve('./src/lib/inside/' + path);
 }
 
 /**
  * 获取外部依赖文件路径(！文件必须都存放在lib/extern下 针对打包后外部依赖文件路径问题)
  * @param path lib/extern为起点的相对路径
- * @param isMain 是否主进程
  * */
-export function getExternPath(path: string, isMain: boolean = false): string {
-    if (isMain) return global.sharedObject["isPackaged"] ? resolve(__dirname, '../../extern/' + path) : resolve('./src/lib/extern/' + path);
+export function getExternPath(path: string): string {
+    if (global.sharedObject) return global.sharedObject["isPackaged"] ? resolve(__dirname, '../../extern/' + path) : resolve('./src/lib/extern/' + path);
     else return remote.getGlobal("sharedObject")["isPackaged"] ? resolve(__dirname, '../../extern/' + path) : resolve('./src/lib/extern/' + path);
 }
 
@@ -25,19 +23,20 @@ export function getExternPath(path: string, isMain: boolean = false): string {
  * 设置全局参数
  * @param key 键
  * @param value 值
- * @param isMain 是否主进程
  */
-export function sendGlobal(key: string, value: unknown, isMain: boolean = false) {
-    isMain ? global.sharedObject[key] = value : ipcRenderer.sendSync("global-sharedObject", {key, value});
+export function sendGlobal(key: string, value: unknown) {
+    !isNull(global.sharedObject) ? global.sharedObject[key] = value : ipcRenderer.sendSync("global-sharedObject", {
+        key,
+        value
+    });
 }
 
 /**
  * 获取全局参数
  * @param key 键
- * @param isMain 是否主进程
  */
-export function getGlobal(key: string, isMain: boolean = false) {
-    return isMain ? global.sharedObject[key] : remote.getGlobal("sharedObject")[key];
+export function getGlobal(key: string) {
+    return !isNull(global.sharedObject) ? global.sharedObject[key] : remote.getGlobal("sharedObject")[key];
 }
 
 /**
@@ -85,20 +84,24 @@ export function dateFormat(fmt: string = 'yyyy-MM-dd'): string {
 
 /**
  * 深拷贝
- * @param obj
+ * @param sourceObj
+ * @param targetObj
  */
-export function deepCopy<T>(obj: T): T {
-    let objArray: any = Array.isArray(obj) ? [] : {};
-    if (obj && typeof obj === "object") {
-        for (let key in obj) {
-            if (obj.hasOwnProperty(key)) {
-                if (obj[key] && typeof obj[key] === "object") {
-                    objArray[key] = deepCopy(obj[key]);
-                } else {
-                    objArray[key] = obj[key];
-                }
+export function deepClone(sourceObj: any, targetObj: any) {
+    let cloneObj: any = {};
+    if (!sourceObj || typeof sourceObj !== "object" || sourceObj.length === undefined) {
+        return sourceObj;
+    }
+    if (sourceObj instanceof Array) {
+        cloneObj = sourceObj.concat();
+    } else {
+        for (let i in sourceObj) {
+            if (typeof sourceObj[i] === 'object') {
+                cloneObj[i] = deepClone(sourceObj[i], {});
+            } else {
+                cloneObj[i] = sourceObj[i];
             }
         }
     }
-    return objArray;
+    return cloneObj;
 }
