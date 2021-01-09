@@ -39,7 +39,7 @@ yarn
 ### 安装中的网络问题
 - `electron`:
 ```shell
-yarn config set electron_mirror https://npm.taobao.org/mirrors/electron/
+yarn config set electron_mirror https://cdn.npm.taobao.org/dist/electron/
 ```
 
 ## 运行调试
