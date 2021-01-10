@@ -105,3 +105,37 @@ export function deepClone(sourceObj: any, targetObj: any) {
     }
     return cloneObj;
 }
+
+/**
+ * 防抖
+ */
+export function debounce(fun: Function, wait: number) {
+    let timer: number = null;
+    return function () {
+        if (timer !== null) {
+            clearTimeout(timer);
+        }
+        timer = setTimeout(fun, wait);
+    }
+}
+
+/**
+ * 节流
+ */
+export function throttle(fun: Function, delay: number) {
+    let timer: number = null;
+    let startTime = Date.now();
+    return function () {
+        let curTime = Date.now();
+        let remaining = delay - (curTime - startTime);
+        let context = this;
+        let args = arguments;
+        clearTimeout(timer);
+        if (remaining <= 0) {
+            fun.apply(context, args);
+            startTime = Date.now();
+        } else {
+            timer = setTimeout(fun, remaining);
+        }
+    }
+}
