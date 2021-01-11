@@ -1,3 +1,22 @@
+<style lang="scss">
+.info {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 25px 10px 10px;
+
+  .text {
+    font: normal 16px sans-serif;
+  }
+
+  .close {
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+  }
+}
+</style>
+
 <template>
   <div class="main">
     <Head></Head>
@@ -14,7 +33,7 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import {argsState} from "@/renderer/store";
-import {closeWindow, messageSend, setBounds} from "@/renderer/utils";
+import {closeWindow, messageSend, setSize} from "@/renderer/utils";
 import Head from "../components/Head.vue";
 import {IpcMsg, IPC_MSG_TYPE} from "@/lib/interface";
 
@@ -25,7 +44,7 @@ export default defineComponent({
   name: "Message",
   setup() {
     const args = argsState();
-    setBounds([400, 150], args.currentMaximized);
+    setSize(args.id, [400, 150], args.currentMaximized);
     let cons = 0;
 
     function test() {//测试发送 为主窗口发送消息
@@ -49,22 +68,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style lang="scss">
-.info {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  padding: 25px 10px 10px;
-
-  .text {
-    font: normal 16px sans-serif;
-  }
-
-  .close {
-    position: absolute;
-    right: 5px;
-    bottom: 5px;
-  }
-}
-</style>

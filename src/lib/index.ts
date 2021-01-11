@@ -1,23 +1,5 @@
 import {resolve} from "path";
-import {ipcRenderer, remote} from "electron";
-
-/**
- * 获取内部依赖文件路径(！文件必须都存放在lib/inside 针对打包后内部依赖文件路径问题)
- * @param path lib/inside为起点的相对路径
- * */
-export function getInsidePath(path: string): string {
-    if (global.sharedObject) return global.sharedObject["isPackaged"] ? resolve(__dirname, '../inside/' + path) : resolve('./src/lib/inside/' + path);
-    else return remote.getGlobal("sharedObject")["isPackaged"] ? resolve(__dirname, '../inside/' + path) : resolve('./src/lib/inside/' + path);
-}
-
-/**
- * 获取外部依赖文件路径(！文件必须都存放在lib/extern下 针对打包后外部依赖文件路径问题)
- * @param path lib/extern为起点的相对路径
- * */
-export function getExternPath(path: string): string {
-    if (global.sharedObject) return global.sharedObject["isPackaged"] ? resolve(__dirname, '../../extern/' + path) : resolve('./src/lib/extern/' + path);
-    else return remote.getGlobal("sharedObject")["isPackaged"] ? resolve(__dirname, '../../extern/' + path) : resolve('./src/lib/extern/' + path);
-}
+import {ipcRenderer} from "electron";
 
 /**
  * 设置全局参数
@@ -25,7 +7,7 @@ export function getExternPath(path: string): string {
  * @param value 值
  */
 export function sendGlobal(key: string, value: unknown) {
-    !isNull(global.sharedObject) ? global.sharedObject[key] = value : ipcRenderer.sendSync("global-sharedObject", {
+    !isNull(global.sharedObject) ? global.sharedObject[key] = value : ipcRenderer.sendSync("global-sharedObject-set", {
         key,
         value
     });
@@ -36,7 +18,25 @@ export function sendGlobal(key: string, value: unknown) {
  * @param key 键
  */
 export function getGlobal(key: string) {
-    return !isNull(global.sharedObject) ? global.sharedObject[key] : remote.getGlobal("sharedObject")[key];
+    return !isNull(global.sharedObject) ? global.sharedObject[key] : ipcRenderer.sendSync("global-sharedObject-get", {
+        key
+    });
+}
+
+/**
+ * 获取内部依赖文件路径(！文件必须都存放在lib/inside 针对打包后内部依赖文件路径问题)
+ * @param path lib/inside为起点的相对路径
+ * */
+export function getInsidePath(path: string): string {
+    return getGlobal("isPackaged") ? resolve(__dirname, '../inside/' + path) : resolve('./src/lib/inside/' + path);
+}
+
+/**
+ * 获取外部依赖文件路径(！文件必须都存放在lib/extern下 针对打包后外部依赖文件路径问题)
+ * @param path lib/extern为起点的相对路径
+ * */
+export function getExternPath(path: string): string {
+    return getGlobal("isPackaged") ? resolve(__dirname, '../../extern/' + path) : resolve('./src/lib/extern/' + path);
 }
 
 /**

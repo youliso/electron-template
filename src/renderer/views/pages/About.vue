@@ -1,3 +1,11 @@
+<style lang="scss">
+.info {
+  width: 100%;
+  height: 100%;
+  padding: 25px 10px 10px;
+}
+</style>
+
 <template>
   <div class="main">
     <Head></Head>
@@ -35,11 +43,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style lang="scss">
-.info {
-  width: 100%;
-  height: 100%;
-  padding: 25px 10px 10px;
-}
-</style>

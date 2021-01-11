@@ -1,45 +1,3 @@
-<template>
-  <div class="head">
-    <div class="title">
-      标题
-    </div>
-    <div class="events">
-      <div v-if="isMain" @click="min" class="event min no-drag cursor-pointer"></div>
-      <div v-if="isMain" @click="maxMin" class="event maxmin no-drag cursor-pointer"></div>
-      <div @click="close" class="event close no-drag cursor-pointer"></div>
-    </div>
-  </div>
-</template>
-
-<script lang="ts">
-import {defineComponent} from "vue";
-import {argsState} from "@/renderer/store";
-import {minWindow, maxMinWindow, closeWindow} from "@/renderer/utils";
-
-export default defineComponent({
-  name: "Head",
-  setup() {
-    const args = argsState();
-    const isMain = args.isMainWin || false;
-
-    function min() {
-      minWindow();
-    }
-
-    function maxMin() {
-      maxMinWindow();
-    }
-
-    function close() {
-      if (isMain) closeWindow();
-      else closeWindow(args.id);
-    }
-
-    return {min, maxMin, close, isMain}
-  }
-});
-</script>
-
 <style lang="scss">
 .head {
   position: absolute;
@@ -93,3 +51,45 @@ export default defineComponent({
   }
 }
 </style>
+
+<template>
+  <div class="head">
+    <div class="title">
+      标题
+    </div>
+    <div class="events">
+      <div v-if="isMain" @click="min" class="event min no-drag cursor-pointer"></div>
+      <div v-if="isMain" @click="maxMin" class="event maxmin no-drag cursor-pointer"></div>
+      <div @click="close" class="event close no-drag cursor-pointer"></div>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import {defineComponent} from "vue";
+import {argsState} from "@/renderer/store";
+import {minWindow, maxMinWindow, closeWindow} from "@/renderer/utils";
+
+export default defineComponent({
+  name: "Head",
+  setup() {
+    const args = argsState();
+    const isMain = args.isMainWin || false;
+
+    function min() {
+      minWindow();
+    }
+
+    function maxMin() {
+      maxMinWindow(args.id);
+    }
+
+    function close() {
+      if (isMain) closeWindow();
+      else closeWindow(args.id);
+    }
+
+    return {min, maxMin, close, isMain}
+  }
+});
+</script>

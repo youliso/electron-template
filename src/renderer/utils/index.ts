@@ -1,4 +1,4 @@
-import {ipcRenderer, remote} from "electron";
+import {ipcRenderer} from "electron";
 import {setMessageData} from "../store";
 import {IpcMsg, WindowOpt} from "@/lib/interface";
 
@@ -24,36 +24,24 @@ export function messageSend(args: IpcMsg) {
 }
 
 /**
- * 设置窗口最小大小
+ * 设置窗口大小
  */
-export function setMinSize(size: number[]) {
-    remote.getCurrentWindow().setMinimumSize(size[0], size[1]);
+export function setSize(id: number, size: number[], center: boolean = false) {
+    ipcRenderer.send("window-size-set", {id, size, center});
 }
 
 /**
- * 设置窗口大小
+ * 设置窗口最小大小
  */
-export function setBounds(size: number[], center: boolean = false) {
-    return new Promise(resolve => {
-        let Rectangle: { [key: string]: number } = {
-            width: parseInt(size[0].toString()),
-            height: parseInt(size[1].toString())
-        };
-        if (Rectangle.width === remote.getCurrentWindow().getBounds().width &&
-            Rectangle.height === remote.getCurrentWindow().getBounds().height) {
-            resolve(0);
-            return;
-        }
-        if (!center) {
-            Rectangle["x"] = parseInt((remote.getCurrentWindow().getPosition()[0] + ((remote.getCurrentWindow().getBounds().width - size[0]) / 2)).toString());
-            Rectangle["y"] = parseInt((remote.getCurrentWindow().getPosition()[1] + ((remote.getCurrentWindow().getBounds().height - size[1]) / 2)).toString());
-        }
-        remote.getCurrentWindow().once("resize", () => {
-            if (center) remote.getCurrentWindow().center();
-            resolve(0);
-        });
-        remote.getCurrentWindow().setBounds(Rectangle);
-    })
+export function setMinSize(id: number, size: number[]) {
+    ipcRenderer.send("window-min-size-set", {id, size});
+}
+
+/**
+ * 设置窗口最小大小
+ */
+export function setMaxSize(id: number, size: number[]) {
+    ipcRenderer.send("window-max-size-set", {id, size});
 }
 
 /**
@@ -61,9 +49,6 @@ export function setBounds(size: number[], center: boolean = false) {
  */
 export function createWindow(data: WindowOpt) {
     let args: WindowOpt = {
-        currentWidth: remote.getCurrentWindow().getBounds().width,
-        currentHeight: remote.getCurrentWindow().getBounds().height,
-        currentMaximized: remote.getCurrentWindow().isMaximized(),
         width: data.width || 0,
         height: data.height || 0,
         route: data.route, // 页面路由
@@ -80,35 +65,29 @@ export function createWindow(data: WindowOpt) {
 /**
  * 最大化&最小化当前窗口
  */
-export function maxMinWindow() {
-    if (remote.getCurrentWindow().isMaximized()) {
-        remote.getCurrentWindow().unmaximize();
-        remote.getCurrentWindow().movable = true;
-    } else {
-        remote.getCurrentWindow().movable = false;
-        remote.getCurrentWindow().maximize();
-    }
+export function maxMinWindow(id: number) {
+    ipcRenderer.send("window-max-min-size", id);
 }
 
 /**
  * 最小化窗口 (传id则对应窗口否则全部窗口)
  */
 export function minWindow(id?: number) {
-    ipcRenderer.send("mini", id);
+    ipcRenderer.send("window-mini", id);
 }
 
 /**
  * 最大化窗口 (传id则对应窗口否则全部窗口)
  */
 export function maxWindow(id?: number) {
-    ipcRenderer.send("max", id);
+    ipcRenderer.send("window-max", id);
 }
 
 /**
  * 关闭窗口 (传id则对应窗口否则全部窗口)
  */
 export function closeWindow(id?: number) {
-    ipcRenderer.send("closed", id);
+    ipcRenderer.send("window-closed", id);
 }
 
 /**

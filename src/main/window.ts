@@ -2,7 +2,7 @@ import {join} from "path";
 import {shell, app, screen, BrowserWindow, BrowserWindowConstructorOptions, Menu, Tray} from "electron";
 import Log from "@/lib/log";
 import {WindowOpt} from "@/lib/interface";
-import ico from "./assets/icon.ico";
+import ico from "./assets/tray.png";
 
 const config = require("@/cfg/config.json");
 
@@ -20,6 +20,8 @@ export class Window {
      * */
     browserWindowOpt(wh: number[]): BrowserWindowConstructorOptions {
         return {
+            minWidth: wh[0],
+            minHeight: wh[1],
             width: wh[0],
             height: wh[1],
             transparent: true,
@@ -33,8 +35,7 @@ export class Window {
                 contextIsolation: false,
                 nodeIntegration: true,
                 devTools: !app.isPackaged,
-                webSecurity: false,
-                enableRemoteModule: true
+                webSecurity: false
             }
         }
     }
@@ -70,6 +71,9 @@ export class Window {
         let opt = this.browserWindowOpt([args.width || config.appW, args.height || config.appH]);
         if (args.parentId) {
             opt.parent = this.getWindow(args.parentId);
+            args.currentWidth = this.getWindow(args.parentId).getBounds().width;
+            args.currentHeight = this.getWindow(args.parentId).getBounds().height;
+            args.currentMaximized = this.getWindow(args.parentId).isMaximized();
             if (args.currentMaximized) {
                 opt.x = parseInt(((screen.getPrimaryDisplay().workAreaSize.width - args.width) / 2).toString())
                 opt.y = parseInt(((screen.getPrimaryDisplay().workAreaSize.height - args.height) / 2).toString())
@@ -142,6 +146,42 @@ export class Window {
         this.tray.on("double-click", () => {
             for (let i in this.group) if (this.group[i]) this.getWindow(Number(i)).show();
         })
+    }
+
+    /**
+     * 设置窗口最小大小
+     */
+    setMinSize(args: { id: number; size: number[] }) {
+        this.getWindow(args.id).setMinimumSize(args.size[0], args.size[1]);
+    }
+
+    /**
+     * 设置窗口最大大小
+     */
+    setMaxSize(args: { id: number; size: number[] }) {
+        this.getWindow(args.id).setMaximumSize(args.size[0], args.size[1]);
+    }
+
+    /**
+     * 设置窗口大小
+     */
+    setSize(args: { id: number, size: number[], center: boolean; }) {
+        let Rectangle: { [key: string]: number } = {
+            width: parseInt(args.size[0].toString()),
+            height: parseInt(args.size[1].toString())
+        };
+        if (Rectangle.width === this.getWindow(args.id).getBounds().width &&
+            Rectangle.height === this.getWindow(args.id).getBounds().height) {
+            return;
+        }
+        if (!args.center) {
+            Rectangle.x = parseInt((this.getWindow(args.id).getPosition()[0] + ((this.getWindow(args.id).getBounds().width - args.size[0]) / 2)).toString());
+            Rectangle.y = parseInt((this.getWindow(args.id).getPosition()[1] + ((this.getWindow(args.id).getBounds().height - args.size[1]) / 2)).toString());
+        }
+        this.getWindow(args.id).once("resize", () => {
+            if (args.center) this.getWindow(args.id).center();
+        });
+        this.getWindow(args.id).setBounds(Rectangle);
     }
 
 }

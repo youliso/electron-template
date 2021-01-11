@@ -5,7 +5,7 @@ import {Window} from "./window";
 import {Updates} from "./update";
 import {Sockets} from "./socket";
 import Log from "@/lib/log";
-import {getExternPath, getGlobal} from "@/lib";
+import {getExternPath} from "@/lib";
 import {readFile} from "@/lib/file";
 
 declare global {
@@ -87,7 +87,7 @@ class Init {
          * 主体
          * */
         //关闭
-        ipcMain.on("closed", (event, winId) => {
+        ipcMain.on("window-closed", (event, winId) => {
             if (winId) {
                 this.window.getWindow(Number(winId)).close();
                 if (this.window.group[Number(winId)]) delete this.window.group[Number(winId)];
@@ -96,7 +96,7 @@ class Init {
             }
         });
         //隐藏
-        ipcMain.on("hide", (event, winId) => {
+        ipcMain.on("window-hide", (event, winId) => {
             if (winId) {
                 this.window.getWindow(Number(winId)).hide();
             } else {
@@ -104,7 +104,7 @@ class Init {
             }
         });
         //显示
-        ipcMain.on("show", (event, winId) => {
+        ipcMain.on("window-show", (event, winId) => {
             if (winId) {
                 this.window.getWindow(Number(winId)).show();
             } else {
@@ -112,7 +112,7 @@ class Init {
             }
         });
         //最小化
-        ipcMain.on("mini", (event, winId) => {
+        ipcMain.on("window-mini", (event, winId) => {
             if (winId) {
                 this.window.getWindow(Number(winId)).minimize();
             } else {
@@ -120,15 +120,27 @@ class Init {
             }
         });
         //最大化
-        ipcMain.on("max", (event, winId) => {
+        ipcMain.on("window-max", (event, winId) => {
             if (winId) {
                 this.window.getWindow(Number(winId)).maximize();
             } else {
                 for (let i in this.window.group) if (this.window.group[i]) this.window.getWindow(Number(i)).maximize();
             }
         });
+        //最大化最小化窗口
+        ipcMain.on("window-max-min-size", (event, winId) => {
+            if (winId) {
+                if (this.window.getWindow(winId).isMaximized()) {
+                    this.window.getWindow(winId).unmaximize();
+                    this.window.getWindow(winId).movable = true;
+                } else {
+                    this.window.getWindow(winId).movable = false;
+                    this.window.getWindow(winId).maximize();
+                }
+            }
+        });
         //复原
-        ipcMain.on("restore", (event, winId) => {
+        ipcMain.on("window-restore", (event, winId) => {
             if (winId) {
                 this.window.getWindow(Number(winId)).restore();
             } else {
@@ -136,7 +148,7 @@ class Init {
             }
         });
         //重载
-        ipcMain.on("reload", (event, winId) => {
+        ipcMain.on("window-reload", (event, winId) => {
             if (winId) {
                 this.window.getWindow(Number(winId)).reload();
             } else {
@@ -144,11 +156,17 @@ class Init {
             }
         });
         //重启
-        ipcMain.on("relaunch", () => {
+        ipcMain.on("app-relaunch", () => {
             app.relaunch({args: process.argv.slice(1)});
         });
         //创建窗口
         ipcMain.on("window-new", (event, args) => this.window.createWindow(args));
+        //设置窗口大小
+        ipcMain.on("window-size-set", (event, args) => this.window.setSize(args));
+        //设置窗口最小大小
+        ipcMain.on("window-min-size-set", (event, args) => this.window.setMinSize(args));
+        //设置窗口最大大小
+        ipcMain.on("window-max-size-set", (event, args) => this.window.setMaxSize(args));
 
         /**
          * socket
@@ -197,9 +215,12 @@ class Init {
          * 全局变量赋值
          * 返回1代表完成
          */
-        ipcMain.on("global-sharedObject", (event, args) => {
+        ipcMain.on("global-sharedObject-set", (event, args) => {
             global.sharedObject[args.key] = args.value;
             event.returnValue = 1;
+        });
+        ipcMain.on("global-sharedObject-get", (event, args) => {
+            event.returnValue = global.sharedObject[args.key];
         });
 
         /**

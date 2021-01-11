@@ -1,3 +1,11 @@
+<style lang="scss">
+.info {
+  width: 100%;
+  height: 100%;
+  padding: 25px 10px 10px;
+}
+</style>
+
 <template>
   <div class="main">
     <Head></Head>
@@ -18,7 +26,6 @@ import {argsState, messageData} from "@/renderer/store";
 import {createWindow} from "@/renderer/utils";
 import {getInsidePath, getExternPath, getGlobal} from "@/lib";
 import {WindowOpt} from "@/lib/interface";
-import {net} from "@/lib/net"
 
 export default defineComponent({
   components: {
@@ -64,11 +71,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style lang="scss">
-.info {
-  width: 100%;
-  height: 100%;
-  padding: 25px 10px 10px;
-}
-</style>
