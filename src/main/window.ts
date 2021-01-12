@@ -26,6 +26,7 @@ export class Window {
             height: wh[1],
             transparent: true,
             autoHideMenuBar: true,
+            titleBarStyle: "hidden",
             resizable: true,
             minimizable: true,
             maximizable: true,

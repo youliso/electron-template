@@ -6,6 +6,8 @@ const path = require('path');
 const cfg = require('./cfg.json');
 
 let electronProcess = null;
+let manualRestart = false
+
 
 async function startRenderer() {
     const config = require('./webpack.renderer.config');
@@ -14,49 +16,61 @@ async function startRenderer() {
         hot: true,
         host: 'localhost'
     };
-
     webpackDevServer.addDevServerEntrypoints(config, options);
     const compiler = webpack(config);
     const server = new webpackDevServer(compiler, options);
-
     server.listen(cfg.port, 'localhost', () => {
         console.log(`dev server listening on port ${cfg.port}`);
     });
 }
 
 async function startMain() {
-    const config = require('./webpack.main.config');
-    const compiler = webpack(config);
-    compiler.watch({}, (err, stats) => {
-        if (err) {
-            console.log(err);
-            return
-        }
-        if (electronProcess) {
-            electronProcess.kill()
-            electronProcess = null;
-            startElectron();
-        } else {
-            startElectron();
-        }
-    });
+    return new Promise((resolve) => {
+        const config = require('./webpack.main.config');
+        const compiler = webpack(config);
+        compiler.watch({}, (err, stats) => {
+            if (err) {
+                console.log(err);
+                return
+            }
+            if (electronProcess && electronProcess.kill) {
+                manualRestart = true
+                process.kill(electronProcess.pid)
+                electronProcess = null
+                startElectron()
+                setTimeout(() => {
+                    manualRestart = false
+                }, 5000)
+            }
+            resolve(1);
+        });
+    })
 }
 
 function startElectron() {
-    const args = [
+    let args = [
         "dist/main.bundle.js",
     ];
+    if (process.env.npm_execpath.endsWith('yarn.js')) {
+        args = args.concat(process.argv.slice(3))
+    } else if (process.env.npm_execpath.endsWith('npm-cli.js')) {
+        args = args.concat(process.argv.slice(2))
+    }
     electronProcess = spawn(electron, args);
     electronProcess.stdout.on("data", data => console.log("[main:stdout]", data.toString()));
     electronProcess.stderr.on("data", data => console.log("[main:stderr]", data.toString()))
-    electronProcess.on("close", (e) => {
-        if (e === 0) startElectron();
-    });
+    electronProcess.on('exit', (e) => {
+        console.log(e)
+    })
+    electronProcess.on('close', () => {
+        if (!manualRestart) process.exit();
+    })
 }
 
 async function init() {
     await startRenderer();
     await startMain();
+    startElectron();
 }
 
 init().then();
