@@ -56,7 +56,7 @@ export function createWindow(data: WindowOpt) {
         data: data.data, //数据
         isMultiWindow: data.isMultiWindow || false, //是否支持多窗口
         isMainWin: data.isMainWin || false, //是否主窗口
-        modal: data.modal || true //父窗口置顶
+        modal: data.modal || false //父窗口置顶
     };
     if (data.parentId) args.parentId = data.parentId;
     ipcRenderer.send("window-new", args);

@@ -42,7 +42,8 @@ export default defineComponent({
       let data: WindowOpt = {
         route: "/message",
         parentId: args.id,
-        data: {text: getGlobal("setting")}
+        data: {text: getGlobal("setting")},
+        modal: true
       }
       createWindow(data);
     }
