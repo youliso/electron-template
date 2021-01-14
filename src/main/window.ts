@@ -93,7 +93,6 @@ export class Window {
             route: args.route,
             isMultiWindow: args.isMultiWindow
         };
-        win.setMaximumSize(screen.getPrimaryDisplay().workAreaSize.width, screen.getPrimaryDisplay().workAreaSize.height);
         //window加载完毕后显示
         win.once("ready-to-show", () => win.show());
         //默认浏览器打开跳转连接
