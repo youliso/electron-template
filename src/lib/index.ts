@@ -139,3 +139,12 @@ export function throttle(fun: Function, delay: number) {
         }
     }
 }
+
+/**
+ * 指定范围内的随机整数
+ * @param start
+ * @param end
+ */
+export function random(start: number = 0, end: number = 1) {
+    return Math.floor(Math.random() * (end - start + 1) + start);
+}
