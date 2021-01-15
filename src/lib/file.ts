@@ -11,19 +11,23 @@ import {isNull} from "@/lib";
  */
 export function findFileBySuffix(path: string, fileName: string) {
     if (path.substr(0, 1) !== "/" && path.indexOf(":") === -1) path = resolve(path);
-    let files: string[] = [];
-    let dirArray = fs.readdirSync(path)
-    for (let d of dirArray) {
-        let filePath = resolve(path, d)
-        let stat = fs.statSync(filePath)
-        if (stat.isDirectory()) {
-            files = files.concat(findFileBySuffix(filePath, fileName))
+    try {
+        let files: string[] = [];
+        let dirArray = fs.readdirSync(path);
+        for (let d of dirArray) {
+            let filePath = resolve(path, d)
+            let stat = fs.statSync(filePath)
+            if (stat.isDirectory()) {
+                files = files.concat(findFileBySuffix(filePath, fileName))
+            }
+            if (stat.isFile() && extname(filePath) === fileName) {
+                files.push(filePath)
+            }
         }
-        if (stat.isFile() && extname(filePath) === fileName) {
-            files.push(filePath)
-        }
+        return files
+    } catch (e) {
+        return null;
     }
-    return files
 }
 
 /**
@@ -126,7 +130,7 @@ export async function writeFile(path: string, data: string | Buffer, options?: {
     return new Promise((resolve) =>
         fs.writeFile(path, data, options, (err) => {
             if (err) {
-                Log.error("[writeFile]", err);
+                Log.error("[writeFile]", err.message);
                 resolve(0);
             }
             resolve(1);
@@ -144,7 +148,7 @@ export async function appendFile(path: string, data: string | Uint8Array, option
     return new Promise((resolve) =>
         fs.appendFile(path, data, options, (err) => {
             if (err) {
-                Log.error("[appendFile]", err);
+                Log.error("[appendFile]", err.message);
                 resolve(0);
             }
             resolve(1);
