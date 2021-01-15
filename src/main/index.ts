@@ -1,5 +1,5 @@
 import {resolve} from "path";
-import {app, globalShortcut, ipcMain} from "electron";
+import {app, globalShortcut, ipcMain, systemPreferences} from "electron";
 import {IPC_MSG_TYPE, SOCKET_MSG_TYPE} from "@/lib/interface";
 import {Window} from "./window";
 import {Updates} from "./update";
@@ -11,7 +11,7 @@ import {readFile} from "@/lib/file";
 declare global {
     namespace NodeJS {
         interface Global {
-            sharedObject: { [key: string]: unknown }
+            sharedObject: { [key: string]: any }
         }
     }
 }
@@ -24,6 +24,8 @@ global.sharedObject = {
         version: app.getVersion()
     }
 };
+
+if (process.platform === "win32") global.sharedObject["appInfo"]["accentColor"] = systemPreferences.getAccentColor();
 
 class Init {
 

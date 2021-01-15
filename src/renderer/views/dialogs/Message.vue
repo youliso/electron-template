@@ -18,7 +18,7 @@
 </style>
 
 <template>
-  <div class="main">
+  <div class="container" :class="platform" :style="{'--accentColor':'#'+accentColor}">
     <Head></Head>
     <div class="info">
       <div class="text">
@@ -36,6 +36,7 @@ import {argsState} from "@/renderer/store";
 import {closeWindow, messageSend, setSize} from "@/renderer/utils";
 import Head from "../components/Head.vue";
 import {IpcMsg, IPC_MSG_TYPE} from "@/lib/interface";
+import {getGlobal} from "@/lib";
 
 export default defineComponent({
   components: {
@@ -62,6 +63,8 @@ export default defineComponent({
 
     return {
       args: argsState(),
+      platform: getGlobal("platform"),
+      accentColor: getGlobal("appInfo")["accentColor"],
       test,
       close
     }

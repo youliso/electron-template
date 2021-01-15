@@ -7,7 +7,7 @@
 </style>
 
 <template>
-  <div class="main">
+  <div class="container" :class="platform" :style="{'--accentColor':'#'+accentColor}">
     <Head></Head>
     <div class="info">
       <div>内部资源内容: {{ readFileSync(getInsidePath("t.txt")).toString() }}</div>
@@ -53,7 +53,8 @@ export default defineComponent({
         route: "/about",
         width: 300,
         height: 300,
-        isMainWin: true
+        isMainWin: true,
+        resizable: true
       }
       createWindow(data);
     }
@@ -63,6 +64,8 @@ export default defineComponent({
     })
 
     return {
+      platform: getGlobal("platform"),
+      accentColor: getGlobal("appInfo")["accentColor"],
       readFileSync,
       getInsidePath,
       getExternPath,

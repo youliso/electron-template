@@ -7,7 +7,7 @@
 </style>
 
 <template>
-  <div class="main">
+  <div class="container" :class="platform" :style="{'--accentColor':'#'+accentColor}">
     <Head></Head>
     <div class="info">
       <h5>This is an about page</h5>
@@ -21,6 +21,7 @@ import {defineComponent} from "vue";
 import Head from "../components/Head.vue";
 import {createWindow} from "@/renderer/utils";
 import {argsState} from "@/renderer/store";
+import {getGlobal} from "@/lib";
 
 export default defineComponent({
   components: {
@@ -33,11 +34,14 @@ export default defineComponent({
     function toHome() {
       createWindow({
         route: "/",
-        isMainWin: true
+        isMainWin: true,
+        resizable: true
       });
     }
 
     return {
+      platform: getGlobal("platform"),
+      accentColor: getGlobal("appInfo")["accentColor"],
       toHome
     }
   }
