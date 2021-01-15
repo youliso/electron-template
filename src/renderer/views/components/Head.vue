@@ -54,7 +54,11 @@
         background-color: var(--red);
       }
 
-      > .setting {
+      .min {
+        background-color: var(--grey);
+      }
+
+      .maxmin {
         background-color: var(--cyan);
       }
     }
@@ -69,6 +73,8 @@
         DEMO
       </div>
       <div class="events">
+        <div @click="min" class="event min no-drag cursor-pointer"></div>
+        <div @click="maxMin" class="event maxmin no-drag cursor-pointer"></div>
         <div @click="close" class="event close no-drag cursor-pointer"></div>
       </div>
     </div>
@@ -85,20 +91,33 @@
 import {defineComponent} from "vue";
 import {argsState} from "@/renderer/store";
 import {isNull, getGlobal} from "@/lib";
-import {closeWindow} from "@/renderer/utils";
+import {closeWindow, maxMinWindow, minWindow} from "@/renderer/utils";
 
 export default defineComponent({
   name: "Head",
   setup() {
     const args = argsState();
 
+    const isMain = args.isMainWin || false;
+
+    function min() {
+      minWindow(args.id);
+    }
+
+    function maxMin() {
+      maxMinWindow(args.id);
+    }
+
     function close() {
-      if (isNull(args)) closeWindow();
+      if (isMain) closeWindow();
       else closeWindow(args.id);
     }
 
     return {
+      min,
+      maxMin,
       close,
+      isMain,
       platform: getGlobal("platform")
     }
   }
