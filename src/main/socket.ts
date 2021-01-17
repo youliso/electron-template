@@ -19,21 +19,18 @@ export class Sockets {
      * 参考 ManagerOptions & SocketOptions
      * url https://socket.io/docs/v3/client-api/#new-Manager-url-options
      */
-    opts() {
-        let opts: Partial<ManagerOptions & SocketOptions> = {
-            auth: {
-                authorization: global.sharedObject["authorization"]
-            }
-        }
-        return opts;
-    }
+    public opts: Partial<ManagerOptions & SocketOptions> = {
+        auth: {
+            authorization: global.sharedObject["authorization"]
+        },
+    };
 
     /**
      * 打开通讯
      * @param callback
      */
     open(callback: Function) {
-        this.io = io(config.socketUrl, this.opts());
+        this.io = io(config.socketUrl, this.opts);
         this.io.on("connect", () => {
             Log.info("[Socket]connect");
         });
