@@ -8,6 +8,7 @@ import {Platform} from "./platform";
 import Log from "@/lib/log";
 import {getExternPath} from "@/lib";
 import {readFile} from "@/lib/file";
+import {sessionInit} from "@/main/session";
 
 declare global {
     namespace NodeJS {
@@ -74,6 +75,7 @@ class Init {
         app.setAsDefaultProtocolClient(app.name, process.execPath, args);
         await this.initialGlobal();
         await this.ipc();
+        sessionInit();
     }
 
     async ipc() {
