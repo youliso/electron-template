@@ -1,11 +1,12 @@
 import fetch, {RequestInit, Headers} from "node-fetch";
 import AbortController from 'node-abort-controller'
-import {getGlobal, sendGlobal} from "@/lib";
+import querystring from "querystring";
+import {getGlobal, isNull, sendGlobal} from "@/lib";
 
 const config = require('@/cfg/config.json');
 
 export interface NetOpt extends RequestInit {
-    data?: unknown;
+    data?: any;
     type?: NET_RESPONSE_TYPE; //返回数据类型
 }
 
@@ -129,10 +130,9 @@ export async function net(url: string, param: NetOpt = {}): Promise<any> {
         timeout: param.timeout || 30000,
         type: param.type || NET_RESPONSE_TYPE.TEXT,
         method: param.method || "GET",
-        signal: param.signal || null
+        signal: param.signal || null,
+        body: isNull(param.data) ? null : querystring.stringify(param.data)
     };
-    if (sendData.method === "GET") url = url + convertObj(param.data);
-    else sendData.body = JSON.stringify(param.data);
     return Promise.race([timeoutPromise(sendData.timeout), fetchPromise(url, sendData)])
         .catch(err => errorReturn(err.message));
 }
