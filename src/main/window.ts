@@ -128,7 +128,7 @@ export class Window {
     /**
      * 创建托盘
      * */
-    async createTray() {
+    createTray() {
         const contextMenu = Menu.buildFromTemplate([{
             label: "显示",
             click: () => {

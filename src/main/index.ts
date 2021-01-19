@@ -44,22 +44,23 @@ class Init {
      * 初始化并加载
      * */
     async init() {
+        //协议调起
+        let args = [];
+        if (!app.isPackaged) args.push(resolve(process.argv[1]));
+        args.push("--");
+        app.setAsDefaultProtocolClient(app.name, process.execPath, args);
         app.allowRendererProcessReuse = true;
         if (!app.requestSingleInstanceLock()) {
             app.quit();
         } else {
             app.on("second-instance", () => {
-                // 当运行第二个实例时,将会聚焦到myWindow这个窗口
+                // 当运行第二个实例时,将会聚焦到main窗口
                 if (this.window.main) {
                     if (this.window.main.isMinimized()) this.window.main.restore();
                     this.window.main.focus();
                 }
             })
         }
-        app.whenReady().then(() => {
-            this.window.createWindow({isMainWin: true});
-            this.window.createTray();
-        });
         app.on("window-all-closed", () => {
             if (process.platform !== "darwin") {
                 app.quit();
@@ -81,13 +82,11 @@ class Init {
             // 注销关闭刷新
             globalShortcut.unregister("CommandOrControl+R");
         });
-        //协议调起
-        let args = [];
-        if (!app.isPackaged) args.push(resolve(process.argv[1]));
-        args.push("--");
-        app.setAsDefaultProtocolClient(app.name, process.execPath, args);
-        await this.global();
-        await this.ipc();
+        //启动
+        await Promise.all([this.global(), this.ipc(), app.whenReady()]);
+        //创建窗口、托盘
+        this.window.createWindow({isMainWin: true});
+        this.window.createTray();
     }
 
     /**
