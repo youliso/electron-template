@@ -2,7 +2,7 @@ import {join} from "path";
 import {shell, app, screen, BrowserWindow, BrowserWindowConstructorOptions, Menu, Tray} from "electron";
 import Log from "@/lib/log";
 import {WindowOpt} from "@/lib/interface";
-import ico from "./assets/tray.png";
+import ico from "../assets/tray.png";
 
 const config = require("@/cfg/config.json");
 

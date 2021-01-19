@@ -4,10 +4,10 @@ import {IPC_MSG_TYPE, SOCKET_MSG_TYPE} from "@/lib/interface";
 import Log from "@/lib/log";
 import {getExternPath} from "@/lib";
 import {readFile} from "@/lib/file";
-import {Session} from "./session";
-import {Window} from "./window";
-import {Update} from "./update";
-import {Socket} from "./socket";
+import {Session} from "./modular/session";
+import {Window} from "./modular/window";
+import {Update} from "./modular/update";
+import {Socket} from "./modular/socket";
 import {Platform} from "./platform";
 
 declare global {
