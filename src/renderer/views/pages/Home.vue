@@ -23,7 +23,7 @@ import {defineComponent, onUnmounted, watch} from "vue";
 import Head from "../components/Head.vue";
 import {readFileSync} from "fs";
 import {argsState, messageData} from "@/renderer/store";
-import {createWindow} from "@/renderer/utils";
+import {createWindow} from "@/renderer/utils/window";
 import {getInsidePath, getExternPath, getGlobal} from "@/lib";
 import {WindowOpt} from "@/lib/interface";
 

@@ -1,14 +1,14 @@
 import {resolve} from "path";
 import {app, globalShortcut, ipcMain} from "electron";
 import {IPC_MSG_TYPE, SOCKET_MSG_TYPE} from "@/lib/interface";
-import {Window} from "./window";
-import {Updates} from "./update";
-import {Sockets} from "./socket";
-import {Platform} from "./platform";
 import Log from "@/lib/log";
 import {getExternPath} from "@/lib";
 import {readFile} from "@/lib/file";
-import {sessionInit} from "@/main/session";
+import {Session} from "./session";
+import {Window} from "./window";
+import {Update} from "./update";
+import {Socket} from "./socket";
+import {Platform} from "./platform";
 
 declare global {
     namespace NodeJS {
@@ -18,11 +18,24 @@ declare global {
     }
 }
 
+/**
+ * 初始定义
+ */
+global.sharedObject = {
+    isPackaged: app.isPackaged, //是否打包
+    platform: process.platform, //当前运行平台
+    appInfo: { //应用信息
+        name: app.name,
+        version: app.getVersion()
+    }
+};
+
 class Init {
 
     private window = new Window()
-    private socket = new Sockets();
-    private updates = new Updates();
+    private socket = new Socket();
+    private update = new Update();
+    private session = new Session();
 
     constructor() {
     }
@@ -73,15 +86,28 @@ class Init {
         if (!app.isPackaged) args.push(resolve(process.argv[1]));
         args.push("--");
         app.setAsDefaultProtocolClient(app.name, process.execPath, args);
-        await this.initialGlobal();
+        await this.global();
         await this.ipc();
-        sessionInit();
     }
 
+    /**
+     * 初始全局变量加载
+     */
+    async global() {
+        try {
+            const setting = await readFile(getExternPath("setting.json"));
+            global.sharedObject["setting"] = JSON.parse(setting as string);
+        } catch (e) {
+            Log.error("[setting]", e);
+            global.sharedObject["setting"] = {};
+        }
+        Platform[global.sharedObject.platform]();
+    }
+
+    /**
+     * 通讯
+     * */
     async ipc() {
-        /**
-         * 主体
-         * */
         //关闭
         ipcMain.on("window-closed", (event, winId) => {
             if (winId) {
@@ -165,6 +191,46 @@ class Init {
         ipcMain.on("window-max-size-set", (event, args) => this.window.setMaxSize(args));
 
         /**
+         * 全局变量赋值
+         * 返回1代表完成
+         */
+        ipcMain.on("global-sharedObject-set", (event, args) => {
+            global.sharedObject[args.key] = args.value;
+            event.returnValue = 1;
+        });
+        ipcMain.on("global-sharedObject-get", (event, args) => {
+            event.returnValue = global.sharedObject[args.key];
+        });
+
+        /**
+         * 消息反馈
+         */
+        ipcMain.on("message-send", (event, args) => {
+            switch (args.type) {
+                case IPC_MSG_TYPE.WIN:
+                    for (let i in this.window.group) if (this.window.group[i]) this.window.getWindow(Number(i)).webContents.send("message-back", args);
+                    break;
+                case IPC_MSG_TYPE.SOCKET: //socket模块
+                    if (this.socket.io && this.socket.io.io._readyState === "open") this.socket.io.send(args);
+                    break;
+            }
+        });
+
+        /**
+         * 检查更新
+         * */
+        //开启更新监听
+        ipcMain.on("update-check", () => {
+            this.update.checkForUpdates((data: any) => { //更新消息
+                for (let i in this.window.group) if (this.window.group[i]) this.window.getWindow(Number(i)).webContents.send("message-back", data);
+            })
+        });
+        //重新检查更新 isDel 是否删除历史更新缓存
+        ipcMain.on("update-recheck", (event, isDel) => this.update.checkUpdate(isDel));
+        // 关闭程序安装新的软件 isSilent 是否静默更新
+        ipcMain.on("update-quit-install", (event, isSilent) => this.update.updateQuitInstall(isSilent));
+
+        /**
          * socket
          * */
         //初始化
@@ -194,63 +260,13 @@ class Init {
         ipcMain.on("socket-reconnection", async () => this.socket.close());
 
         /**
-         * 检查更新
-         * */
-        //开启更新监听
-        ipcMain.on("update-check", () => {
-            this.updates.checkForUpdates((data: any) => { //更新消息
-                for (let i in this.window.group) if (this.window.group[i]) this.window.getWindow(Number(i)).webContents.send("message-back", data);
-            })
-        });
-        //重新检查更新 isDel 是否删除历史更新缓存
-        ipcMain.on("update-recheck", (event, isDel) => this.updates.checkUpdate(isDel));
-        // 关闭程序安装新的软件 isSilent 是否静默更新
-        ipcMain.on("update-quit-install", (event, isSilent) => this.updates.updateQuitInstall(isSilent));
-
-        /**
-         * 全局变量赋值
-         * 返回1代表完成
+         * session
          */
-        ipcMain.on("global-sharedObject-set", (event, args) => {
-            global.sharedObject[args.key] = args.value;
-            event.returnValue = 1;
-        });
-        ipcMain.on("global-sharedObject-get", (event, args) => {
-            event.returnValue = global.sharedObject[args.key];
+        //开启request监听
+        ipcMain.on("session-web-request", async (event, args) => {
+            this.session.webRequest(args);
         });
 
-        /**
-         * 消息反馈
-         */
-        ipcMain.on("message-send", (event, args) => {
-            switch (args.type) {
-                case IPC_MSG_TYPE.WIN:
-                    for (let i in this.window.group) if (this.window.group[i]) this.window.getWindow(Number(i)).webContents.send("message-back", args);
-                    break;
-                case IPC_MSG_TYPE.SOCKET:
-                    if (this.socket.io && this.socket.io.io._readyState === "open") this.socket.io.send(args);
-                    break;
-            }
-        });
-    }
-
-    async initialGlobal() {
-        global.sharedObject = {
-            isPackaged: app.isPackaged, //是否打包
-            platform: process.platform, //当前运行平台
-            appInfo: { //应用信息
-                name: app.name,
-                version: app.getVersion()
-            }
-        };
-        try {
-            const setting = await readFile(getExternPath("setting.json"));
-            global.sharedObject["setting"] = JSON.parse(setting as string);
-        } catch (e) {
-            Log.error("[setting]", e);
-            global.sharedObject["setting"] = {};
-        }
-        Platform[global.sharedObject.platform]();
     }
 
 }

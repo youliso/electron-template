@@ -1,16 +1,38 @@
-import {session} from "electron";
+import {Filter, session} from "electron";
 
 /**
- * 拦截监听指定url请求
+ * 监听
  */
-export let urls: string[] = [
-    "http://127.0.0.1/*"
-]
+export class Session {
 
-export function sessionInit() {
-    session.defaultSession.webRequest.onBeforeSendHeaders({
-        urls
-    }, (details, callback) => {
-        callback({requestHeaders: details.requestHeaders});
-    })
+    /**
+     * urls列表
+     */
+    private filer: Filter = {
+        urls: []
+    };
+
+    constructor() {
+    }
+
+    /**
+     * 拦截监听指定url请求并更换指定headers
+     * @param args
+     */
+    webRequest(args: {
+        urls: string[], value: {
+            headers: { [key: string]: string }
+        }
+    }) {
+        this.filer.urls = args.urls;
+        session.defaultSession.webRequest.onBeforeSendHeaders({
+            urls: args.urls
+        }, (details, callback) => {
+            for (let i of Object.keys(args.value.headers)) {
+                details.requestHeaders[i] = args.value.headers[i];
+            }
+            callback({requestHeaders: details.requestHeaders});
+        });
+    }
+
 }

@@ -19,7 +19,7 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import Head from "../components/Head.vue";
-import {createWindow} from "@/renderer/utils";
+import {createWindow} from "@/renderer/utils/window";
 import {argsState} from "@/renderer/store";
 import {getGlobal} from "@/lib";
 

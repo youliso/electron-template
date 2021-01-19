@@ -8,11 +8,10 @@ const config = require("@/cfg/config.json");
 /**
  * 更新模块
  * */
-export class Updates {
-    public autoUpdater: AppUpdater;
+export class Update {
+    public autoUpdater: AppUpdater = autoUpdater;
 
     constructor() {
-        this.autoUpdater = autoUpdater;
     }
 
     /**

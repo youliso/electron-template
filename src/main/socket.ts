@@ -1,5 +1,5 @@
 import Log from "@/lib/log";
-import {io, Socket} from "socket.io-client";
+import {io, Socket as SocketIo} from "socket.io-client";
 import {ManagerOptions} from "socket.io-client/build/manager";
 import {SocketOptions} from "socket.io-client/build/socket";
 
@@ -8,11 +8,8 @@ const config = require("@/cfg/config.json");
 /**
  * Socket模块
  * */
-export class Sockets {
-    public io: Socket;
-
-    constructor() {
-    }
+export class Socket {
+    public io: SocketIo;
 
     /**
      * socket.io参数
@@ -24,6 +21,9 @@ export class Sockets {
             authorization: global.sharedObject["authorization"]
         },
     };
+
+    constructor() {
+    }
 
     /**
      * 打开通讯
