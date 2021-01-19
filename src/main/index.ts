@@ -107,6 +107,10 @@ class Init {
      * 通讯
      * */
     async ipc() {
+        //重启
+        ipcMain.on("app-relaunch", () => {
+            app.relaunch({args: process.argv.slice(1)});
+        });
         //关闭
         ipcMain.on("window-closed", (event, winId) => {
             if (winId) {
@@ -175,10 +179,6 @@ class Init {
             } else {
                 for (let i in this.window.group) if (this.window.group[i]) this.window.getWindow(Number(i)).reload();
             }
-        });
-        //重启
-        ipcMain.on("app-relaunch", () => {
-            app.relaunch({args: process.argv.slice(1)});
         });
         //创建窗口
         ipcMain.on("window-new", (event, args) => this.window.createWindow(args));
