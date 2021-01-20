@@ -1,5 +1,5 @@
 import {join} from "path";
-import {shell, app, screen, BrowserWindow, BrowserWindowConstructorOptions, Menu, Tray} from "electron";
+import {shell, app, screen, BrowserWindow, BrowserWindowConstructorOptions, Menu, Tray, ipcMain} from "electron";
 import Log from "@/lib/log";
 import {WindowOpt} from "@/lib/interface";
 import ico from "../assets/tray.png";
@@ -182,6 +182,90 @@ export class Window {
             if (args.center) this.getWindow(args.id).center();
         });
         this.getWindow(args.id).setBounds(Rectangle);
+    }
+
+    /**
+     * 开启监听
+     */
+    on() {
+        //关闭
+        ipcMain.on("window-closed", (event, winId) => {
+            if (winId) {
+                this.getWindow(Number(winId)).close();
+                if (this.group[Number(winId)]) delete this.group[Number(winId)];
+            } else {
+                for (let i in this.group) if (this.group[i]) this.getWindow(Number(i)).close();
+            }
+        });
+        //隐藏
+        ipcMain.on("window-hide", (event, winId) => {
+            if (winId) {
+                this.getWindow(Number(winId)).hide();
+            } else {
+                for (let i in this.group) if (this.group[i]) this.getWindow(Number(i)).hide();
+            }
+        });
+        //显示
+        ipcMain.on("window-show", (event, winId) => {
+            if (winId) {
+                this.getWindow(Number(winId)).show();
+            } else {
+                for (let i in this.group) if (this.group[i]) this.getWindow(Number(i)).show();
+            }
+        });
+        //最小化
+        ipcMain.on("window-mini", (event, winId) => {
+            if (winId) {
+                this.getWindow(Number(winId)).minimize();
+            } else {
+                for (let i in this.group) if (this.group[i]) this.getWindow(Number(i)).minimize();
+            }
+        });
+        //最大化
+        ipcMain.on("window-max", (event, winId) => {
+            if (winId) {
+                this.getWindow(Number(winId)).maximize();
+            } else {
+                for (let i in this.group) if (this.group[i]) this.getWindow(Number(i)).maximize();
+            }
+        });
+        //最大化最小化窗口
+        ipcMain.on("window-max-min-size", (event, winId) => {
+            if (winId) {
+                if (this.getWindow(winId).isMaximized()) {
+                    this.getWindow(winId).unmaximize();
+                    this.getWindow(winId).movable = true;
+                } else {
+                    this.getWindow(winId).movable = false;
+                    this.getWindow(winId).maximize();
+                }
+            }
+        });
+        //复原
+        ipcMain.on("window-restore", (event, winId) => {
+            if (winId) {
+                this.getWindow(Number(winId)).restore();
+            } else {
+                for (let i in this.group) if (this.group[i]) this.getWindow(Number(i)).restore();
+            }
+        });
+        //重载
+        ipcMain.on("window-reload", (event, winId) => {
+            if (winId) {
+                this.getWindow(Number(winId)).reload();
+            } else {
+                for (let i in this.group) if (this.group[i]) this.getWindow(Number(i)).reload();
+            }
+        });
+        //创建窗口
+        ipcMain.on("window-new", (event, args) => this.createWindow(args));
+        //设置窗口大小
+        ipcMain.on("window-size-set", (event, args) => this.setSize(args));
+        //设置窗口最小大小
+        ipcMain.on("window-min-size-set", (event, args) => this.setMinSize(args));
+        //设置窗口最大大小
+        ipcMain.on("window-max-size-set", (event, args) => this.setMaxSize(args));
+
     }
 
 }

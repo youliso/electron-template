@@ -2,6 +2,8 @@ import {join} from "path";
 import {AppUpdater, autoUpdater} from "electron-updater";
 import Log from "@/lib/log";
 import {delDir} from "@/lib/file";
+import {ipcMain} from "electron";
+import {Window} from "@/main/modular/window";
 
 const config = require("@/cfg/config.json");
 
@@ -10,6 +12,11 @@ const config = require("@/cfg/config.json");
  * */
 export class Update {
     public autoUpdater: AppUpdater = autoUpdater;
+
+    /**
+     * 渲染进程data key
+     */
+    public key: string = "update-message";
 
     constructor() {
     }
@@ -27,14 +34,14 @@ export class Update {
      * 检查更新
      * @param messageBack 反馈更新状态
      */
-    checkForUpdates(messageBack: Function) {
+    open(messageBack: Function) {
         this.autoUpdater.removeAllListeners();
         this.handleUpdate();
         let message = {
-            error: {key: "update-message", value: {code: 0, msg: "检查更新出错"}},
-            checking: {key: "update-message", value: {code: 1, msg: "正在检查更新"}},
-            updateAva: {key: "update-message", value: {code: 2, msg: "检测到新版本,正在下载"}},
-            updateNotAva: {key: "update-message", value: {code: 3, msg: "现在使用的就是最新版本,不用更新"}}
+            error: {key: this.key, value: {code: 0, msg: "检查更新出错"}},
+            checking: {key: this.key, value: {code: 1, msg: "正在检查更新"}},
+            updateAva: {key: this.key, value: {code: 2, msg: "检测到新版本,正在下载"}},
+            updateNotAva: {key: this.key, value: {code: 3, msg: "现在使用的就是最新版本,不用更新"}}
         };
         // // 本地开发环境，改变app-update.yml地址
         // if (process.env.NODE_ENV === 'development' && !(process.platform === 'darwin')) {
@@ -74,6 +81,26 @@ export class Update {
      */
     updateQuitInstall(isSilent: boolean) {
         this.autoUpdater.quitAndInstall(isSilent);
+    }
+
+    /**
+     * 开启监听
+     */
+    on(window: Window) {
+        //开启更新监听
+        ipcMain.on("update-check", () => {
+            this.open((data: { key: string; value: any }) => { //更新消息
+                for (let i in window.group) {
+                    if (window.group[i]) {
+                        window.getWindow(Number(i)).webContents.send("message-back", data);
+                    }
+                }
+            })
+        });
+        //重新检查更新 isDel 是否删除历史更新缓存
+        ipcMain.on("update-recheck", (event, isDel) => this.checkUpdate(isDel));
+        // 关闭程序安装新的软件 isSilent 是否静默更新
+        ipcMain.on("update-quit-install", (event, isSilent) => this.updateQuitInstall(isSilent));
     }
 
 }
