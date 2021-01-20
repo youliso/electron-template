@@ -1,4 +1,4 @@
-import {Filter, ipcMain, session} from "electron";
+import {ipcMain, session} from "electron";
 
 /**
  * 监听
@@ -25,7 +25,8 @@ export class Session {
         session.defaultSession.webRequest.onBeforeSendHeaders({
             urls: this.urls
         }, (details, callback) => {
-            const keys = Object.keys(this.urlHeaders).filter((key: string) => {
+            const urls = Object.keys(this.urlHeaders);
+            const keys = urls.filter((key: string) => {
                 return details.url.indexOf(key) === 0;
             })
             for (let key of keys) {
@@ -50,17 +51,10 @@ export class Session {
      * 开启监听
      */
     on() {
-        //设置urls
-        ipcMain.on("session-set-urls", async (event, args) => {
-            this.urls = args;
-        });
+        this.webRequest();
         //设置headers
         ipcMain.on("session-set-headers", async (event, args) => {
             this.urlHeaders = args;
-        });
-        //启动webRequest (只需调用一次)
-        ipcMain.on("session-web-request", async () => {
-            this.webRequest();
         });
     }
 

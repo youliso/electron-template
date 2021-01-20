@@ -88,9 +88,10 @@ class Init {
         });
 
         //启动
-        await Promise.all([this.global(), this.ipc(), app.whenReady()]);
+        await Promise.all([this.global(), app.whenReady()]);
 
-        //创建窗口、托盘
+        //通讯、创建窗口、托盘
+        this.ipc()
         this.window.createWindow({isMainWin: true});
         this.window.createTray();
     }
@@ -112,7 +113,7 @@ class Init {
     /**
      * 通讯
      * */
-    async ipc() {
+    ipc() {
         /**
          * app重启
          */
