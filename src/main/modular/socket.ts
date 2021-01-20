@@ -3,7 +3,6 @@ import {io, Socket as SocketIo} from "socket.io-client";
 import {ManagerOptions} from "socket.io-client/build/manager";
 import {SocketOptions} from "socket.io-client/build/socket";
 import {ipcMain} from "electron";
-import {SOCKET_MSG_TYPE} from "@/lib/interface";
 import {Window} from "@/main/modular/window";
 import {isNull} from "@/lib";
 

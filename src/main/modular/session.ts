@@ -54,7 +54,7 @@ export class Session {
         this.webRequest();
         //设置headers
         ipcMain.on("session-set-headers", async (event, args) => {
-            this.urlHeaders = args;
+            this.urlHeaders = Object.assign(this.urlHeaders, args);
         });
     }
 

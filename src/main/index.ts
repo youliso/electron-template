@@ -1,6 +1,6 @@
 import {resolve} from "path";
 import {app, globalShortcut, ipcMain} from "electron";
-import {IPC_MSG_TYPE, SOCKET_MSG_TYPE} from "@/lib/interface";
+import {IPC_MSG_TYPE} from "@/lib/interface";
 import Log from "@/lib/log";
 import {getExternPath} from "@/lib";
 import {readFile} from "@/lib/file";
