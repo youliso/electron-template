@@ -33,24 +33,6 @@ export function AbortSignal() {
  * */
 
 /**
- * url参数转对象
- */
-export function GetQueryJson2(url: string): { [key: string]: unknown } {
-    let arr = []; // 存储参数的数组
-    let res: { [key: string]: unknown } = {}; // 存储最终JSON结果对象
-    arr = url.split("&"); // 获取浏览器地址栏中的参数
-    for (let i = 0; i < arr.length; i++) { // 遍历参数
-        if (arr[i].indexOf("=") != -1) { // 如果参数中有值
-            let str = arr[i].split("=");
-            res[str[0]] = str[1];
-        } else { // 如果参数中无值
-            res[arr[i]] = "";
-        }
-    }
-    return res;
-}
-
-/**
  * 错误信息包装
  */
 export function errorReturn(msg: string): { [key: string]: unknown } {
