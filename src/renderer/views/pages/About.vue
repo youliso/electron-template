@@ -21,7 +21,6 @@ import {defineComponent} from "vue";
 import Head from "../components/Head.vue";
 import {createWindow} from "@/renderer/utils/window";
 import {argsState} from "@/renderer/store";
-import {getGlobal} from "@/lib";
 
 export default defineComponent({
   components: {
@@ -40,8 +39,8 @@ export default defineComponent({
     }
 
     return {
-      platform: getGlobal("platform"),
-      accentColor: getGlobal("appInfo")["accentColor"],
+      platform: args.platform,
+      accentColor: args.appInfo.accentColor,
       toHome
     }
   }

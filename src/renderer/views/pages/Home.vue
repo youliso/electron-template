@@ -40,6 +40,7 @@ export default defineComponent({
 
     function test() {
       let data: WindowOpt = {
+        title: "弹框测试",
         route: "/message",
         parentId: args.id,
         data: {text: getGlobal("setting")},
@@ -64,8 +65,8 @@ export default defineComponent({
     })
 
     return {
-      platform: getGlobal("platform"),
-      accentColor: getGlobal("appInfo")["accentColor"],
+      platform: args.platform,
+      accentColor: args.appInfo.accentColor,
       readFileSync,
       getInsidePath,
       getExternPath,

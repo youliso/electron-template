@@ -93,6 +93,9 @@ export class Window {
             route: args.route,
             isMultiWindow: args.isMultiWindow
         };
+        args.id = win.id;
+        args.platform = global.sharedObject["platform"];
+        args.appInfo = global.sharedObject["appInfo"];
         //window加载完毕后显示
         win.once("ready-to-show", () => win.show());
         //默认浏览器打开跳转连接
@@ -111,7 +114,6 @@ export class Window {
                 }
                 this.main = win;
             }
-            args.id = win.id;
             win.webContents.send("window-load", args);
         });
         if (!app.isPackaged) win.loadURL(`http://localhost:${config.appPort}`).catch(err => Log.error("[createWindow]", err));

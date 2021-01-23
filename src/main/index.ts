@@ -86,12 +86,18 @@ class Init {
             // 注销关闭刷新
             globalShortcut.unregister("CommandOrControl+R");
         });
+        /**
+         * app重启
+         */
+        ipcMain.on("app-relaunch", () => {
+            app.relaunch({args: process.argv.slice(1)});
+        });
 
         //启动
         await Promise.all([this.global(), app.whenReady()]);
 
-        //通讯、创建窗口、托盘
-        this.ipc()
+        //模块、创建窗口、托盘
+        this.modular();
         this.window.createWindow({isMainWin: true});
         this.window.createTray();
     }
@@ -108,18 +114,6 @@ class Init {
             global.sharedObject["setting"] = {};
         }
         Platform[global.sharedObject.platform]();
-    }
-
-    /**
-     * 通讯
-     * */
-    ipc() {
-        /**
-         * app重启
-         */
-        ipcMain.on("app-relaunch", () => {
-            app.relaunch({args: process.argv.slice(1)});
-        });
 
         /**
          * 全局变量赋值
@@ -132,7 +126,12 @@ class Init {
         ipcMain.on("global-sharedObject-get", (event, args) => {
             event.returnValue = global.sharedObject[args.key];
         });
+    }
 
+    /**
+     * 模块
+     * */
+    modular() {
         /**
          * 消息反馈(根据需要增加修改)
          */

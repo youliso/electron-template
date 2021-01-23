@@ -70,7 +70,7 @@
   <div class="head-info drag">
     <div v-if="platform==='win32'" :class="platform">
       <div class="title">
-        {{ title ? title : appName }}
+        {{ title }}
       </div>
       <div class="events">
         <div @click="min" class="event min no-drag cursor-pointer"></div>
@@ -81,7 +81,7 @@
     <div v-else-if="platform==='darwin'" :class="platform">
       <div></div>
       <div class="title">
-        {{ title ? title : appName }}
+        {{ title }}
       </div>
     </div>
   </div>
@@ -90,7 +90,6 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import {argsState} from "@/renderer/store";
-import {getGlobal} from "@/lib";
 import {closeWindow, maxMinWindow, minWindow} from "@/renderer/utils/window";
 
 export default defineComponent({
@@ -118,9 +117,8 @@ export default defineComponent({
       maxMin,
       close,
       isMain,
-      title: args.title,
-      appName: getGlobal("appInfo")["name"],
-      platform: getGlobal("platform")
+      title: args.title || args.appInfo.name,
+      platform: args.platform
     }
   }
 });

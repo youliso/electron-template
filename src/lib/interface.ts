@@ -1,3 +1,9 @@
+export interface AppInfo {
+    name: string;
+    version: string;
+    accentColor?: string;
+}
+
 export interface WindowOpt {
     id?: number; //唯一id
     title?: string; //窗口标题
@@ -13,6 +19,8 @@ export interface WindowOpt {
     isMainWin?: boolean; //是否主窗口(当为true时会替代当前主窗口)
     parentId?: number; //父窗口id
     modal?: boolean; //父窗口置顶
+    platform?: NodeJS.Platform;
+    appInfo?: AppInfo;
 }
 
 export interface IpcMsg {
