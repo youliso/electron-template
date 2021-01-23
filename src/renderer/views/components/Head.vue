@@ -70,7 +70,7 @@
   <div class="head-info drag">
     <div v-if="platform==='win32'" :class="platform">
       <div class="title">
-        DEMO
+        {{ title ? title : appName }}
       </div>
       <div class="events">
         <div @click="min" class="event min no-drag cursor-pointer"></div>
@@ -81,7 +81,7 @@
     <div v-else-if="platform==='darwin'" :class="platform">
       <div></div>
       <div class="title">
-        DEMO
+        {{ title ? title : appName }}
       </div>
     </div>
   </div>
@@ -118,6 +118,8 @@ export default defineComponent({
       maxMin,
       close,
       isMain,
+      title: args.title,
+      appName: getGlobal("appInfo")["name"],
       platform: getGlobal("platform")
     }
   }

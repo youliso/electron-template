@@ -1,5 +1,6 @@
 export interface WindowOpt {
     id?: number; //唯一id
+    title?: string; //窗口标题
     currentWidth?: number; //父类窗口宽度
     currentHeight?: number; //父类窗口高度
     currentMaximized?: boolean; //父类窗口是否全屏

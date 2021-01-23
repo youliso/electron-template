@@ -6,6 +6,7 @@ import {WindowOpt} from "@/lib/interface";
  */
 export function createWindow(data: WindowOpt) {
     let args: WindowOpt = {
+        title: data.title,
         width: data.width || 0,
         height: data.height || 0,
         route: data.route, // 页面路由
