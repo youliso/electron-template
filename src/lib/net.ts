@@ -112,7 +112,7 @@ export async function net(url: string, param: NetOpt = {}): Promise<any> {
         method: param.method || "GET",
         signal: param.signal || null
     };
-    if (!isNull(sendData.data)) {
+    if (!isNull(param.data)) {
         if (sendData.method === "GET") url = `${url}?${querystring.stringify(param.data)}`;
         else if (sendData.isQuerystring) sendData.body = querystring.stringify(param.data);
         else sendData.body = param.data;
