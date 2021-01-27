@@ -3,6 +3,13 @@ import {IpcMsg} from "@/lib/interface";
 import {setMessageData} from "@/renderer/store";
 
 /**
+ * 渲染进程初始化 (i)
+ * */
+export async function windowLoad() {
+    return new Promise(resolve => ipcRenderer.once("window-load", async (event, args) => resolve(args)))
+}
+
+/**
  * 消息反馈 (i)
  */
 export function messageBack() {
