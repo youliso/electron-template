@@ -24,7 +24,7 @@ export class Window {
             minHeight: wh[1],
             width: wh[0],
             height: wh[1],
-            transparent: true,
+            backgroundColor: config.appBackgroundColor,
             autoHideMenuBar: true,
             titleBarStyle: "hidden",
             resizable: true,
@@ -96,8 +96,10 @@ export class Window {
         args.id = win.id;
         args.platform = global.sharedObject["platform"];
         args.appInfo = global.sharedObject["appInfo"];
-        //window加载完毕后显示
-        win.once("ready-to-show", () => win.show());
+        //window加载完毕后显示 (放到vue生命周期执行)
+        // win.once("ready-to-show", () => win.show());
+        //window关闭时黑底时设置透明
+        win.on("close", () => win.setOpacity(0));
         //默认浏览器打开跳转连接
         win.webContents.on("new-window", async (event, url) => {
             event.preventDefault();
@@ -183,7 +185,15 @@ export class Window {
         this.getWindow(args.id).once("resize", () => {
             if (args.center) this.getWindow(args.id).center();
         });
+        this.getWindow(args.id).setMinimumSize(Rectangle.width, Rectangle.height);
         this.getWindow(args.id).setBounds(Rectangle);
+    }
+
+    /**
+     * 设置窗口背景色
+     */
+    setBackgroundColor(id: number, color: string = config.appBackgroundColor) {
+        this.getWindow(id).setBackgroundColor(color);
     }
 
     /**
@@ -196,7 +206,7 @@ export class Window {
                 this.getWindow(Number(winId)).close();
                 if (this.group[Number(winId)]) delete this.group[Number(winId)];
             } else {
-                for (let i in this.group) if (this.group[i]) this.getWindow(Number(i)).close();
+                this.closeAllWindow();
             }
         });
         //隐藏
@@ -236,9 +246,9 @@ export class Window {
             if (winId) {
                 if (this.getWindow(winId).isMaximized()) {
                     this.getWindow(winId).unmaximize();
-                    this.getWindow(winId).movable = true;
+                    // this.getWindow(winId).movable = true;
                 } else {
-                    this.getWindow(winId).movable = false;
+                    // this.getWindow(winId).movable = false;
                     this.getWindow(winId).maximize();
                 }
             }
@@ -267,6 +277,8 @@ export class Window {
         ipcMain.on("window-min-size-set", (event, args) => this.setMinSize(args));
         //设置窗口最大大小
         ipcMain.on("window-max-size-set", (event, args) => this.setMaxSize(args));
+        //设置窗口背景颜色
+        ipcMain.on("window-bg-color-set", (event, args) => this.setBackgroundColor(args.id, args.color));
 
     }
 

@@ -21,6 +21,13 @@ export function createWindow(data: WindowOpt) {
 }
 
 /**
+ * 窗口显示
+ */
+export function windowShow(id?: number) {
+    ipcRenderer.send("window-show", id);
+}
+
+/**
  * 最大化&最小化当前窗口
  */
 export function maxMinWindow(id: number) {
@@ -67,4 +74,11 @@ export function setMinSize(id: number, size: number[]) {
  */
 export function setMaxSize(id: number, size: number[]) {
     ipcRenderer.send("window-max-size-set", {id, size});
+}
+
+/**
+ * 设置窗口背景颜色
+ */
+export function setBackgroundColor(id: number, color?: string) {
+    ipcRenderer.send("window-bg-color-set", {id, color});
 }

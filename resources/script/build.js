@@ -18,6 +18,7 @@ config.asar = true;//是否asar打包
 let nConf = {
     "appW": 800, //app默认宽
     "appH": 600, //app默认高
+    "appBackgroundColor": "#333333", //app默认背景色
     "appPort": cfg.port,
     "appUrl": "http://127.0.0.1:3000/", //程序主访问地址
     "socketUrl": "http://127.0.0.1:3000/",// 程序socket访问地址
@@ -106,6 +107,7 @@ function deleteFolderRecursive(url) {
         console.log("...");
     }
 }
+
 deleteFolderRecursive(path.resolve('dist'));//清除dist
 webpack([
     {...main},

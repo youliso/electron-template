@@ -19,5 +19,6 @@ export default {
 }
 </script>
 <style lang="scss">
+@import "views/scss/color";
 @import "views/scss/main";
 </style>

@@ -7,7 +7,7 @@
 </style>
 
 <template>
-  <div class="container" :class="platform" :style="{'--accentColor':'#'+accentColor}">
+  <div class="container" :class="platform">
     <Head></Head>
     <div class="info">
       <div>内部资源内容: {{ readFileSync(getInsidePath("t.txt")).toString() }}</div>
@@ -19,11 +19,11 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, onUnmounted, watch} from "vue";
+import {defineComponent, onMounted, onUnmounted, watch} from "vue";
 import Head from "../components/Head.vue";
 import {readFileSync} from "fs";
 import {argsState, messageData} from "@/renderer/store";
-import {createWindow} from "@/renderer/utils/window";
+import {createWindow, windowShow} from "@/renderer/utils/window";
 import {getInsidePath, getExternPath, getGlobal} from "@/lib";
 import {WindowOpt} from "@/lib/interface";
 
@@ -44,7 +44,8 @@ export default defineComponent({
         route: "/message",
         parentId: args.id,
         data: {text: getGlobal("setting")},
-        modal: true
+        modal: true,
+        resizable: true
       }
       createWindow(data);
     }
@@ -60,13 +61,16 @@ export default defineComponent({
       createWindow(data);
     }
 
+    onMounted(() => {
+      windowShow(args.id);
+    })
+
     onUnmounted(() => {
       watchTest()
     })
 
     return {
       platform: args.platform,
-      accentColor: args.appInfo.accentColor,
       readFileSync,
       getInsidePath,
       getExternPath,

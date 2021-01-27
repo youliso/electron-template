@@ -18,7 +18,7 @@
 </style>
 
 <template>
-  <div class="container" :class="platform" :style="{'--accentColor':'#'+accentColor}">
+  <div class="container" :class="platform">
     <Head></Head>
     <div class="info">
       <div class="text">
@@ -31,13 +31,12 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
+import {defineComponent, onMounted} from "vue";
 import {argsState} from "@/renderer/store";
-import {closeWindow, setSize} from "@/renderer/utils/window";
+import {closeWindow, setSize, windowShow} from "@/renderer/utils/window";
 import {messageSend} from "@/renderer/utils";
 import Head from "../components/Head.vue";
 import {IpcMsg, IPC_MSG_TYPE} from "@/lib/interface";
-import {getGlobal} from "@/lib";
 
 export default defineComponent({
   components: {
@@ -46,7 +45,9 @@ export default defineComponent({
   name: "Message",
   setup() {
     const args = argsState();
-    setSize(args.id, [400, 150], args.currentMaximized);
+    setTimeout(()=>{
+      setSize(args.id, [400, 150], args.currentMaximized);
+    },0)
     let cons = 0;
 
     function test() {//测试发送 为主窗口发送消息
@@ -62,10 +63,13 @@ export default defineComponent({
       closeWindow(args.id);
     }
 
+    onMounted(()=>{
+      windowShow(args.id);
+    })
+
     return {
       args: argsState(),
-      platform: getGlobal("platform"),
-      accentColor: getGlobal("appInfo")["accentColor"],
+      platform: args.platform,
       test,
       close
     }
