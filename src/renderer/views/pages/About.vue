@@ -17,10 +17,10 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, onMounted} from "vue";
+import {defineComponent} from "vue";
 import Head from "../components/Head.vue";
-import {createWindow, windowShow} from "@/renderer/utils/window";
-import {argsState} from "@/renderer/store";
+import {createWindow} from "@/renderer/utils/window";
+import {argsData} from "@/renderer/store";
 
 export default defineComponent({
   components: {
@@ -28,23 +28,16 @@ export default defineComponent({
   },
   name: "About",
   setup() {
-    const args = argsState();
 
     function toHome() {
       createWindow({
-        route: "/",
         isMainWin: true,
         resizable: true
       });
     }
 
-
-    onMounted(()=>{
-      windowShow(args.id);
-    })
-
     return {
-      platform: args.platform,
+      platform: argsData.window.platform,
       toHome
     }
   }

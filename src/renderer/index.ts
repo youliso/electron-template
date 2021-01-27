@@ -1,14 +1,14 @@
 import {createApp} from "vue";
 import App from "./App.vue";
-import {argsSymbol, createArgs} from "./store";
 import router from "./router";
-import {windowLoad, messageBack} from "./utils";
+import {ipcRenderer} from "electron";
+import {argsData} from "@/renderer/store";
+import {messageBack} from "./utils";
 
-(async () => {
-    messageBack();
-    const Args = await windowLoad();
-    createApp(App as any)
+messageBack();
+ipcRenderer.once("window-load", (event, args) => {
+    argsData.window = args;
+    createApp(App)
         .use(router)
-        .provide(argsSymbol, createArgs(Args))
         .mount("#app");
-})()
+});

@@ -93,6 +93,13 @@ export class Window {
             route: args.route,
             isMultiWindow: args.isMultiWindow
         };
+        if (args.isMainWin) { //是否主窗口
+            if (this.main) {
+                delete this.group[this.main.id];
+                this.main.close();
+            }
+            this.main = win;
+        }
         args.id = win.id;
         args.platform = global.sharedObject["platform"];
         args.appInfo = global.sharedObject["appInfo"];
@@ -109,13 +116,6 @@ export class Window {
         if (!app.isPackaged) win.webContents.openDevTools();
         //注入初始化代码
         win.webContents.on("did-finish-load", () => {
-            if (args.isMainWin) { //是否主窗口
-                if (this.main) {
-                    delete this.group[this.main.id];
-                    this.main.close();
-                }
-                this.main = win;
-            }
             win.webContents.send("window-load", args);
         });
         if (!app.isPackaged) win.loadURL(`http://localhost:${config.appPort}`).catch(err => Log.error("[createWindow]", err));

@@ -19,11 +19,11 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, onMounted, onUnmounted, watch} from "vue";
+import {defineComponent, onUnmounted, watch} from "vue";
 import Head from "../components/Head.vue";
 import {readFileSync} from "fs";
-import {argsState, messageData} from "@/renderer/store";
-import {createWindow, windowShow} from "@/renderer/utils/window";
+import {argsData, messageData} from "@/renderer/store";
+import {createWindow} from "@/renderer/utils/window";
 import {getInsidePath, getExternPath, getGlobal} from "@/lib";
 import {WindowOpt} from "@/lib/interface";
 
@@ -33,7 +33,6 @@ export default defineComponent({
   },
   name: "Home",
   setup() {
-    const args = argsState();
     let watchTest = watch(() => messageData["test"], (n, o) => { // n 为新赋值 o为旧值
       console.log(n, o)
     });
@@ -42,7 +41,7 @@ export default defineComponent({
       let data: WindowOpt = {
         title: "弹框测试",
         route: "/message",
-        parentId: args.id,
+        parentId: argsData.window.id,
         data: {text: getGlobal("setting")},
         modal: true,
         resizable: true
@@ -61,16 +60,12 @@ export default defineComponent({
       createWindow(data);
     }
 
-    onMounted(() => {
-      windowShow(args.id);
-    })
-
     onUnmounted(() => {
       watchTest()
     })
 
     return {
-      platform: args.platform,
+      platform: argsData.window.platform,
       readFileSync,
       getInsidePath,
       getExternPath,

@@ -8,12 +8,13 @@
 <script lang="ts">
 import {toRefs} from "vue";
 import {useRouter} from "vue-router";
-import {argsState, keepAliveOpt} from "./store";
+import {argsData, keepAliveOpt} from "./store";
+import {windowShow} from "@/renderer/utils/window";
 
 export default {
   setup() {
-    const args = argsState();
-    if (args.route) useRouter().replace(args.route);
+    windowShow(argsData.window.id);
+    if (argsData.window.route) useRouter().replace(argsData.window.route);
     return {...toRefs(keepAliveOpt)};
   }
 }

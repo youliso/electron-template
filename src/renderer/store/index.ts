@@ -23,19 +23,19 @@ export const delExclude = (key: string) => {
 };
 
 /**
- * 窗口初始化参数
+ * 窗口常驻参数
  * */
-export const argsSymbol = Symbol("args");
-export const createArgs = (args?: WindowOpt) => reactive(args);
-export const argsState = (): WindowOpt => inject(argsSymbol);
+export const argsData = reactive<{ window: WindowOpt }>({
+    window: null
+});
 
 /**
  * 创建全局provide
  * @param key 唯一标识
  * @param args
  */
-export const provideState = (key: symbol, args: { [key: string]: unknown }) => provide(
-    key,
+export const provideState = (key: string, args: { [key: string]: unknown }) => provide(
+    Symbol(key),
     reactive(args)
 );
 export const getProvideState = (key: symbol) => inject(key);

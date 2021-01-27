@@ -160,6 +160,4 @@ class Init {
 /**
  * 启动
  * */
-(async () => {
-    new Init().init().then();
-})()
+new Init().init().then();

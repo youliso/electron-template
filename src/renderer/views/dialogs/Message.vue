@@ -22,7 +22,7 @@
     <Head></Head>
     <div class="info">
       <div class="text">
-        {{ args.data.text }}
+        {{ data.text }}
         <button @click="test">测试通讯</button>
       </div>
       <button class="close" @click="close">确定</button>
@@ -31,9 +31,9 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, onMounted} from "vue";
-import {argsState} from "@/renderer/store";
-import {closeWindow, setSize, windowShow} from "@/renderer/utils/window";
+import {defineComponent} from "vue";
+import {argsData} from "@/renderer/store";
+import {closeWindow, setSize} from "@/renderer/utils/window";
 import {messageSend} from "@/renderer/utils";
 import Head from "../components/Head.vue";
 import {IpcMsg, IPC_MSG_TYPE} from "@/lib/interface";
@@ -44,10 +44,8 @@ export default defineComponent({
   },
   name: "Message",
   setup() {
-    const args = argsState();
-    setTimeout(()=>{
-      setSize(args.id, [400, 150], args.currentMaximized);
-    },0)
+
+    setSize(argsData.window.id, [400, 150], argsData.window.currentMaximized);
     let cons = 0;
 
     function test() {//测试发送 为主窗口发送消息
@@ -60,16 +58,12 @@ export default defineComponent({
     }
 
     function close() {
-      closeWindow(args.id);
+      closeWindow(argsData.window.id);
     }
 
-    onMounted(()=>{
-      windowShow(args.id);
-    })
-
     return {
-      args: argsState(),
-      platform: args.platform,
+      data: argsData.window.data,
+      platform: argsData.window.platform,
       test,
       close
     }
