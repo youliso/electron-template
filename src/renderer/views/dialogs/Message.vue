@@ -18,7 +18,7 @@
 </style>
 
 <template>
-  <div class="container" :class="platform">
+  <div class="container" :class="platform" :style="{'--accentColor':'#'+accentColor}">
     <Head></Head>
     <div class="info">
       <div class="text">
@@ -31,9 +31,9 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
+import {defineComponent, onMounted} from "vue";
 import {argsData} from "@/renderer/store";
-import {closeWindow, setSize} from "@/renderer/utils/window";
+import {closeWindow, setSize, windowShow} from "@/renderer/utils/window";
 import {messageSend} from "@/renderer/utils";
 import Head from "../components/Head.vue";
 import {IpcMsg, IPC_MSG_TYPE} from "@/lib/interface";
@@ -61,9 +61,14 @@ export default defineComponent({
       closeWindow(argsData.window.id);
     }
 
+    onMounted(()=>{
+      windowShow(argsData.window.id);
+    })
+
     return {
       data: argsData.window.data,
       platform: argsData.window.platform,
+      accentColor: argsData.window.appInfo.accentColor,
       test,
       close
     }

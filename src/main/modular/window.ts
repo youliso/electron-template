@@ -88,6 +88,7 @@ export class Window {
         }
         if (typeof args.modal === "boolean") opt.modal = args.modal;
         if (typeof args.resizable === "boolean") opt.resizable = args.resizable;
+        if (args.backgroundColor) opt.backgroundColor = args.backgroundColor;
         let win = new BrowserWindow(opt);
         this.group[win.id] = {
             route: args.route,

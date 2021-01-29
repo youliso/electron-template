@@ -1,4 +1,7 @@
+import {systemPreferences} from "electron";
+
 export function win32() {
+    global.sharedObject["appInfo"]["accentColor"] = systemPreferences.getAccentColor();
 }
 
 export function linux() {

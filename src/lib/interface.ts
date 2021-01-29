@@ -14,6 +14,7 @@ export interface WindowOpt {
     height?: number;
     route?: string; // 页面路由
     resizable?: boolean; //是否支持调整窗口大小
+    backgroundColor?:string, //窗口背景色
     data?: unknown; //数据
     isMultiWindow?: boolean; //是否支持多窗口
     isMainWin?: boolean; //是否主窗口(当为true时会替代当前主窗口)

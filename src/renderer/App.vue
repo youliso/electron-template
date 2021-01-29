@@ -9,11 +9,9 @@
 import {toRefs} from "vue";
 import {useRouter} from "vue-router";
 import {argsData, keepAliveOpt} from "./store";
-import {windowShow} from "@/renderer/utils/window";
 
 export default {
   setup() {
-    windowShow(argsData.window.id);
     if (argsData.window.route) useRouter().replace(argsData.window.route);
     return {...toRefs(keepAliveOpt)};
   }

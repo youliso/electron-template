@@ -7,7 +7,7 @@
 </style>
 
 <template>
-  <div class="container" :class="platform">
+  <div class="container" :class="platform" :style="{'--accentColor':'#'+accentColor}">
     <Head></Head>
     <div class="info">
       <h5>This is an about page</h5>
@@ -17,9 +17,9 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
+import {defineComponent, onMounted} from "vue";
 import Head from "../components/Head.vue";
-import {createWindow} from "@/renderer/utils/window";
+import {createWindow, windowShow} from "@/renderer/utils/window";
 import {argsData} from "@/renderer/store";
 
 export default defineComponent({
@@ -36,8 +36,13 @@ export default defineComponent({
       });
     }
 
+    onMounted(()=>{
+      windowShow(argsData.window.id);
+    })
+
     return {
       platform: argsData.window.platform,
+      accentColor: argsData.window.appInfo.accentColor,
       toHome
     }
   }

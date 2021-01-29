@@ -111,3 +111,7 @@ button {
   background-color: var(--black);
   color: var(--white);
 }
+
+.container.win32 {
+  border: 1px solid var(--accentColor);
+}

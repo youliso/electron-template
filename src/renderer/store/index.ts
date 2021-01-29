@@ -38,7 +38,7 @@ export const provideState = (key: string, args: { [key: string]: unknown }) => p
     Symbol(key),
     reactive(args)
 );
-export const getProvideState = (key: symbol) => inject(key);
+export const getProvideState = (key: string) => inject( Symbol(key));
 
 /**
  * 窗口通信消息内容

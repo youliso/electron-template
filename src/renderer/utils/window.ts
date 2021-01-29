@@ -11,6 +11,7 @@ export function createWindow(data: WindowOpt) {
         height: data.height || 0,
         route: data.route, // 页面路由
         resizable: data.resizable || false,// 是否支持调整窗口大小
+        backgroundColor: data.backgroundColor || null,//窗口背景色
         data: data.data, //数据
         isMultiWindow: data.isMultiWindow || false, //是否支持多窗口
         isMainWin: data.isMainWin || false, //是否主窗口
