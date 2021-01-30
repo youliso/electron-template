@@ -53,8 +53,8 @@ export function windowClose(id?: number) {
 /**
  * 设置窗口大小
  */
-export function windowSetSize(id: number, size: number[], center: boolean = false) {
-    ipcRenderer.send("window-size-set", {id, size, center});
+export function windowSetSize(id: number, size: number[], resizable: boolean = true, center: boolean = false) {
+    ipcRenderer.send("window-size-set", {id, size, resizable, center});
 }
 
 /**

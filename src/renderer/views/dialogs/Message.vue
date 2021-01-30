@@ -45,7 +45,7 @@ export default defineComponent({
   name: "Message",
   setup() {
 
-    windowSetSize(argsData.window.id, [400, 150], argsData.window.currentMaximized);
+    windowSetSize(argsData.window.id, [400, 150], true, argsData.window.currentMaximized);
     let cons = 0;
 
     function test() {//测试发送 为主窗口发送消息
@@ -61,7 +61,7 @@ export default defineComponent({
       windowClose(argsData.window.id);
     }
 
-    onMounted(()=>{
+    onMounted(() => {
       windowShow(argsData.window.id);
     })
 

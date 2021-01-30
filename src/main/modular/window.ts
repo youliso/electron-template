@@ -171,7 +171,7 @@ export class Window {
     /**
      * 设置窗口大小
      */
-    setSize(args: { id: number, size: number[], center: boolean; }) {
+    setSize(args: { id: number, size: number[], resizable: boolean; center: boolean; }) {
         let Rectangle: { [key: string]: number } = {
             width: parseInt(args.size[0].toString()),
             height: parseInt(args.size[1].toString())
@@ -187,6 +187,7 @@ export class Window {
         this.getWindow(args.id).once("resize", () => {
             if (args.center) this.getWindow(args.id).center();
         });
+        this.getWindow(args.id).setResizable(args.resizable);
         this.getWindow(args.id).setMinimumSize(Rectangle.width, Rectangle.height);
         this.getWindow(args.id).setBounds(Rectangle);
     }
@@ -194,15 +195,15 @@ export class Window {
     /**
      * 设置窗口背景色
      */
-    setBackgroundColor(id: number, color: string = config.appBackgroundColor) {
-        this.getWindow(id).setBackgroundColor(color);
+    setBackgroundColor(args: { id: number; color: string; }) {
+        this.getWindow(args.id).setBackgroundColor(args.color || config.appBackgroundColor);
     }
 
     /**
      * 设置窗口是否置顶
      */
-    setAlwaysOnTop(id: number, is: boolean, type?: 'normal' | 'floating' | 'torn-off-menu' | 'modal-panel' | 'main-menu' | 'status' | 'pop-up-menu' | 'screen-saver') {
-        this.getWindow(id).setAlwaysOnTop(is, type)
+    setAlwaysOnTop(args: { id: number, is: boolean, type?: 'normal' | 'floating' | 'torn-off-menu' | 'modal-panel' | 'main-menu' | 'status' | 'pop-up-menu' | 'screen-saver' }) {
+        this.getWindow(args.id).setAlwaysOnTop(args.is, args.type || 'normal');
     }
 
     /**
@@ -281,7 +282,7 @@ export class Window {
         //创建窗口
         ipcMain.on("window-new", (event, args) => this.createWindow(args));
         //设置窗口是否置顶
-        ipcMain.on("window-always-top-set", (event, args) => this.setAlwaysOnTop(args.id, args.is, args.type));
+        ipcMain.on("window-always-top-set", (event, args) => this.setAlwaysOnTop(args));
         //设置窗口大小
         ipcMain.on("window-size-set", (event, args) => this.setSize(args));
         //设置窗口最小大小
@@ -289,7 +290,7 @@ export class Window {
         //设置窗口最大大小
         ipcMain.on("window-max-size-set", (event, args) => this.setMaxSize(args));
         //设置窗口背景颜色
-        ipcMain.on("window-bg-color-set", (event, args) => this.setBackgroundColor(args.id, args.color));
+        ipcMain.on("window-bg-color-set", (event, args) => this.setBackgroundColor(args));
 
     }
 
