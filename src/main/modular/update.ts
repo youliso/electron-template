@@ -41,16 +41,14 @@ export class Update {
             error: {key: this.key, value: {code: 0, msg: "检查更新出错"}},
             checking: {key: this.key, value: {code: 1, msg: "正在检查更新"}},
             updateAva: {key: this.key, value: {code: 2, msg: "检测到新版本,正在下载"}},
-            updateDown: (value: any) => {
-                return {key: this.key, value: {code: 3, value, msg: "下载中"}}
-            },
+            updateDown: {key: this.key, value: {code: 3, value: "", msg: "下载中"}},
             updateDownload: {key: this.key, value: {code: 4, msg: "已下载完毕"}},
             updateNotAva: {key: this.key, value: {code: 5, msg: "现在使用的就是最新版本,不用更新"}}
         };
-        // // 本地开发环境，改变app-update.yml地址
-        // if (process.env.NODE_ENV === 'development' && !(process.platform === 'darwin')) {
-        //     this.autoUpdater.updateConfigPath = join(__dirname, 'out/win-unpacked/resources/app-update.yml')
-        // }
+        //本地开发环境，改变app-update.yml地址
+        if (process.env.NODE_ENV === 'development' && !(process.platform === 'darwin')) {
+            this.autoUpdater.updateConfigPath = join('out/win-unpacked/resources/app-update.yml')
+        }
         // 这里的URL就是更新服务器的放置文件的地址
         this.autoUpdater.setFeedURL({
             provider: 'generic',
@@ -61,7 +59,10 @@ export class Update {
         this.autoUpdater.on("update-available", () => messageBack(message.updateAva));
         this.autoUpdater.on("update-not-available", () => messageBack(message.updateNotAva));
         // 更新下载进度事件
-        this.autoUpdater.on("download-progress", (progressObj) => messageBack(message.updateDown(progressObj)));
+        this.autoUpdater.on("download-progress", (progressObj) => {
+            message.updateDown.value["value"] = progressObj;
+            messageBack(message.updateDown);
+        });
         // 下载完成事件
         this.autoUpdater.on("update-downloaded", () => messageBack(message.updateDownload));
         this.autoUpdater.checkForUpdates().catch(e => Log.error("[checkForUpdates]", e));
@@ -80,7 +81,7 @@ export class Update {
      * 关闭程序进行更新
      * @param isSilent 是否静默更新
      */
-    updateQuitInstall(isSilent: boolean) {
+    updateQuitInstall(isSilent: boolean = false) {
         this.autoUpdater.quitAndInstall(isSilent);
     }
 
