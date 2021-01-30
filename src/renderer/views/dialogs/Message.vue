@@ -33,7 +33,7 @@
 <script lang="ts">
 import {defineComponent, onMounted} from "vue";
 import {argsData} from "@/renderer/store";
-import {closeWindow, setSize, windowShow} from "@/renderer/utils/window";
+import {windowClose, windowSetSize, windowShow} from "@/renderer/utils/window";
 import {messageSend} from "@/renderer/utils";
 import Head from "../components/Head.vue";
 import {IpcMsg, IPC_MSG_TYPE} from "@/lib/interface";
@@ -45,7 +45,7 @@ export default defineComponent({
   name: "Message",
   setup() {
 
-    setSize(argsData.window.id, [400, 150], argsData.window.currentMaximized);
+    windowSetSize(argsData.window.id, [400, 150], argsData.window.currentMaximized);
     let cons = 0;
 
     function test() {//测试发送 为主窗口发送消息
@@ -58,7 +58,7 @@ export default defineComponent({
     }
 
     function close() {
-      closeWindow(argsData.window.id);
+      windowClose(argsData.window.id);
     }
 
     onMounted(()=>{

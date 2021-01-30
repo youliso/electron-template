@@ -19,7 +19,7 @@
 <script lang="ts">
 import {defineComponent, onMounted} from "vue";
 import Head from "../components/Head.vue";
-import {createWindow, windowShow} from "@/renderer/utils/window";
+import {windowCreate, windowShow} from "@/renderer/utils/window";
 import {argsData} from "@/renderer/store";
 
 export default defineComponent({
@@ -30,7 +30,7 @@ export default defineComponent({
   setup() {
 
     function toHome() {
-      createWindow({
+      windowCreate({
         isMainWin: true,
         resizable: true
       });

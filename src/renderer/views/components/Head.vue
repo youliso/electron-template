@@ -90,32 +90,29 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import {argsData} from "@/renderer/store";
-import {closeWindow, maxMinWindow, minWindow} from "@/renderer/utils/window";
+import {windowClose, windowMaxMin, windowMin} from "@/renderer/utils/window";
 
 export default defineComponent({
   name: "Head",
   setup() {
 
-    const isMain = argsData.window.isMainWin || false;
-
     function min() {
-      minWindow(argsData.window.id);
+      windowMin(argsData.window.id);
     }
 
     function maxMin() {
-      maxMinWindow(argsData.window.id);
+      windowMaxMin(argsData.window.id);
     }
 
     function close() {
-      if (isMain) closeWindow();
-      else closeWindow(argsData.window.id);
+      if (argsData.window.isMainWin) windowClose();
+      else windowClose(argsData.window.id);
     }
 
     return {
       min,
       maxMin,
       close,
-      isMain,
       title: argsData.window.title || argsData.window.appInfo.name,
       platform: argsData.window.platform
     }

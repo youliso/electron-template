@@ -69,6 +69,7 @@ export class Window {
                 return;
             }
         }
+
         let opt = this.browserWindowOpt([args.width || config.appW, args.height || config.appH]);
         if (args.parentId) {
             opt.parent = this.getWindow(args.parentId);
@@ -76,8 +77,8 @@ export class Window {
             args.currentHeight = this.getWindow(args.parentId).getBounds().height;
             args.currentMaximized = this.getWindow(args.parentId).isMaximized();
             if (args.currentMaximized) {
-                opt.x = parseInt(((screen.getPrimaryDisplay().workAreaSize.width - args.width) / 2).toString())
-                opt.y = parseInt(((screen.getPrimaryDisplay().workAreaSize.height - args.height) / 2).toString())
+                opt.x = parseInt(((screen.getPrimaryDisplay().workAreaSize.width - (args.width || 0)) / 2).toString())
+                opt.y = parseInt(((screen.getPrimaryDisplay().workAreaSize.height - (args.height || 0)) / 2).toString())
             } else {
                 opt.x = parseInt((this.getWindow(args.parentId).getPosition()[0] + ((this.getWindow(args.parentId).getBounds().width - (args.width || args.currentWidth)) / 2)).toString());
                 opt.y = parseInt((this.getWindow(args.parentId).getPosition()[1] + ((this.getWindow(args.parentId).getBounds().height - (args.height || args.currentHeight)) / 2)).toString());
@@ -198,6 +199,13 @@ export class Window {
     }
 
     /**
+     * 设置窗口是否置顶
+     */
+    setAlwaysOnTop(id: number, is: boolean, type?: 'normal' | 'floating' | 'torn-off-menu' | 'modal-panel' | 'main-menu' | 'status' | 'pop-up-menu' | 'screen-saver') {
+        this.getWindow(id).setAlwaysOnTop(is, type)
+    }
+
+    /**
      * 开启监听
      */
     on() {
@@ -272,6 +280,8 @@ export class Window {
         });
         //创建窗口
         ipcMain.on("window-new", (event, args) => this.createWindow(args));
+        //设置窗口是否置顶
+        ipcMain.on("window-always-top-set", (event, args) => this.setAlwaysOnTop(args.id, args.is, args.type));
         //设置窗口大小
         ipcMain.on("window-size-set", (event, args) => this.setSize(args));
         //设置窗口最小大小

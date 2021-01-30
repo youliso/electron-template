@@ -23,7 +23,7 @@ import {defineComponent,onMounted, onUnmounted, watch} from "vue";
 import Head from "../components/Head.vue";
 import {readFileSync} from "fs";
 import {argsData, messageData} from "@/renderer/store";
-import {createWindow, windowShow} from "@/renderer/utils/window";
+import {windowCreate, windowShow} from "@/renderer/utils/window";
 import {getInsidePath, getExternPath, getGlobal} from "@/lib";
 import {WindowOpt} from "@/lib/interface";
 
@@ -46,7 +46,7 @@ export default defineComponent({
         modal: true,
         resizable: true
       }
-      createWindow(data);
+      windowCreate(data);
     }
 
     function toAbout() {
@@ -57,7 +57,7 @@ export default defineComponent({
         isMainWin: true,
         resizable: true
       }
-      createWindow(data);
+      windowCreate(data);
     }
 
     onMounted(()=>{
