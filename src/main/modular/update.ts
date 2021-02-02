@@ -35,7 +35,6 @@ export class Update {
      * @param messageBack 反馈更新状态
      */
     open(messageBack: Function) {
-        this.autoUpdater.removeAllListeners();
         this.handleUpdate();
         let message = {
             error: {key: this.key, value: {code: 0, msg: "检查更新出错"}},
