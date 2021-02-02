@@ -60,7 +60,7 @@ function startElectron() {
     electronProcess.stdout.on("data", data => console.log("[main:stdout]", data.toString()));
     electronProcess.stderr.on("data", data => console.log("[main:stderr]", data.toString()))
     electronProcess.on('exit', (e) => {
-        console.log(e)
+        console.log("exit",e);
     })
     electronProcess.on('close', () => {
         if (!manualRestart) process.exit();
