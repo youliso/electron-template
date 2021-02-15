@@ -24,6 +24,13 @@ export function messageSend(args: IpcMsg) {
 }
 
 /**
+ * app常用获取路径
+ */
+export function getAppPath(key: string) {
+    return ipcRenderer.sendSync("app-path-get", {key});
+}
+
+/**
  * 发送ipc消息
  * @param key
  * @param value

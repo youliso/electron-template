@@ -112,6 +112,6 @@ button {
   color: var(--white);
 }
 
-.container.win32 {
+.container.win32,.container.linux {
   border: 1px solid var(--accentColor);
 }

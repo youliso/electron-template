@@ -10,7 +10,7 @@
   justify-content: space-between;
   align-items: center;
 
-  > .win32, .darwin {
+  > .win32, .darwin, .linux {
     width: 100%;
     height: 100%;
     display: flex;
@@ -26,7 +26,7 @@
     padding-right: 10px;
   }
 
-  > .win32 {
+  > .win32, .linux {
     padding-left: 10px;
 
     > .events {
@@ -68,7 +68,13 @@
 
 <template>
   <div class="head-info drag">
-    <div v-if="platform==='win32'" :class="platform">
+    <div v-if="platform==='darwin'" :class="platform">
+      <div></div>
+      <div class="title">
+        {{ title }}
+      </div>
+    </div>
+    <div v-else :class="platform">
       <div class="title">
         {{ title }}
       </div>
@@ -76,12 +82,6 @@
         <div @click="min" class="event min no-drag cursor-pointer"></div>
         <div @click="maxMin" class="event maxmin no-drag cursor-pointer"></div>
         <div @click="close" class="event close no-drag cursor-pointer"></div>
-      </div>
-    </div>
-    <div v-else-if="platform==='darwin'" :class="platform">
-      <div></div>
-      <div class="title">
-        {{ title }}
       </div>
     </div>
   </div>
