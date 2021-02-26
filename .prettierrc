@@ -1,0 +1,16 @@
+{
+  "printWidth": 100,
+  "semi": true,
+  "tabWidth": 4,
+  "useTabs": false,
+  "singleQuote": true,
+  "trailingComma": "none",
+  "bracketSpacing": true,
+  "proseWrap": "always",
+  "htmlWhitespaceSensitivity": "ignore",
+  "parsers": {
+    ".scss": "scss",
+    ".ts": "typescript",
+    ".vue": "vue"
+  }
+}
