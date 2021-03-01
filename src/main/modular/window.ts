@@ -127,8 +127,11 @@ export class Window {
         win.webContents.on('did-finish-load', () => {
             win.webContents.send('window-load', args);
         });
-        if (!app.isPackaged) win.loadURL(`http://localhost:${appPort}`).catch(err => Log.error('[createWindow]', err));
-        else win.loadFile(join(__dirname, './index.html')).catch(err => Log.error('[createWindow]', err));
+        if (!app.isPackaged) { //调试模式
+            win.loadURL(`http://localhost:${appPort}`).catch(err => Log.error('[createWindow]', err));
+            return;
+        }
+        win.loadFile(join(__dirname, './index.html')).catch(err => Log.error('[createWindow]', err));
     }
 
     /**
