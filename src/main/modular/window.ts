@@ -1,10 +1,17 @@
-import {join} from "path";
-import {shell, app, screen, BrowserWindow, BrowserWindowConstructorOptions, Menu, Tray, ipcMain} from "electron";
-import Log from "@/lib/log";
-import {WindowOpt} from "@/lib/interface";
-import ico from "../assets/tray.png";
+import { join } from 'path';
+import { readFileSync } from 'fs';
+import { shell, app, screen, BrowserWindow, BrowserWindowConstructorOptions, Menu, Tray, ipcMain } from 'electron';
+import Log from '@/lib/log';
+import { WindowOpt } from '@/lib/interface';
+import ico from '../assets/tray.png';
 
-const config = require("@/cfg/config.json");
+const config = require('@/cfg/config.json');
+let appPort = '';
+try {
+    appPort = readFileSync(join('.port'), 'utf8');
+} catch (e) {
+    throw 'not found .port';
+}
 
 export class Window {
 
@@ -26,7 +33,7 @@ export class Window {
             height: wh[1],
             backgroundColor: config.appBackgroundColor,
             autoHideMenuBar: true,
-            titleBarStyle: "hidden",
+            titleBarStyle: 'hidden',
             resizable: true,
             minimizable: true,
             maximizable: true,
@@ -38,7 +45,7 @@ export class Window {
                 devTools: !app.isPackaged,
                 webSecurity: false
             }
-        }
+        };
     }
 
     /**
@@ -77,8 +84,8 @@ export class Window {
             args.currentHeight = this.getWindow(args.parentId).getBounds().height;
             args.currentMaximized = this.getWindow(args.parentId).isMaximized();
             if (args.currentMaximized) {
-                opt.x = parseInt(((screen.getPrimaryDisplay().workAreaSize.width - (args.width || 0)) / 2).toString())
-                opt.y = parseInt(((screen.getPrimaryDisplay().workAreaSize.height - (args.height || 0)) / 2).toString())
+                opt.x = parseInt(((screen.getPrimaryDisplay().workAreaSize.width - (args.width || 0)) / 2).toString());
+                opt.y = parseInt(((screen.getPrimaryDisplay().workAreaSize.height - (args.height || 0)) / 2).toString());
             } else {
                 opt.x = parseInt((this.getWindow(args.parentId).getPosition()[0] + ((this.getWindow(args.parentId).getBounds().width - (args.width || args.currentWidth)) / 2)).toString());
                 opt.y = parseInt((this.getWindow(args.parentId).getPosition()[1] + ((this.getWindow(args.parentId).getBounds().height - (args.height || args.currentHeight)) / 2)).toString());
@@ -87,8 +94,8 @@ export class Window {
             opt.x = parseInt((this.main.getPosition()[0] + ((this.main.getBounds().width - opt.width) / 2)).toString());
             opt.y = parseInt((this.main.getPosition()[1] + ((this.main.getBounds().height - opt.height) / 2)).toString());
         }
-        if (typeof args.modal === "boolean") opt.modal = args.modal;
-        if (typeof args.resizable === "boolean") opt.resizable = args.resizable;
+        if (typeof args.modal === 'boolean') opt.modal = args.modal;
+        if (typeof args.resizable === 'boolean') opt.resizable = args.resizable;
         if (args.backgroundColor) opt.backgroundColor = args.backgroundColor;
         let win = new BrowserWindow(opt);
         this.group[win.id] = {
@@ -103,25 +110,25 @@ export class Window {
             this.main = win;
         }
         args.id = win.id;
-        args.platform = global.sharedObject["platform"];
-        args.appInfo = global.sharedObject["appInfo"];
+        args.platform = global.sharedObject['platform'];
+        args.appInfo = global.sharedObject['appInfo'];
         //window加载完毕后显示 (放到vue生命周期执行)
         // win.once("ready-to-show", () => win.show());
         //window关闭时黑底时设置透明
-        win.on("close", () => win.setOpacity(0));
+        win.on('close', () => win.setOpacity(0));
         //默认浏览器打开跳转连接
-        win.webContents.on("new-window", async (event, url) => {
+        win.webContents.on('new-window', async (event, url) => {
             event.preventDefault();
             await shell.openExternal(url);
         });
         // 打开开发者工具
         if (!app.isPackaged) win.webContents.openDevTools();
         //注入初始化代码
-        win.webContents.on("did-finish-load", () => {
-            win.webContents.send("window-load", args);
+        win.webContents.on('did-finish-load', () => {
+            win.webContents.send('window-load', args);
         });
-        if (!app.isPackaged) win.loadURL(`http://localhost:${config.appPort}`).catch(err => Log.error("[createWindow]", err));
-        else win.loadFile(join(__dirname, "./index.html")).catch(err => Log.error("[createWindow]", err));
+        if (!app.isPackaged) win.loadURL(`http://localhost:${appPort}`).catch(err => Log.error('[createWindow]', err));
+        else win.loadFile(join(__dirname, './index.html')).catch(err => Log.error('[createWindow]', err));
     }
 
     /**
@@ -136,12 +143,12 @@ export class Window {
      * */
     createTray() {
         const contextMenu = Menu.buildFromTemplate([{
-            label: "显示",
+            label: '显示',
             click: () => {
                 for (let i in this.group) if (this.group[i]) this.getWindow(Number(i)).show();
             }
         }, {
-            label: "退出",
+            label: '退出',
             click: () => {
                 app.quit();
             }
@@ -149,9 +156,9 @@ export class Window {
         this.tray = new Tray(join(__dirname, `./${ico}`));
         this.tray.setContextMenu(contextMenu);
         this.tray.setToolTip(app.name);
-        this.tray.on("double-click", () => {
+        this.tray.on('double-click', () => {
             for (let i in this.group) if (this.group[i]) this.getWindow(Number(i)).show();
-        })
+        });
     }
 
     /**
@@ -184,7 +191,7 @@ export class Window {
             Rectangle.x = parseInt((this.getWindow(args.id).getPosition()[0] + ((this.getWindow(args.id).getBounds().width - args.size[0]) / 2)).toString());
             Rectangle.y = parseInt((this.getWindow(args.id).getPosition()[1] + ((this.getWindow(args.id).getBounds().height - args.size[1]) / 2)).toString());
         }
-        this.getWindow(args.id).once("resize", () => {
+        this.getWindow(args.id).once('resize', () => {
             if (args.center) this.getWindow(args.id).center();
         });
         this.getWindow(args.id).setResizable(args.resizable);
@@ -211,7 +218,7 @@ export class Window {
      */
     on() {
         //关闭
-        ipcMain.on("window-closed", (event, winId) => {
+        ipcMain.on('window-closed', (event, winId) => {
             if (winId) {
                 this.getWindow(Number(winId)).close();
                 if (this.group[Number(winId)]) delete this.group[Number(winId)];
@@ -220,7 +227,7 @@ export class Window {
             }
         });
         //隐藏
-        ipcMain.on("window-hide", (event, winId) => {
+        ipcMain.on('window-hide', (event, winId) => {
             if (winId) {
                 this.getWindow(Number(winId)).hide();
             } else {
@@ -228,7 +235,7 @@ export class Window {
             }
         });
         //显示
-        ipcMain.on("window-show", (event, winId) => {
+        ipcMain.on('window-show', (event, winId) => {
             if (winId) {
                 this.getWindow(Number(winId)).show();
             } else {
@@ -236,7 +243,7 @@ export class Window {
             }
         });
         //最小化
-        ipcMain.on("window-mini", (event, winId) => {
+        ipcMain.on('window-mini', (event, winId) => {
             if (winId) {
                 this.getWindow(Number(winId)).minimize();
             } else {
@@ -244,7 +251,7 @@ export class Window {
             }
         });
         //最大化
-        ipcMain.on("window-max", (event, winId) => {
+        ipcMain.on('window-max', (event, winId) => {
             if (winId) {
                 this.getWindow(Number(winId)).maximize();
             } else {
@@ -252,7 +259,7 @@ export class Window {
             }
         });
         //最大化最小化窗口
-        ipcMain.on("window-max-min-size", (event, winId) => {
+        ipcMain.on('window-max-min-size', (event, winId) => {
             if (winId) {
                 if (this.getWindow(winId).isMaximized()) {
                     this.getWindow(winId).unmaximize();
@@ -264,7 +271,7 @@ export class Window {
             }
         });
         //复原
-        ipcMain.on("window-restore", (event, winId) => {
+        ipcMain.on('window-restore', (event, winId) => {
             if (winId) {
                 this.getWindow(Number(winId)).restore();
             } else {
@@ -272,7 +279,7 @@ export class Window {
             }
         });
         //重载
-        ipcMain.on("window-reload", (event, winId) => {
+        ipcMain.on('window-reload', (event, winId) => {
             if (winId) {
                 this.getWindow(Number(winId)).reload();
             } else {
@@ -280,17 +287,17 @@ export class Window {
             }
         });
         //创建窗口
-        ipcMain.on("window-new", (event, args) => this.createWindow(args));
+        ipcMain.on('window-new', (event, args) => this.createWindow(args));
         //设置窗口是否置顶
-        ipcMain.on("window-always-top-set", (event, args) => this.setAlwaysOnTop(args));
+        ipcMain.on('window-always-top-set', (event, args) => this.setAlwaysOnTop(args));
         //设置窗口大小
-        ipcMain.on("window-size-set", (event, args) => this.setSize(args));
+        ipcMain.on('window-size-set', (event, args) => this.setSize(args));
         //设置窗口最小大小
-        ipcMain.on("window-min-size-set", (event, args) => this.setMinSize(args));
+        ipcMain.on('window-min-size-set', (event, args) => this.setMinSize(args));
         //设置窗口最大大小
-        ipcMain.on("window-max-size-set", (event, args) => this.setMaxSize(args));
+        ipcMain.on('window-max-size-set', (event, args) => this.setMaxSize(args));
         //设置窗口背景颜色
-        ipcMain.on("window-bg-color-set", (event, args) => this.setBackgroundColor(args));
+        ipcMain.on('window-bg-color-set', (event, args) => this.setBackgroundColor(args));
 
     }
 

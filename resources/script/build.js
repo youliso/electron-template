@@ -7,9 +7,6 @@ const path = require('path');
 const main = require('./webpack.main.config'); //主进程
 const renderer = require('./webpack.renderer.config'); //子进程
 
-/** 调试配置 **/
-cfg.port = 3345; //本地调试渲染进程端口
-
 /**  config配置  **/
 config.productName = name;
 config.appId = `org.${name}`;
@@ -23,7 +20,6 @@ let nConf = {
     "appW": 800, //app默认宽
     "appH": 600, //app默认高
     "appBackgroundColor": "#333333", //app默认背景色
-    "appPort": cfg.port,
     "appUrl": "http://127.0.0.1:3000/", //程序主访问地址
     "socketUrl": "http://127.0.0.1:3000/",// 程序socket访问地址
     "updateFileUrl": "http://127.0.0.1:3000/public/", //更新文件地址
