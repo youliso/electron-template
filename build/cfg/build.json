@@ -39,15 +39,15 @@
     "perMachine": true,
     "allowElevation": true,
     "allowToChangeInstallationDirectory": true,
-    "installerIcon": "resources/icons/icon.ico",
-    "uninstallerIcon": "resources/icons/unicon.ico",
-    "installerHeaderIcon": "resources/icons/icon.ico",
-    "installerSidebar": "resources/icons/modern-wizard.bmp",
-    "uninstallerSidebar": "resources/icons/modern-wizard.bmp",
+    "installerIcon": "build/icons/icon.ico",
+    "uninstallerIcon": "build/icons/unicon.ico",
+    "installerHeaderIcon": "build/icons/icon.ico",
+    "installerSidebar": "build/icons/modern-wizard.bmp",
+    "uninstallerSidebar": "build/icons/modern-wizard.bmp",
     "createDesktopShortcut": true,
     "createStartMenuShortcut": true,
     "shortcutName": "electrontemplate",
-    "include": "resources/script/installer.nsh",
+    "include": "build/cfg/installer.nsh",
     "menuCategory": false,
     "displayLanguageSelector": false
   },
@@ -67,10 +67,10 @@
     ]
   },
   "mac": {
-    "icon": "resources/icons/icon.icns"
+    "icon": "build/icons/icon.icns"
   },
   "win": {
-    "icon": "resources/icons/icon.ico",
+    "icon": "build/icons/icon.ico",
     "requestedExecutionLevel": "asInvoker",
     "target": [
       {
@@ -82,8 +82,8 @@
     ]
   },
   "linux": {
-    "icon": "resources/icons",
-    "target": "pacman",
+    "icon": "build/icons",
+    "target": "AppImage",
     "executableName": "electrontemplate"
   },
   "npmRebuild": true

@@ -10,17 +10,15 @@
   },
   "license": "MIT",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development node ./resources/script/dev.js",
-    "npm:rebuild": "cross-env NODE_ENV=npm node ./resources/script/rebuild.js",
-    "electron:rebuild": "cross-env NODE_ENV=electron node ./resources/script/rebuild.js",
-    "build:win": "cross-env NODE_ENV=production node resources/script/build.js && electron-builder -c resources/script/build.json --win",
-    "build:linux": "cross-env NODE_ENV=production node resources/script/build.js && electron-builder -c resources/script/build.json --linux",
-    "build:mac": "cross-env NODE_ENV=production node resources/script/build.js && electron-builder -c resources/script/build.json --mac"
+    "dev": "node build/script/dev.js",
+    "rebuild": "electron-rebuild",
+    "build:win": "node build/script/build.js && electron-builder -c build/cfg/build.json --win",
+    "build:linux": "node build/script/build.js && electron-builder -c build/cfg/build.json --linux",
+    "build:mac": "node build/script/build.js && electron-builder -c build/cfg/build.json --mac"
   },
   "devDependencies": {
     "@types/node-fetch": "^2.5.8",
     "@vue/compiler-sfc": "^3.0.6",
-    "cross-env": "^7.0.3",
     "css-loader": "^5.1.0",
     "electron": "^11.3.0",
     "electron-builder": "^22.9.1",

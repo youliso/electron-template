@@ -14,9 +14,9 @@ async function startRenderer() {
     try {
         port = fs.readFileSync(path.resolve('.port'), 'utf8');
     } catch (e) {
-        throw "not found .port"
+        throw 'not found .port';
     }
-    const config = require('./webpack.renderer.config');
+    const config = require('./webpack.renderer.config')('development');
     const options = {
         contentBase: path.resolve('dist'),
         hot: true,
@@ -26,14 +26,15 @@ async function startRenderer() {
     const compiler = webpack(config);
     const server = new webpackDevServer(compiler, options);
     server.listen(port, 'localhost', () => {
-        console.log(`dev server listening on port ${port}`);
+    });
+    server.invalidate(() => {
+        console.log(`Project is running at http://localhost:${port}`);
     });
 }
 
 async function startMain() {
     return new Promise((resolve) => {
-        const config = require('./webpack.main.config');
-        const compiler = webpack(config);
+        const compiler = webpack(require('./webpack.main.config')('development'));
         compiler.watch({}, (err, stats) => {
             if (err) {
                 console.log(err);

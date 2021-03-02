@@ -6,12 +6,6 @@ import { WindowOpt } from '@/lib/interface';
 import ico from '../assets/tray.png';
 
 const config = require('@/cfg/config.json');
-let appPort = '';
-try {
-    appPort = readFileSync(join('.port'), 'utf8');
-} catch (e) {
-    throw 'not found .port';
-}
 
 export class Window {
 
@@ -128,6 +122,12 @@ export class Window {
             win.webContents.send('window-load', args);
         });
         if (!app.isPackaged) { //调试模式
+            let appPort = '';
+            try {
+                appPort = readFileSync(join('.port'), 'utf8');
+            } catch (e) {
+                throw 'not found .port';
+            }
             win.loadURL(`http://localhost:${appPort}`).catch(err => Log.error('[createWindow]', err));
             return;
         }
