@@ -4,7 +4,7 @@ const { name } = require('../../package.json');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const miniCssExtractPlugin = require('mini-css-extract-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
-const { ESBuildPlugin } = require('esbuild-loader');
+const { ESBuildPlugin, ESBuildMinifyPlugin } = require('esbuild-loader');
 module.exports = (env) => {
     return {
         mode: env,
@@ -38,7 +38,7 @@ module.exports = (env) => {
                     loader: 'esbuild-loader',
                     options: {
                         loader: 'ts',
-                        target: 'esnext',
+                        target: 'esnext'
                         // appendTsSuffixTo: [/\.vue$/]
                     },
                     exclude: /node_modules/
@@ -116,7 +116,12 @@ module.exports = (env) => {
             })
         ],
         optimization: {
-            minimize: env === 'production'
+            minimize: env === 'production',
+            minimizer: [
+                new ESBuildMinifyPlugin({
+                    target: 'esnext'
+                })
+            ]
         }
     };
 };

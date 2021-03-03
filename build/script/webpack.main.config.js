@@ -1,5 +1,5 @@
 const { resolve } = require('path');
-const { ESBuildPlugin } = require('esbuild-loader');
+const { ESBuildPlugin, ESBuildMinifyPlugin } = require('esbuild-loader');
 module.exports = (env) => {
     return {
         mode: env,
@@ -44,7 +44,12 @@ module.exports = (env) => {
             }
         },
         optimization: {
-            minimize: env === 'production'
+            minimize: env === 'production',
+            minimizer: [
+                new ESBuildMinifyPlugin({
+                    target: 'esnext'
+                })
+            ]
         },
         plugins: [
             new ESBuildPlugin()
