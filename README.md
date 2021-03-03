@@ -19,7 +19,8 @@
 
 ## 模块大致文件结构参考
 ```
-├── resources 打包所需的文件
+├── build 打包所需的文件
+│   ├── cfg 打包配置
 │   ├── icons 图片
 │   └── script 打包的方法 、本地调试等
 └── src
@@ -31,11 +32,6 @@
     └── renderer 渲染进程模块
 ```
 
-## 安装依赖
-运行命令
-```shell
-yarn
-```
 ### 安装中的网络问题
 - `electron`:
 ```shell
@@ -45,5 +41,5 @@ yarn config set electron_mirror https://cdn.npm.taobao.org/dist/electron/
 ## 运行调试
 运行命令
 ```shell
-yarn run dev:all
+yarn run dev
 ```
