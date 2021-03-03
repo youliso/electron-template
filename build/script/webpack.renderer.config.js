@@ -4,6 +4,7 @@ const { name } = require('../../package.json');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const miniCssExtractPlugin = require('mini-css-extract-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
+const { ESBuildPlugin } = require('esbuild-loader');
 module.exports = (env) => {
     return {
         mode: env,
@@ -34,9 +35,11 @@ module.exports = (env) => {
                 },
                 {
                     test: /\.ts$/,
-                    use: {
-                        loader: 'ts-loader',
-                        options: { appendTsSuffixTo: [/\.vue$/] }
+                    loader: 'esbuild-loader',
+                    options: {
+                        loader: 'ts',
+                        target: 'esnext',
+                        // appendTsSuffixTo: [/\.vue$/]
                     },
                     exclude: /node_modules/
                 },
@@ -95,6 +98,7 @@ module.exports = (env) => {
             }
         },
         plugins: [
+            new ESBuildPlugin(),
             new miniCssExtractPlugin({
                 // Options similar to the same options in webpackOptions.output
                 // both options are optional

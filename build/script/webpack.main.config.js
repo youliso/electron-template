@@ -1,4 +1,5 @@
 const { resolve } = require('path');
+const { ESBuildPlugin } = require('esbuild-loader');
 module.exports = (env) => {
     return {
         mode: env,
@@ -20,7 +21,11 @@ module.exports = (env) => {
             rules: [
                 {
                     test: /\.ts$/,
-                    use: 'ts-loader',
+                    loader: 'esbuild-loader',
+                    options: {
+                        loader: 'ts',
+                        target: 'esnext'
+                    },
                     exclude: /node_modules/
                 },
                 {
@@ -40,6 +45,9 @@ module.exports = (env) => {
         },
         optimization: {
             minimize: env === 'production'
-        }
+        },
+        plugins: [
+            new ESBuildPlugin()
+        ]
     };
 };
