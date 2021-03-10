@@ -14,7 +14,7 @@
   调用 `src/lib/index.ts`  内`getInsidePath()` 方法可获取 调试和打包 对应路径
 
 ## electron builder 打包配置
-位于 `resources/script/build.js` 根据自己需求更改即可   
+位于 `build/cfg/build.js` 根据自己需求更改即可   
 请参考 [electron-builder](https://www.electron.build/) 文档
 
 ## 模块大致文件结构参考
