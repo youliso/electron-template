@@ -37,7 +37,8 @@ class Init {
     private update = new Update();
     private session = new Session();
 
-    constructor() {}
+    constructor() {
+    }
 
     /**
      * 初始化并加载
@@ -47,7 +48,7 @@ class Init {
         let args = [];
         if (!app.isPackaged) args.push(resolve(process.argv[1]));
         args.push('--');
-        app.setAsDefaultProtocolClient(app.name, process.execPath, args);
+        if (!app.isDefaultProtocolClient(app.name, process.execPath, args)) app.setAsDefaultProtocolClient(app.name, process.execPath, args);
         app.allowRendererProcessReuse = true;
 
         if (!app.requestSingleInstanceLock()) {
@@ -77,7 +78,8 @@ class Init {
         //获得焦点时发出
         app.on('browser-window-focus', () => {
             //关闭刷新
-            globalShortcut.register('CommandOrControl+R', () => {});
+            globalShortcut.register('CommandOrControl+R', () => {
+            });
         });
         //失去焦点时发出
         app.on('browser-window-blur', () => {
