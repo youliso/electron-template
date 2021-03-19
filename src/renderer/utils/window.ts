@@ -16,6 +16,13 @@ export function windowShow(id?: number) {
 }
 
 /**
+ * 窗口隐藏
+ */
+export function windowHide(id?: number) {
+    ipcRenderer.send('window-hide', id);
+}
+
+/**
  * 窗口置顶
  */
 export function windowAlwaysOnTop(id: number, is: boolean, type?: 'normal' | 'floating' | 'torn-off-menu' | 'modal-panel' | 'main-menu' | 'status' | 'pop-up-menu' | 'screen-saver') {
