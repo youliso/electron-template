@@ -1,4 +1,3 @@
-const electron = require('electron');
 const webpackDevServer = require('webpack-dev-server');
 const webpack = require('webpack');
 const { spawn } = require('child_process');
@@ -63,7 +62,7 @@ function startElectron() {
     } else if (process.env.npm_execpath.endsWith('npm-cli.js')) {
         args = args.concat(process.argv.slice(2));
     }
-    electronProcess = spawn(electron, args);
+    electronProcess = spawn('electron', args, { cwd: path.resolve('./'), shell: true });
     electronProcess.stdout.on('data', data => console.log('[main:stdout]', data.toString()));
     electronProcess.stderr.on('data', data => console.log('[main:stderr]', data.toString()));
     electronProcess.on('exit', (e) => {
