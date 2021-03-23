@@ -98,7 +98,6 @@ module.exports = (env) => {
             }
         },
         plugins: [
-            new ESBuildPlugin(),
             new miniCssExtractPlugin({
                 // Options similar to the same options in webpackOptions.output
                 // both options are optional
