@@ -74,15 +74,15 @@ export class Window {
         let opt = this.browserWindowOpt([args.width || config.appW, args.height || config.appH]);
         if (args.parentId) {
             opt.parent = this.getWindow(args.parentId);
-            args.currentWidth = this.getWindow(args.parentId).getBounds().width;
-            args.currentHeight = this.getWindow(args.parentId).getBounds().height;
-            args.currentMaximized = this.getWindow(args.parentId).isMaximized();
+            args.currentWidth = opt.parent.getBounds().width;
+            args.currentHeight = opt.parent.getBounds().height;
+            args.currentMaximized = opt.parent.isMaximized();
             if (args.currentMaximized) {
                 opt.x = parseInt(((screen.getPrimaryDisplay().workAreaSize.width - (args.width || 0)) / 2).toString());
                 opt.y = parseInt(((screen.getPrimaryDisplay().workAreaSize.height - (args.height || 0)) / 2).toString());
             } else {
-                opt.x = parseInt((this.getWindow(args.parentId).getPosition()[0] + ((this.getWindow(args.parentId).getBounds().width - (args.width || args.currentWidth)) / 2)).toString());
-                opt.y = parseInt((this.getWindow(args.parentId).getPosition()[1] + ((this.getWindow(args.parentId).getBounds().height - (args.height || args.currentHeight)) / 2)).toString());
+                opt.x = parseInt((opt.parent.getPosition()[0] + ((opt.parent.getBounds().width - (args.width || args.currentWidth)) / 2)).toString());
+                opt.y = parseInt((opt.parent.getPosition()[1] + ((opt.parent.getBounds().height - (args.height || args.currentHeight)) / 2)).toString());
             }
         } else if (this.main) {
             opt.x = parseInt((this.main.getPosition()[0] + ((this.main.getBounds().width - opt.width) / 2)).toString());
