@@ -32,11 +32,11 @@ global.sharedObject = {
 };
 
 class Init {
+    private log = new Log();
     private window = new Window();
     private socket = new Socket();
     private update = new Update();
     private session = new Session();
-    private log = new Log();
 
     constructor() {
     }
