@@ -11,10 +11,11 @@
   "license": "MIT",
   "scripts": {
     "dev": "node build/script/dev.js",
-    "rebuild": "electron-rebuild",
+    "rebuild": "electron-rebuild -f",
     "build:win": "node build/script/build.js && electron-builder -c build/cfg/build.json --win",
     "build:linux": "node build/script/build.js && electron-builder -c build/cfg/build.json --linux",
-    "build:mac": "node build/script/build.js && electron-builder -c build/cfg/build.json --mac"
+    "build:mac": "node build/script/build.js && electron-builder -c build/cfg/build.json --mac",
+    "postinstall": "electron-builder install-app-deps"
   },
   "devDependencies": {
     "@types/node-fetch": "^2.5.8",
