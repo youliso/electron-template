@@ -1,8 +1,7 @@
 import { statSync, writeFileSync, appendFileSync } from 'fs';
 import { app, ipcMain } from 'electron';
-import { dateFormat, isNull } from '@/lib';
+import { dateFormat } from '@/lib';
 import { EOL } from 'os';
-import { Window } from '@/main/modular/window';
 
 export class Log {
     private readonly logFile: string = app.getPath('logs');
