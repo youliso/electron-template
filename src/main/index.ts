@@ -1,9 +1,9 @@
 import { resolve } from 'path';
 import { app, globalShortcut, ipcMain } from 'electron';
 import { IPC_MSG_TYPE } from '@/lib/interface';
-import Log from '@/lib/log';
 import { getExternPath } from '@/lib';
 import { readFile } from '@/lib/file';
+import { Log } from './modular/log';
 import { Session } from './modular/session';
 import { Window } from './modular/window';
 import { Update } from './modular/update';
@@ -36,6 +36,7 @@ class Init {
     private socket = new Socket();
     private update = new Update();
     private session = new Session();
+    private log = new Log();
 
     constructor() {
     }
@@ -114,7 +115,7 @@ class Init {
             const setting = await readFile(getExternPath('setting.json'));
             global.sharedObject['setting'] = JSON.parse(setting as string);
         } catch (e) {
-            Log.error('[setting]', e);
+            this.log.error('[setting]', e);
             global.sharedObject['setting'] = {};
         }
         Platform[global.sharedObject.platform]();
@@ -153,6 +154,7 @@ class Init {
         /**
          * 开启模块监听
          */
+        this.log.on();
         this.window.on();
         this.session.on();
         this.socket.on(this.window);

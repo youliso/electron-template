@@ -1,12 +1,11 @@
-import Log from "@/lib/log";
-import {io, Socket as SocketIo} from "socket.io-client";
-import {ManagerOptions} from "socket.io-client/build/manager";
-import {SocketOptions} from "socket.io-client/build/socket";
-import {ipcMain} from "electron";
-import {Window} from "@/main/modular/window";
-import {isNull} from "@/lib";
+import { io, Socket as SocketIo } from 'socket.io-client';
+import { ManagerOptions } from 'socket.io-client/build/manager';
+import { SocketOptions } from 'socket.io-client/build/socket';
+import { ipcMain } from 'electron';
+import { Window } from '@/main/modular/window';
+import { isNull } from '@/lib';
 
-const config = require("@/cfg/config.json");
+const config = require('@/cfg/config.json');
 
 /**
  * Socket模块
@@ -21,8 +20,8 @@ export class Socket {
      */
     public opts: Partial<ManagerOptions & SocketOptions> = {
         auth: {
-            authorization: global.sharedObject["authorization"]
-        },
+            authorization: global.sharedObject['authorization']
+        }
     };
 
     constructor() {
@@ -33,32 +32,32 @@ export class Socket {
      */
     open(callback: Function) {
         this.io = io(config.socketUrl, this.opts);
-        this.io.on("connect", () => {
-            Log.info("[Socket]connect");
+        this.io.on('connect', () => {
+            console.log('[Socket]connect');
         });
-        this.io.on("disconnect", () => {
-            Log.info("[Socket]disconnect");
+        this.io.on('disconnect', () => {
+            console.log('[Socket]disconnect');
             setTimeout(() => {
-                if (this.io && this.io.io._readyState === "closed") this.io.open()
-            }, 1000 * 60 * 3)
+                if (this.io && this.io.io._readyState === 'closed') this.io.open();
+            }, 1000 * 60 * 3);
         });
-        this.io.on("message", (data: { key: string; value: any; }) => callback(data));
-        this.io.on("error", (data: any) => Log.info(`[Socket]error ${data.toString()}`));
-        this.io.on("close", () => Log.info("[Socket]close"));
+        this.io.on('message', (data: { key: string; value: any; }) => callback(data));
+        this.io.on('error', (data: any) => console.log(`[Socket]error ${data.toString()}`));
+        this.io.on('close', () => console.log('[Socket]close'));
     }
 
     /**
      * 重新连接
      */
     reconnection() {
-        if (this.io && this.io.io._readyState === "closed") this.io.open();
+        if (this.io && this.io.io._readyState === 'closed') this.io.open();
     }
 
     /**
      * 关闭
      */
     close() {
-        if (this.io && this.io.io._readyState !== "closed") this.io.close();
+        if (this.io && this.io.io._readyState !== 'closed') this.io.close();
     }
 
     /**
@@ -66,18 +65,18 @@ export class Socket {
      */
     on(window: Window) {
         //设置opts
-        ipcMain.on("socket-set-opts", async (event, args) => this.opts = args);
+        ipcMain.on('socket-set-opts', async (event, args) => this.opts = args);
         //重新连接
-        ipcMain.on("socket-reconnection", async () => this.reconnection());
+        ipcMain.on('socket-reconnection', async () => this.reconnection());
         //关闭
-        ipcMain.on("socket-reconnection", async () => this.close());
+        ipcMain.on('socket-reconnection', async () => this.close());
         //打开socket
-        ipcMain.on("socket-open", async () => {
+        ipcMain.on('socket-open', async () => {
             if (isNull(this.io)) {
                 this.open((data: { key: string; value: any; }) => {
                     for (let i in window.group) {
                         if (window.group[i]) {
-                            window.getWindow(Number(i)).webContents.send("message-back", data);
+                            window.getWindow(Number(i)).webContents.send('message-back', data);
                         }
                     }
                 });

@@ -1,7 +1,6 @@
 import { join } from 'path';
 import { readFileSync } from 'fs';
 import { shell, app, screen, BrowserWindow, BrowserWindowConstructorOptions, Menu, Tray, ipcMain } from 'electron';
-import Log from '@/lib/log';
 import { WindowOpt } from '@/lib/interface';
 import ico from '../assets/tray.png';
 
@@ -128,10 +127,10 @@ export class Window {
             } catch (e) {
                 throw 'not found .port';
             }
-            win.loadURL(`http://localhost:${appPort}`).catch(err => Log.error('[createWindow]', err));
+            win.loadURL(`http://localhost:${appPort}`).then();
             return;
         }
-        win.loadFile(join(__dirname, './index.html')).catch(err => Log.error('[createWindow]', err));
+        win.loadFile(join(__dirname, './index.html')).then();
     }
 
     /**
