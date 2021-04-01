@@ -23,7 +23,6 @@ import Head from '../components/Head.vue';
 import { argsData, messageData } from '@/renderer/store';
 import { windowCreate, windowShow } from '@/renderer/utils/window';
 import {  getGlobal } from '@/renderer/utils';
-import {  net } from '@/renderer/utils/net';
 import { WindowOpt } from '@/lib/interface';
 
 export default defineComponent({
