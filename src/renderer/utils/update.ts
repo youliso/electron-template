@@ -1,10 +1,9 @@
-import {ipcRenderer} from "electron";
 
 /**
  * 检查更新 (注: 只需调用一次,多次调用会造成更新模块多次监听)
  */
 export function updateCheck() {
-    ipcRenderer.send("update-check");
+    window.ipcFun.send("update-check");
 }
 
 /**
@@ -12,7 +11,7 @@ export function updateCheck() {
  * @param isDel 是否删除历史更新缓存
  */
 export function updateReCheck(isDel: boolean) {
-    ipcRenderer.send("update-recheck", isDel);
+    window.ipcFun.send("update-recheck", isDel);
 }
 
 /**
@@ -20,5 +19,5 @@ export function updateReCheck(isDel: boolean) {
  * @param isSilent 是否静默更新
  */
 export function updateQuitInstall(isSilent: boolean) {
-    ipcRenderer.send("update-quit-install", isSilent);
+    window.ipcFun.send("update-quit-install", isSilent);
 }

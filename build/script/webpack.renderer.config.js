@@ -10,7 +10,7 @@ module.exports = (env) => {
   return {
     ...base,
     mode: env,
-    target: 'electron-renderer',
+    target: 'web',
     entry: {
       app: './src/renderer/index.ts'
     },

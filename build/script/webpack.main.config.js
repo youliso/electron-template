@@ -7,7 +7,8 @@ module.exports = (env) => {
     mode: env,
     target: 'electron-main',
     entry: {
-      main: './src/main/index.ts'
+      main: './src/main/index.ts',
+      preload: './src/main/preload/index.ts',
     },
     output: {
       filename: '[name].bundle.js',

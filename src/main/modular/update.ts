@@ -1,6 +1,6 @@
 import { join } from 'path';
 import { AppUpdater, autoUpdater } from 'electron-updater';
-import { delDir } from '@/lib/file';
+import { delDir } from '@/main/modular/file';
 import { ipcMain } from 'electron';
 import { Window } from '@/main/modular/window';
 

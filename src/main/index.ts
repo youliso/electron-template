@@ -1,6 +1,7 @@
 import { resolve } from 'path';
 import { app, globalShortcut, ipcMain } from 'electron';
 import { IPC_MSG_TYPE } from '@/lib/interface';
+import { fileOn } from './modular/file';
 import { Log } from './modular/log';
 import { Session } from './modular/session';
 import { Window } from './modular/window';
@@ -94,6 +95,7 @@ class Init {
       }
     });
     //开启模块监听
+    fileOn();
     this.log.on();
     this.window.on();
     this.session.on();

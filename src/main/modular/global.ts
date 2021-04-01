@@ -1,5 +1,5 @@
 import { app, ipcMain } from 'electron';
-import { readFile } from '@/lib/file';
+import { readFile } from '@/main/modular/file';
 import { Platform } from './platform';
 import { resolve } from 'path';
 
@@ -28,12 +28,6 @@ export class Global {
   }
 
   async init() {
-    try {
-      const setting = await readFile(this.getExternPath('setting.json'));
-      this.sharedObject['setting'] = JSON.parse(setting as string);
-    } catch (e) {
-      this.sharedObject['setting'] = {};
-    }
     Platform[this.sharedObject.platform](this);
     this.on();
   }

@@ -34,8 +34,9 @@ export class Window {
       frame: false,
       show: false,
       webPreferences: {
-        contextIsolation: false,
-        nodeIntegration: true,
+        preload: join(__dirname, './preload.bundle.js'),
+        contextIsolation: true,
+        nodeIntegration: false,
         devTools: !app.isPackaged,
         webSecurity: false
       }

@@ -1,11 +1,9 @@
-import fetch, { RequestInit, Headers } from 'node-fetch';
-import AbortController from 'node-abort-controller';
 import querystring from 'querystring';
-import { isNull } from '@/lib/index';
 
 const { appUrl } = require('@/cfg/config.json');
 
 export interface NetOpt extends RequestInit {
+  outTime?: number; //请求超时时间
   authorization?: string;
   isHeaders?: boolean; //是否获取headers
   isQuerystring?: boolean; //是否querystring参数
@@ -17,14 +15,8 @@ export enum NET_RESPONSE_TYPE {
   TEXT,
   JSON,
   BUFFER,
-  BLOB
-}
-
-/**
- * 创建 AbortController
- */
-export function AbortSignal() {
-  return new AbortController();
+  BLOB,
+  FORM_DATA
 }
 
 /**
@@ -32,6 +24,13 @@ export function AbortSignal() {
  * @param url string
  * @param param NetSendOpt
  * */
+
+/**
+ * 创建 AbortController
+ */
+export function AbortSignal() {
+  return new AbortController();
+}
 
 /**
  * 错误信息包装
@@ -89,6 +88,7 @@ function fetchPromise(url: string, sendData: NetOpt): Promise<any> {
     });
 }
 
+
 /**
  * 处理函数
  * @param url
@@ -99,21 +99,21 @@ export async function net(url: string, param: NetOpt = {}): Promise<any> {
   let sendData: NetOpt = {
     isQuerystring: param.isQuerystring,
     isHeaders: param.isHeaders,
-    headers: new Headers(Object.assign({
+    headers: Object.assign({
         'Content-type': 'application/json;charset=utf-8',
         'authorization': param.authorization || ''
       },
-      param.headers || {})),
-    timeout: param.timeout || 30000,
+      param.headers || {}),
+    outTime: param.outTime || 30000,
     type: param.type || NET_RESPONSE_TYPE.TEXT,
     method: param.method || 'GET',
     signal: param.signal || null
   };
-  if (!isNull(param.data)) {
+  if (!!param.data) {
     if (sendData.method === 'GET') url = `${url}?${querystring.stringify(param.data)}`;
     else if (sendData.isQuerystring) sendData.body = querystring.stringify(param.data);
     else sendData.body = param.data;
   }
-  return Promise.race([timeoutPromise(sendData.timeout), fetchPromise(url, sendData)])
+  return Promise.race([timeoutPromise(sendData.outTime), fetchPromise(url, sendData)])
     .catch(err => errorReturn(err.message));
 }
