@@ -62,23 +62,6 @@ export class Global {
   }
 
   /**
-   * 设置全局参数
-   * @param key 键
-   * @param value 值
-   */
-  sendGlobal(key: string, value: unknown) {
-    this.sharedObject[key] = value;
-  }
-
-  /**
-   * 获取全局参数
-   * @param key 键
-   */
-  getGlobal(key: string) {
-    return this.sharedObject[key];
-  }
-
-  /**
    * 获取内部依赖文件路径(！文件必须都存放在lib/inside 针对打包后内部依赖文件路径问题)
    * @param path lib/inside为起点的相对路径
    * */
