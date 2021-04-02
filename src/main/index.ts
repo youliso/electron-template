@@ -1,8 +1,8 @@
 import { resolve } from 'path';
 import { app, globalShortcut, ipcMain } from 'electron';
 import { IPC_MSG_TYPE } from '@/lib/interface';
+import { logOn } from './modular/log';
 import { fileOn } from './modular/file';
-import { Log } from './modular/log';
 import { Session } from './modular/session';
 import { Window } from './modular/window';
 import { Update } from './modular/update';
@@ -10,7 +10,6 @@ import { Socket } from './modular/socket';
 import Global from './modular/global';
 
 class Init {
-  private log = new Log();
   private window = new Window();
   private socket = new Socket();
   private update = new Update();
@@ -95,8 +94,8 @@ class Init {
       }
     });
     //开启模块监听
+    logOn();
     fileOn();
-    this.log.on();
     this.window.on();
     this.session.on();
     this.socket.on(this.window);
