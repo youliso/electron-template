@@ -154,6 +154,11 @@ export async function appendFile(path: string, data: string | Uint8Array, option
  * 监听
  */
 export function fileOn() {
-  ipcMain.on('file-filebysuffix', async (event, args) => fileBySuffix(args.path, args.fileName));
-  ipcMain.on('file-deldir', async (event, args) => delDir(args.path));
+  ipcMain.handle('file-filebysuffix', async (event, args) => fileBySuffix(args.path, args.fileName));
+  ipcMain.handle('file-deldir', async (event, args) => delDir(args.path));
+  ipcMain.handle('file-access', async (event, args) => access(args.path));
+  ipcMain.handle('file-readfile', async (event, args) => readFile(args.path, args.options));
+  ipcMain.handle('file-readline', async (event, args) => readLine(args.path, args.index));
+  ipcMain.handle('file-writefile', async (event, args) => writeFile(args.path, args.data, args.options));
+  ipcMain.handle('file-appendfile', async (event, args) => appendFile(args.path, args.data, args.options));
 }
