@@ -1,6 +1,16 @@
 import { join } from 'path';
 import { readFileSync } from 'fs';
-import { shell, app, screen, BrowserWindow, BrowserWindowConstructorOptions, Menu, Tray, ipcMain } from 'electron';
+import {
+  shell,
+  app,
+  screen,
+  BrowserWindow,
+  BrowserWindowConstructorOptions,
+  Menu,
+  Tray,
+  nativeImage,
+  ipcMain
+} from 'electron';
 import { WindowOpt } from '@/lib/interface';
 import Global from './global';
 import ico from '../assets/tray.png';
@@ -157,7 +167,7 @@ export class Window {
         app.quit();
       }
     }]);
-    this.tray = new Tray(join(__dirname, `./${ico}`));
+    this.tray = new Tray(nativeImage.createFromPath(join(__dirname, `./${ico}`)));
     this.tray.setContextMenu(contextMenu);
     this.tray.setToolTip(app.name);
     this.tray.on('double-click', () => {
