@@ -36,8 +36,6 @@ module.exports = (env) => {
           use: [{
             loader: miniCssExtractPlugin.loader,
             options: {
-              // you can specify a publicPath here
-              // by default it use publicPath in webpackOptions.output
               publicPath: './'
             }
           },
@@ -45,19 +43,29 @@ module.exports = (env) => {
           ]
         },
         {
-          // scss
           test: /\.scss$/,
           use: [
             {
               loader: miniCssExtractPlugin.loader,
               options: {
-                // you can specify a publicPath here
-                // by default it use publicPath in webpackOptions.output
                 publicPath: './'
               }
             },
             'css-loader',
             'sass-loader'
+          ]
+        },
+        {
+          test: /\.less$/,
+          use: [
+            {
+              loader: miniCssExtractPlugin.loader,
+              options: {
+                publicPath: './'
+              }
+            },
+            'css-loader',
+            'less-loader'
           ]
         }
       ]
