@@ -8,7 +8,9 @@ const { ESBuildMinifyPlugin } = require('esbuild-loader');
 const base = require('./webpack.base.config');
 module.exports = (env) => {
   return {
-    ...base,
+    node: {
+      ...base.node
+    },
     mode: env,
     target: 'web',
     entry: {
@@ -19,8 +21,12 @@ module.exports = (env) => {
       chunkFilename: '[id].bundle.view.js',
       path: resolve('dist')
     },
+    resolve: {
+      ...base.resolve
+    },
     module: {
       rules: [
+        ...base.module.rules,
         {
           test: /\.vue$/,
           loader: 'vue-loader',
@@ -29,16 +35,6 @@ module.exports = (env) => {
               scss: 'vue-style-loader!css-loader!sass-loader'
             }
           }
-        },
-        {
-          test: /\.ts$/,
-          loader: 'esbuild-loader',
-          options: {
-            loader: 'ts',
-            target: 'esnext'
-            // appendTsSuffixTo: [/\.vue$/]
-          },
-          exclude: /node_modules/
         },
         {
           test: /\.css$/,
@@ -71,18 +67,6 @@ module.exports = (env) => {
             {
               loader: 'sass-loader'
             }
-          ]
-        },
-        {
-          test: /\.(png|svg|jpg|gif|ico)$/,
-          use: [
-            'file-loader'
-          ]
-        },
-        {
-          test: /\.(woff|woff2|eot|ttf|otf)$/,
-          use: [
-            'file-loader'
           ]
         }
       ]

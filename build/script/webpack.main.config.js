@@ -15,25 +15,6 @@ module.exports = (env) => {
       chunkFilename: '[id].bundle.js',
       path: resolve('dist')
     },
-    module: {
-      rules: [
-        {
-          test: /\.ts$/,
-          loader: 'esbuild-loader',
-          options: {
-            loader: 'ts',
-            target: 'esnext'
-          },
-          exclude: /node_modules/
-        },
-        {
-          test: /\.(png|svg|jpg|gif|ico)$/,
-          use: [
-            'file-loader'
-          ]
-        }
-      ]
-    },
     optimization: {
       minimize: env === 'production',
       minimizer: [
@@ -41,7 +22,6 @@ module.exports = (env) => {
           target: 'esnext'
         })
       ]
-    },
-    plugins: []
+    }
   };
 };
