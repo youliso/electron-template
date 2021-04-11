@@ -29,12 +29,7 @@ module.exports = (env) => {
         ...base.module.rules,
         {
           test: /\.vue$/,
-          loader: 'vue-loader',
-          options: {
-            loader: {
-              scss: 'vue-style-loader!css-loader!sass-loader'
-            }
-          }
+          loader: 'vue-loader'
         },
         {
           test: /\.css$/,
@@ -61,12 +56,8 @@ module.exports = (env) => {
                 publicPath: './'
               }
             },
-            {
-              loader: 'css-loader'
-            },
-            {
-              loader: 'sass-loader'
-            }
+            'css-loader',
+            'sass-loader'
           ]
         }
       ]
