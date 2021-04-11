@@ -1,5 +1,4 @@
 const { resolve } = require('path');
-const webpack = require('webpack');
 const { name } = require('../../package.json');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const miniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -72,8 +71,6 @@ module.exports = (env) => {
     },
     plugins: [
       new miniCssExtractPlugin({
-        // Options similar to the same options in webpackOptions.output
-        // both options are optional
         filename: '[name].css',
         chunkFilename: '[id].css'
       }),
@@ -81,11 +78,7 @@ module.exports = (env) => {
         title: name,
         template: './build/index.html'
       }),
-      new VueLoaderPlugin(),
-      new webpack.DefinePlugin({
-        '__VUE_OPTIONS_API__': 'false',
-        '__VUE_PROD_DEVTOOLS__': 'false'
-      })
+      new VueLoaderPlugin()
     ],
     optimization: {
       minimize: env === 'production',
