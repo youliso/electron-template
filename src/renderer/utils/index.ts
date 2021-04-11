@@ -1,32 +1,26 @@
-import { IpcMsg } from "@/lib/interface";
-import { setMessageData } from "@/renderer/store";
+import { IpcMsg } from '@/lib/interface';
+import { setMessageData } from '@/renderer/store';
 
 /**
  * 渲染进程初始化 (i)
  * */
-export async function windowLoad() {
-  return new Promise(resolve => window.ipcFun.once("window-load", async (event, args) => resolve(args)));
-}
-
-/**
- * 消息反馈 (i)
- */
-export function messageBack() {
-  window.ipcFun.on("message-back", (event, args) => setMessageData(args.key, args.value));
+export async function load() {
+  window.ipcFun.on('message-back', (event, args) => setMessageData(args.key, args.value)); //监听消息反馈
+  return new Promise(resolve => window.ipcFun.once('window-load', async (event, args) => resolve(args)));
 }
 
 /**
  * 消息发送
  */
 export function messageSend(args: IpcMsg) {
-  window.ipcFun.send("message-send", args);
+  window.ipcFun.send('message-send', args);
 }
 
 /**
  * app常用获取路径
  */
 export function getAppPath(key: string) {
-  return window.ipcFun.sendSync("app-path-get", { key });
+  return window.ipcFun.sendSync('app-path-get', { key });
 }
 
 /**
@@ -43,7 +37,7 @@ export function ipcSend(key: string, value?: unknown) {
  * @param args
  */
 export function logInfo(...args: any) {
-  window.ipcFun.send("log-info", args);
+  window.ipcFun.send('log-info', args);
 }
 
 /**
@@ -51,7 +45,7 @@ export function logInfo(...args: any) {
  * @param args
  */
 export function logError(...args: any) {
-  window.ipcFun.send("log-error", args);
+  window.ipcFun.send('log-error', args);
 }
 
 /**
@@ -60,7 +54,7 @@ export function logError(...args: any) {
  * @param value 值
  */
 export function sendGlobal(key: string, value: unknown) {
-  return window.ipcFun.sendSync("global-sharedObject-set", {
+  return window.ipcFun.sendSync('global-sharedObject-set', {
     key,
     value
   });
@@ -71,7 +65,7 @@ export function sendGlobal(key: string, value: unknown) {
  * @param key 键
  */
 export function getGlobal(key: string) {
-  return window.ipcFun.sendSync("global-sharedObject-get", key);
+  return window.ipcFun.sendSync('global-sharedObject-get', key);
 }
 
 /**
@@ -79,7 +73,7 @@ export function getGlobal(key: string) {
  * @param path lib/inside为起点的相对路径
  * */
 export function getInsidePath(path: string): string {
-  return window.ipcFun.sendSync("global-insidePath-get", path);
+  return window.ipcFun.sendSync('global-insidePath-get', path);
 }
 
 /**
@@ -87,5 +81,5 @@ export function getInsidePath(path: string): string {
  * @param path lib/extern为起点的相对路径
  * */
 export function getExternPath(path: string): string {
-  return window.ipcFun.sendSync("global-externPath-get", path);
+  return window.ipcFun.sendSync('global-externPath-get', path);
 }
