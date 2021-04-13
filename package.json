@@ -25,7 +25,6 @@
     "electron-builder": "^22.10.5",
     "electron-rebuild": "^2.3.4",
     "esbuild-loader": "^2.11.0",
-    "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.1.0",
     "mini-css-extract-plugin": "^1.4.0",
     "prettier": "^2.2.1",
