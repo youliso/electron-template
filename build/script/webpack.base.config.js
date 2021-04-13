@@ -1,6 +1,9 @@
 const { resolve } = require('path');
 
 module.exports = {
+  experiments: {
+    // topLevelAwait: true,
+  },
   node: {
     global: false,
     __dirname: false,

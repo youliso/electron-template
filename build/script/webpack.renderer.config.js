@@ -7,6 +7,7 @@ const { ESBuildMinifyPlugin } = require('esbuild-loader');
 const base = require('./webpack.base.config');
 module.exports = (env) => {
   return {
+    experiments: base.experiments,
     node: {
       ...base.node
     },
