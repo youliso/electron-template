@@ -21,9 +21,7 @@ module.exports = {
         options: {
           loader: 'ts',
           target: 'esnext'
-          // appendTsSuffixTo: [/\.vue$/]
-        },
-        exclude: /node_modules/
+        }
       },
       {
         test: /\.(png|svg|jpg|gif|ico|woff|woff2|eot|ttf|otf)$/,

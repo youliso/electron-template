@@ -53,19 +53,6 @@ module.exports = (env) => {
             'css-loader',
             'sass-loader'
           ]
-        },
-        {
-          test: /\.less$/,
-          use: [
-            {
-              loader: miniCssExtractPlugin.loader,
-              options: {
-                publicPath: './'
-              }
-            },
-            'css-loader',
-            'less-loader'
-          ]
         }
       ]
     },
