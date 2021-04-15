@@ -20,8 +20,9 @@
     }
   },
   "include": [
+    "src/**/*.d.ts",
     "src/**/*.vue",
     "src/**/*.ts",
-    "src/**/*.d.ts"
+    "test/**/*.ts"
   ]
 }
