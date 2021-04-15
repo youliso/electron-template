@@ -27,12 +27,6 @@ export function AbortSignal() {
 }
 
 /**
- * 网络请求
- * @param url string
- * @param param NetSendOpt
- * */
-
-/**
  * 错误信息包装
  */
 export function errorReturn(msg: string): { [key: string]: unknown } {
