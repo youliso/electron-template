@@ -16,7 +16,7 @@
     "build:linux": "node build/script/build.js && electron-builder -c build/cfg/build.json --linux",
     "build:mac": "node build/script/build.js && electron-builder -c build/cfg/build.json --mac",
     "postinstall": "electron-builder install-app-deps",
-    "test": "jest --config build/script/jest.config.js"
+    "test": "jest -c build/cfg/jest.json"
   },
   "devDependencies": {
     "@types/jest": "^26.0.22",
