@@ -6,8 +6,8 @@ const { appUrl } = require('@/cfg/config.json');
 
 export interface NetOpt extends RequestInit {
   authorization?: string;
+  isStringify?: boolean; //是否stringify参数（非GET请求使用）
   isHeaders?: boolean; //是否获取headers
-  isQuerystring?: boolean; //是否querystring参数
   data?: any;
   type?: NET_RESPONSE_TYPE; //返回数据类型
 }
@@ -59,22 +59,22 @@ function fetchPromise(url: string, sendData: NetOpt): Promise<any> {
     .then(async (res) => {
       switch (sendData.type) {
         case NET_RESPONSE_TYPE.TEXT:
-          return sendData.isQuerystring ? {
+          return sendData.isHeaders ? {
             headers: await res.headers,
             data: await res.text()
           } : await res.text();
         case NET_RESPONSE_TYPE.JSON:
-          return sendData.isQuerystring ? {
+          return sendData.isHeaders ? {
             headers: await res.headers,
             data: await res.json()
           } : await res.json();
         case NET_RESPONSE_TYPE.BUFFER:
-          return sendData.isQuerystring ? {
+          return sendData.isHeaders ? {
             headers: await res.headers,
             data: await res.arrayBuffer()
           } : await res.arrayBuffer();
         case NET_RESPONSE_TYPE.BLOB:
-          return sendData.isQuerystring ? {
+          return sendData.isHeaders ? {
             headers: await res.headers,
             data: await res.blob()
           } : await res.blob();
@@ -90,8 +90,8 @@ function fetchPromise(url: string, sendData: NetOpt): Promise<any> {
 export async function net(url: string, param: NetOpt = {}): Promise<any> {
   if (url.indexOf('http://') === -1 && url.indexOf('https://') === -1) url = appUrl + url;
   let sendData: NetOpt = {
-    isQuerystring: param.isQuerystring,
     isHeaders: param.isHeaders,
+    isStringify: param.isStringify,
     headers: new Headers(Object.assign({
         'Content-type': 'application/json;charset=utf-8',
         'authorization': param.authorization || ''
@@ -104,8 +104,7 @@ export async function net(url: string, param: NetOpt = {}): Promise<any> {
   };
   if (!!param.data) {
     if (sendData.method === 'GET') url = `${url}?${querystring.stringify(param.data)}`;
-    else if (sendData.isQuerystring) sendData.body = querystring.stringify(param.data);
-    else sendData.body = param.data;
+    else sendData.body = sendData.isStringify ? querystring.stringify(param.data) : JSON.stringify(param.data);
   }
   return Promise.race([timeoutPromise(sendData.timeout), fetchPromise(url, sendData)])
     .catch(err => errorReturn(err.message));
