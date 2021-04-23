@@ -1,19 +1,18 @@
 <template>
   <router-view v-slot='{ Component }'>
-    <keep-alive :include='include' :exclude='exclude' :max='max'>
+    <keep-alive :include='keepAliveOpt.include' :exclude='keepAliveOpt.exclude' :max='keepAliveOpt.max'>
       <component :is='Component' />
     </keep-alive>
   </router-view>
 </template>
 <script lang='ts'>
-import { toRefs } from 'vue';
 import { useRouter } from 'vue-router';
 import { argsData, keepAliveOpt } from './store';
 
 export default {
   setup() {
     if (argsData.window.route) useRouter().replace(argsData.window.route);
-    return { ...toRefs(keepAliveOpt) };
+    return { keepAliveOpt };
   }
 };
 </script>

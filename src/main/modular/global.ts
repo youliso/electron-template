@@ -1,7 +1,10 @@
 import { app, ipcMain } from 'electron';
-import { readFile } from '@/main/modular/file';
 import { Platform } from './platform';
 import { resolve } from 'path';
+
+type Obj<Value> = {} & {
+  [key: string]: Value | Obj<Value>;
+};
 
 /**
  * Global
@@ -38,12 +41,12 @@ export class Global {
   on() {
     //赋值(sharedObject)
     ipcMain.on('global-sharedObject-set', (event, args) => {
-      this.sharedObject[args.key] = args.value;
+      this.sendGlobal(args.key, args.value);
       event.returnValue = 1;
     });
     //获取(sharedObject)
     ipcMain.on('global-sharedObject-get', (event, key) => {
-      event.returnValue = this.sharedObject[key];
+      event.returnValue = this.getGlobal(key);
     });
     //获取(insidePath)
     ipcMain.on('global-insidePath-get', (event, path) => {
@@ -53,6 +56,69 @@ export class Global {
     ipcMain.on('global-externPath-get', (event, path) => {
       event.returnValue = this.getExternPath(path);
     });
+  }
+
+  getGlobal<Value>(key: string): Value | undefined {
+    if (key === '') {
+      console.error('Invalid key, the key can not be a empty string');
+      return;
+    }
+
+    if (!key.includes('.') && Object.prototype.hasOwnProperty.call(this.sharedObject, key)) {
+      return this.sharedObject[key] as Value;
+    }
+
+    const levels = key.split('.');
+    let cur = this.sharedObject;
+    for (const level of levels) {
+      if (Object.prototype.hasOwnProperty.call(cur, level)) {
+        cur = (cur[level] as unknown) as Obj<Value>;
+      } else {
+        return;
+      }
+    }
+
+    return (cur as unknown) as Value;
+  }
+
+  sendGlobal<Value>(key: string, value: Value): void {
+    if (key === '') {
+      console.error('Invalid key, the key can not be a empty string');
+      return;
+    }
+
+    if (!key.includes('.')) {
+      if (Object.prototype.hasOwnProperty.call(this.sharedObject, key)) {
+        console.warn(`The key ${key} looks like already exists on obj.`);
+      }
+      this.sharedObject[key] = value;
+    }
+
+    const levels = key.split('.');
+    const lastKey = levels.pop()!;
+
+    let cur = this.sharedObject;
+    for (const level of levels) {
+      if (Object.prototype.hasOwnProperty.call(cur, level)) {
+        cur = cur[level];
+      } else {
+        console.error(
+          `Cannot set value because the key ${key} is not exists on obj.`
+        );
+        return;
+      }
+    }
+
+    if (typeof cur !== 'object') {
+      console.error(
+        `Invalid key ${key} because the value of this key is not a object.`
+      );
+      return;
+    }
+    if (Object.prototype.hasOwnProperty.call(cur, lastKey)) {
+      console.warn(`The key ${key} looks like already exists on obj.`);
+    }
+    cur[lastKey] = value;
   }
 
   /**
