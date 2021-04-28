@@ -1,5 +1,5 @@
 import { WindowOpt } from '@/lib/interface';
-import { setWindowMessageData } from '@/renderer/store';
+import { setMessageData } from '@/renderer/store';
 
 /**
  * 窗口初始化 (i)
@@ -13,7 +13,7 @@ export async function windowLoad() {
  * 窗口消息监听
  */
 export function windowMessageOn() {
-  window.ipcFun.on('window-message-back', (event, args) => setWindowMessageData(args.key, args.value)); //监听消息反馈
+  window.ipcFun.on('window-message-back', (event, args) => setMessageData(args.key, args.value)); //监听消息反馈
 }
 
 /**
