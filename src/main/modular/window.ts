@@ -247,20 +247,21 @@ export class Window {
       width: parseInt(args.size[0].toString()),
       height: parseInt(args.size[1].toString())
     };
-    if (Rectangle.width === this.getWindow(args.id).getBounds().width &&
-      Rectangle.height === this.getWindow(args.id).getBounds().height) {
+    let window = this.getWindow(args.id);
+    if (Rectangle.width === window.getBounds().width &&
+      Rectangle.height === window.getBounds().height) {
       return;
     }
     if (!args.center) {
-      Rectangle.x = parseInt((this.getWindow(args.id).getPosition()[0] + ((this.getWindow(args.id).getBounds().width - args.size[0]) / 2)).toString());
-      Rectangle.y = parseInt((this.getWindow(args.id).getPosition()[1] + ((this.getWindow(args.id).getBounds().height - args.size[1]) / 2)).toString());
+      Rectangle.x = parseInt((window.getPosition()[0] + ((window.getBounds().width - args.size[0]) / 2)).toString());
+      Rectangle.y = parseInt((window.getPosition()[1] + ((window.getBounds().height - args.size[1]) / 2)).toString());
     }
-    this.getWindow(args.id).once('resize', () => {
-      if (args.center) this.getWindow(args.id).center();
+    window.once('resize', () => {
+      if (args.center) window.center();
     });
-    this.getWindow(args.id).setResizable(args.resizable);
-    this.getWindow(args.id).setMinimumSize(Rectangle.width, Rectangle.height);
-    this.getWindow(args.id).setBounds(Rectangle);
+    window.setResizable(args.resizable);
+    window.setMinimumSize(Rectangle.width, Rectangle.height);
+    window.setBounds(Rectangle);
   }
 
   /**
