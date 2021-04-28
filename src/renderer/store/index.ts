@@ -44,7 +44,7 @@ export const getProvideState = (key: string) => inject( Symbol(key));
  * 窗口通信消息内容
  * */
 export const messageData = reactive(<{ [key: string]: unknown }>{});
-export const setMessageData = (key: string, value: unknown) => {
+export const setWindowMessageData = (key: string, value: unknown) => {
     messageData[key] = value;
 };
 export const removeMessageData = (key: string) => {

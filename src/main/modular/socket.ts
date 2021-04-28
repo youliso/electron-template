@@ -62,27 +62,28 @@ export class Socket {
   }
 
   /**
+   * 发送
+   */
+  send(args: any) {
+    if (this.io && this.io.io._readyState !== 'closed') this.io.send(args);
+  }
+
+  /**
    * 开启监听
    */
   on(window: Window) {
     //设置opts
-    ipcMain.on('socket-set-opts', async (event, args) => this.opts = args);
+    ipcMain.on('socket-setopts', async (event, args) => this.opts = args);
     //重新连接
     ipcMain.on('socket-reconnection', async () => this.reconnection());
     //关闭
-    ipcMain.on('socket-reconnection', async () => this.close());
+    ipcMain.on('socket-close', async () => this.close());
     //打开socket
     ipcMain.on('socket-open', async () => {
-      if (isNull(this.io)) {
-        this.open((data: { key: string; value: any; }) => {
-          for (let i in window.group) {
-            if (window.group[i]) {
-              window.getWindow(Number(i)).webContents.send('message-back', data);
-            }
-          }
-        });
-      }
+      if (isNull(this.io)) this.open((data: { key: string; value: any; }) => window.windowSend('socket-back', data));
     });
+    //发送消息
+    ipcMain.on('socket-send', (event, args) => this.send(args));
   }
 
 }

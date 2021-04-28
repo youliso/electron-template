@@ -1,4 +1,4 @@
-import { app, ipcMain } from 'electron';
+import { app, ipcMain, shell } from 'electron';
 import { Platform } from './platform';
 import { resolve } from 'path';
 
@@ -55,6 +55,14 @@ export class Global {
     //获取(externPath)
     ipcMain.on('global-externPath-get', (event, path) => {
       event.returnValue = this.getExternPath(path);
+    });
+    //app常用获取路径
+    ipcMain.on('app-path-get', (event, args) => {
+      event.returnValue = app.getPath(args.key);
+    });
+    //app打开外部url
+    ipcMain.on('app-open-url', (event, args) => {
+      shell.openExternal(args.url).then();
     });
   }
 

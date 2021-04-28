@@ -1,4 +1,4 @@
-<style lang="scss">
+<style lang='scss'>
 .info {
   position: relative;
   width: 100%;
@@ -18,43 +18,40 @@
 </style>
 
 <template>
-  <div class="container" :class="platform" :style="{'--accentColor':'#'+accentColor}">
+  <div class='container' :class='platform' :style="{'--accentColor':'#'+accentColor}">
     <Head></Head>
-    <div class="info">
-      <div class="text">
+    <div class='info'>
+      <div class='text'>
         {{ data.text }}
-        <button @click="test">测试通讯</button>
+        <button @click='test'>测试通讯</button>
       </div>
-      <button class="close" @click="close">确定</button>
+      <button class='close' @click='close'>确定</button>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import {defineComponent, onMounted} from "vue";
-import {argsData} from "@/renderer/store";
-import {windowClose, windowSetSize, windowShow} from "@/renderer/utils/window";
-import {messageSend} from "@/renderer/utils";
-import Head from "../components/Head.vue";
-import {IpcMsg, IPC_MSG_TYPE} from "@/lib/interface";
+<script lang='ts'>
+import { defineComponent, onMounted } from 'vue';
+import { argsData } from '@/renderer/store';
+import { windowClose, windowSetSize, windowShow } from '@/renderer/utils/window';
+import { windowMessageSend } from '@/renderer/utils/window';
+import Head from '../components/Head.vue';
 
 export default defineComponent({
   components: {
     Head
   },
-  name: "Message",
+  name: 'Message',
   setup() {
 
     windowSetSize(argsData.window.id, [400, 150], true, argsData.window.currentMaximized);
     let cons = 0;
 
-    function test() {//测试发送 为主窗口发送消息
-      let data: IpcMsg = {
-        type: IPC_MSG_TYPE.WIN,
-        key: "test",
+    function test() {//测试发送 为所以窗口发送消息
+      windowMessageSend({
+        key: 'test',
         value: cons++
-      };
-      messageSend(data);
+      });
     }
 
     function close() {
@@ -63,7 +60,7 @@ export default defineComponent({
 
     onMounted(() => {
       windowShow(argsData.window.id);
-    })
+    });
 
     return {
       data: argsData.window.data,
@@ -71,7 +68,7 @@ export default defineComponent({
       accentColor: argsData.window.appInfo.accentColor,
       test,
       close
-    }
+    };
   }
 });
 </script>

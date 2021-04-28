@@ -2,9 +2,9 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
 import { argsData } from './store';
-import { load } from './utils';
+import { windowLoad } from './utils/window';
 
-load().then(args => {
+windowLoad().then(args => {
   argsData.window = args;
   createApp(App)
     .use(router)

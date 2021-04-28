@@ -1,28 +1,3 @@
-import { IpcMsg } from '@/lib/interface';
-import { setMessageData } from '@/renderer/store';
-
-/**
- * 渲染进程初始化 (i)
- * */
-export async function load() {
-  window.ipcFun.on('message-back', (event, args) => setMessageData(args.key, args.value)); //监听消息反馈
-  return new Promise(resolve => window.ipcFun.once('window-load', async (event, args) => resolve(args)));
-}
-
-/**
- * 消息发送
- */
-export function messageSend(args: IpcMsg) {
-  window.ipcFun.send('message-send', args);
-}
-
-/**
- * app常用获取路径
- */
-export function getAppPath(key: string) {
-  return window.ipcFun.sendSync('app-path-get', { key });
-}
-
 /**
  * 发送ipc消息
  * @param key
@@ -82,4 +57,18 @@ export function getInsidePath(path: string): string {
  * */
 export function getExternPath(path: string): string {
   return window.ipcFun.sendSync('global-externPath-get', path);
+}
+
+/**
+ * app常用获取路径
+ */
+export function getAppPath(key: string) {
+  return window.ipcFun.sendSync('app-path-get', { key });
+}
+
+/**
+ * app打开url
+ */
+export function openUrl(url: string) {
+  window.ipcFun.send('app-open-url', { url });
 }

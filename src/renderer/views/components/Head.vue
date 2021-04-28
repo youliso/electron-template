@@ -105,8 +105,7 @@ export default defineComponent({
     }
 
     function close() {
-      if (argsData.window.isMainWin) windowClose();
-      else windowClose(argsData.window.id);
+      windowClose(argsData.window.id);
     }
 
     return {

@@ -1,6 +1,5 @@
 import { resolve } from 'path';
 import { app, globalShortcut, ipcMain } from 'electron';
-import { IPC_MSG_TYPE } from '@/lib/interface';
 import { logOn } from './modular/log';
 import { fileOn } from './modular/file';
 import { Session } from './modular/session';
@@ -66,10 +65,6 @@ class Init {
     ipcMain.on('app-relaunch', () => {
       app.relaunch({ args: process.argv.slice(1) });
     });
-    //app常用获取路径
-    ipcMain.on('app-path-get', (event, args) => {
-      event.returnValue = app.getPath(args.key);
-    });
     //启动
     await Promise.all([Global.init(), app.whenReady()]);
     //模块、创建窗口、托盘
@@ -82,18 +77,6 @@ class Init {
    * 模块
    * */
   modular() {
-    //消息反馈(根据需要增加修改)
-    ipcMain.on('message-send', (event, args) => {
-      switch (args.type) {
-        case IPC_MSG_TYPE.WIN: //window模块
-          for (let i in this.window.group) if (this.window.group[i]) this.window.getWindow(Number(i)).webContents.send('message-back', args);
-          break;
-        case IPC_MSG_TYPE.SOCKET: //socket模块
-          if (this.socket.io && this.socket.io.io._readyState === 'open') this.socket.io.send(args);
-          break;
-      }
-    });
-    //开启模块监听
     logOn();
     fileOn();
     this.window.on();
