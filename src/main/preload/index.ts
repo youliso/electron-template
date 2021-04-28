@@ -5,7 +5,8 @@ export interface ipcFun {
   sendSync: (channel: string, args: any) => any;
   on: (channel: string, callBack: (event: IpcRendererEvent, args: any) => void) => void;
   once: (channel: string, callBack: (event: IpcRendererEvent, args: any) => void) => void;
-  invoke: (channel: string, args: any) => Promise<any>;
+  invoke: (channel: string, args?: any) => Promise<any>;
+  removeAllListeners: (channel: string) => this;
 }
 
 contextBridge.exposeInMainWorld('ipcFun', {
@@ -28,5 +29,6 @@ contextBridge.exposeInMainWorld('ipcFun', {
     args: any
   ) => {
     return ipcRenderer.invoke(channel, args);
-  }
+  },
+  removeAllListeners: (channel: string) => ipcRenderer.removeAllListeners(channel)
 });

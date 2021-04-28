@@ -12,7 +12,14 @@ export function socketOpen() {
  * socket 监听 (注: 只需调用一次,多次调用会造成socket模块多次监听)
  */
 export function socketOn(callback: Function) {
-  window.ipcFun.on('socket-back', data => callback(data));
+  window.ipcFun.on('socket-back', (event, args) => callback(args));
+}
+
+/**
+ * socket 关闭监听
+ */
+export function socketRemoveAllListeners() {
+  window.ipcFun.removeAllListeners('socket-back');
 }
 
 /**
@@ -41,5 +48,4 @@ export function socketClose() {
  */
 export function socketSend(args: any) {
   window.ipcFun.send('socket-send', args);
-
 }
