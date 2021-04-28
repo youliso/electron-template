@@ -73,6 +73,13 @@ export function windowMaxMin(id: number) {
 }
 
 /**
+ * 关闭窗口 (传id则对应窗口否则全部窗口)
+ */
+export function windowClose(id?: number) {
+  window.ipcFun.send('window-fun', { type: 'close', id });
+}
+
+/**
  * 窗口显示
  */
 export function windowShow(id?: number) {
@@ -90,19 +97,12 @@ export function windowHide(id?: number) {
  * 最小化窗口 (传id则对应窗口否则全部窗口)
  */
 export function windowMin(id?: number) {
-  window.ipcFun.send('window-fun', { type: 'mini', id });
+  window.ipcFun.send('window-fun', { type: 'minimize', id });
 }
 
 /**
  * 最大化窗口 (传id则对应窗口否则全部窗口)
  */
 export function windowMax(id?: number) {
-  window.ipcFun.send('window-fun', { type: 'max', id });
-}
-
-/**
- * 关闭窗口 (传id则对应窗口否则全部窗口)
- */
-export function windowClose(id?: number) {
-  window.ipcFun.send('window-fun', { type: 'close', id });
+  window.ipcFun.send('window-fun', { type: 'maximize', id });
 }
