@@ -118,8 +118,11 @@ export class Window {
     args.appInfo = Global.sharedObject['appInfo'];
     //window加载完毕后显示 (放到vue生命周期执行)
     // win.once("ready-to-show", () => win.show());
-    //window关闭时黑底时设置透明
-    win.on('close', () => win.setOpacity(0));
+    //window关闭前黑底时设置透明并删除引用
+    win.on('close', () => {
+      delete this.group[win.id];
+      win.setOpacity(0);
+    });
     // 打开开发者工具
     if (!app.isPackaged) win.webContents.openDevTools();
     //注入初始化代码
