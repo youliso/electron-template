@@ -24,4 +24,23 @@ export interface WindowOpt {
   appInfo?: AppInfo;
 }
 
+export type windowAlwaysOnTopOpt =
+  'normal'
+  | 'floating'
+  | 'torn-off-menu'
+  | 'modal-panel'
+  | 'main-menu'
+  | 'status'
+  | 'pop-up-menu'
+  | 'screen-saver';
+
 export type windowFunOpt = 'close' | 'hide' | 'show' | 'minimize' | 'maximize' | 'restore' | 'reload';
+
+export type windowStatusOpt =
+  'isMaximized'
+  | 'isMinimized'
+  | 'isFullScreen'
+  | 'isAlwaysOnTop'
+  | 'isVisible'
+  | 'isFocused'
+  | 'isModal';

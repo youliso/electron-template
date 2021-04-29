@@ -1,4 +1,4 @@
-import { WindowOpt } from '@/lib/interface';
+import { windowAlwaysOnTopOpt, WindowOpt, windowStatusOpt } from '@/lib/interface';
 import { setMessageData } from '@/renderer/store';
 
 /**
@@ -31,9 +31,16 @@ export function windowCreate(args: WindowOpt) {
 }
 
 /**
+ * 窗口状态
+ */
+export async function windowStatus(id: number, type: windowStatusOpt) {
+  return await window.ipcFun.invoke('window-status', { type, id });
+}
+
+/**
  * 窗口置顶
  */
-export function windowAlwaysOnTop(id: number, is: boolean, type?: 'normal' | 'floating' | 'torn-off-menu' | 'modal-panel' | 'main-menu' | 'status' | 'pop-up-menu' | 'screen-saver') {
+export function windowAlwaysOnTop(id: number, is: boolean, type?: windowAlwaysOnTopOpt) {
   window.ipcFun.send('window-always-top-set', { id, is, type });
 }
 

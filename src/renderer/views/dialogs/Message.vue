@@ -33,7 +33,7 @@
 <script lang='ts'>
 import { defineComponent, onMounted } from 'vue';
 import { argsData } from '@/renderer/store';
-import { windowClose, windowSetSize, windowShow } from '@/renderer/utils/window';
+import { windowClose, windowSetSize, windowShow, windowStatus } from '@/renderer/utils/window';
 import { windowMessageSend } from '@/renderer/utils/window';
 import Head from '../components/Head.vue';
 
@@ -60,6 +60,7 @@ export default defineComponent({
 
     onMounted(() => {
       windowShow(argsData.window.id);
+      windowStatus(argsData.window.id,'isModal').then(console.log); //当前窗口是否Modal
     });
 
     return {

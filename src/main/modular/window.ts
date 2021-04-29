@@ -10,7 +10,7 @@ import {
   nativeImage,
   ipcMain
 } from 'electron';
-import { windowFunOpt, WindowOpt } from '@/lib/interface';
+import { windowFunOpt, WindowOpt, windowStatusOpt } from '@/lib/interface';
 import Global from './global';
 import ico from '../assets/tray.png';
 import { isNull } from '@/lib';
@@ -226,6 +226,32 @@ export class Window {
   }
 
   /**
+   * 窗口状态
+   */
+  windowStatus(type: windowStatusOpt, id: number) {
+    if (isNull(id)) {
+      console.error('Invalid id, the id can not be a empty');
+      return;
+    }
+    switch (type) {
+      case 'isMaximized':
+        return this.getWindow(id).isMaximized();
+      case 'isMinimized':
+        return this.getWindow(id).isMinimized();
+      case 'isFullScreen':
+        return this.getWindow(id).isFullScreen();
+      case 'isAlwaysOnTop':
+        return this.getWindow(id).isAlwaysOnTop();
+      case 'isVisible':
+        return this.getWindow(id).isVisible();
+      case 'isFocused':
+        return this.getWindow(id).isFocused();
+      case 'isModal':
+        return this.getWindow(id).isModal();
+    }
+  }
+
+  /**
    * 设置窗口最小大小
    */
   setMinSize(args: { id: number; size: number[] }) {
@@ -282,12 +308,14 @@ export class Window {
    * 开启监听
    */
   on() {
-    //窗口消息
-    ipcMain.on('window-fun', (event, args) => this.windowFun(args.type, args.id));
     //最大化最小化窗口
     ipcMain.on('window-max-min-size', (event, winId) => {
       if (winId) if (this.getWindow(winId).isMaximized()) this.getWindow(winId).unmaximize(); else this.getWindow(winId).maximize();
     });
+    //窗口消息
+    ipcMain.on('window-fun', (event, args) => this.windowFun(args.type, args.id));
+    //窗口状态
+    ipcMain.handle('window-status', (event, args) => this.windowStatus(args.type, args.id));
     //创建窗口
     ipcMain.on('window-new', (event, args) => this.createWindow(args));
     //设置窗口是否置顶
