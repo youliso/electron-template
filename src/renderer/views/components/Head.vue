@@ -1,4 +1,57 @@
-<style lang="scss">
+<template>
+  <div class="head-info drag">
+    <div v-if="platform==='darwin'" :class="platform">
+      <div></div>
+      <div class="title">
+        {{ title }}
+      </div>
+    </div>
+    <div v-else :class="platform">
+      <div class="title">
+        {{ title }}
+      </div>
+      <div class="events">
+        <div @click="min" class="event min no-drag cursor-pointer"></div>
+        <div @click="maxMin" class="event maxmin no-drag cursor-pointer"></div>
+        <div @click="close" class="event close no-drag cursor-pointer"></div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import {defineComponent} from "vue";
+import {argsData} from "@/renderer/store";
+import {windowClose, windowMaxMin, windowMin} from "@/renderer/utils/window";
+
+export default defineComponent({
+  name: "Head",
+  setup() {
+
+    function min() {
+      windowMin(argsData.window.id);
+    }
+
+    function maxMin() {
+      windowMaxMin(argsData.window.id);
+    }
+
+    function close() {
+      windowClose(argsData.window.id);
+    }
+
+    return {
+      min,
+      maxMin,
+      close,
+      title: argsData.window.title || argsData.window.appInfo.name,
+      platform: argsData.window.platform
+    }
+  }
+});
+</script>
+
+<style lang="scss" scoped>
 .head-info {
   position: absolute;
   top: 0;
@@ -65,56 +118,3 @@
   }
 }
 </style>
-
-<template>
-  <div class="head-info drag">
-    <div v-if="platform==='darwin'" :class="platform">
-      <div></div>
-      <div class="title">
-        {{ title }}
-      </div>
-    </div>
-    <div v-else :class="platform">
-      <div class="title">
-        {{ title }}
-      </div>
-      <div class="events">
-        <div @click="min" class="event min no-drag cursor-pointer"></div>
-        <div @click="maxMin" class="event maxmin no-drag cursor-pointer"></div>
-        <div @click="close" class="event close no-drag cursor-pointer"></div>
-      </div>
-    </div>
-  </div>
-</template>
-
-<script lang="ts">
-import {defineComponent} from "vue";
-import {argsData} from "@/renderer/store";
-import {windowClose, windowMaxMin, windowMin} from "@/renderer/utils/window";
-
-export default defineComponent({
-  name: "Head",
-  setup() {
-
-    function min() {
-      windowMin(argsData.window.id);
-    }
-
-    function maxMin() {
-      windowMaxMin(argsData.window.id);
-    }
-
-    function close() {
-      windowClose(argsData.window.id);
-    }
-
-    return {
-      min,
-      maxMin,
-      close,
-      title: argsData.window.title || argsData.window.appInfo.name,
-      platform: argsData.window.platform
-    }
-  }
-});
-</script>

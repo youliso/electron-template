@@ -1,16 +1,8 @@
-<style lang='scss'>
-.info {
-  width: 100%;
-  height: 100%;
-  padding: 30px 10px 10px;
-}
-</style>
-
 <template>
   <div class='container' :class='platform' :style="{'--accentColor':'#'+accentColor}">
     <Head></Head>
     <div class='info'>
-      <div>123</div>
+      <div>hello {{ platform }}</div>
       <button @click='toAbout'>关于</button>
       <button @click='test'>弹个框</button>
     </div>
@@ -75,3 +67,11 @@ export default defineComponent({
   }
 });
 </script>
+
+<style lang='scss' scoped>
+.info {
+  width: 100%;
+  height: 100%;
+  padding: 30px 10px 10px;
+}
+</style>

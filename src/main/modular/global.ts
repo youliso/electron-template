@@ -39,6 +39,14 @@ export class Global {
    * 开启监听
    */
   on() {
+    //app常用获取路径
+    ipcMain.on('app-path-get', (event, args) => {
+      event.returnValue = app.getPath(args.key);
+    });
+    //app打开外部url
+    ipcMain.on('app-open-url', (event, args) => {
+      shell.openExternal(args.url).then();
+    });
     //赋值(sharedObject)
     ipcMain.on('global-sharedObject-set', (event, args) => {
       this.sendGlobal(args.key, args.value);
@@ -55,14 +63,6 @@ export class Global {
     //获取(externPath)
     ipcMain.on('global-externPath-get', (event, path) => {
       event.returnValue = this.getExternPath(path);
-    });
-    //app常用获取路径
-    ipcMain.on('app-path-get', (event, args) => {
-      event.returnValue = app.getPath(args.key);
-    });
-    //app打开外部url
-    ipcMain.on('app-open-url', (event, args) => {
-      shell.openExternal(args.url).then();
     });
   }
 

@@ -1,22 +1,3 @@
-<style lang='scss'>
-.info {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  padding: 25px 10px 10px;
-
-  .text {
-    font: normal 16px sans-serif;
-  }
-
-  .close {
-    position: absolute;
-    right: 5px;
-    bottom: 5px;
-  }
-}
-</style>
-
 <template>
   <div class='container' :class='platform' :style="{'--accentColor':'#'+accentColor}">
     <Head></Head>
@@ -73,3 +54,22 @@ export default defineComponent({
   }
 });
 </script>
+
+<style lang='scss' scoped>
+.info {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 25px 10px 10px;
+
+  .text {
+    font: normal 16px sans-serif;
+  }
+
+  .close {
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+  }
+}
+</style>

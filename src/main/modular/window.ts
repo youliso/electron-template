@@ -167,7 +167,6 @@ export class Window {
       case 'close':
         if (!isNull(id)) {
           if (this.getWindow(id)) this.getWindow(id).close();
-          delete this.group[id];
           return;
         }
         for (let i in this.group) if (this.getWindow(Number(i))) this.getWindow(Number(i)).close();
