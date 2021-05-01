@@ -107,10 +107,7 @@ export class Window {
       isMultiWindow: args.isMultiWindow
     };
     if (args.isMainWin) { //是否主窗口
-      if (this.main) {
-        delete this.group[this.main.id];
-        this.main.close();
-      }
+      if (this.main&&!this.main.isDestroyed()) this.main.close();
       this.main = win;
     }
     args.id = win.id;
