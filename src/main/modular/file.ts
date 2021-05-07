@@ -9,7 +9,7 @@ import { ipcMain } from 'electron';
  * @param path
  * @param fileName
  */
-export function fileBySuffix(path: string, fileName: string) {
+export function fileBySuffix(path: string, suffix: string) {
   if (path.substr(0, 1) !== '/' && path.indexOf(':') === -1) path = resolve(path);
   try {
     let files: string[] = [];
@@ -18,9 +18,9 @@ export function fileBySuffix(path: string, fileName: string) {
       let filePath = resolve(path, d);
       let stat = fs.statSync(filePath);
       if (stat.isDirectory()) {
-        files = files.concat(fileBySuffix(filePath, fileName));
+        files = files.concat(fileBySuffix(filePath, suffix));
       }
-      if (stat.isFile() && extname(filePath) === fileName) {
+      if (stat.isFile() && extname(filePath) === suffix) {
         files.push(filePath);
       }
     }
@@ -65,20 +65,32 @@ export function access(path: string) {
 }
 
 /**
+ * 文件重命名
+ * @return 0 失败 1 成功
+ */
+export function rename(path: string, newPath: string) {
+  if (path.substr(0, 1) !== '/' && path.indexOf(':') === -1) path = resolve(path);
+  if (newPath.substr(0, 1) !== '/' && newPath.indexOf(':') === -1) newPath = resolve(newPath);
+  return new Promise((resolve) => {
+    fs.rename(path, newPath, (err) => {
+      if (err) resolve(0);
+      else resolve(1);
+    });
+  });
+}
+
+/**
  * 读取整个文件
  * @param path 文件路径
  * @param options 选项
  */
-export function readFile(path: string, options?: { encoding?: BufferEncoding; flag?: string; }) {
+export function readFile(path: string, options?: { encoding?: BufferEncoding; flag?: string }) {
   if (path.substr(0, 1) !== '/' && path.indexOf(':') === -1) path = resolve(path);
   return new Promise((resolve) =>
-    fs.readFile(
-      path,
-      options,
-      (err, data) => {
-        if (err) resolve(0);
-        resolve(data);
-      })
+    fs.readFile(path, options, (err, data) => {
+      if (err) resolve(0);
+      resolve(data);
+    })
   );
 }
 
@@ -120,9 +132,13 @@ export function readLine(path: string, index?: number): Promise<string | any[]> 
  * 覆盖数据到文件
  * @return 0 失败 1 成功
  */
-export async function writeFile(path: string, data: string | Buffer, options?: { encoding?: BufferEncoding; mode?: number | string; flag?: string; }) {
+export async function writeFile(
+  path: string,
+  data: string | Buffer,
+  options?: { encoding?: BufferEncoding; mode?: number | string; flag?: string }
+) {
   if (path.substr(0, 1) !== '/' && path.indexOf(':') === -1) path = resolve(path);
-  if (await access(path) === 0) fs.mkdirSync(dirname(path), { recursive: true });
+  if ((await access(path)) === 0) fs.mkdirSync(dirname(path), { recursive: true });
   return new Promise((resolve) =>
     fs.writeFile(path, data, options, (err) => {
       if (err) {
@@ -137,9 +153,13 @@ export async function writeFile(path: string, data: string | Buffer, options?: {
  * 追加数据到文件
  * @return 0 失败 1 成功
  */
-export async function appendFile(path: string, data: string | Uint8Array, options?: { encoding?: BufferEncoding; mode?: number | string; flag?: string; }) {
+export async function appendFile(
+  path: string,
+  data: string | Uint8Array,
+  options?: { encoding?: BufferEncoding; mode?: number | string; flag?: string }
+) {
   if (path.substr(0, 1) !== '/' && path.indexOf(':') === -1) path = resolve(path);
-  if (await access(path) === 0) fs.mkdirSync(dirname(path), { recursive: true });
+  if ((await access(path)) === 0) fs.mkdirSync(dirname(path), { recursive: true });
   return new Promise((resolve) =>
     fs.appendFile(path, data, options, (err) => {
       if (err) {
@@ -154,11 +174,18 @@ export async function appendFile(path: string, data: string | Uint8Array, option
  * 监听
  */
 export function fileOn() {
-  ipcMain.handle('file-filebysuffix', async (event, args) => fileBySuffix(args.path, args.fileName));
+  ipcMain.handle('file-filebysuffix', async (event, args) =>
+    fileBySuffix(args.path, args.fileName)
+  );
   ipcMain.handle('file-deldir', async (event, args) => delDir(args.path));
   ipcMain.handle('file-access', async (event, args) => access(args.path));
+  ipcMain.handle('file-rename', async (event, args) => rename(args.path, args.newPath));
   ipcMain.handle('file-readfile', async (event, args) => readFile(args.path, args.options));
   ipcMain.handle('file-readline', async (event, args) => readLine(args.path, args.index));
-  ipcMain.handle('file-writefile', async (event, args) => writeFile(args.path, args.data, args.options));
-  ipcMain.handle('file-appendfile', async (event, args) => appendFile(args.path, args.data, args.options));
+  ipcMain.handle('file-writefile', async (event, args) =>
+    writeFile(args.path, args.data, args.options)
+  );
+  ipcMain.handle('file-appendfile', async (event, args) =>
+    appendFile(args.path, args.data, args.options)
+  );
 }
