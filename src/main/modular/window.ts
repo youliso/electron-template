@@ -18,13 +18,18 @@ import { isNull } from '@/lib';
 const config = require('@/cfg/config.json');
 
 export class Window {
+  private static instance: Window;
 
   public main: BrowserWindow = null; //当前主页
   public group: { [id: number]: WindowOpt } = {}; //窗口组
   public tray: Tray = null; //托盘
 
-  constructor() {
+  static getInstance() {
+    if (!Window.instance) Window.instance = new Window();
+    return Window.instance;
   }
+
+  constructor() {}
 
   /**
    * 窗口配置
@@ -74,9 +79,11 @@ export class Window {
    * */
   createWindow(args: WindowOpt) {
     for (let i in this.group) {
-      if (!isNull(this.group[i]) &&
+      if (
+        !isNull(this.group[i]) &&
         this.group[i].route === args.route &&
-        !this.group[i].isMultiWindow) {
+        !this.group[i].isMultiWindow
+      ) {
         this.getWindow(Number(i)).focus();
         return;
       }
@@ -88,15 +95,33 @@ export class Window {
       args.currentHeight = opt.parent.getBounds().height;
       args.currentMaximized = opt.parent.isMaximized();
       if (args.currentMaximized) {
-        opt.x = parseInt(((screen.getPrimaryDisplay().workAreaSize.width - (args.width || 0)) / 2).toString());
-        opt.y = parseInt(((screen.getPrimaryDisplay().workAreaSize.height - (args.height || 0)) / 2).toString());
+        opt.x = parseInt(
+          ((screen.getPrimaryDisplay().workAreaSize.width - (args.width || 0)) / 2).toString()
+        );
+        opt.y = parseInt(
+          ((screen.getPrimaryDisplay().workAreaSize.height - (args.height || 0)) / 2).toString()
+        );
       } else {
-        opt.x = parseInt((opt.parent.getPosition()[0] + ((opt.parent.getBounds().width - (args.width || args.currentWidth)) / 2)).toString());
-        opt.y = parseInt((opt.parent.getPosition()[1] + ((opt.parent.getBounds().height - (args.height || args.currentHeight)) / 2)).toString());
+        opt.x = parseInt(
+          (
+            opt.parent.getPosition()[0] +
+            (opt.parent.getBounds().width - (args.width || args.currentWidth)) / 2
+          ).toString()
+        );
+        opt.y = parseInt(
+          (
+            opt.parent.getPosition()[1] +
+            (opt.parent.getBounds().height - (args.height || args.currentHeight)) / 2
+          ).toString()
+        );
       }
     } else if (this.main) {
-      opt.x = parseInt((this.main.getPosition()[0] + ((this.main.getBounds().width - opt.width) / 2)).toString());
-      opt.y = parseInt((this.main.getPosition()[1] + ((this.main.getBounds().height - opt.height) / 2)).toString());
+      opt.x = parseInt(
+        (this.main.getPosition()[0] + (this.main.getBounds().width - opt.width) / 2).toString()
+      );
+      opt.y = parseInt(
+        (this.main.getPosition()[1] + (this.main.getBounds().height - opt.height) / 2).toString()
+      );
     }
     if (typeof args.modal === 'boolean') opt.modal = args.modal;
     if (typeof args.resizable === 'boolean') opt.resizable = args.resizable;
@@ -106,8 +131,9 @@ export class Window {
       route: args.route,
       isMultiWindow: args.isMultiWindow
     };
-    if (args.isMainWin) { //是否主窗口
-      if (this.main&&!this.main.isDestroyed()) this.main.close();
+    if (args.isMainWin) {
+      //是否主窗口
+      if (this.main && !this.main.isDestroyed()) this.main.close();
       this.main = win;
     }
     args.id = win.id;
@@ -126,7 +152,8 @@ export class Window {
     win.webContents.on('did-finish-load', () => {
       win.webContents.send('window-load', args);
     });
-    if (!app.isPackaged) { //调试模式
+    if (!app.isPackaged) {
+      //调试模式
       let appPort = '';
       try {
         appPort = readFileSync(join('.port'), 'utf8');
@@ -143,13 +170,16 @@ export class Window {
    * 创建托盘
    * */
   createTray() {
-    const contextMenu = Menu.buildFromTemplate([{
-      label: '显示',
-      click: () => this.windowFun('show')
-    }, {
-      label: '退出',
-      click: () => app.quit()
-    }]);
+    const contextMenu = Menu.buildFromTemplate([
+      {
+        label: '显示',
+        click: () => this.windowFun('show')
+      },
+      {
+        label: '退出',
+        click: () => app.quit()
+      }
+    ]);
     this.tray = new Tray(nativeImage.createFromPath(join(__dirname, `./${ico}`)));
     this.tray.setContextMenu(contextMenu);
     this.tray.setToolTip(app.name);
@@ -187,21 +217,24 @@ export class Window {
           if (this.getWindow(id)) this.getWindow(id).minimize();
           return;
         }
-        for (let i in this.group) if (this.getWindow(Number(i))) this.getWindow(Number(i)).minimize();
+        for (let i in this.group)
+          if (this.getWindow(Number(i))) this.getWindow(Number(i)).minimize();
         break;
       case 'maximize':
         if (!isNull(id)) {
           if (this.getWindow(id)) this.getWindow(id).maximize();
           return;
         }
-        for (let i in this.group) if (this.getWindow(Number(i))) this.getWindow(Number(i)).maximize();
+        for (let i in this.group)
+          if (this.getWindow(Number(i))) this.getWindow(Number(i)).maximize();
         break;
       case 'restore':
         if (!isNull(id)) {
           if (this.getWindow(id)) this.getWindow(id).restore();
           return;
         }
-        for (let i in this.group) if (this.getWindow(Number(i))) this.getWindow(Number(i)).restore();
+        for (let i in this.group)
+          if (this.getWindow(Number(i))) this.getWindow(Number(i)).restore();
         break;
       case 'reload':
         if (!isNull(id)) {
@@ -221,7 +254,8 @@ export class Window {
       this.getWindow(id).webContents.send(key, value);
       return;
     }
-    for (let i in this.group) if (this.getWindow(Number(i))) this.getWindow(Number(i)).webContents.send(key, value);
+    for (let i in this.group)
+      if (this.getWindow(Number(i))) this.getWindow(Number(i)).webContents.send(key, value);
   }
 
   /**
@@ -267,19 +301,25 @@ export class Window {
   /**
    * 设置窗口大小
    */
-  setSize(args: { id: number, size: number[], resizable: boolean; center: boolean; }) {
+  setSize(args: { id: number; size: number[]; resizable: boolean; center: boolean }) {
     let Rectangle: { [key: string]: number } = {
       width: parseInt(args.size[0].toString()),
       height: parseInt(args.size[1].toString())
     };
     let window = this.getWindow(args.id);
-    if (Rectangle.width === window.getBounds().width &&
-      Rectangle.height === window.getBounds().height) {
+    if (
+      Rectangle.width === window.getBounds().width &&
+      Rectangle.height === window.getBounds().height
+    ) {
       return;
     }
     if (!args.center) {
-      Rectangle.x = parseInt((window.getPosition()[0] + ((window.getBounds().width - args.size[0]) / 2)).toString());
-      Rectangle.y = parseInt((window.getPosition()[1] + ((window.getBounds().height - args.size[1]) / 2)).toString());
+      Rectangle.x = parseInt(
+        (window.getPosition()[0] + (window.getBounds().width - args.size[0]) / 2).toString()
+      );
+      Rectangle.y = parseInt(
+        (window.getPosition()[1] + (window.getBounds().height - args.size[1]) / 2).toString()
+      );
     }
     window.once('resize', () => {
       if (args.center) window.center();
@@ -292,14 +332,26 @@ export class Window {
   /**
    * 设置窗口背景色
    */
-  setBackgroundColor(args: { id: number; color: string; }) {
+  setBackgroundColor(args: { id: number; color: string }) {
     this.getWindow(args.id).setBackgroundColor(args.color || config.appBackgroundColor);
   }
 
   /**
    * 设置窗口是否置顶
    */
-  setAlwaysOnTop(args: { id: number, is: boolean, type?: 'normal' | 'floating' | 'torn-off-menu' | 'modal-panel' | 'main-menu' | 'status' | 'pop-up-menu' | 'screen-saver' }) {
+  setAlwaysOnTop(args: {
+    id: number;
+    is: boolean;
+    type?:
+      | 'normal'
+      | 'floating'
+      | 'torn-off-menu'
+      | 'modal-panel'
+      | 'main-menu'
+      | 'status'
+      | 'pop-up-menu'
+      | 'screen-saver';
+  }) {
     this.getWindow(args.id).setAlwaysOnTop(args.is, args.type || 'normal');
   }
 
@@ -309,7 +361,9 @@ export class Window {
   on() {
     //最大化最小化窗口
     ipcMain.on('window-max-min-size', (event, winId) => {
-      if (winId) if (this.getWindow(winId).isMaximized()) this.getWindow(winId).unmaximize(); else this.getWindow(winId).maximize();
+      if (winId)
+        if (this.getWindow(winId).isMaximized()) this.getWindow(winId).unmaximize();
+        else this.getWindow(winId).maximize();
     });
     //窗口消息
     ipcMain.on('window-fun', (event, args) => this.windowFun(args.type, args.id));
@@ -328,7 +382,10 @@ export class Window {
     //设置窗口背景颜色
     ipcMain.on('window-bg-color-set', (event, args) => this.setBackgroundColor(args));
     //窗口消息
-    ipcMain.on('window-message-send', (event, args) => this.windowSend('window-message-back', args));
+    ipcMain.on('window-message-send', (event, args) =>
+      this.windowSend('window-message-back', args)
+    );
   }
-
 }
+
+export default Window.getInstance();

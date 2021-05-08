@@ -2,7 +2,7 @@ import { join } from 'path';
 import { AppUpdater, autoUpdater } from 'electron-updater';
 import { delDir } from '@/main/modular/file';
 import { ipcMain } from 'electron';
-import { Window } from '@/main/modular/window';
+import Window from '@/main/modular/window';
 
 const config = require('@/cfg/config.json');
 
@@ -84,10 +84,10 @@ export class Update {
   /**
    * 开启监听
    */
-  on(window: Window) {
+  on() {
     //开启更新监听
     ipcMain.on('update-check', () => {
-      this.open((data: { key: string; value: any }) => window.windowSend('update-back', data));
+      this.open((data: { key: string; value: any }) => Window.windowSend('update-back', data));
     });
     //重新检查更新 isDel 是否删除历史更新缓存
     ipcMain.on('update-recheck', (event, isDel) => this.checkUpdate(isDel));
