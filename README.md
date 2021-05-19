@@ -1,7 +1,7 @@
 # electron-vue3 
 一个基于 `electron` & `vue3` 多窗口模式的模板
 
-❗注意  `vue` or `vue-router` 版本 使用的`yarn`进行管理 可自行换`npm`
+❗注意 `nodejs => 14.17.0`  `vue` \ `vue-router` 版本 
 
 ## 引入依赖问题
 - `外部`不会被打包进asar包内:  
