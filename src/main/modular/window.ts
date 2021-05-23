@@ -137,8 +137,6 @@ export class Window {
       this.main = win;
     }
     args.id = win.id;
-    args.platform = Global.sharedObject['platform'];
-    args.appInfo = Global.sharedObject['appInfo'];
     //window加载完毕后显示 (放到vue生命周期执行)
     // win.once("ready-to-show", () => win.show());
     //window关闭前黑底时设置透明并删除引用

@@ -1,14 +1,20 @@
 import { windowAlwaysOnTopOpt, WindowOpt, windowStatusOpt } from '@/lib/interface';
-import { setMessageData } from '@/renderer/store';
+import { argsData, setMessageData } from '@/renderer/store';
+import { domPropertyLoad } from './dom';
 
 /**
  * 窗口初始化 (i)
  * */
 export async function windowLoad() {
   windowMessageOn();
-  return new Promise(resolve => window.ipcFun.once('window-load', async (event, args) => resolve(args)));
+  return new Promise((resolve) =>
+    window.ipcFun.once('window-load', async (event, args: WindowOpt) => {
+      argsData.window = args;
+      domPropertyLoad();
+      resolve(true);
+    })
+  );
 }
-
 /**
  * 窗口消息监听
  */
@@ -19,7 +25,7 @@ export function windowMessageOn() {
 /**
  * 消息发送
  */
-export function windowMessageSend(args: { key: string; value: any; }) {
+export function windowMessageSend(args: { key: string; value: any }) {
   window.ipcFun.send('window-message-send', args);
 }
 
@@ -47,7 +53,12 @@ export function windowAlwaysOnTop(id: number, is: boolean, type?: windowAlwaysOn
 /**
  * 设置窗口大小
  */
-export function windowSetSize(id: number, size: number[], resizable: boolean = true, center: boolean = false) {
+export function windowSetSize(
+  id: number,
+  size: number[],
+  resizable: boolean = true,
+  center: boolean = false
+) {
   window.ipcFun.send('window-size-set', { id, size, resizable, center });
 }
 

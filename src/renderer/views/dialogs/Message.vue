@@ -1,17 +1,17 @@
 <template>
-  <div class='container' :class='platform' :style="{'--accentColor':'#'+accentColor}">
-    <Head></Head>
-    <div class='info'>
-      <div class='text'>
+  <div class="container">
+    <Head />
+    <div class="info">
+      <div class="text">
         {{ data.text }}
-        <button @click='test'>测试通讯</button>
+        <button @click="test">测试通讯</button>
       </div>
-      <button class='close' @click='close'>确定</button>
+      <button class="close" @click="close">确定</button>
     </div>
   </div>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import { defineComponent, onMounted } from 'vue';
 import { argsData } from '@/renderer/store';
 import { windowClose, windowSetSize, windowShow, windowStatus } from '@/renderer/utils/window';
@@ -24,11 +24,11 @@ export default defineComponent({
   },
   name: 'Message',
   setup() {
-
     windowSetSize(argsData.window.id, [400, 150], true, argsData.window.currentMaximized);
     let cons = 0;
 
-    function test() {//测试发送 为所以窗口发送消息
+    function test() {
+      //测试发送 为所以窗口发送消息
       windowMessageSend({
         key: 'test',
         value: cons++
@@ -41,13 +41,11 @@ export default defineComponent({
 
     onMounted(() => {
       windowShow(argsData.window.id);
-      windowStatus(argsData.window.id,'isModal').then(console.log); //当前窗口是否Modal
+      windowStatus(argsData.window.id, 'isModal').then(console.log); //当前窗口是否Modal
     });
 
     return {
       data: argsData.window.data,
-      platform: argsData.window.platform,
-      accentColor: argsData.window.appInfo.accentColor,
       test,
       close
     };
@@ -55,7 +53,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .info {
   position: relative;
   width: 100%;

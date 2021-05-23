@@ -1,12 +1,12 @@
 <template>
   <div class="head-info drag">
-    <div v-if="platform==='darwin'" :class="platform">
+    <div v-if="isMacintosh" class="content">
       <div></div>
       <div class="title">
         {{ title }}
       </div>
     </div>
-    <div v-else :class="platform">
+    <div v-else class="content">
       <div class="title">
         {{ title }}
       </div>
@@ -20,13 +20,15 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
-import {argsData} from "@/renderer/store";
-import {windowClose, windowMaxMin, windowMin} from "@/renderer/utils/window";
+import { computed, defineComponent } from 'vue';
+import { getGlobal } from '@/renderer/utils';
+import { argsData } from '@/renderer/store';
+import { windowClose, windowMaxMin, windowMin } from '@/renderer/utils/window';
 
 export default defineComponent({
-  name: "Head",
+  name: 'Head',
   setup() {
+    const isMacintosh = computed(() => getGlobal('system.platform') === 'darwin');
 
     function min() {
       windowMin(argsData.window.id);
@@ -44,14 +46,27 @@ export default defineComponent({
       min,
       maxMin,
       close,
-      title: argsData.window.title || argsData.window.appInfo.name,
-      platform: argsData.window.platform
-    }
+      title: argsData.window.title || getGlobal('app.name'),
+      isMacintosh
+    };
   }
 });
 </script>
 
 <style lang="scss" scoped>
+.darwin {
+  .head-info > .content {
+    padding-right: 10px;
+  }
+}
+
+.win32,
+.linux {
+  .head-info > .content {
+    padding-left: 10px;
+  }
+}
+
 .head-info {
   position: absolute;
   top: 0;
@@ -63,7 +78,7 @@ export default defineComponent({
   justify-content: space-between;
   align-items: center;
 
-  > .win32, .darwin, .linux {
+  > .content {
     width: 100%;
     height: 100%;
     display: flex;
@@ -73,14 +88,6 @@ export default defineComponent({
     > .title {
       font: normal 13px /13px ping-fang;
     }
-  }
-
-  > .darwin {
-    padding-right: 10px;
-  }
-
-  > .win32, .linux {
-    padding-left: 10px;
 
     > .events {
       display: flex;
@@ -96,11 +103,11 @@ export default defineComponent({
       }
 
       > .event:hover {
-        opacity: .9;
+        opacity: 0.9;
       }
 
       > .event:active {
-        opacity: .7;
+        opacity: 0.7;
       }
 
       > .close {

@@ -1,15 +1,15 @@
 <template>
-  <div class='container' :class='platform' :style="{'--accentColor':'#'+accentColor}">
+  <div class="container">
     <Head></Head>
-    <div class='info'>
-      <div>hello {{ platform }}</div>
-      <button @click='toAbout'>关于</button>
-      <button @click='test'>弹个框</button>
+    <div class="info">
+      <div>hello</div>
+      <button @click="toAbout">关于</button>
+      <button @click="test">弹个框</button>
     </div>
   </div>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import { defineComponent, onMounted, onUnmounted, watch } from 'vue';
 import Head from '../components/Head.vue';
 import { argsData, messageData } from '@/renderer/store';
@@ -23,9 +23,13 @@ export default defineComponent({
   },
   name: 'Home',
   setup() {
-    let watchTest = watch(() => messageData['test'], (n, o) => { // n 为新赋值 o为旧值
-      console.log(n, o);
-    });
+    let watchTest = watch(
+      () => messageData['test'],
+      (n, o) => {
+        // n 为新赋值 o为旧值
+        console.log(n, o);
+      }
+    );
 
     function test() {
       let data: WindowOpt = {
@@ -59,8 +63,6 @@ export default defineComponent({
     });
 
     return {
-      platform: argsData.window.platform,
-      accentColor: argsData.window.appInfo.accentColor,
       test,
       toAbout
     };
@@ -68,7 +70,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .info {
   width: 100%;
   height: 100%;
