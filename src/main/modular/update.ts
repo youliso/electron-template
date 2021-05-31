@@ -43,9 +43,9 @@ export class Update {
       updateDownload: { code: 4, msg: '已下载完毕' },
       updateNotAva: { code: 5, msg: '现在使用的就是最新版本,不用更新' }
     };
-    //本地开发环境，改变app-update.yml地址
+    //本地开发环境，使用调试app-update.yml地址
     if (process.env.NODE_ENV === 'development' && !(process.platform === 'darwin')) {
-      this.autoUpdater.updateConfigPath = join('out/win-unpacked/resources/app-update.yml');
+      this.autoUpdater.updateConfigPath = join('build/cfg/app-update.yml');
     }
     // 这里的URL就是更新服务器的放置文件的地址
     this.autoUpdater.setFeedURL({
