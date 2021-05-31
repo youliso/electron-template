@@ -11,11 +11,10 @@ import {
   ipcMain
 } from 'electron';
 import { windowFunOpt, WindowOpt, windowStatusOpt } from '@/lib/interface';
-import Global from './global';
 import ico from '../assets/tray.png';
 import { isNull } from '@/lib';
 
-const config = require('@/cfg/config.json');
+const config = require('@/cfg/index.json');
 
 export class Window {
   private static instance: Window;

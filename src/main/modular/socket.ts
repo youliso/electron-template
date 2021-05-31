@@ -6,7 +6,7 @@ import { io, Socket as SocketIo } from 'socket.io-client';
 import { ManagerOptions } from 'socket.io-client/build/manager';
 import { SocketOptions } from 'socket.io-client/build/socket';
 
-const { socketUrl } = require('@/cfg/config.json');
+const { socketUrl } = require('@/cfg/index.json');
 
 /**
  * Socket模块

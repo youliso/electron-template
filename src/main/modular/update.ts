@@ -4,7 +4,7 @@ import { delDir } from '@/main/modular/file';
 import { ipcMain } from 'electron';
 import Window from '@/main/modular/window';
 
-const config = require('@/cfg/config.json');
+const { updaterCacheDirName, updateFileUrl } = require('@/cfg/index.json');
 
 /**
  * 更新模块
@@ -12,19 +12,21 @@ const config = require('@/cfg/config.json');
 export class Update {
   public autoUpdater: AppUpdater = autoUpdater;
 
-  constructor() {
-  }
+  constructor() {}
 
   /**
    * 删除更新包文件
    */
   handleUpdate() {
-    // @ts-ignore
-    const updatePendingPath = join(this.autoUpdater.app.baseCachePath, config.updaterCacheDirName, 'pending');
+    const updatePendingPath = join(
+      // @ts-ignore
+      this.autoUpdater.app.baseCachePath,
+      updaterCacheDirName,
+      'pending'
+    );
     try {
       delDir(updatePendingPath);
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   /**
@@ -34,7 +36,7 @@ export class Update {
   open(messageBack: Function) {
     this.handleUpdate();
     let message = {
-      error:  { code: 0, msg: '检查更新出错' },
+      error: { code: 0, msg: '检查更新出错' },
       checking: { code: 1, msg: '正在检查更新' },
       updateAva: { code: 2, msg: '检测到新版本,正在下载' },
       updateDown: { code: 3, value: '', msg: '下载中' },
@@ -48,7 +50,7 @@ export class Update {
     // 这里的URL就是更新服务器的放置文件的地址
     this.autoUpdater.setFeedURL({
       provider: 'generic',
-      url: config.updateFileUrl
+      url: updateFileUrl
     });
     this.autoUpdater.on('error', () => messageBack(message.error));
     this.autoUpdater.on('checking-for-update', () => messageBack(message.checking));
@@ -94,5 +96,4 @@ export class Update {
     // 关闭程序安装新的软件 isSilent 是否静默更新
     ipcMain.on('update-quit-install', (event, isSilent) => this.updateQuitInstall(isSilent));
   }
-
 }

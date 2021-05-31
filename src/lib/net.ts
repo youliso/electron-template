@@ -2,7 +2,7 @@ import fetch, { RequestInit, Headers } from 'node-fetch';
 import AbortController from 'node-abort-controller';
 import querystring from 'querystring';
 
-const { appUrl } = require('@/cfg/config.json');
+const { appUrl } = require('@/cfg/index.json');
 
 export interface NetOpt extends RequestInit {
   authorization?: string;
@@ -52,32 +52,40 @@ function timeoutPromise(outTime: number): Promise<any> {
  */
 function fetchPromise(url: string, sendData: NetOpt): Promise<any> {
   return fetch(url, sendData)
-    .then(res => {
+    .then((res) => {
       if (res.status >= 200 && res.status < 300) return res;
       throw new Error(res.statusText);
     })
     .then(async (res) => {
       switch (sendData.type) {
         case NET_RESPONSE_TYPE.TEXT:
-          return sendData.isHeaders ? {
-            headers: await res.headers,
-            data: await res.text()
-          } : await res.text();
+          return sendData.isHeaders
+            ? {
+                headers: await res.headers,
+                data: await res.text()
+              }
+            : await res.text();
         case NET_RESPONSE_TYPE.JSON:
-          return sendData.isHeaders ? {
-            headers: await res.headers,
-            data: await res.json()
-          } : await res.json();
+          return sendData.isHeaders
+            ? {
+                headers: await res.headers,
+                data: await res.json()
+              }
+            : await res.json();
         case NET_RESPONSE_TYPE.BUFFER:
-          return sendData.isHeaders ? {
-            headers: await res.headers,
-            data: await res.arrayBuffer()
-          } : await res.arrayBuffer();
+          return sendData.isHeaders
+            ? {
+                headers: await res.headers,
+                data: await res.arrayBuffer()
+              }
+            : await res.arrayBuffer();
         case NET_RESPONSE_TYPE.BLOB:
-          return sendData.isHeaders ? {
-            headers: await res.headers,
-            data: await res.blob()
-          } : await res.blob();
+          return sendData.isHeaders
+            ? {
+                headers: await res.headers,
+                data: await res.blob()
+              }
+            : await res.blob();
       }
     });
 }
@@ -92,11 +100,15 @@ export async function net(url: string, param: NetOpt = {}): Promise<any> {
   let sendData: NetOpt = {
     isHeaders: param.isHeaders,
     isStringify: param.isStringify,
-    headers: new Headers(Object.assign({
-        'Content-type': 'application/json;charset=utf-8',
-        'authorization': param.authorization || ''
-      },
-      param.headers || {})),
+    headers: new Headers(
+      Object.assign(
+        {
+          'Content-type': 'application/json;charset=utf-8',
+          authorization: param.authorization || ''
+        },
+        param.headers || {}
+      )
+    ),
     timeout: param.timeout || 30000,
     type: param.type || NET_RESPONSE_TYPE.TEXT,
     method: param.method || 'GET',
@@ -104,8 +116,12 @@ export async function net(url: string, param: NetOpt = {}): Promise<any> {
   };
   if (!!param.data) {
     if (sendData.method === 'GET') url = `${url}?${querystring.stringify(param.data)}`;
-    else sendData.body = sendData.isStringify ? querystring.stringify(param.data) : JSON.stringify(param.data);
+    else
+      sendData.body = sendData.isStringify
+        ? querystring.stringify(param.data)
+        : JSON.stringify(param.data);
   }
-  return Promise.race([timeoutPromise(sendData.timeout), fetchPromise(url, sendData)])
-    .catch(err => errorReturn(err.message));
+  return Promise.race([timeoutPromise(sendData.timeout), fetchPromise(url, sendData)]).catch(
+    (err) => errorReturn(err.message)
+  );
 }
