@@ -1,4 +1,3 @@
-import { systemPreferences } from 'electron';
 import Global from './global';
 
 export function win32() {

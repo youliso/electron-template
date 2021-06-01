@@ -2,7 +2,7 @@
   <div class="container">
     <Head></Head>
     <div class="info">
-      <div>hello</div>
+      <div>hello {{ version }}</div>
       <button @click="toAbout">关于</button>
       <button @click="test">弹个框</button>
     </div>
@@ -36,7 +36,7 @@ export default defineComponent({
         title: '弹框测试',
         route: '/message',
         parentId: argsData.window.id,
-        data: { text: getGlobal('setting') },
+        data: { text: '123' },
         modal: true,
         resizable: true
       };
@@ -64,7 +64,8 @@ export default defineComponent({
 
     return {
       test,
-      toAbout
+      toAbout,
+      version: getGlobal('app.version')
     };
   }
 });
