@@ -2,12 +2,16 @@ import { resolve } from 'path';
 import { app, globalShortcut, ipcMain } from 'electron';
 import { logOn } from './modular/log';
 import { fileOn } from './modular/file';
+import { Dialog } from './modular/dialog';
+import { Menus } from './modular/menu';
 import { Session } from './modular/session';
 import { Update } from './modular/update';
 import { Socket } from './modular/socket';
 import Global from './modular/global';
 import Window from './modular/window';
 class Init {
+  private dialog = new Dialog();
+  private menus = new Menus();
   private socket = new Socket();
   private update = new Update();
   private session = new Session();
@@ -78,6 +82,8 @@ class Init {
     fileOn();
     Global.on();
     Window.on();
+    this.dialog.on();
+    this.menus.on();
     this.session.on();
     this.socket.on();
     this.update.on();

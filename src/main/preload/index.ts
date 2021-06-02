@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer, IpcRenderer, IpcRendererEvent } from 'electron';
+import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 
 export interface ipcFun {
   send: (channel: string, args?: any) => void;
