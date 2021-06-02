@@ -28,9 +28,8 @@ export default defineComponent({
     let cons = 0;
 
     function test() {
-      //测试发送 为所以窗口发送消息
-      windowMessageSend({
-        key: 'test',
+      //测试发送窗口发送消息
+      windowMessageSend('test',{
         value: cons++
       });
     }

@@ -1,3 +1,4 @@
+import { IpcRendererEvent } from 'electron';
 /**
  * 检查更新 (注: 只需调用一次,多次调用会造成更新模块多次监听)
  */
@@ -8,14 +9,14 @@ export function updateCheck() {
 /**
  * 更新监听
  */
-export function updateOn(callback: Function) {
-  window.ipcFun.on('update-back', (event, args) => callback(args));
+export function updateOn(listener: (event: IpcRendererEvent, args: any) => void) {
+  window.ipcFun.on('update-back', listener);
 }
 
 /**
  * socket 关闭监听
  */
-export function updateRemoveAllListeners() {
+export function updateListenersRemove() {
   window.ipcFun.removeAllListeners('update-back');
 }
 

@@ -1,3 +1,4 @@
+import { IpcRendererEvent } from 'electron';
 import { ManagerOptions } from 'socket.io-client/build/manager';
 import { SocketOptions } from 'socket.io-client/build/socket';
 
@@ -11,14 +12,14 @@ export function socketOpen() {
 /**
  * socket 监听 (注: 只需调用一次,多次调用会造成socket模块多次监听)
  */
-export function socketOn(callback: Function) {
-  window.ipcFun.on('socket-back', (event, args) => callback(args));
+export function socketOn(listener: (event: IpcRendererEvent, args: any) => void) {
+  window.ipcFun.on('socket-back', listener);
 }
 
 /**
  * socket 关闭监听
  */
-export function socketRemoveAllListeners() {
+export function socketListenersRemove() {
   window.ipcFun.removeAllListeners('socket-back');
 }
 

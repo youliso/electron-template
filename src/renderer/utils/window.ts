@@ -1,12 +1,12 @@
+import { IpcRendererEvent } from 'electron';
 import { windowAlwaysOnTopOpt, WindowOpt, windowStatusOpt } from '@/lib/interface';
-import { argsData, setMessageData } from '@/renderer/store';
+import { argsData } from '@/renderer/store';
 import { domPropertyLoad } from './dom';
 
 /**
  * 窗口初始化 (i)
  * */
 export async function windowLoad() {
-  windowMessageOn();
   return new Promise((resolve) =>
     window.ipcFun.once('window-load', async (event, args: WindowOpt) => {
       argsData.window = args;
@@ -15,18 +15,40 @@ export async function windowLoad() {
     })
   );
 }
+
 /**
  * 窗口消息监听
  */
-export function windowMessageOn() {
-  window.ipcFun.on('window-message-back', (event, args) => setMessageData(args.key, args.value)); //监听消息反馈
+export function windowMessageOn(
+  channel: string,
+  listener: (event: IpcRendererEvent, args: any) => void
+) {
+  window.ipcFun.on(`window-message-${channel}-back`, listener);
+}
+
+/**
+ * 关闭窗口消息监听
+ */
+export function windowMessageRemove(channel: string) {
+  window.ipcFun.removeAllListeners(`window-message-${channel}-back`);
 }
 
 /**
  * 消息发送
  */
-export function windowMessageSend(args: { key: string; value: any }) {
-  window.ipcFun.send('window-message-send', args);
+export function windowMessageSend(
+  channel: string, //监听key（保证唯一）
+  value: any, //需要发送的内容
+  isback: boolean = false, //是否给自身反馈
+  acceptId: number = argsData.window.parentId //指定窗口id发送
+) {
+  window.ipcFun.send('window-message-send', {
+    channel,
+    value,
+    isback,
+    acceptId,
+    id: argsData.window.id
+  });
 }
 
 /**

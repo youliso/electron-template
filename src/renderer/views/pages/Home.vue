@@ -10,10 +10,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onUnmounted, watch } from 'vue';
+import { IpcRendererEvent } from 'electron';
+import { defineComponent, onMounted, onUnmounted } from 'vue';
 import Head from '../components/Head.vue';
-import { argsData, messageData } from '@/renderer/store';
-import { windowCreate, windowShow } from '@/renderer/utils/window';
+import { argsData } from '@/renderer/store';
+import {
+  windowCreate,
+  windowShow,
+  windowMessageOn,
+  windowMessageRemove
+} from '@/renderer/utils/window';
 import { getGlobal } from '@/renderer/utils';
 import { WindowOpt } from '@/lib/interface';
 
@@ -23,13 +29,10 @@ export default defineComponent({
   },
   name: 'Home',
   setup() {
-    let watchTest = watch(
-      () => messageData['test'],
-      (n, o) => {
-        // n 为新赋值 o为旧值
-        console.log(n, o);
-      }
-    );
+    windowMessageOn('test', (event: IpcRendererEvent, args: any) => {
+      //监听弹框测试
+      console.log(args);
+    });
 
     function test() {
       let data: WindowOpt = {
@@ -59,7 +62,7 @@ export default defineComponent({
     });
 
     onUnmounted(() => {
-      watchTest();
+      windowMessageRemove('test'); //关闭监听
     });
 
     return {
