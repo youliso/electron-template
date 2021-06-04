@@ -1,11 +1,9 @@
 import Global from './global';
 
 export function win32() {
-  Global.sharedObject['app']['dom']['css']['--platform-theme-color'] = '#000000';
 }
 
 export function linux() {
-  Global.sharedObject['app']['dom']['css']['--platform-theme-color'] = '#000000';
 }
 
 export function darwin() {}
