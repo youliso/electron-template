@@ -25,6 +25,11 @@
   background: transparent;
 }
 
+@font-face {
+  font-family: ping-fang;
+  src: url('~@/renderer/assets/fonts/PingFang-SC-Regular.ttf');
+}
+
 html,
 body {
   width: 100%;
@@ -34,7 +39,14 @@ body {
   background-color: transparent;
   position: relative;
   user-select: none;
-  font-family: sans-serif;
+  font-family: ping-fang;
+}
+
+a,
+button,
+select,
+input {
+  font-family: ping-fang;
 }
 
 .bg-img {

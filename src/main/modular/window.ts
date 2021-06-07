@@ -14,7 +14,7 @@ import { windowFunOpt, WindowOpt, windowStatusOpt } from '@/lib/interface';
 import ico from '../assets/tray.png';
 import { isNull } from '@/lib';
 
-const config = require('@/cfg/index.json');
+const { appBackgroundColor, appW, appH } = require('@/cfg/index.json');
 
 export class Window {
   private static instance: Window;
@@ -39,7 +39,7 @@ export class Window {
       minHeight: wh[1],
       width: wh[0],
       height: wh[1],
-      backgroundColor: config.appBackgroundColor,
+      backgroundColor: appBackgroundColor,
       autoHideMenuBar: true,
       titleBarStyle: 'hidden',
       resizable: true,
@@ -87,7 +87,7 @@ export class Window {
         return;
       }
     }
-    let opt = this.browserWindowOpt([args.width || config.appW, args.height || config.appH]);
+    let opt = this.browserWindowOpt([args.width || appW, args.height || appH]);
     if (args.parentId) {
       opt.parent = this.getWindow(args.parentId);
       args.currentWidth = opt.parent.getBounds().width;
@@ -330,7 +330,7 @@ export class Window {
    * 设置窗口背景色
    */
   setBackgroundColor(args: { id: number; color: string }) {
-    this.getWindow(args.id).setBackgroundColor(args.color || config.appBackgroundColor);
+    this.getWindow(args.id).setBackgroundColor(args.color || appBackgroundColor);
   }
 
   /**
