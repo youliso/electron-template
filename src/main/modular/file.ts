@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs, { MakeDirectoryOptions } from 'fs';
 import { createInterface } from 'readline';
 import { resolve, dirname, extname } from 'path';
 import { isNull } from '@/lib';
@@ -129,7 +129,25 @@ export function readLine(path: string, index?: number): Promise<string | any[]> 
 }
 
 /**
- * 覆盖数据到文件
+ * 创建目录
+ * @param path
+ * @param options
+ * @returns 0 失败 1成功
+ */
+export async function mkdir(path: string, options: MakeDirectoryOptions) {
+  if (path.substr(0, 1) !== '/' && path.indexOf(':') === -1) path = resolve(path);
+  return new Promise((resolve) => {
+    fs.mkdir(dirname(path), options || { recursive: true }, (err) => {
+      if (err) {
+        resolve(0);
+      }
+      resolve(1);
+    });
+  });
+}
+
+/**
+ * 创建文件
  * @return 0 失败 1 成功
  */
 export async function writeFile(
@@ -138,7 +156,6 @@ export async function writeFile(
   options?: { encoding?: BufferEncoding; mode?: number | string; flag?: string }
 ) {
   if (path.substr(0, 1) !== '/' && path.indexOf(':') === -1) path = resolve(path);
-  if ((await access(path)) === 0) fs.mkdirSync(dirname(path), { recursive: true });
   return new Promise((resolve) =>
     fs.writeFile(path, data, options, (err) => {
       if (err) {
@@ -159,7 +176,6 @@ export async function appendFile(
   options?: { encoding?: BufferEncoding; mode?: number | string; flag?: string }
 ) {
   if (path.substr(0, 1) !== '/' && path.indexOf(':') === -1) path = resolve(path);
-  if ((await access(path)) === 0) fs.mkdirSync(dirname(path), { recursive: true });
   return new Promise((resolve) =>
     fs.appendFile(path, data, options, (err) => {
       if (err) {
