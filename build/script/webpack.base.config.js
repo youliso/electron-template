@@ -2,7 +2,7 @@ const { resolve } = require('path');
 
 module.exports = {
   experiments: {
-    // topLevelAwait: true,
+    topLevelAwait: true
   },
   node: {
     global: false,
@@ -12,7 +12,7 @@ module.exports = {
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
     alias: {
-      'dist': resolve('dist'),
+      dist: resolve('dist'),
       '@': resolve('src')
     }
   },

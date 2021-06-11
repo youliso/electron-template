@@ -2,6 +2,7 @@ import { resolve } from 'path';
 import { app, globalShortcut, ipcMain } from 'electron';
 import { logOn } from './modular/log';
 import { fileOn } from './modular/file';
+import { pathOn } from './modular/path';
 import { Dialog } from './modular/dialog';
 import { Menus } from './modular/menu';
 import { Session } from './modular/session';
@@ -80,6 +81,7 @@ class Init {
   modular() {
     logOn();
     fileOn();
+    pathOn();
     Global.on();
     Window.on();
     this.dialog.on();
