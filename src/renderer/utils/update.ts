@@ -1,31 +1,26 @@
 import { IpcRendererEvent } from 'electron';
-/**
- * 检查更新 (注: 只需调用一次,多次调用会造成更新模块多次监听)
- */
-export function updateCheck() {
-  window.ipcFun.send('update-check');
-}
 
 /**
  * 更新监听
  */
 export function updateOn(listener: (event: IpcRendererEvent, args: any) => void) {
-  window.ipcFun.on('update-back', listener);
+  window.ipcFun.on('update-back-open', listener);
 }
 
 /**
- * socket 关闭监听
+ * 关闭监听
  */
 export function updateListenersRemove() {
   window.ipcFun.removeAllListeners('update-back');
 }
 
 /**
- * 重新检查更新
+ * 检查更新
  * @param isDel 是否删除历史更新缓存
+ * @param autoDownload 是否在找到更新时自动下载更新
  */
-export function updateReCheck(isDel: boolean) {
-  window.ipcFun.send('update-recheck', isDel);
+export function updateCheck(isDel: boolean, autoDownload: boolean = false) {
+  window.ipcFun.send('update-check', { isDel, autoDownload });
 }
 
 /**

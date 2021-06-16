@@ -7,12 +7,13 @@ import Window from '@/main/modular/window';
 const { updaterCacheDirName, updateFileUrl } = require('@/cfg/index.json');
 
 /**
- * 更新模块
+ * 更新模块 https://www.electron.build/auto-update
  * */
 export class Update {
   public autoUpdater: AppUpdater = autoUpdater;
 
-  constructor() {}
+  constructor() {
+  }
 
   /**
    * 删除更新包文件
@@ -26,7 +27,8 @@ export class Update {
     );
     try {
       delDir(updatePendingPath);
-    } catch (e) {}
+    } catch (e) {
+    }
   }
 
   /**
@@ -34,7 +36,6 @@ export class Update {
    * @param messageBack 反馈更新状态
    */
   open(messageBack: Function) {
-    this.handleUpdate();
     let message = {
       error: { code: 0, msg: '检查更新出错' },
       checking: { code: 1, msg: '正在检查更新' },
@@ -63,15 +64,16 @@ export class Update {
     });
     // 下载完成事件
     this.autoUpdater.on('update-downloaded', () => messageBack(message.updateDownload));
-    this.autoUpdater.checkForUpdates().catch(() => messageBack(message.error));
   }
 
   /**
-   * 重新检查
+   * 检查更新
    * @param isDel 是否删除历史更新缓存
+   * @param autoDownload 是否在找到更新时自动下载更新
    */
-  checkUpdate(isDel: boolean) {
+  checkUpdate(isDel: boolean, autoDownload: boolean = false) {
     if (isDel) this.handleUpdate();
+    this.autoUpdater.autoDownload = autoDownload;
     this.autoUpdater.checkForUpdates().catch();
   }
 
@@ -88,11 +90,11 @@ export class Update {
    */
   on() {
     //开启更新监听
-    ipcMain.on('update-check', () => {
+    ipcMain.on('update-back-open', () => {
       this.open((data: { key: string; value: any }) => Window.windowSend('update-back', data));
     });
-    //重新检查更新 isDel 是否删除历史更新缓存
-    ipcMain.on('update-recheck', (event, isDel) => this.checkUpdate(isDel));
+    //检查更新
+    ipcMain.on('update-check', (event, args) => this.checkUpdate(args.isDel, args.autoDownload));
     // 关闭程序安装新的软件 isSilent 是否静默更新
     ipcMain.on('update-quit-install', (event, isSilent) => this.updateQuitInstall(isSilent));
   }
