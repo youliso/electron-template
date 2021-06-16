@@ -1,3 +1,5 @@
+import { MakeDirectoryOptions } from 'fs';
+
 /**
  * 读取目录下指定后缀文件
  * @param path
@@ -5,6 +7,13 @@
  */
 export async function fileBySuffix(path: string, fileName: string) {
   return await window.ipcFun.invoke('file-filebysuffix', { path, fileName });
+}
+
+/**
+ * 创建目录和内部文件
+ * */
+export async function mkdir(path: string, options?: MakeDirectoryOptions) {
+  return await window.ipcFun.invoke('file-mkdir', { path, options });
 }
 
 /**

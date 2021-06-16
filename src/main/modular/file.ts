@@ -193,6 +193,7 @@ export function fileOn() {
   ipcMain.handle('file-filebysuffix', async (event, args) =>
     fileBySuffix(args.path, args.fileName)
   );
+  ipcMain.handle('file-mkdir', async (event, args) => mkdir(args.path, args.options));
   ipcMain.handle('file-deldir', async (event, args) => delDir(args.path));
   ipcMain.handle('file-access', async (event, args) => access(args.path));
   ipcMain.handle('file-rename', async (event, args) => rename(args.path, args.newPath));
