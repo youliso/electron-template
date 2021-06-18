@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { AppUpdater, NsisUpdater } from 'electron-updater';
+import { AppUpdater, AppImageUpdater, MacUpdater, NsisUpdater } from 'electron-updater';
 import { AllPublishOptions } from 'builder-util-runtime';
 import { delDir } from '@/main/modular/file';
 import { ipcMain, app } from 'electron';
@@ -19,7 +19,9 @@ export class Update {
       provider: updateCfg.provider,
       url: updateCfg.url
     };
-    this.autoUpdater = new NsisUpdater(options);
+    if (process.platform === 'win32') this.autoUpdater = new NsisUpdater(options);
+    else if (process.platform === 'darwin') this.autoUpdater = new MacUpdater(options);
+    else if (process.platform === 'linux') this.autoUpdater = new AppImageUpdater(options);
     //本地开发环境，使用调试app-update.yml地址
     if (!app.isPackaged && !(process.platform === 'darwin')) {
       this.autoUpdater.updateConfigPath = join('build/cfg/app-update.yml');
