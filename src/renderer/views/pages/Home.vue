@@ -1,15 +1,15 @@
 <template>
-  <div class="container">
+  <div class='container'>
     <Head></Head>
-    <div class="info">
+    <div class='info'>
       <div>hello {{ version }}</div>
-      <button @click="toAbout">关于</button>
-      <button @click="test">弹个框</button>
+      <button @click='toAbout'>关于</button>
+      <button @click='test'>弹个框</button>
     </div>
   </div>
 </template>
 
-<script lang="ts">
+<script lang='ts'>
 import { IpcRendererEvent } from 'electron';
 import { defineComponent, onMounted, onUnmounted } from 'vue';
 import Head from '../components/Head.vue';
@@ -74,7 +74,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang='scss' scoped>
 .info {
   width: 100%;
   height: 100%;

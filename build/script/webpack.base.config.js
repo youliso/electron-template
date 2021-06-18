@@ -1,6 +1,7 @@
 const { resolve } = require('path');
 
 module.exports = {
+  devtool: 'eval-cheap-source-map',
   experiments: {
     topLevelAwait: true
   },

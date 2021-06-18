@@ -12,6 +12,7 @@ module.exports = (env) => {
       ...base.node
     },
     mode: env,
+    devtool: env === 'production' ? undefined : base.devtool,
     target: 'web',
     entry: {
       app: './src/renderer/index.ts'

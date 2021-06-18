@@ -1,6 +1,4 @@
 {
-  "updateFileUrl": "http://127.0.0.1:3000/public/",
-  "updaterCacheDirName": "electrontemplate-updater",
   "appW": 800,
   "appH": 600,
   "appBackgroundColor": "#333333",
