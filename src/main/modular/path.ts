@@ -14,7 +14,7 @@ export function basename(str: string) {
 }
 
 export function pathOn() {
-  ipcMain.handle('path-sep', async (event, args) => sep());
+  ipcMain.on('path-sep', async (event, args) => event.returnValue = sep());
   ipcMain.handle('path-normalize', async (event, args) => normalize(args));
   ipcMain.handle('path-basename', async (event, args) => basename(args));
 }

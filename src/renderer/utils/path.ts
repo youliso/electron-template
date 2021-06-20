@@ -1,5 +1,5 @@
-export async function sep(): Promise<string> {
-  return await window.ipcFun.invoke('path-sep');
+export function sep(): string {
+  return window.ipcFun.sendSync('path-sep');
 }
 
 export async function normalize(path: string): Promise<string> {
