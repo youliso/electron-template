@@ -1,7 +1,7 @@
 {
   "compression": "maximum",
-  "productName": "electrontemplate",
-  "appId": "org.electrontemplate",
+  "productName": "demo",
+  "appId": "org.demo",
   "copyright": "MIT",
   "asar": true,
   "directories": {
@@ -40,7 +40,7 @@
     "uninstallerSidebar": "build/icons/modern-wizard.bmp",
     "createDesktopShortcut": true,
     "createStartMenuShortcut": true,
-    "shortcutName": "electrontemplate",
+    "shortcutName": "demo",
     "include": "build/cfg/installer.nsh",
     "menuCategory": false,
     "displayLanguageSelector": false
@@ -78,7 +78,7 @@
   "linux": {
     "icon": "build/icons",
     "target": "AppImage",
-    "executableName": "electrontemplate"
+    "executableName": "demo"
   },
   "npmRebuild": true,
   "publish": [

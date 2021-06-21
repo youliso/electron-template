@@ -33,6 +33,8 @@ config.win.target.push({
   arch: ['x64']
 });
 
+//更新配置
+updateConfig.dirname = `${name.toLowerCase()}-updater`;
 let update =
   'provider: ' + updateConfig.provider + '\n' +
   'url: ' + updateConfig.url + '\n' +
@@ -96,3 +98,4 @@ fs.writeFileSync('./build/cfg/app-update.yml', update);
 fs.writeFileSync('./build/cfg/build.json', JSON.stringify(config, null, 2));
 fs.writeFileSync('./build/cfg/installer.nsh', nsh);
 fs.writeFileSync('./src/cfg/index.json', JSON.stringify(appConfig, null, 2));
+fs.writeFileSync('./src/cfg/update.json', JSON.stringify(updateConfig, null, 2));

@@ -1,8 +1,8 @@
 {
-  "name": "electrontemplate",
-  "productName": "electrontemplate",
+  "name": "demo",
+  "productName": "demo",
   "version": "1.0.0",
-  "description": "electron template",
+  "description": "electron demo",
   "main": "dist/main.bundle.js",
   "author": {
     "name": "youliso",
