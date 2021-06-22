@@ -61,8 +61,8 @@ class Init {
       }
     });
     app.on('activate', () => {
-      if (Window.getAllWindows().length === 0) {
-        Window.createWindow(this.initWindowOpt);
+      if (Window.windowsAllGet().length === 0) {
+        Window.windowCreate(this.initWindowOpt);
       }
     });
     //获得焦点时发出
@@ -84,8 +84,8 @@ class Init {
     await Promise.all([Global.init(), app.whenReady()]);
     //模块、创建窗口、托盘
     this.modular();
-    Window.createWindow(this.initWindowOpt);
-    Window.createTray();
+    Window.windowCreate(this.initWindowOpt);
+    Window.trayCreate();
   }
 
   /**

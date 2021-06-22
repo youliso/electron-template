@@ -63,34 +63,34 @@ export class Window {
    * @param id 窗口id
    * @constructor
    */
-  getWindow(id: number) {
+  windowGet(id: number) {
     return BrowserWindow.fromId(id);
   }
 
   /**
    * 获取全部窗口
    */
-  getAllWindows() {
+  windowsAllGet() {
     return BrowserWindow.getAllWindows();
   }
 
   /**
    * 创建窗口
    * */
-  createWindow(args: WindowOpt) {
+  windowCreate(args: WindowOpt) {
     for (let i in this.group) {
       if (
         !isNull(this.group[i]) &&
         this.group[i].route === args.route &&
         !this.group[i].isMultiWindow
       ) {
-        this.getWindow(Number(i)).focus();
+        this.windowGet(Number(i)).focus();
         return;
       }
     }
     let opt = this.browserWindowOpt([args.width || appW, args.height || appH]);
     if (args.parentId) {
-      opt.parent = this.getWindow(args.parentId);
+      opt.parent = this.windowGet(args.parentId);
       args.currentWidth = opt.parent.getBounds().width;
       args.currentHeight = opt.parent.getBounds().height;
       args.currentMaximized = opt.parent.isMaximized();
@@ -167,7 +167,7 @@ export class Window {
   /**
    * 创建托盘
    * */
-  createTray() {
+  trayCreate() {
     const contextMenu = Menu.buildFromTemplate([
       {
         label: '显示',
@@ -191,55 +191,55 @@ export class Window {
     switch (type) {
       case 'close':
         if (!isNull(id)) {
-          if (this.getWindow(id)) this.getWindow(id).close();
+          if (this.windowGet(id)) this.windowGet(id).close();
           return;
         }
-        for (let i in this.group) if (this.getWindow(Number(i))) this.getWindow(Number(i)).close();
+        for (let i in this.group) if (this.windowGet(Number(i))) this.windowGet(Number(i)).close();
         break;
       case 'hide':
         if (!isNull(id)) {
-          if (this.getWindow(id)) this.getWindow(id).hide();
+          if (this.windowGet(id)) this.windowGet(id).hide();
           return;
         }
-        for (let i in this.group) if (this.getWindow(Number(i))) this.getWindow(Number(i)).hide();
+        for (let i in this.group) if (this.windowGet(Number(i))) this.windowGet(Number(i)).hide();
         break;
       case 'show':
         if (!isNull(id)) {
-          if (this.getWindow(id)) this.getWindow(id).show();
+          if (this.windowGet(id)) this.windowGet(id).show();
           return;
         }
-        for (let i in this.group) if (this.getWindow(Number(i))) this.getWindow(Number(i)).show();
+        for (let i in this.group) if (this.windowGet(Number(i))) this.windowGet(Number(i)).show();
         break;
       case 'minimize':
         if (!isNull(id)) {
-          if (this.getWindow(id)) this.getWindow(id).minimize();
+          if (this.windowGet(id)) this.windowGet(id).minimize();
           return;
         }
         for (let i in this.group)
-          if (this.getWindow(Number(i))) this.getWindow(Number(i)).minimize();
+          if (this.windowGet(Number(i))) this.windowGet(Number(i)).minimize();
         break;
       case 'maximize':
         if (!isNull(id)) {
-          if (this.getWindow(id)) this.getWindow(id).maximize();
+          if (this.windowGet(id)) this.windowGet(id).maximize();
           return;
         }
         for (let i in this.group)
-          if (this.getWindow(Number(i))) this.getWindow(Number(i)).maximize();
+          if (this.windowGet(Number(i))) this.windowGet(Number(i)).maximize();
         break;
       case 'restore':
         if (!isNull(id)) {
-          if (this.getWindow(id)) this.getWindow(id).restore();
+          if (this.windowGet(id)) this.windowGet(id).restore();
           return;
         }
         for (let i in this.group)
-          if (this.getWindow(Number(i))) this.getWindow(Number(i)).restore();
+          if (this.windowGet(Number(i))) this.windowGet(Number(i)).restore();
         break;
       case 'reload':
         if (!isNull(id)) {
-          if (this.getWindow(id)) this.getWindow(id).reload();
+          if (this.windowGet(id)) this.windowGet(id).reload();
           return;
         }
-        for (let i in this.group) if (this.getWindow(Number(i))) this.getWindow(Number(i)).reload();
+        for (let i in this.group) if (this.windowGet(Number(i))) this.windowGet(Number(i)).reload();
         break;
     }
   }
@@ -249,11 +249,11 @@ export class Window {
    */
   windowSend(key: string, value: any, id?: number) {
     if (!isNull(id)) {
-      this.getWindow(id).webContents.send(key, value);
+      this.windowGet(id).webContents.send(key, value);
       return;
     }
     for (let i in this.group)
-      if (this.getWindow(Number(i))) this.getWindow(Number(i)).webContents.send(key, value);
+      if (this.windowGet(Number(i))) this.windowGet(Number(i)).webContents.send(key, value);
   }
 
   /**
@@ -266,45 +266,45 @@ export class Window {
     }
     switch (type) {
       case 'isMaximized':
-        return this.getWindow(id).isMaximized();
+        return this.windowGet(id).isMaximized();
       case 'isMinimized':
-        return this.getWindow(id).isMinimized();
+        return this.windowGet(id).isMinimized();
       case 'isFullScreen':
-        return this.getWindow(id).isFullScreen();
+        return this.windowGet(id).isFullScreen();
       case 'isAlwaysOnTop':
-        return this.getWindow(id).isAlwaysOnTop();
+        return this.windowGet(id).isAlwaysOnTop();
       case 'isVisible':
-        return this.getWindow(id).isVisible();
+        return this.windowGet(id).isVisible();
       case 'isFocused':
-        return this.getWindow(id).isFocused();
+        return this.windowGet(id).isFocused();
       case 'isModal':
-        return this.getWindow(id).isModal();
+        return this.windowGet(id).isModal();
     }
   }
 
   /**
    * 设置窗口最小大小
    */
-  setMinSize(args: { id: number; size: number[] }) {
-    this.getWindow(args.id).setMinimumSize(args.size[0], args.size[1]);
+  windowMinSizeSet(args: { id: number; size: number[] }) {
+    this.windowGet(args.id).setMinimumSize(args.size[0], args.size[1]);
   }
 
   /**
    * 设置窗口最大大小
    */
-  setMaxSize(args: { id: number; size: number[] }) {
-    this.getWindow(args.id).setMaximumSize(args.size[0], args.size[1]);
+  windowMaxSizeSet(args: { id: number; size: number[] }) {
+    this.windowGet(args.id).setMaximumSize(args.size[0], args.size[1]);
   }
 
   /**
    * 设置窗口大小
    */
-  setSize(args: { id: number; size: number[]; resizable: boolean; center: boolean }) {
+  windowSizeSet(args: { id: number; size: number[]; resizable: boolean; center: boolean }) {
     let Rectangle: { [key: string]: number } = {
       width: parseInt(args.size[0].toString()),
       height: parseInt(args.size[1].toString())
     };
-    let window = this.getWindow(args.id);
+    let window = this.windowGet(args.id);
     if (
       Rectangle.width === window.getBounds().width &&
       Rectangle.height === window.getBounds().height
@@ -330,14 +330,14 @@ export class Window {
   /**
    * 设置窗口背景色
    */
-  setBackgroundColor(args: { id: number; color: string }) {
-    this.getWindow(args.id).setBackgroundColor(args.color || appBackgroundColor);
+  windowBackgroundColorSet(args: { id: number; color: string }) {
+    this.windowGet(args.id).setBackgroundColor(args.color || appBackgroundColor);
   }
 
   /**
    * 设置窗口是否置顶
    */
-  setAlwaysOnTop(args: {
+  windowAlwaysOnTopSet(args: {
     id: number;
     is: boolean;
     type?:
@@ -350,7 +350,7 @@ export class Window {
       | 'pop-up-menu'
       | 'screen-saver';
   }) {
-    this.getWindow(args.id).setAlwaysOnTop(args.is, args.type || 'normal');
+    this.windowGet(args.id).setAlwaysOnTop(args.is, args.type || 'normal');
   }
 
   /**
@@ -360,53 +360,55 @@ export class Window {
     //最大化最小化窗口
     ipcMain.on('window-max-min-size', (event, winId) => {
       if (winId)
-        if (this.getWindow(winId).isMaximized()) this.getWindow(winId).unmaximize();
-        else this.getWindow(winId).maximize();
+        if (this.windowGet(winId).isMaximized()) this.windowGet(winId).unmaximize();
+        else this.windowGet(winId).maximize();
     });
     //窗口消息
     ipcMain.on('window-fun', (event, args) => this.windowFun(args.type, args.id));
     //窗口状态
     ipcMain.handle('window-status', (event, args) => this.windowStatus(args.type, args.id));
     //创建窗口
-    ipcMain.on('window-new', (event, args) => this.createWindow(args));
+    ipcMain.on('window-new', (event, args) => this.windowCreate(args));
     //设置窗口是否置顶
-    ipcMain.on('window-always-top-set', (event, args) => this.setAlwaysOnTop(args));
+    ipcMain.on('window-always-top-set', (event, args) => this.windowAlwaysOnTopSet(args));
     //设置窗口大小
-    ipcMain.on('window-size-set', (event, args) => this.setSize(args));
+    ipcMain.on('window-size-set', (event, args) => this.windowSizeSet(args));
     //设置窗口最小大小
-    ipcMain.on('window-min-size-set', (event, args) => this.setMinSize(args));
+    ipcMain.on('window-min-size-set', (event, args) => this.windowMinSizeSet(args));
     //设置窗口最大大小
-    ipcMain.on('window-max-size-set', (event, args) => this.setMaxSize(args));
+    ipcMain.on('window-max-size-set', (event, args) => this.windowMaxSizeSet(args));
     //设置窗口背景颜色
-    ipcMain.on('window-bg-color-set', (event, args) => this.setBackgroundColor(args));
+    ipcMain.on('window-bg-color-set', (event, args) => this.windowBackgroundColorSet(args));
     //窗口消息
     ipcMain.on('window-message-send', (event, args) => {
       let channel = `window-message-${args.channel}-back`;
       if (!isNull(args.acceptIds) && args.acceptIds.length > 0) {
         for (let i of args.acceptIds) {
-          if (this.getWindow(Number(i)))
-            this.getWindow(Number(i)).webContents.send(channel, args.value);
+          if (this.windowGet(Number(i)))
+            this.windowGet(Number(i)).webContents.send(channel, args.value);
         }
         return;
       }
       if (args.isback) {
         for (let i in this.group) {
-          if (this.getWindow(Number(i)))
-            this.getWindow(Number(i)).webContents.send(channel, args.value);
+          if (this.windowGet(Number(i)))
+            this.windowGet(Number(i)).webContents.send(channel, args.value);
         }
       } else {
         for (let i in this.group) {
-          if (this.getWindow(Number(i)) && Number(i) !== args.id)
-            this.getWindow(Number(i)).webContents.send(channel, args.value);
+          if (this.windowGet(Number(i)) && Number(i) !== args.id)
+            this.windowGet(Number(i)).webContents.send(channel, args.value);
         }
       }
     });
-    //通过路由获取窗口id
-    ipcMain.on('window-id-get-by-route', (event, args) => {
+    //通过路由获取窗口id (不传route查全部)
+    ipcMain.on('window-id-get', (event, args) => {
       let winIds: number[] = [];
-      for (let i in this.group) {
-        if (this.group[i].route === args.route) winIds.push(Number(i));
-      }
+      if (args.route) {
+        for (let i in this.group) {
+          if (this.group[i].route === args.route) winIds.push(Number(i));
+        }
+      } else winIds = Object.keys(this.group).map(e => Number(e));
       event.returnValue = winIds;
     });
   }

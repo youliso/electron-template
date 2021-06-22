@@ -15,7 +15,7 @@
 <script lang='ts'>
 import { defineComponent, onMounted } from 'vue';
 import { argsData } from '@/renderer/store';
-import { windowClose, windowSetSize, windowShow, windowStatus, windowGetIdByRoute } from '@/renderer/utils/window';
+import { windowClose, windowSetSize, windowShow, windowStatus, windowIdGet } from '@/renderer/utils/window';
 import { windowMessageSend } from '@/renderer/utils/window';
 import Head from '../components/Head.vue';
 
@@ -36,7 +36,7 @@ export default defineComponent({
     }
 
     function test1() {
-      console.log('通过获取窗口ids',windowGetIdByRoute('/'));
+      console.log(windowIdGet('/'));
     }
 
     function close() {

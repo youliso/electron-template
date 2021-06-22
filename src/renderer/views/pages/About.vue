@@ -1,21 +1,21 @@
 <template>
-  <div class="container">
+  <div class='container'>
     <Head />
-    <div class="info">
+    <div class='info'>
       <img
-        @click="open"
-        src="https://avatars.githubusercontent.com/u/34784062?s=96&amp;v=4"
-        width="68"
-        height="68"
-        alt="@youliso"
+        @click='open'
+        src='https://avatars.githubusercontent.com/u/34784062?s=96&amp;v=4'
+        width='68'
+        height='68'
+        alt='@youliso'
       />
-      <div @click="open" class="name">youliso</div>
-      <button @click="toHome">首页</button>
+      <div @click='open' class='name'>youliso</div>
+      <button @click='toHome'>首页</button>
     </div>
   </div>
 </template>
 
-<script lang="ts">
+<script lang='ts'>
 import { defineComponent, onMounted } from 'vue';
 import Head from '../components/Head.vue';
 import { windowCreate, windowShow } from '@/renderer/utils/window';
@@ -31,7 +31,8 @@ export default defineComponent({
     function toHome() {
       windowCreate({
         isMainWin: true,
-        resizable: true
+        resizable: true,
+        route: '/'
       });
     }
 
@@ -51,7 +52,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang='scss' scoped>
 .info {
   width: 100%;
   height: 100%;
@@ -59,6 +60,7 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   align-items: center;
+
   > .name {
     padding: 10px 0;
     font: bold 18px/18px normal;

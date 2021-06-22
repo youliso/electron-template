@@ -148,8 +148,8 @@ export function windowMax(id?: number) {
 }
 
 /**
- * 通过路由获取窗口id
+ * 通过路由获取窗口id (不传route查全部)
  */
-export function windowGetIdByRoute(route: string) {
-  return window.ipcFun.sendSync('window-id-get-by-route', { route });
+export function windowIdGet(route?: string): number[] {
+  return window.ipcFun.sendSync('window-id-get', { route });
 }
