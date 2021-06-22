@@ -1,6 +1,6 @@
 import { resolve } from 'path';
 import { app, globalShortcut, ipcMain } from 'electron';
-import { logOn } from './modular/log';
+import { logOn, logError } from './modular/log';
 import { fileOn } from './modular/file';
 import { pathOn } from './modular/path';
 import { Dialog } from './modular/dialog';
@@ -10,6 +10,7 @@ import { Update } from './modular/update';
 import { Socket } from './modular/socket';
 import Global from './modular/global';
 import Window from './modular/window';
+
 class Init {
   private dialog = new Dialog();
   private menus = new Menus();
@@ -17,7 +18,8 @@ class Init {
   private update = new Update();
   private session = new Session();
 
-  constructor() {}
+  constructor() {
+  }
 
   /**
    * 初始化并加载
@@ -42,6 +44,8 @@ class Init {
         }
       });
     }
+    //渲染进程崩溃监听
+    app.on('render-process-gone', (event, webContents, details) => logError(webContents.getTitle(), webContents.getURL(), JSON.stringify(details)));
     //关闭所有窗口退出
     app.on('window-all-closed', () => {
       if (process.platform !== 'darwin') {
@@ -56,7 +60,8 @@ class Init {
     //获得焦点时发出
     app.on('browser-window-focus', () => {
       //关闭刷新
-      globalShortcut.register('CommandOrControl+R', () => {});
+      globalShortcut.register('CommandOrControl+R', () => {
+      });
     });
     //失去焦点时发出
     app.on('browser-window-blur', () => {
