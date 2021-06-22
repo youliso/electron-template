@@ -1,20 +1,21 @@
 <template>
-  <div class="container">
+  <div class='container'>
     <Head />
-    <div class="info">
-      <div class="text">
+    <div class='info'>
+      <div class='text'>
         {{ data.text }}
-        <button @click="test">测试通讯</button>
+        <button @click='test'>测试通讯</button>
+        <button @click='test1'>测试获取路由id</button>
       </div>
-      <button class="close" @click="close">确定</button>
+      <button class='close' @click='close'>确定</button>
     </div>
   </div>
 </template>
 
-<script lang="ts">
+<script lang='ts'>
 import { defineComponent, onMounted } from 'vue';
 import { argsData } from '@/renderer/store';
-import { windowClose, windowSetSize, windowShow, windowStatus } from '@/renderer/utils/window';
+import { windowClose, windowSetSize, windowShow, windowStatus, windowGetIdByRoute } from '@/renderer/utils/window';
 import { windowMessageSend } from '@/renderer/utils/window';
 import Head from '../components/Head.vue';
 
@@ -29,9 +30,13 @@ export default defineComponent({
 
     function test() {
       //测试发送窗口发送消息
-      windowMessageSend('test',{
+      windowMessageSend('test', {
         value: cons++
       });
+    }
+
+    function test1() {
+      console.log('通过获取窗口ids',windowGetIdByRoute('/'));
     }
 
     function close() {
@@ -46,13 +51,14 @@ export default defineComponent({
     return {
       data: argsData.window.data,
       test,
-      close
+      close,
+      test1
     };
   }
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang='scss' scoped>
 .info {
   position: relative;
   width: 100%;

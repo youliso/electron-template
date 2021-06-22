@@ -28,7 +28,8 @@ export class Window {
     return Window.instance;
   }
 
-  constructor() {}
+  constructor() {
+  }
 
   /**
    * 窗口配置
@@ -381,9 +382,11 @@ export class Window {
     //窗口消息
     ipcMain.on('window-message-send', (event, args) => {
       let channel = `window-message-${args.channel}-back`;
-      if (!isNull(args.acceptId)) {
-        if (this.getWindow(Number(args.acceptId)))
-          this.getWindow(Number(args.acceptId)).webContents.send(channel, args.value);
+      if (!isNull(args.acceptIds) && args.acceptIds.length > 0) {
+        for (let i of args.acceptIds) {
+          if (this.getWindow(Number(i)))
+            this.getWindow(Number(i)).webContents.send(channel, args.value);
+        }
         return;
       }
       if (args.isback) {
@@ -397,6 +400,14 @@ export class Window {
             this.getWindow(Number(i)).webContents.send(channel, args.value);
         }
       }
+    });
+    //通过路由获取窗口id
+    ipcMain.on('window-id-get-by-route', (event, args) => {
+      let winIds: number[] = [];
+      for (let i in this.group) {
+        if (this.group[i].route === args.route) winIds.push(Number(i));
+      }
+      event.returnValue = winIds;
     });
   }
 }

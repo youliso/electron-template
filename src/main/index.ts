@@ -10,6 +10,7 @@ import { Update } from './modular/update';
 import { Socket } from './modular/socket';
 import Global from './modular/global';
 import Window from './modular/window';
+import { WindowOpt } from '@/lib/interface';
 
 class Init {
   private dialog = new Dialog();
@@ -17,6 +18,11 @@ class Init {
   private socket = new Socket();
   private update = new Update();
   private session = new Session();
+
+  private initWindowOpt: WindowOpt = { //初始化创建窗口参数
+    isMainWin: true,
+    route: '/'
+  };
 
   constructor() {
   }
@@ -56,7 +62,7 @@ class Init {
     });
     app.on('activate', () => {
       if (Window.getAllWindows().length === 0) {
-        Window.createWindow({ isMainWin: true });
+        Window.createWindow(this.initWindowOpt);
       }
     });
     //获得焦点时发出
@@ -78,7 +84,7 @@ class Init {
     await Promise.all([Global.init(), app.whenReady()]);
     //模块、创建窗口、托盘
     this.modular();
-    Window.createWindow({ isMainWin: true });
+    Window.createWindow(this.initWindowOpt);
     Window.createTray();
   }
 

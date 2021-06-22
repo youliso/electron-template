@@ -1,12 +1,12 @@
 export interface WindowOpt {
   id?: number; //唯一id
+  route: string; // 页面路由
   title?: string; //窗口标题
   currentWidth?: number; //父类窗口宽度
   currentHeight?: number; //父类窗口高度
   currentMaximized?: boolean; //父类窗口是否全屏
   width?: number;
   height?: number;
-  route?: string; // 页面路由
   resizable?: boolean; //是否支持调整窗口大小
   backgroundColor?: string; //窗口背景色
   data?: unknown; //数据

@@ -40,13 +40,13 @@ export function windowMessageSend(
   channel: string, //监听key（保证唯一）
   value: any, //需要发送的内容
   isback: boolean = false, //是否给自身反馈
-  acceptId: number = argsData.window.parentId //指定窗口id发送
+  acceptIds: number[] = [argsData.window.parentId] //指定窗口id发送
 ) {
   window.ipcFun.send('window-message-send', {
     channel,
     value,
     isback,
-    acceptId,
+    acceptIds,
     id: argsData.window.id
   });
 }
@@ -145,4 +145,11 @@ export function windowMin(id?: number) {
  */
 export function windowMax(id?: number) {
   window.ipcFun.send('window-fun', { type: 'maximize', id });
+}
+
+/**
+ * 通过路由获取窗口id
+ */
+export function windowGetIdByRoute(route: string) {
+  return window.ipcFun.sendSync('window-id-get-by-route', { route });
 }
