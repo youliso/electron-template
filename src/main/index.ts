@@ -45,7 +45,9 @@ class Init {
       });
     }
     //渲染进程崩溃监听
-    app.on('render-process-gone', (event, webContents, details) => logError(webContents.getTitle(), webContents.getURL(), JSON.stringify(details)));
+    app.on('render-process-gone', (event, webContents, details) => logError('[render-process-gone]', webContents.getTitle(), webContents.getURL(), JSON.stringify(details)));
+    //子进程崩溃监听
+    app.on('child-process-gone', (event, details) => logError('[child-process-gone]', JSON.stringify(details)));
     //关闭所有窗口退出
     app.on('window-all-closed', () => {
       if (process.platform !== 'darwin') {
