@@ -3,10 +3,11 @@
     <Head />
     <div class='info'>
       <div class='text'>
-        {{ data.text }}
-        <button @click='test'>测试通讯</button>
-        <button @click='test1'>测试获取路由id</button>
+        <div>创建传参: {{ data.text }}</div>
+        <div>app启动参数: {{ argv }}</div>
       </div>
+      <button @click='test'>测试通讯</button>
+      <button @click='test1'>测试获取路由id</button>
       <button class='close' @click='close'>确定</button>
     </div>
   </div>
@@ -15,8 +16,15 @@
 <script lang='ts'>
 import { defineComponent, onMounted } from 'vue';
 import { argsData } from '@/renderer/store';
-import { windowClose, windowSetSize, windowShow, windowStatus, windowIdGet } from '@/renderer/utils/window';
-import { windowMessageSend } from '@/renderer/utils/window';
+import { getGlobal } from '@/renderer/utils';
+import {
+  windowClose,
+  windowSetSize,
+  windowShow,
+  windowStatus,
+  windowIdGet,
+  windowMessageSend
+} from '@/renderer/utils/window';
 import Head from '../components/Head.vue';
 
 export default defineComponent({
@@ -25,7 +33,7 @@ export default defineComponent({
   },
   name: 'Message',
   setup() {
-    windowSetSize(argsData.window.id, [400, 150], true, argsData.window.currentMaximized);
+    windowSetSize(argsData.window.id, [400, 200], true, argsData.window.currentMaximized);
     let cons = 0;
 
     function test() {
@@ -51,6 +59,7 @@ export default defineComponent({
     return {
       data: argsData.window.data,
       test,
+      argv: getGlobal('app.argv'),
       close,
       test1
     };
@@ -66,6 +75,7 @@ export default defineComponent({
   padding: 25px 10px 10px;
 
   .text {
+    word-break: break-all;
     font: normal 16px sans-serif;
   }
 

@@ -31,18 +31,17 @@ class Init {
    * 初始化并加载
    * */
   async init() {
-    //协议调起
-    let args = [];
-    if (!app.isPackaged) args.push(resolve(process.argv[1]));
-    args.push('--');
-    if (!app.isDefaultProtocolClient(app.name, process.execPath, args))
-      app.setAsDefaultProtocolClient(app.name, process.execPath, args);
     app.allowRendererProcessReuse = true;
-    //重复启动(单例)
-    if (!app.requestSingleInstanceLock()) {
-      app.quit();
-    } else {
-      app.on('second-instance', () => {
+    //协议调起
+    let argv = [];
+    if (!app.isPackaged) argv.push(resolve(process.argv[1]));
+    argv.push('--');
+    if (!app.isDefaultProtocolClient(app.name, process.execPath, argv))
+      app.setAsDefaultProtocolClient(app.name, process.execPath, argv);
+    //默认单例根据自己需要改
+    if (!app.requestSingleInstanceLock()) app.quit();
+    else {
+      app.on('second-instance', (event, argv) => {
         // 当运行第二个实例时,将会聚焦到main窗口
         if (Window.main) {
           if (Window.main.isMinimized()) Window.main.restore();

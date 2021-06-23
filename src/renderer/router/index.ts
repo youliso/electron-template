@@ -5,14 +5,14 @@ export default createRouter({
     routes: [{
         path: "/",
         name: "Home",
-        component: () => import(/* webpackChunkName: "home" */ "../views/pages/Home.vue")
+        component: () => import("../views/pages/Home.vue")
     }, {
         path: "/about",
         name: "About",
-        component: () => import(/* webpackChunkName: "about" */ "../views/pages/About.vue")
+        component: () => import("../views/pages/About.vue")
     }, {
         path: "/message",
         name: "Message",
-        component: () => import(/* webpackChunkName: "message" */ "../views/dialogs/Message.vue")
+        component: () => import("../views/dialogs/Message.vue")
     }]
 });

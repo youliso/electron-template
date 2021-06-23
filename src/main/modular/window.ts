@@ -11,7 +11,7 @@ import {
   ipcMain
 } from 'electron';
 import { windowFunOpt, WindowOpt, windowStatusOpt } from '@/lib/interface';
-import ico from '../assets/tray.png';
+import ico from '@/lib/assets/tray.png';
 import { isNull } from '@/lib';
 
 const { appBackgroundColor, appW, appH } = require('@/cfg/index.json');
