@@ -18,15 +18,14 @@ const { appBackgroundColor, appW, appH } = require('@/cfg/index.json');
 
 /**
  * 窗口配置
- * @param wh
- * @param backgroundColor
+ * @param args
  */
-export function browserWindowOpt(wh: number[], backgroundColor?: string): BrowserWindowConstructorOptions {
+export function browserWindowOpt(args: WindowOpt): BrowserWindowConstructorOptions {
   let opt: BrowserWindowConstructorOptions = {
-    minWidth: wh[0],
-    minHeight: wh[1],
-    width: wh[0],
-    height: wh[1],
+    minWidth: args.minWidth || appW,
+    minHeight: args.minHeight || appH,
+    width: args.width || appW,
+    height: args.height || appH,
     autoHideMenuBar: true,
     titleBarStyle: 'hidden',
     resizable: true,
@@ -42,7 +41,43 @@ export function browserWindowOpt(wh: number[], backgroundColor?: string): Browse
       webSecurity: false
     }
   };
-  if (!isNull(backgroundColor)) opt.backgroundColor = backgroundColor;
+  if (args.parentId) {
+    opt.parent = Window.getInstance().windowGet(args.parentId);
+    args.currentWidth = opt.parent.getBounds().width;
+    args.currentHeight = opt.parent.getBounds().height;
+    args.currentMaximized = opt.parent.isMaximized();
+    if (args.currentMaximized) {
+      opt.x = parseInt(
+        ((screen.getPrimaryDisplay().workAreaSize.width - (args.width || 0)) / 2).toString()
+      );
+      opt.y = parseInt(
+        ((screen.getPrimaryDisplay().workAreaSize.height - (args.height || 0)) / 2).toString()
+      );
+    } else {
+      opt.x = parseInt(
+        (
+          opt.parent.getPosition()[0] +
+          (opt.parent.getBounds().width - (args.width || args.currentWidth)) / 2
+        ).toString()
+      );
+      opt.y = parseInt(
+        (
+          opt.parent.getPosition()[1] +
+          (opt.parent.getBounds().height - (args.height || args.currentHeight)) / 2
+        ).toString()
+      );
+    }
+  } else if (Window.getInstance().main) {
+    opt.x = parseInt(
+      (Window.getInstance().main.getPosition()[0] + (Window.getInstance().main.getBounds().width - opt.width) / 2).toString()
+    );
+    opt.y = parseInt(
+      (Window.getInstance().main.getPosition()[1] + (Window.getInstance().main.getBounds().height - opt.height) / 2).toString()
+    );
+  }
+  if (!isNull(args.modal)) opt.modal = args.modal;
+  if (!isNull(args.resizable)) opt.resizable = args.resizable;
+  if (!isNull(opt.backgroundColor)) opt.backgroundColor = args.backgroundColor;
   return opt;
 }
 
@@ -91,45 +126,7 @@ export class Window {
         return;
       }
     }
-    let opt = browserWindowOpt([args.width || appW, args.height || appH], args.backgroundColor);
-    if (args.parentId) {
-      opt.parent = this.windowGet(args.parentId);
-      args.currentWidth = opt.parent.getBounds().width;
-      args.currentHeight = opt.parent.getBounds().height;
-      args.currentMaximized = opt.parent.isMaximized();
-      if (args.currentMaximized) {
-        opt.x = parseInt(
-          ((screen.getPrimaryDisplay().workAreaSize.width - (args.width || 0)) / 2).toString()
-        );
-        opt.y = parseInt(
-          ((screen.getPrimaryDisplay().workAreaSize.height - (args.height || 0)) / 2).toString()
-        );
-      } else {
-        opt.x = parseInt(
-          (
-            opt.parent.getPosition()[0] +
-            (opt.parent.getBounds().width - (args.width || args.currentWidth)) / 2
-          ).toString()
-        );
-        opt.y = parseInt(
-          (
-            opt.parent.getPosition()[1] +
-            (opt.parent.getBounds().height - (args.height || args.currentHeight)) / 2
-          ).toString()
-        );
-      }
-    } else if (this.main) {
-      opt.x = parseInt(
-        (this.main.getPosition()[0] + (this.main.getBounds().width - opt.width) / 2).toString()
-      );
-      opt.y = parseInt(
-        (this.main.getPosition()[1] + (this.main.getBounds().height - opt.height) / 2).toString()
-      );
-    }
-    if (typeof args.modal === 'boolean') opt.modal = args.modal;
-    if (typeof args.resizable === 'boolean') opt.resizable = args.resizable;
-    if (args.backgroundColor) opt.backgroundColor = args.backgroundColor;
-    let win = new BrowserWindow(opt);
+    let win = new BrowserWindow(browserWindowOpt(args));
     this.group[win.id] = {
       route: args.route,
       isMultiWindow: args.isMultiWindow
