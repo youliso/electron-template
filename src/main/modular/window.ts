@@ -16,6 +16,36 @@ import { isNull } from '@/lib';
 
 const { appBackgroundColor, appW, appH } = require('@/cfg/index.json');
 
+/**
+ * 窗口配置
+ * @param wh
+ * @param backgroundColor
+ */
+export function browserWindowOpt(wh: number[], backgroundColor?: string): BrowserWindowConstructorOptions {
+  let opt: BrowserWindowConstructorOptions = {
+    minWidth: wh[0],
+    minHeight: wh[1],
+    width: wh[0],
+    height: wh[1],
+    autoHideMenuBar: true,
+    titleBarStyle: 'hidden',
+    resizable: true,
+    minimizable: true,
+    maximizable: true,
+    frame: false,
+    show: false,
+    webPreferences: {
+      preload: join(__dirname, './preload.bundle.js'),
+      contextIsolation: true,
+      nodeIntegration: false,
+      devTools: !app.isPackaged,
+      webSecurity: false
+    }
+  };
+  if (!isNull(backgroundColor)) opt.backgroundColor = backgroundColor;
+  return opt;
+}
+
 export class Window {
   private static instance: Window;
 
@@ -29,33 +59,6 @@ export class Window {
   }
 
   constructor() {
-  }
-
-  /**
-   * 窗口配置
-   * */
-  browserWindowOpt(wh: number[]): BrowserWindowConstructorOptions {
-    return {
-      minWidth: wh[0],
-      minHeight: wh[1],
-      width: wh[0],
-      height: wh[1],
-      backgroundColor: appBackgroundColor,
-      autoHideMenuBar: true,
-      titleBarStyle: 'hidden',
-      resizable: true,
-      minimizable: true,
-      maximizable: true,
-      frame: false,
-      show: false,
-      webPreferences: {
-        preload: join(__dirname, './preload.bundle.js'),
-        contextIsolation: true,
-        nodeIntegration: false,
-        devTools: !app.isPackaged,
-        webSecurity: false
-      }
-    };
   }
 
   /**
@@ -88,7 +91,7 @@ export class Window {
         return;
       }
     }
-    let opt = this.browserWindowOpt([args.width || appW, args.height || appH]);
+    let opt = browserWindowOpt([args.width || appW, args.height || appH], args.backgroundColor);
     if (args.parentId) {
       opt.parent = this.windowGet(args.parentId);
       args.currentWidth = opt.parent.getBounds().width;
