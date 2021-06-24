@@ -22,8 +22,8 @@ const { appBackgroundColor, appW, appH } = require('@/cfg/index.json');
  */
 export function browserWindowOpt(args: WindowOpt): BrowserWindowConstructorOptions {
   let opt: BrowserWindowConstructorOptions = {
-    minWidth: args.minWidth || appW,
-    minHeight: args.minHeight || appH,
+    minWidth: args.minWidth || args.width || appW,
+    minHeight: args.minHeight || args.height || appH,
     width: args.width || appW,
     height: args.height || appH,
     autoHideMenuBar: true,
