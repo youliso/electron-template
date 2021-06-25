@@ -29,7 +29,7 @@ export function AbortSignal() {
 /**
  * 错误信息包装
  */
-export function errorReturn(msg: string): { [key: string]: unknown } {
+export function errorReturn(msg: string): { code: number, msg: string } {
   return { code: 400, msg };
 }
 
@@ -37,7 +37,7 @@ export function errorReturn(msg: string): { [key: string]: unknown } {
  * 超时处理
  * @param outTime
  */
-function timeoutPromise(outTime: number): Promise<any> {
+function timeoutPromise(outTime: number): Promise<{ code: number, msg: string }> {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       reject(errorReturn('超时'));
@@ -50,7 +50,7 @@ function timeoutPromise(outTime: number): Promise<any> {
  * @param url
  * @param sendData
  */
-function fetchPromise(url: string, sendData: NetOpt): Promise<any> {
+function fetchPromise<T>(url: string, sendData: NetOpt): Promise<T> {
   return fetch(url, sendData)
     .then((res) => {
       if (res.status >= 200 && res.status < 300) return res;
@@ -61,30 +61,30 @@ function fetchPromise(url: string, sendData: NetOpt): Promise<any> {
         case NET_RESPONSE_TYPE.TEXT:
           return sendData.isHeaders
             ? {
-                headers: await res.headers,
-                data: await res.text()
-              }
+              headers: await res.headers,
+              data: await res.text()
+            }
             : await res.text();
         case NET_RESPONSE_TYPE.JSON:
           return sendData.isHeaders
             ? {
-                headers: await res.headers,
-                data: await res.json()
-              }
+              headers: await res.headers,
+              data: await res.json()
+            }
             : await res.json();
         case NET_RESPONSE_TYPE.BUFFER:
           return sendData.isHeaders
             ? {
-                headers: await res.headers,
-                data: await res.arrayBuffer()
-              }
+              headers: await res.headers,
+              data: await res.arrayBuffer()
+            }
             : await res.arrayBuffer();
         case NET_RESPONSE_TYPE.BLOB:
           return sendData.isHeaders
             ? {
-                headers: await res.headers,
-                data: await res.blob()
-              }
+              headers: await res.headers,
+              data: await res.blob()
+            }
             : await res.blob();
       }
     });
@@ -95,7 +95,7 @@ function fetchPromise(url: string, sendData: NetOpt): Promise<any> {
  * @param url
  * @param param
  */
-export async function net(url: string, param: NetOpt = {}): Promise<any> {
+export async function net<T>(url: string, param: NetOpt = {}): Promise<T | { code: number, msg: string }> {
   if (url.indexOf('http://') === -1 && url.indexOf('https://') === -1) url = appUrl + url;
   let sendData: NetOpt = {
     isHeaders: param.isHeaders,
@@ -121,7 +121,7 @@ export async function net(url: string, param: NetOpt = {}): Promise<any> {
         ? querystring.stringify(param.data)
         : JSON.stringify(param.data);
   }
-  return Promise.race([timeoutPromise(sendData.timeout), fetchPromise(url, sendData)]).catch(
+  return Promise.race([timeoutPromise(sendData.timeout), fetchPromise<T>(url, sendData)]).catch(
     (err) => errorReturn(err.message)
   );
 }
