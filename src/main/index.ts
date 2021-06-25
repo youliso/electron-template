@@ -71,7 +71,8 @@ class Init {
       app.relaunch({ args: process.argv.slice(1) });
     });
     //启动
-    await Promise.all([Global.init(), app.whenReady()]);
+    await app.whenReady();
+    await Global.init();
     //模块、创建窗口、托盘
     this.modular();
     Window.windowCreate(this.initWindowOpt);
