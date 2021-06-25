@@ -44,7 +44,7 @@ export default defineComponent({
     }
 
     function test1() {
-      console.log(windowIdGet('/'));
+      console.log(windowIdGet());
     }
 
     function close() {

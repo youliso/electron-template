@@ -1,17 +1,18 @@
 import { resolve } from 'path';
-import { app, globalShortcut, ipcMain } from 'electron';
+import { app, BrowserWindowConstructorOptions, globalShortcut, ipcMain } from 'electron';
 import { logOn, logError } from './modular/log';
 import { fileOn } from './modular/file';
 import { pathOn } from './modular/path';
 import Global from './modular/global';
 import Window from './modular/window';
-import { WindowOpt } from '@/lib/interface';
 
 class Init {
 
-  private initWindowOpt: WindowOpt = { //初始化创建窗口参数
-    isMainWin: true,
-    route: '/'
+  private initWindowOpt: BrowserWindowConstructorOptions = { //初始化创建窗口参数
+    customize: {
+      isMainWin: true,
+      route: '/'
+    }
   };
 
   constructor() {

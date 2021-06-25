@@ -1,5 +1,4 @@
 import { reactive, provide, inject } from 'vue';
-import { WindowOpt } from '@/lib/interface';
 
 /**
  * 组件页面配置
@@ -31,7 +30,7 @@ export const delExclude = (key: string) => {
 /**
  * 窗口常驻参数
  * */
-export const argsData = reactive<{ window: WindowOpt }>({
+export const argsData = reactive<{ window: Customize }>({
   window: null
 });
 

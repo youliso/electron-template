@@ -2,8 +2,6 @@ import { getGlobal } from './';
 
 /**
  * 页面初始化加载
- * @param key
- * @param value
  */
 export function domPropertyLoad() {
   let accent = getGlobal('app.dom');

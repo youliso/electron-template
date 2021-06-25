@@ -1,24 +1,27 @@
-export interface WindowOpt {
+interface Customize {
   id?: number; //唯一id
+  title?: string; //标题
   route: string; // 页面路由
-  title?: string; //窗口标题
   currentWidth?: number; //父类窗口宽度
   currentHeight?: number; //父类窗口高度
   currentMaximized?: boolean; //父类窗口是否全屏
-  minWidth?: number;
-  minHeight?: number;
-  width?: number;
-  height?: number;
-  resizable?: boolean; //是否支持调整窗口大小
-  backgroundColor?: string; //窗口背景色
-  data?: unknown; //数据
+  data?: any; //数据
   isMultiWindow?: boolean; //是否支持多窗口
   isMainWin?: boolean; //是否主窗口(当为true时会替代当前主窗口)
   parentId?: number; //父窗口id
-  modal?: boolean; //父窗口置顶
 }
 
-export type windowAlwaysOnTopOpt =
+declare namespace Electron {
+  interface BrowserWindow {
+    customize: Customize;
+  }
+
+  interface BrowserWindowConstructorOptions {
+    customize: Customize;
+  }
+}
+
+type windowAlwaysOnTopOpt =
   | 'normal'
   | 'floating'
   | 'torn-off-menu'
@@ -28,7 +31,7 @@ export type windowAlwaysOnTopOpt =
   | 'pop-up-menu'
   | 'screen-saver';
 
-export type windowFunOpt =
+type windowFunOpt =
   | 'close'
   | 'hide'
   | 'show'
@@ -37,7 +40,7 @@ export type windowFunOpt =
   | 'restore'
   | 'reload';
 
-export type windowStatusOpt =
+type windowStatusOpt =
   | 'isMaximized'
   | 'isMinimized'
   | 'isFullScreen'

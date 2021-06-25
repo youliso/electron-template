@@ -16,6 +16,7 @@
 </template>
 
 <script lang='ts'>
+import { BrowserWindowConstructorOptions } from 'electron';
 import { defineComponent, onMounted } from 'vue';
 import Head from '../components/Head.vue';
 import { windowCreate, windowShow } from '@/renderer/utils/window';
@@ -29,11 +30,14 @@ export default defineComponent({
   name: 'About',
   setup() {
     function toHome() {
-      windowCreate({
-        isMainWin: true,
-        resizable: true,
-        route: '/'
-      });
+      let data: BrowserWindowConstructorOptions = {
+        customize: {
+          isMainWin: true,
+          route: '/'
+        },
+        resizable: true
+      };
+      windowCreate(data);
     }
 
     function open() {

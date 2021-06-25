@@ -10,7 +10,7 @@
 </template>
 
 <script lang='ts'>
-import { IpcRendererEvent } from 'electron';
+import { IpcRendererEvent, BrowserWindowConstructorOptions } from 'electron';
 import { defineComponent, onMounted, onUnmounted } from 'vue';
 import Head from '../components/Head.vue';
 import { argsData } from '@/renderer/store';
@@ -21,7 +21,6 @@ import {
   windowMessageRemove
 } from '@/renderer/utils/window';
 import { getGlobal } from '@/renderer/utils';
-import { WindowOpt } from '@/lib/interface';
 
 export default defineComponent({
   components: {
@@ -35,11 +34,13 @@ export default defineComponent({
     });
 
     function test() {
-      let data: WindowOpt = {
-        title: '弹框测试',
-        route: '/message',
-        parentId: argsData.window.id,
-        data: { text: '123' },
+      let data: BrowserWindowConstructorOptions = {
+        customize: {
+          title: '弹框测试',
+          route: '/message',
+          parentId: argsData.window.id,
+          data: { text: '123' }
+        },
         modal: true,
         resizable: true
       };
@@ -47,11 +48,13 @@ export default defineComponent({
     }
 
     function toAbout() {
-      let data: WindowOpt = {
-        route: '/about',
+      let data: BrowserWindowConstructorOptions = {
+        customize: {
+          route: '/about',
+          isMainWin: true
+        },
         width: 300,
         height: 300,
-        isMainWin: true,
         resizable: true
       };
       windowCreate(data);

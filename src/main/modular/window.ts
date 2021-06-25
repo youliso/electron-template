@@ -4,31 +4,29 @@ import {
   app,
   screen,
   BrowserWindow,
-  BrowserWindowConstructorOptions,
   Menu,
   Tray,
   nativeImage,
-  ipcMain
+  ipcMain, BrowserWindowConstructorOptions
 } from 'electron';
-import { windowFunOpt, WindowOpt, windowStatusOpt } from '@/lib/interface';
 import ico from '@/lib/assets/tray.png';
 import { isNull } from '@/lib';
 
 const { appBackgroundColor, appW, appH } = require('@/cfg/index.json');
 
+
 /**
  * 窗口配置
  * @param args
  */
-export function browserWindowOpt(args: WindowOpt): BrowserWindowConstructorOptions {
-  let opt: BrowserWindowConstructorOptions = {
-    minWidth: args.minWidth || args.width || appW,
-    minHeight: args.minHeight || args.height || appH,
-    width: args.width || appW,
-    height: args.height || appH,
+export function browserWindowInit(args: BrowserWindowConstructorOptions): BrowserWindow {
+  args.minWidth = args.minWidth || args.width || appW;
+  args.minHeight = args.minHeight || args.height || appH;
+  args.width = args.width || appW;
+  args.height = args.height || appH;
+  let opt: BrowserWindowConstructorOptions = Object.assign(args, {
     autoHideMenuBar: true,
     titleBarStyle: 'hidden',
-    resizable: true,
     minimizable: true,
     maximizable: true,
     frame: false,
@@ -40,30 +38,30 @@ export function browserWindowOpt(args: WindowOpt): BrowserWindowConstructorOptio
       devTools: !app.isPackaged,
       webSecurity: false
     }
-  };
-  if (args.parentId) {
-    opt.parent = Window.getInstance().windowGet(args.parentId);
-    args.currentWidth = opt.parent.getBounds().width;
-    args.currentHeight = opt.parent.getBounds().height;
-    args.currentMaximized = opt.parent.isMaximized();
-    if (args.currentMaximized) {
+  });
+  if (opt.customize.parentId) {
+    opt.parent = Window.getInstance().windowGet(opt.customize.parentId);
+    opt.customize.currentWidth = opt.parent.getBounds().width;
+    opt.customize.currentHeight = opt.parent.getBounds().height;
+    opt.customize.currentMaximized = opt.parent.isMaximized();
+    if (opt.customize.currentMaximized) {
       opt.x = parseInt(
-        ((screen.getPrimaryDisplay().workAreaSize.width - (args.width || 0)) / 2).toString()
+        ((screen.getPrimaryDisplay().workAreaSize.width - (opt.width || 0)) / 2).toString()
       );
       opt.y = parseInt(
-        ((screen.getPrimaryDisplay().workAreaSize.height - (args.height || 0)) / 2).toString()
+        ((screen.getPrimaryDisplay().workAreaSize.height - (opt.height || 0)) / 2).toString()
       );
     } else {
       opt.x = parseInt(
         (
           opt.parent.getPosition()[0] +
-          (opt.parent.getBounds().width - (args.width || args.currentWidth)) / 2
+          (opt.parent.getBounds().width - (opt.width || opt.customize.currentWidth)) / 2
         ).toString()
       );
       opt.y = parseInt(
         (
           opt.parent.getPosition()[1] +
-          (opt.parent.getBounds().height - (args.height || args.currentHeight)) / 2
+          (opt.parent.getBounds().height - (opt.height || opt.customize.currentHeight)) / 2
         ).toString()
       );
     }
@@ -75,17 +73,18 @@ export function browserWindowOpt(args: WindowOpt): BrowserWindowConstructorOptio
       (Window.getInstance().main.getPosition()[1] + (Window.getInstance().main.getBounds().height - opt.height) / 2).toString()
     );
   }
-  if (!isNull(args.modal)) opt.modal = args.modal;
-  if (!isNull(args.resizable)) opt.resizable = args.resizable;
-  if (!isNull(opt.backgroundColor)) opt.backgroundColor = args.backgroundColor;
-  return opt;
+  const win = new BrowserWindow(opt);
+  win.customize = {
+    id: win.id,
+    ...opt.customize
+  };
+  return win;
 }
 
 export class Window {
   private static instance: Window;
 
   public main: BrowserWindow = null; //当前主页
-  public group: { [id: number]: WindowOpt } = {}; //窗口组
   public tray: Tray = null; //托盘
 
   static getInstance() {
@@ -115,40 +114,31 @@ export class Window {
   /**
    * 创建窗口
    * */
-  windowCreate(args: WindowOpt) {
-    for (let i in this.group) {
-      if (
-        !isNull(this.group[i]) &&
-        this.group[i].route === args.route &&
-        !this.group[i].isMultiWindow
+  windowCreate(args: BrowserWindowConstructorOptions) {
+    for (const i of this.windowsAllGet()) {
+      if (i &&
+        i.customize.route === args.customize.route &&
+        !i.customize.isMultiWindow
       ) {
         this.windowGet(Number(i)).focus();
         return;
       }
     }
-    let win = new BrowserWindow(browserWindowOpt(args));
-    this.group[win.id] = {
-      route: args.route,
-      isMultiWindow: args.isMultiWindow
-    };
-    if (args.isMainWin) {
+    const win = browserWindowInit(args);
+    if (win.customize.isMainWin) {
       //是否主窗口
       if (this.main && !this.main.isDestroyed()) this.main.close();
       this.main = win;
     }
-    args.id = win.id;
-    //window加载完毕后显示 (放到vue生命周期执行)
-    // win.once("ready-to-show", () => win.show());
     //window关闭前黑底时设置透明并删除引用
     win.on('close', () => {
-      delete this.group[win.id];
       win.setOpacity(0);
     });
     // 打开开发者工具
     if (!app.isPackaged) win.webContents.openDevTools();
     //注入初始化代码
     win.webContents.on('did-finish-load', () => {
-      win.webContents.send('window-load', args);
+      win.webContents.send('window-load', win.customize);
     });
     if (!app.isPackaged) {
       //调试模式
@@ -158,10 +148,10 @@ export class Window {
       } catch (e) {
         throw 'not found .port';
       }
-      win.loadURL(`http://localhost:${appPort}`).then();
+      win.loadURL(`http://localhost:${appPort}`).then().catch(console.log);
       return;
     }
-    win.loadFile(join(__dirname, './index.html')).then();
+    win.loadFile(join(__dirname, './index.html')).then().catch(console.log);
   }
 
   /**
@@ -194,52 +184,52 @@ export class Window {
           if (this.windowGet(id)) this.windowGet(id).close();
           return;
         }
-        for (let i in this.group) if (this.windowGet(Number(i))) this.windowGet(Number(i)).close();
+        for (const i of this.windowsAllGet()) if (i) i.close();
         break;
       case 'hide':
         if (!isNull(id)) {
           if (this.windowGet(id)) this.windowGet(id).hide();
           return;
         }
-        for (let i in this.group) if (this.windowGet(Number(i))) this.windowGet(Number(i)).hide();
+        for (const i of this.windowsAllGet()) if (i) i.hide();
         break;
       case 'show':
         if (!isNull(id)) {
           if (this.windowGet(id)) this.windowGet(id).show();
           return;
         }
-        for (let i in this.group) if (this.windowGet(Number(i))) this.windowGet(Number(i)).show();
+        for (const i of this.windowsAllGet()) if (i) i.show();
         break;
       case 'minimize':
         if (!isNull(id)) {
           if (this.windowGet(id)) this.windowGet(id).minimize();
           return;
         }
-        for (let i in this.group)
-          if (this.windowGet(Number(i))) this.windowGet(Number(i)).minimize();
+        for (const i of this.windowsAllGet())
+          if (i) i.minimize();
         break;
       case 'maximize':
         if (!isNull(id)) {
           if (this.windowGet(id)) this.windowGet(id).maximize();
           return;
         }
-        for (let i in this.group)
-          if (this.windowGet(Number(i))) this.windowGet(Number(i)).maximize();
+        for (const i of this.windowsAllGet())
+          if (i) i.maximize();
         break;
       case 'restore':
         if (!isNull(id)) {
           if (this.windowGet(id)) this.windowGet(id).restore();
           return;
         }
-        for (let i in this.group)
-          if (this.windowGet(Number(i))) this.windowGet(Number(i)).restore();
+        for (const i of this.windowsAllGet())
+          if (i) i.restore();
         break;
       case 'reload':
         if (!isNull(id)) {
           if (this.windowGet(id)) this.windowGet(id).reload();
           return;
         }
-        for (let i in this.group) if (this.windowGet(Number(i))) this.windowGet(Number(i)).reload();
+        for (const i of this.windowsAllGet()) if (i) i.reload();
         break;
     }
   }
@@ -252,8 +242,8 @@ export class Window {
       this.windowGet(id).webContents.send(key, value);
       return;
     }
-    for (let i in this.group)
-      if (this.windowGet(Number(i))) this.windowGet(Number(i)).webContents.send(key, value);
+    for (const i of this.windowsAllGet())
+      if (i) i.webContents.send(key, value);
   }
 
   /**
@@ -340,15 +330,7 @@ export class Window {
   windowAlwaysOnTopSet(args: {
     id: number;
     is: boolean;
-    type?:
-      | 'normal'
-      | 'floating'
-      | 'torn-off-menu'
-      | 'modal-panel'
-      | 'main-menu'
-      | 'status'
-      | 'pop-up-menu'
-      | 'screen-saver';
+    type?: windowAlwaysOnTopOpt;
   }) {
     this.windowGet(args.id).setAlwaysOnTop(args.is, args.type || 'normal');
   }
@@ -390,12 +372,12 @@ export class Window {
         return;
       }
       if (args.isback) {
-        for (let i in this.group) {
+        for (const i of this.windowsAllGet()) {
           if (this.windowGet(Number(i)))
             this.windowGet(Number(i)).webContents.send(channel, args.value);
         }
       } else {
-        for (let i in this.group) {
+        for (const i of this.windowsAllGet()) {
           if (this.windowGet(Number(i)) && Number(i) !== args.id)
             this.windowGet(Number(i)).webContents.send(channel, args.value);
         }
@@ -405,10 +387,10 @@ export class Window {
     ipcMain.on('window-id-get', (event, args) => {
       let winIds: number[] = [];
       if (args.route) {
-        for (let i in this.group) {
-          if (this.group[i].route === args.route) winIds.push(Number(i));
+        for (const i of this.windowsAllGet()) {
+          if (i && i.customize.route === args.route) winIds.push(i.id);
         }
-      } else winIds = Object.keys(this.group).map(e => Number(e));
+      } else winIds = this.windowsAllGet().map(win => win.id);
       event.returnValue = winIds;
     });
   }

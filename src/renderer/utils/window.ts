@@ -1,5 +1,4 @@
-import { IpcRendererEvent } from 'electron';
-import { windowAlwaysOnTopOpt, WindowOpt, windowStatusOpt } from '@/lib/interface';
+import { IpcRendererEvent, BrowserWindowConstructorOptions } from 'electron';
 import { argsData } from '@/renderer/store';
 import { domPropertyLoad } from './dom';
 
@@ -8,7 +7,7 @@ import { domPropertyLoad } from './dom';
  * */
 export async function windowLoad() {
   return new Promise((resolve) =>
-    window.ipcFun.once('window-load', async (event, args: WindowOpt) => {
+    window.ipcFun.once('window-load', async (event, args: Customize) => {
       argsData.window = args;
       domPropertyLoad();
       resolve(true);
@@ -54,7 +53,7 @@ export function windowMessageSend(
 /**
  * 创建窗口
  */
-export function windowCreate(args: WindowOpt) {
+export function windowCreate(args: BrowserWindowConstructorOptions) {
   window.ipcFun.send('window-new', args);
 }
 

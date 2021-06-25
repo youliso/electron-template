@@ -1,5 +1,3 @@
-import Global from './global';
-
 export function win32() {
 }
 
