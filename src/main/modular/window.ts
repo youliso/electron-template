@@ -135,7 +135,7 @@ export class Window {
       win.setOpacity(0);
     });
     // 打开开发者工具
-    if (!app.isPackaged) win.webContents.openDevTools();
+    if (!app.isPackaged) win.webContents.openDevTools({ mode: 'detach' });
     //注入初始化代码
     win.webContents.on('did-finish-load', () => {
       win.webContents.send('window-load', win.customize);
