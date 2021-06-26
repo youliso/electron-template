@@ -2,10 +2,14 @@ export function sep(): string {
   return window.ipcFun.sendSync('path-sep');
 }
 
-export async function normalize(path: string): Promise<string> {
-  return await window.ipcFun.invoke('path-normalize', path);
+export function dirname(path: string): string {
+  return window.ipcFun.sendSync('path-normalize', path);
 }
 
-export async function basename(path: string) {
-  return await window.ipcFun.invoke('path-basename', path);
+export function normalize(path: string): string {
+  return window.ipcFun.sendSync('path-normalize', path);
+}
+
+export function basename(path: string): string {
+  return window.ipcFun.sendSync('path-basename', path);
 }

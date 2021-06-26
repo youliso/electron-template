@@ -137,7 +137,7 @@ export function readLine(path: string, index?: number): Promise<string | any[]> 
 export async function mkdir(path: string, options: MakeDirectoryOptions) {
   if (path.substr(0, 1) !== '/' && path.indexOf(':') === -1) path = resolve(path);
   return new Promise((resolve) => {
-    fs.mkdir(dirname(path), options || { recursive: true }, (err) => {
+    fs.mkdir(path, options || { recursive: true }, (err) => {
       if (err) {
         resolve(0);
       }
