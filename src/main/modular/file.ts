@@ -1,4 +1,4 @@
-import fs, { MakeDirectoryOptions } from 'fs';
+import fs, { constants, MakeDirectoryOptions } from 'fs';
 import { createInterface } from 'readline';
 import { resolve, dirname, extname } from 'path';
 import { isNull } from '@/lib';
@@ -57,7 +57,7 @@ export function delDir(path: string): void {
 export function access(path: string) {
   if (path.substr(0, 1) !== '/' && path.indexOf(':') === -1) path = resolve(path);
   return new Promise((resolve) =>
-    fs.access(path, fs.constants.F_OK | fs.constants.W_OK, (err) => {
+    fs.access(path, fs.constants.F_OK, (err) => {
       if (err) err.code === 'ENOENT' ? resolve(0) : resolve(1);
       else resolve(2);
     })

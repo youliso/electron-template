@@ -1,5 +1,6 @@
 import { app, ipcMain, shell } from 'electron';
-import { resolve } from 'path';
+import { accessSync, constants } from 'fs';
+import { resolve, normalize } from 'path';
 import { EOL } from 'os';
 
 type Obj<Value> = {} & {
@@ -135,9 +136,15 @@ export class Global {
    * @param path lib/inside为起点的相对路径
    * */
   getInsidePath(path: string): string {
-    return app.isPackaged
-      ? resolve(__dirname, '../inside/' + path)
-      : resolve('./src/lib/inside/' + path);
+    try {
+      path = normalize(app.isPackaged
+        ? resolve(__dirname, '../inside/' + path)
+        : resolve('./src/lib/inside/' + path));
+      accessSync(path, constants.R_OK);
+      return path;
+    } catch (e) {
+      throw e;
+    }
   }
 
   /**
@@ -145,9 +152,15 @@ export class Global {
    * @param path lib/extern为起点的相对路径
    * */
   getExternPath(path: string): string {
-    return app.isPackaged
-      ? resolve(__dirname, '../../extern/' + path)
-      : resolve('./src/lib/extern/' + path);
+    try {
+      path = normalize(app.isPackaged
+        ? resolve(__dirname, '../../extern/' + path)
+        : resolve('./src/lib/extern/' + path));
+      accessSync(path, constants.R_OK);
+      return path;
+    } catch (e) {
+      throw e;
+    }
   }
 }
 
