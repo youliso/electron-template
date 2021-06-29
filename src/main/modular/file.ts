@@ -1,6 +1,6 @@
-import fs, { constants, MakeDirectoryOptions } from 'fs';
+import fs, { MakeDirectoryOptions } from 'fs';
 import { createInterface } from 'readline';
-import { resolve, dirname, extname } from 'path';
+import { resolve, extname } from 'path';
 import { isNull } from '@/lib';
 import { ipcMain } from 'electron';
 
