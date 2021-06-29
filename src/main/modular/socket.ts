@@ -80,7 +80,7 @@ export class Socket {
     ipcMain.on('socket-close', async () => this.close());
     //打开socket
     ipcMain.on('socket-open', async () => {
-      if (isNull(this.io)) this.open((data: { key: string; value: any; }) => Window.windowSend('socket-back', data));
+      if (isNull(this.io)) this.open((data: { key: string; value: any; }) => Window.send('socket-back', data));
     });
     //发送消息
     ipcMain.on('socket-send', (event, args) => this.send(args));

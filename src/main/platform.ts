@@ -6,7 +6,7 @@ export function linux() {
 
 export function darwin() {}
 
-export const Platform: { [key: string]: Function } = {
+export const Platforms: { [key: string]: Function } = {
   win32,
   linux,
   darwin

@@ -1,10 +1,12 @@
 import { resolve } from 'path';
 import { app, BrowserWindowConstructorOptions, globalShortcut, ipcMain } from 'electron';
+import { Platforms } from './platform';
 import { logOn, logError } from './modular/log';
 import { fileOn } from './modular/file';
 import { pathOn } from './modular/path';
 import Global from './modular/global';
 import Window from './modular/window';
+import Tray from './modular/tray';
 
 class Init {
 
@@ -51,8 +53,8 @@ class Init {
       }
     });
     app.on('activate', () => {
-      if (Window.windowsAllGet().length === 0) {
-        Window.windowCreate(this.initWindowOpt);
+      if (Window.getAll().length === 0) {
+        Window.create(this.initWindowOpt);
       }
     });
     //获得焦点时发出
@@ -72,11 +74,11 @@ class Init {
     });
     //启动
     await app.whenReady();
-    await Global.init();
+    await Platforms[process.platform]();
     //模块、创建窗口、托盘
     this.modular();
-    Window.windowCreate(this.initWindowOpt);
-    Window.trayCreate();
+    Window.create(this.initWindowOpt);
+    Tray.create();
   }
 
   /**
@@ -88,6 +90,7 @@ class Init {
     pathOn();
     Global.on();
     Window.on();
+    Tray.on();
 
     //自定义模块
     import('./modular/dialog').then(({ Dialog }) => new Dialog().on());

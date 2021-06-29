@@ -7,7 +7,7 @@ export class Dialog {
    */
   on() {
     ipcMain.handle('open-dialog', (event, args) =>
-      dialog.showOpenDialog(Window.windowGet(args.winId), args.params)
+      dialog.showOpenDialog(Window.get(args.winId), args.params)
     );
   }
 }

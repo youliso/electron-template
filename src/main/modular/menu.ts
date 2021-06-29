@@ -6,9 +6,6 @@ export class Menus {
   constructor() {
   }
 
-  init() {
-  }
-
   /**
    * 监听
    */

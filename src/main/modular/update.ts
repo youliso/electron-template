@@ -101,7 +101,7 @@ export class Update {
    */
   on() {
     //开启更新监听
-    this.open((data: { key: string; value: any }) => Window.windowSend('update-back', data));
+    this.open((data: { key: string; value: any }) => Window.send('update-back', data));
     //检查更新
     ipcMain.on('update-check', (event, args) => this.checkUpdate(args.isDel, args.autoDownload));
     //手动下载更新

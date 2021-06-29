@@ -1,5 +1,4 @@
 import { app, ipcMain, shell } from 'electron';
-import { Platform } from './platform';
 import { resolve } from 'path';
 import { EOL } from 'os';
 
@@ -39,10 +38,6 @@ export class Global {
   }
 
   constructor() {
-  }
-
-  async init() {
-    Platform[process.platform]();
   }
 
   /**
