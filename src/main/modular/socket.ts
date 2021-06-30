@@ -8,6 +8,14 @@ import { SocketOptions } from 'socket.io-client/build/socket';
 
 const { socketUrl } = require('@/cfg/index.json');
 
+
+export enum SOCKET_MSG_TYPE {
+  ERROR,
+  SUCCESS,
+  INIT,
+  CLOSE
+}
+
 /**
  * Socket模块
  * */
