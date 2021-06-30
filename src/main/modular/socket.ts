@@ -38,9 +38,6 @@ export class Socket {
     });
     this.io.on('disconnect', () => {
       console.log('[Socket]disconnect');
-      setTimeout(() => {
-        if (this.io && this.io.io._readyState === 'closed') this.io.open();
-      }, 1000 * 60 * 3);
     });
     this.io.on('message', (data: { key: string; value: any; }) => callback(data));
     this.io.on('error', (data: any) => console.log(`[Socket]error ${data.toString()}`));
