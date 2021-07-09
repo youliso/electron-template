@@ -3,7 +3,7 @@ export function sep(): string {
 }
 
 export function dirname(path: string): string {
-  return window.ipcFun.sendSync('path-normalize', path);
+  return window.ipcFun.sendSync('path-dirname', path);
 }
 
 export function normalize(path: string): string {
