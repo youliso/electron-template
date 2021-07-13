@@ -1,4 +1,5 @@
 import { IpcRendererEvent, BrowserWindowConstructorOptions } from 'electron';
+import { toRaw } from 'vue';
 import { argsData } from '@/renderer/store';
 import { domPropertyLoad } from './dom';
 
@@ -13,6 +14,13 @@ export async function windowLoad() {
       resolve(true);
     })
   );
+}
+
+/**
+ * 窗口数据更新
+ */
+export function windowUpdate() {
+  window.ipcFun.send('window-update', toRaw(argsData.window));
 }
 
 /**
@@ -120,9 +128,10 @@ export function windowClose(id?: number) {
 
 /**
  * 窗口显示
+ * @param time 延迟显示时间
  */
-export function windowShow(id?: number) {
-  window.ipcFun.send('window-fun', { type: 'show', id });
+export function windowShow(id?: number, time: number = 0) {
+  setTimeout(() => window.ipcFun.send('window-fun', { type: 'show', id }), time);
 }
 
 /**

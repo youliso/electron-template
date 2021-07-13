@@ -121,10 +121,6 @@ export class Window {
       if (this.main && !this.main.isDestroyed()) this.main.close();
       this.main = win;
     }
-    //window关闭前黑底时设置透明并删除引用
-    win.on('close', () => {
-      win.setOpacity(0);
-    });
     // 打开开发者工具
     if (!app.isPackaged) win.webContents.openDevTools({ mode: 'detach' });
     //注入初始化代码
@@ -302,9 +298,13 @@ export class Window {
    * 开启监听
    */
   on() {
+    //窗口数据更新
+    ipcMain.on('window-update', (event, args) => {
+      if (args && !isNull(args.id)) this.get(args.id).customize = args;
+    });
     //最大化最小化窗口
     ipcMain.on('window-max-min-size', (event, id) => {
-      if (id)
+      if (!isNull(id))
         if (this.get(id).isMaximized()) this.get(id).unmaximize();
         else this.get(id).maximize();
     });

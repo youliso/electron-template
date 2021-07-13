@@ -22,6 +22,7 @@ import Head from '../components/Head.vue';
 import { windowCreate, windowShow } from '@/renderer/utils/window';
 import { argsData } from '@/renderer/store';
 import { openUrl } from '@/renderer/utils';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
   components: {
@@ -29,7 +30,10 @@ export default defineComponent({
   },
   name: 'About',
   setup() {
+    const router = useRouter();
     function toHome() {
+      router.replace('/');
+      return;
       let data: BrowserWindowConstructorOptions = {
         customize: {
           isMainWin: true,

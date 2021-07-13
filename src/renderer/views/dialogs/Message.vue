@@ -1,19 +1,19 @@
 <template>
-  <div class='container'>
+  <div class="container">
     <Head />
-    <div class='info'>
-      <div class='text'>
+    <div class="info">
+      <div class="text">
         <div>创建传参: {{ data.text }}</div>
         <div>app启动参数: {{ argv }}</div>
       </div>
-      <button @click='test'>测试通讯</button>
-      <button @click='test1'>测试获取路由id</button>
-      <button class='close' @click='close'>确定</button>
+      <button @click="test">测试通讯</button>
+      <button @click="test1">测试获取路由id</button>
+      <button class="close" @click="close">确定</button>
     </div>
   </div>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import { defineComponent, onMounted } from 'vue';
 import { argsData } from '@/renderer/store';
 import { getGlobal } from '@/renderer/utils';
@@ -33,8 +33,9 @@ export default defineComponent({
   },
   name: 'Message',
   setup() {
-    windowSetSize(argsData.window.id, [400, 200], true, argsData.window.currentMaximized);
+    const argv = getGlobal('app.argv');
     let cons = 0;
+    windowSetSize(argsData.window.id, [400, 200], true, argsData.window.currentMaximized);
 
     function test() {
       //测试发送窗口发送消息
@@ -59,7 +60,7 @@ export default defineComponent({
     return {
       data: argsData.window.data,
       test,
-      argv: getGlobal('app.argv'),
+      argv,
       close,
       test1
     };
@@ -67,7 +68,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .info {
   position: relative;
   width: 100%;

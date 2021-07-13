@@ -1,15 +1,15 @@
 <template>
-  <div class='container'>
+  <div class="container">
     <Head></Head>
-    <div class='info'>
+    <div class="info">
       <div>hello {{ version }}</div>
-      <button @click='toAbout'>关于</button>
-      <button @click='test'>弹个框</button>
+      <button @click="toAbout">关于</button>
+      <button @click="test">弹个框</button>
     </div>
   </div>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import { IpcRendererEvent, BrowserWindowConstructorOptions } from 'electron';
 import { defineComponent, onMounted, onUnmounted } from 'vue';
 import Head from '../components/Head.vue';
@@ -21,13 +21,14 @@ import {
   windowMessageRemove
 } from '@/renderer/utils/window';
 import { getGlobal } from '@/renderer/utils';
-
+import { useRouter } from 'vue-router';
 export default defineComponent({
   components: {
     Head
   },
   name: 'Home',
   setup() {
+    const router = useRouter();
     windowMessageOn('test', (event: IpcRendererEvent, args: any) => {
       //监听弹框测试
       console.log(args);
@@ -48,6 +49,8 @@ export default defineComponent({
     }
 
     function toAbout() {
+      router.replace('/about');
+      return;
       let data: BrowserWindowConstructorOptions = {
         customize: {
           route: '/about',
@@ -77,7 +80,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .info {
   width: 100%;
   height: 100%;

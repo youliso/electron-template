@@ -20,26 +20,26 @@
     "test": "jest -c build/cfg/jest.json"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.23",
-    "@types/node-fetch": "^2.5.10",
-    "@vue/compiler-sfc": "^3.1.2",
+    "@types/jest": "^26.0.24",
+    "@types/node-fetch": "^2.5.11",
+    "@vue/compiler-sfc": "^3.1.4",
     "css-loader": "^5.2.6",
-    "electron": "^13.1.4",
+    "electron": "^13.1.6",
     "electron-builder": "^22.11.7",
     "electron-rebuild": "^2.3.5",
     "esbuild-loader": "^2.13.1",
     "html-webpack-plugin": "^5.3.2",
     "jest": "^27.0.6",
-    "mini-css-extract-plugin": "^1.6.2",
+    "mini-css-extract-plugin": "^2.1.0",
     "prettier": "^2.3.2",
-    "sass": "^1.35.1",
+    "sass": "^1.35.2",
     "sass-loader": "^12.1.0",
     "ts-jest": "^27.0.3",
-    "typescript": "^4.3.4",
-    "vue": "^3.1.2",
+    "typescript": "^4.3.5",
+    "vue": "^3.1.4",
     "vue-loader": "^16.3.0",
     "vue-router": "^4.0.10",
-    "webpack": "^5.41.1",
+    "webpack": "^5.44.0",
     "webpack-cli": "^4.7.2",
     "webpack-dev-server": "^3.11.2"
   },
@@ -47,6 +47,6 @@
     "electron-updater": "^4.3.9",
     "node-abort-controller": "^2.0.0",
     "node-fetch": "^2.6.1",
-    "socket.io-client": "^4.1.2"
+    "socket.io-client": "^4.1.3"
   }
 }
