@@ -13,16 +13,10 @@
   </router-view>
 </template>
 <script lang="ts">
-import { useRouter } from 'vue-router';
-import { argsData, keepAliveData } from './store';
-import { windowBlurFocus } from '@/renderer/utils/window';
+import { keepAliveData } from './store';
 
 export default {
   setup() {
-    windowBlurFocus((envt, args) => {
-      console.log(args);
-    });
-    if (argsData.window.route) useRouter().replace(argsData.window.route);
     return { keepAliveData };
   }
 };

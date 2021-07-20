@@ -1,6 +1,7 @@
 import { IpcRendererEvent, BrowserWindowConstructorOptions } from 'electron';
 import { toRaw } from 'vue';
 import { argsData } from '@/renderer/store';
+import router from '@/renderer/router';
 import { domPropertyLoad } from './dom';
 
 /**
@@ -9,6 +10,10 @@ import { domPropertyLoad } from './dom';
 export async function windowLoad() {
   return new Promise((resolve) =>
     window.ipcFun.once('window-load', async (event, args: Customize) => {
+      router.addRoute({
+        path: '/',
+        redirect: args.route
+      });
       argsData.window = args;
       domPropertyLoad();
       resolve(true);
