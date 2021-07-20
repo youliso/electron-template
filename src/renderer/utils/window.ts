@@ -24,6 +24,20 @@ export function windowUpdate() {
 }
 
 /**
+ * 窗口聚焦失焦监听
+ */
+export function windowBlurFocus(listener: (event: IpcRendererEvent, args: any) => void) {
+  window.ipcFun.on('window-blur-focus', listener);
+}
+
+/**
+ * 关闭窗口聚焦失焦监听
+ */
+export function windowBlurFocusRemove() {
+  window.ipcFun.removeAllListeners('window-blur-focus');
+}
+
+/**
  * 窗口消息监听
  */
 export function windowMessageOn(

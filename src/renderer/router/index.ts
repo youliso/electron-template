@@ -6,7 +6,7 @@ const Router = createRouter({
   history: createWebHashHistory(),
   routes: [
     {
-      path: '/',
+      path: '/home',
       name: 'Home',
       component: () => import('../views/pages/Home.vue')
     },

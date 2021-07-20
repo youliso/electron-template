@@ -127,6 +127,9 @@ export class Window {
     win.webContents.on('did-finish-load', () => {
       win.webContents.send('window-load', win.customize);
     });
+    //聚焦失焦监听
+    win.on('blur', () => win.webContents.send('window-blur-focus', 'blur'));
+    win.on('focus', () => win.webContents.send('window-blur-focus', 'focus'));
     if (!app.isPackaged) {
       //调试模式
       let appPort = '';

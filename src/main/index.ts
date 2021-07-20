@@ -13,7 +13,7 @@ class Init {
   private initWindowOpt: BrowserWindowConstructorOptions = { //初始化创建窗口参数
     customize: {
       isMainWin: true,
-      route: '/'
+      route: '/home'
     }
   };
 
