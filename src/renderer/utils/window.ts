@@ -1,45 +1,33 @@
 import { IpcRendererEvent, BrowserWindowConstructorOptions } from 'electron';
 import { toRaw } from 'vue';
 import { argsData } from '@/renderer/store';
-import router from '@/renderer/router';
-import { domPropertyLoad } from './dom';
 
 /**
  * 窗口初始化 (i)
  * */
-export async function windowLoad() {
-  return new Promise((resolve) =>
-    window.ipcFun.once('window-load', async (event, args: Customize) => {
-      router.addRoute({
-        path: '/',
-        redirect: args.route
-      });
-      argsData.window = args;
-      domPropertyLoad();
-      resolve(true);
-    })
-  );
+export function windowLoad(listener: (event: IpcRendererEvent, args: Customize) => void) {
+  window.ipc.once('window-load', listener);
 }
 
 /**
  * 窗口数据更新
  */
 export function windowUpdate() {
-  window.ipcFun.send('window-update', toRaw(argsData.window));
+  window.ipc.send('window-update', toRaw(argsData.window));
 }
 
 /**
  * 窗口聚焦失焦监听
  */
 export function windowBlurFocus(listener: (event: IpcRendererEvent, args: any) => void) {
-  window.ipcFun.on('window-blur-focus', listener);
+  window.ipc.on('window-blur-focus', listener);
 }
 
 /**
  * 关闭窗口聚焦失焦监听
  */
 export function windowBlurFocusRemove() {
-  window.ipcFun.removeAllListeners('window-blur-focus');
+  window.ipc.removeAllListeners('window-blur-focus');
 }
 
 /**
@@ -49,14 +37,14 @@ export function windowMessageOn(
   channel: string,
   listener: (event: IpcRendererEvent, args: any) => void
 ) {
-  window.ipcFun.on(`window-message-${channel}-back`, listener);
+  window.ipc.on(`window-message-${channel}-back`, listener);
 }
 
 /**
  * 关闭窗口消息监听
  */
 export function windowMessageRemove(channel: string) {
-  window.ipcFun.removeAllListeners(`window-message-${channel}-back`);
+  window.ipc.removeAllListeners(`window-message-${channel}-back`);
 }
 
 /**
@@ -68,7 +56,7 @@ export function windowMessageSend(
   isback: boolean = false, //是否给自身反馈
   acceptIds: number[] = [argsData.window.parentId] //指定窗口id发送
 ) {
-  window.ipcFun.send('window-message-send', {
+  window.ipc.send('window-message-send', {
     channel,
     value,
     isback,
@@ -81,21 +69,21 @@ export function windowMessageSend(
  * 创建窗口
  */
 export function windowCreate(args: BrowserWindowConstructorOptions) {
-  window.ipcFun.send('window-new', args);
+  window.ipc.send('window-new', args);
 }
 
 /**
  * 窗口状态
  */
 export async function windowStatus(id: number, type: windowStatusOpt) {
-  return await window.ipcFun.invoke('window-status', { type, id });
+  return await window.ipc.invoke('window-status', { type, id });
 }
 
 /**
  * 窗口置顶
  */
 export function windowAlwaysOnTop(id: number, is: boolean, type?: windowAlwaysOnTopOpt) {
-  window.ipcFun.send('window-always-top-set', { id, is, type });
+  window.ipc.send('window-always-top-set', { id, is, type });
 }
 
 /**
@@ -107,42 +95,42 @@ export function windowSetSize(
   resizable: boolean = true,
   center: boolean = false
 ) {
-  window.ipcFun.send('window-size-set', { id, size, resizable, center });
+  window.ipc.send('window-size-set', { id, size, resizable, center });
 }
 
 /**
  * 设置窗口最小大小
  */
 export function windowSetMinSize(id: number, size: number[]) {
-  window.ipcFun.send('window-min-size-set', { id, size });
+  window.ipc.send('window-min-size-set', { id, size });
 }
 
 /**
  * 设置窗口最小大小
  */
 export function windowSetMaxSize(id: number, size: number[]) {
-  window.ipcFun.send('window-max-size-set', { id, size });
+  window.ipc.send('window-max-size-set', { id, size });
 }
 
 /**
  * 设置窗口背景颜色
  */
 export function windowSetBackgroundColor(id: number, color?: string) {
-  window.ipcFun.send('window-bg-color-set', { id, color });
+  window.ipc.send('window-bg-color-set', { id, color });
 }
 
 /**
  * 最大化&最小化当前窗口
  */
 export function windowMaxMin(id: number) {
-  window.ipcFun.send('window-max-min-size', id);
+  window.ipc.send('window-max-min-size', id);
 }
 
 /**
  * 关闭窗口 (传id则对应窗口否则全部窗口)
  */
 export function windowClose(id?: number) {
-  window.ipcFun.send('window-fun', { type: 'close', id });
+  window.ipc.send('window-fun', { type: 'close', id });
 }
 
 /**
@@ -150,33 +138,33 @@ export function windowClose(id?: number) {
  * @param time 延迟显示时间
  */
 export function windowShow(id?: number, time: number = 0) {
-  setTimeout(() => window.ipcFun.send('window-fun', { type: 'show', id }), time);
+  setTimeout(() => window.ipc.send('window-fun', { type: 'show', id }), time);
 }
 
 /**
  * 窗口隐藏
  */
 export function windowHide(id?: number) {
-  window.ipcFun.send('window-fun', { type: 'hide', id });
+  window.ipc.send('window-fun', { type: 'hide', id });
 }
 
 /**
  * 最小化窗口 (传id则对应窗口否则全部窗口)
  */
 export function windowMin(id?: number) {
-  window.ipcFun.send('window-fun', { type: 'minimize', id });
+  window.ipc.send('window-fun', { type: 'minimize', id });
 }
 
 /**
  * 最大化窗口 (传id则对应窗口否则全部窗口)
  */
 export function windowMax(id?: number) {
-  window.ipcFun.send('window-fun', { type: 'maximize', id });
+  window.ipc.send('window-fun', { type: 'maximize', id });
 }
 
 /**
  * 通过路由获取窗口id (不传route查全部)
  */
 export function windowIdGet(route?: string): number[] {
-  return window.ipcFun.sendSync('window-id-get', { route });
+  return window.ipc.sendSync('window-id-get', { route });
 }

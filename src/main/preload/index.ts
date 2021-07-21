@@ -1,6 +1,6 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 
-export interface ipcFun {
+export interface Ipc {
   send: (channel: string, args?: any) => void;
   sendSync: (channel: string, args?: any) => any;
   on: (channel: string, listener: (event: IpcRendererEvent, ...args: any[]) => void) => void;
@@ -9,7 +9,7 @@ export interface ipcFun {
   removeAllListeners: (channel: string) => this;
 }
 
-contextBridge.exposeInMainWorld('ipcFun', {
+contextBridge.exposeInMainWorld('ipc', {
   send: (channel: string, args?: any) => ipcRenderer.send(channel, args),
   sendSync: (channel: string, args?: any) => ipcRenderer.sendSync(channel, args),
   on: (channel: string, listener: (event: IpcRendererEvent, ...args: any[]) => void) =>

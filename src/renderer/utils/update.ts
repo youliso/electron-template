@@ -4,14 +4,14 @@ import { IpcRendererEvent } from 'electron';
  * 更新监听
  */
 export function updateOn(listener: (event: IpcRendererEvent, args: any) => void) {
-  window.ipcFun.on('update-back', listener);
+  window.ipc.on('update-back', listener);
 }
 
 /**
  * 关闭监听
  */
 export function updateListenersRemove() {
-  window.ipcFun.removeAllListeners('update-back');
+  window.ipc.removeAllListeners('update-back');
 }
 
 
@@ -21,14 +21,14 @@ export function updateListenersRemove() {
  * @param autoDownload 是否在找到更新时自动下载更新
  */
 export function updateCheck(isDel: boolean = true, autoDownload: boolean = false) {
-  window.ipcFun.send('update-check', { isDel, autoDownload });
+  window.ipc.send('update-check', { isDel, autoDownload });
 }
 
 /**
  * 下载更新 (如果autoDownload选项设置为 false，则可以使用此方法
  */
 export function updateDownload() {
-  window.ipcFun.send('update-download');
+  window.ipc.send('update-download');
 }
 
 /**
@@ -36,5 +36,5 @@ export function updateDownload() {
  * @param isSilent 是否静默更新
  */
 export function updateInstall(isSilent: boolean) {
-  window.ipcFun.send('update-install', isSilent);
+  window.ipc.send('update-install', isSilent);
 }

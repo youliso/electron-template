@@ -6,21 +6,21 @@ import { MakeDirectoryOptions } from 'fs';
  * @param fileName
  */
 export async function fileBySuffix(path: string, fileName: string) {
-  return await window.ipcFun.invoke('file-filebysuffix', { path, fileName });
+  return await window.ipc.invoke('file-filebysuffix', { path, fileName });
 }
 
 /**
  * 创建目录和内部文件
  * */
 export async function mkdir(path: string, options?: MakeDirectoryOptions) {
-  return await window.ipcFun.invoke('file-mkdir', { path, options });
+  return await window.ipc.invoke('file-mkdir', { path, options });
 }
 
 /**
  * 删除目录和内部文件
  * */
 export async function delDir(path: string) {
-  return await window.ipcFun.invoke('file-deldir', { path });
+  return await window.ipc.invoke('file-deldir', { path });
 }
 
 /**
@@ -28,7 +28,7 @@ export async function delDir(path: string) {
  * @return 0 不存在 1 只可读 2 存在可读写
  */
 export async function access(path: string) {
-  return await window.ipcFun.invoke('file-access', { path });
+  return await window.ipc.invoke('file-access', { path });
 }
 
 /**
@@ -36,7 +36,7 @@ export async function access(path: string) {
  * @return 0 失败 1 成功
  */
 export async function rename(path: string, newPath: string) {
-  return await window.ipcFun.invoke('file-rename', { path, newPath });
+  return await window.ipc.invoke('file-rename', { path, newPath });
 }
 
 /**
@@ -48,7 +48,7 @@ export async function readFile(
   path: string,
   options?: { encoding?: BufferEncoding; flag?: string }
 ) {
-  return await window.ipcFun.invoke('file-readfile', { path, options });
+  return await window.ipc.invoke('file-readfile', { path, options });
 }
 
 /**
@@ -57,7 +57,7 @@ export async function readFile(
  * @param index
  */
 export async function readLine(path: string, index?: number): Promise<string | any[]> | null {
-  return await window.ipcFun.invoke('file-readline', { path, index });
+  return await window.ipc.invoke('file-readline', { path, index });
 }
 
 /**
@@ -69,7 +69,7 @@ export async function writeFile(
   data: string | Buffer,
   options?: { encoding?: BufferEncoding; mode?: number | string; flag?: string }
 ) {
-  return await window.ipcFun.invoke('file-writefile', { path, data, options });
+  return await window.ipc.invoke('file-writefile', { path, data, options });
 }
 
 /**
@@ -81,5 +81,5 @@ export async function appendFile(
   data: string | Uint8Array,
   options?: { encoding?: BufferEncoding; mode?: number | string; flag?: string }
 ) {
-  return await window.ipcFun.invoke('file-appendfile', { path, data, options });
+  return await window.ipc.invoke('file-appendfile', { path, data, options });
 }

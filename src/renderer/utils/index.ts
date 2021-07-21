@@ -4,7 +4,7 @@
  * @param value
  */
 export function ipcSend(key: string, value?: unknown) {
-  window.ipcFun.send(key, value);
+  window.ipc.send(key, value);
 }
 
 /**
@@ -12,7 +12,7 @@ export function ipcSend(key: string, value?: unknown) {
  * @param args
  */
 export function logInfo(...args: any) {
-  window.ipcFun.send('log-info', args);
+  window.ipc.send('log-info', args);
 }
 
 /**
@@ -20,7 +20,7 @@ export function logInfo(...args: any) {
  * @param args
  */
 export function logError(...args: any) {
-  window.ipcFun.send('log-error', args);
+  window.ipc.send('log-error', args);
 }
 
 /**
@@ -29,7 +29,7 @@ export function logError(...args: any) {
  * @param value 值
  */
 export function sendGlobal(key: string, value: unknown) {
-  return window.ipcFun.sendSync('global-sharedObject-set', {
+  return window.ipc.sendSync('global-sharedObject-set', {
     key,
     value
   });
@@ -40,7 +40,7 @@ export function sendGlobal(key: string, value: unknown) {
  * @param key 键
  */
 export function getGlobal(key: string) {
-  return window.ipcFun.sendSync('global-sharedObject-get', key);
+  return window.ipc.sendSync('global-sharedObject-get', key);
 }
 
 /**
@@ -48,7 +48,7 @@ export function getGlobal(key: string) {
  * @param path lib/inside为起点的相对路径
  * */
 export function getInsidePath(path: string): string {
-  return window.ipcFun.sendSync('global-insidePath-get', path);
+  return window.ipc.sendSync('global-insidePath-get', path);
 }
 
 /**
@@ -56,19 +56,19 @@ export function getInsidePath(path: string): string {
  * @param path lib/extern为起点的相对路径
  * */
 export function getExternPath(path: string): string {
-  return window.ipcFun.sendSync('global-externPath-get', path);
+  return window.ipc.sendSync('global-externPath-get', path);
 }
 
 /**
  * app常用获取路径
  */
 export function getAppPath(key: string) {
-  return window.ipcFun.sendSync('app-path-get', { key });
+  return window.ipc.sendSync('app-path-get', { key });
 }
 
 /**
  * app打开url
  */
 export function openUrl(url: string) {
-  window.ipcFun.send('app-open-url', { url });
+  window.ipc.send('app-open-url', { url });
 }

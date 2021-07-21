@@ -31,43 +31,28 @@ export function browserWindowInit(args: BrowserWindowConstructorOptions): Browse
   });
   if (opt.customize.parentId) {
     opt.parent = Window.getInstance().get(opt.customize.parentId);
-    opt.customize.currentWidth = opt.parent.getBounds().width;
-    opt.customize.currentHeight = opt.parent.getBounds().height;
+    const currentWH = opt.parent.getBounds();
+    opt.customize.currentWidth = currentWH.width;
+    opt.customize.currentHeight = currentWH.height;
     opt.customize.currentMaximized = opt.parent.isMaximized();
     if (opt.customize.currentMaximized) {
-      opt.x = parseInt(
-        ((screen.getPrimaryDisplay().workAreaSize.width - (opt.width || 0)) / 2).toString()
-      );
-      opt.y = parseInt(
-        ((screen.getPrimaryDisplay().workAreaSize.height - (opt.height || 0)) / 2).toString()
-      );
+      const displayWorkAreaSize = screen.getPrimaryDisplay().workAreaSize;
+      opt.x = Math.round((displayWorkAreaSize.width - (opt.width || 0)) / 2);
+      opt.y = Math.round((displayWorkAreaSize.height - (opt.height || 0)) / 2);
     } else {
-      opt.x = parseInt(
-        (
-          opt.parent.getPosition()[0] +
-          (opt.parent.getBounds().width - (opt.width || opt.customize.currentWidth)) / 2
-        ).toString()
+      const currentPosition = opt.parent.getPosition();
+      opt.x = Math.round(
+        currentPosition[0] + (currentWH.width - (opt.width || opt.customize.currentWidth)) / 2
       );
-      opt.y = parseInt(
-        (
-          opt.parent.getPosition()[1] +
-          (opt.parent.getBounds().height - (opt.height || opt.customize.currentHeight)) / 2
-        ).toString()
+      opt.y = Math.round(
+        currentPosition[1] + (currentWH.height - (opt.height || opt.customize.currentHeight)) / 2
       );
     }
   } else if (Window.getInstance().main) {
-    opt.x = parseInt(
-      (
-        Window.getInstance().main.getPosition()[0] +
-        (Window.getInstance().main.getBounds().width - opt.width) / 2
-      ).toString()
-    );
-    opt.y = parseInt(
-      (
-        Window.getInstance().main.getPosition()[1] +
-        (Window.getInstance().main.getBounds().height - opt.height) / 2
-      ).toString()
-    );
+    const mainPosition = Window.getInstance().main.getPosition();
+    const mainBounds = Window.getInstance().main.getBounds();
+    opt.x = Math.round(mainPosition[0] + (mainBounds.width - opt.width) / 2);
+    opt.y = Math.round(mainPosition[1] + (mainBounds.height - opt.height) / 2);
   }
   const win = new BrowserWindow(opt);
   win.customize = {

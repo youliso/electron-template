@@ -13,13 +13,14 @@
   </router-view>
 </template>
 <script lang="ts">
+import { defineComponent } from 'vue';
 import { keepAliveData } from './store';
 
-export default {
+export default defineComponent({
   setup() {
     return { keepAliveData };
   }
-};
+});
 </script>
 <style lang="scss">
 @import 'views/scss/color';

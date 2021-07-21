@@ -5,7 +5,7 @@ import { CookiesGetFilter, CookiesSetDetails } from 'electron';
  * 键值对 => 域名: Headers
  */
 export function sessionHeadersSet(args: { [key: string]: { [key: string]: string } }) {
-  window.ipcFun.send('session-headers-set', args);
+  window.ipc.send('session-headers-set', args);
 }
 
 /**
@@ -13,7 +13,7 @@ export function sessionHeadersSet(args: { [key: string]: { [key: string]: string
  * @param args
  */
 export function sessionCookiesGet(args: CookiesGetFilter) {
-  return window.ipcFun.invoke('session-cookies-get', args);
+  return window.ipc.invoke('session-cookies-get', args);
 }
 
 /**
@@ -21,7 +21,7 @@ export function sessionCookiesGet(args: CookiesGetFilter) {
  * @param args
  */
 export function sessionCookiesSet(args: CookiesSetDetails) {
-  return window.ipcFun.invoke('session-cookies-set', args);
+  return window.ipc.invoke('session-cookies-set', args);
 }
 
 /**
@@ -30,5 +30,5 @@ export function sessionCookiesSet(args: CookiesSetDetails) {
  * @param name
  */
 export function sessionCookiesRemove(url: string, name: string) {
-  return window.ipcFun.invoke('session-cookies-remove', { url, name });
+  return window.ipc.invoke('session-cookies-remove', { url, name });
 }

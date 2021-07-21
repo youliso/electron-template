@@ -30,15 +30,21 @@ config.win.target = [];
 config.win.target.push({
   //nsis打包
   target: 'nsis',
-  arch: ['x64']
+  arch: ['ia32', 'x64']
 });
 
 //更新配置
 updateConfig.dirname = `${name.toLowerCase()}-updater`;
 let update =
-  'provider: ' + updateConfig.provider + '\n' +
-  'url: ' + updateConfig.url + '\n' +
-  'updaterCacheDirName: ' + updateConfig.dirname + '';
+  'provider: ' +
+  updateConfig.provider +
+  '\n' +
+  'url: ' +
+  updateConfig.url +
+  '\n' +
+  'updaterCacheDirName: ' +
+  updateConfig.dirname +
+  '';
 
 let nsh = '';
 if (config.nsis.allowToChangeInstallationDirectory) {

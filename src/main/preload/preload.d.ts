@@ -1,7 +1,7 @@
-import { ipcFun } from './index';
+import { Ipc } from './index';
 
 declare global {
   interface Window {
-    ipcFun: ipcFun,
+    ipc: Ipc;
   }
 }

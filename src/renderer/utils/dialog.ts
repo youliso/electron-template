@@ -6,5 +6,5 @@ import { OpenDialogOptions } from 'electron';
  * @param params
  */
 export async function openDialog(winId: number, params: OpenDialogOptions) {
-  return window.ipcFun.invoke('open-dialog', { winId, params });
+  return window.ipc.invoke('open-dialog', { winId, params });
 }
