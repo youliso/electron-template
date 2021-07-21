@@ -120,19 +120,19 @@ export class Window {
       try {
         import('fs').then(({ readFileSync }) => {
           const appPort = readFileSync(join('.port'), 'utf8');
-          win.loadURL(`http://localhost:${appPort}`).then().catch(logError);
+          win.loadURL(`http://localhost:${appPort}`).catch(logError);
           win.webContents.openDevTools({ mode: 'detach' });
         });
       } catch (e) {
         throw 'not found .port';
       }
-    } else win.loadFile(join(__dirname, './index.html')).then().catch(logError);
+    } else win.loadFile(join(__dirname, './index.html')).catch(logError);
   }
 
   /**
    * 窗口关闭、隐藏、显示等常用方法
    */
-  func(type: windowFunOpt, id?: number) {
+  func(type: windowFuncOpt, id?: number) {
     switch (type) {
       case 'close':
         if (!isNull(id)) {

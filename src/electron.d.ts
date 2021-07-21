@@ -31,7 +31,7 @@ type windowAlwaysOnTopOpt =
   | 'pop-up-menu'
   | 'screen-saver';
 
-type windowFunOpt =
+type windowFuncOpt =
   | 'close'
   | 'hide'
   | 'show'
