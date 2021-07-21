@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <Head></Head>
-    <div class="info">
+    <div :ref="elDom" class="info">
       <div>hello {{ version }}</div>
       <button @click="toAbout">关于</button>
       <button @click="test">弹个框</button>
@@ -21,12 +21,20 @@ import {
   windowMessageRemove
 } from '@/renderer/utils/window';
 import { getGlobal } from '@/renderer/utils';
+import { menuShow } from '@/renderer/utils/menu';
 export default defineComponent({
   components: {
     Head
   },
   name: 'Home',
   setup() {
+    function elDom(element: HTMLElement) {
+      if (!element) return;
+      element.oncontextmenu = () => {
+        menuShow();
+      };
+    }
+
     windowMessageOn('test', (event: IpcRendererEvent, args: any) => {
       //监听弹框测试
       console.log(args);
@@ -68,6 +76,7 @@ export default defineComponent({
     });
 
     return {
+      elDom,
       test,
       toAbout,
       version: getGlobal('app.version')
