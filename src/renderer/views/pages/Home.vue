@@ -21,14 +21,12 @@ import {
   windowMessageRemove
 } from '@/renderer/utils/window';
 import { getGlobal } from '@/renderer/utils';
-import { useRouter } from 'vue-router';
 export default defineComponent({
   components: {
     Head
   },
   name: 'Home',
   setup() {
-    const router = useRouter();
     windowMessageOn('test', (event: IpcRendererEvent, args: any) => {
       //监听弹框测试
       console.log(args);
@@ -49,8 +47,6 @@ export default defineComponent({
     }
 
     function toAbout() {
-      router.replace('/about');
-      return;
       let data: BrowserWindowConstructorOptions = {
         customize: {
           route: '/about',

@@ -1,28 +1,27 @@
 <template>
-  <div class='container'>
+  <div class="container">
     <Head />
-    <div class='info'>
+    <div class="info">
       <img
-        @click='open'
-        src='https://avatars.githubusercontent.com/u/34784062?s=96&amp;v=4'
-        width='68'
-        height='68'
-        alt='@youliso'
+        @click="open"
+        src="https://avatars.githubusercontent.com/u/34784062?s=96&amp;v=4"
+        width="68"
+        height="68"
+        alt="@youliso"
       />
-      <div @click='open' class='name'>youliso</div>
-      <button @click='toHome'>首页</button>
+      <div @click="open" class="name">youliso</div>
+      <button @click="toHome">首页</button>
     </div>
   </div>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import { BrowserWindowConstructorOptions } from 'electron';
 import { defineComponent, onMounted } from 'vue';
 import Head from '../components/Head.vue';
 import { windowCreate, windowShow } from '@/renderer/utils/window';
 import { argsData } from '@/renderer/store';
 import { openUrl } from '@/renderer/utils';
-import { useRouter } from 'vue-router';
 
 export default defineComponent({
   components: {
@@ -30,14 +29,11 @@ export default defineComponent({
   },
   name: 'About',
   setup() {
-    const router = useRouter();
     function toHome() {
-      router.replace('/');
-      return;
       let data: BrowserWindowConstructorOptions = {
         customize: {
           isMainWin: true,
-          route: '/'
+          route: '/home'
         },
         resizable: true
       };
@@ -60,7 +56,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .info {
   width: 100%;
   height: 100%;

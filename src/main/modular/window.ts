@@ -1,8 +1,7 @@
 import { join } from 'path';
-import { readFileSync } from 'fs';
 import { app, screen, BrowserWindow, ipcMain, BrowserWindowConstructorOptions } from 'electron';
 import { isNull } from '@/lib';
-
+import { logError } from '@/main/modular/log';
 const { appBackgroundColor, appW, appH } = require('@/cfg/index.json');
 
 /**
@@ -103,11 +102,12 @@ export class Window {
     const win = browserWindowInit(args);
     if (win.customize.isMainWin) {
       //是否主窗口
-      if (this.main && !this.main.isDestroyed()) this.main.close();
+      if (this.main && !this.main.isDestroyed()) {
+        this.main.close();
+        delete this.main;
+      }
       this.main = win;
     }
-    // 打开开发者工具
-    if (!app.isPackaged) win.webContents.openDevTools({ mode: 'detach' });
     //注入初始化代码
     win.webContents.on('did-finish-load', () => {
       win.webContents.send('window-load', win.customize);
@@ -117,16 +117,16 @@ export class Window {
     win.on('focus', () => win.webContents.send('window-blur-focus', 'focus'));
     if (!app.isPackaged) {
       //调试模式
-      let appPort = '';
       try {
-        appPort = readFileSync(join('.port'), 'utf8');
+        import('fs').then(({ readFileSync }) => {
+          const appPort = readFileSync(join('.port'), 'utf8');
+          win.loadURL(`http://localhost:${appPort}`).then().catch(logError);
+          win.webContents.openDevTools({ mode: 'detach' });
+        });
       } catch (e) {
         throw 'not found .port';
       }
-      win.loadURL(`http://localhost:${appPort}`).then().catch(console.log);
-      return;
-    }
-    win.loadFile(join(__dirname, './index.html')).then().catch(console.log);
+    } else win.loadFile(join(__dirname, './index.html')).then().catch(logError);
   }
 
   /**
@@ -190,37 +190,32 @@ export class Window {
    * 窗口发送消息
    */
   send(key: string, value: any, id?: number) {
-    if (!isNull(id)) {
-      this.get(id).webContents.send(key, value);
-      return;
-    }
-    for (const i of this.getAll()) if (i) i.webContents.send(key, value);
+    if (!isNull(id)) this.get(id).webContents.send(key, value);
+    else for (const i of this.getAll()) if (i) i.webContents.send(key, value);
   }
 
   /**
    * 窗口状态
    */
   getStatus(type: windowStatusOpt, id: number) {
-    if (isNull(id)) {
-      console.error('Invalid id, the id can not be a empty');
-      return;
-    }
-    switch (type) {
-      case 'isMaximized':
-        return this.get(id).isMaximized();
-      case 'isMinimized':
-        return this.get(id).isMinimized();
-      case 'isFullScreen':
-        return this.get(id).isFullScreen();
-      case 'isAlwaysOnTop':
-        return this.get(id).isAlwaysOnTop();
-      case 'isVisible':
-        return this.get(id).isVisible();
-      case 'isFocused':
-        return this.get(id).isFocused();
-      case 'isModal':
-        return this.get(id).isModal();
-    }
+    if (isNull(id)) console.error('Invalid id, the id can not be a empty');
+    else
+      switch (type) {
+        case 'isMaximized':
+          return this.get(id).isMaximized();
+        case 'isMinimized':
+          return this.get(id).isMinimized();
+        case 'isFullScreen':
+          return this.get(id).isFullScreen();
+        case 'isAlwaysOnTop':
+          return this.get(id).isAlwaysOnTop();
+        case 'isVisible':
+          return this.get(id).isVisible();
+        case 'isFocused':
+          return this.get(id).isFocused();
+        case 'isModal':
+          return this.get(id).isModal();
+      }
   }
 
   /**
@@ -242,30 +237,23 @@ export class Window {
    */
   setSize(args: { id: number; size: number[]; resizable: boolean; center: boolean }) {
     let Rectangle: { [key: string]: number } = {
-      width: parseInt(args.size[0].toString()),
-      height: parseInt(args.size[1].toString())
+      width: Math.round(args.size[0]),
+      height: Math.round(args.size[1])
     };
-    let window = this.get(args.id);
-    if (
-      Rectangle.width === window.getBounds().width &&
-      Rectangle.height === window.getBounds().height
-    ) {
-      return;
-    }
+    const win = this.get(args.id);
+    const winBounds = win.getBounds();
+    const winPosition = win.getPosition();
+    if (Rectangle.width === winBounds.width && Rectangle.height === winBounds.height) return;
     if (!args.center) {
-      Rectangle.x = parseInt(
-        (window.getPosition()[0] + (window.getBounds().width - args.size[0]) / 2).toString()
-      );
-      Rectangle.y = parseInt(
-        (window.getPosition()[1] + (window.getBounds().height - args.size[1]) / 2).toString()
-      );
+      Rectangle.x = Math.round(winPosition[0] + (winBounds.width - args.size[0]) / 2);
+      Rectangle.y = Math.round(winPosition[1] + (winBounds.height - args.size[1]) / 2);
     }
-    window.once('resize', () => {
-      if (args.center) window.center();
+    win.once('resize', () => {
+      if (args.center) win.center();
     });
-    window.setResizable(args.resizable);
-    window.setMinimumSize(Rectangle.width, Rectangle.height);
-    window.setBounds(Rectangle);
+    win.setResizable(args.resizable);
+    win.setMinimumSize(Rectangle.width, Rectangle.height);
+    win.setBounds(Rectangle);
   }
 
   /**
