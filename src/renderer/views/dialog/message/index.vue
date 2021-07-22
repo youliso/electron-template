@@ -25,7 +25,7 @@ import {
   windowIdGet,
   windowMessageSend
 } from '@/renderer/utils/window';
-import Head from '../components/Head.vue';
+import Head from '@/renderer/views/components/head/index.vue';
 
 export default defineComponent({
   components: {
@@ -69,21 +69,5 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.info {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  padding: 25px 10px 10px;
-
-  .text {
-    word-break: break-all;
-    font: normal 16px sans-serif;
-  }
-
-  .close {
-    position: absolute;
-    right: 5px;
-    bottom: 5px;
-  }
-}
+@import './scss/index';
 </style>

@@ -18,10 +18,10 @@
 <script lang="ts">
 import { BrowserWindowConstructorOptions } from 'electron';
 import { defineComponent, onMounted } from 'vue';
-import Head from '../components/Head.vue';
 import { windowCreate, windowShow } from '@/renderer/utils/window';
 import { argsData } from '@/renderer/store';
 import { openUrl } from '@/renderer/utils';
+import Head from '@/renderer/views/components/head/index.vue';
 
 export default defineComponent({
   components: {
@@ -57,17 +57,5 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.info {
-  width: 100%;
-  height: 100%;
-  padding: 45px 10px 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  > .name {
-    padding: 10px 0;
-    font: bold 18px/18px normal;
-  }
-}
+@import './scss/index';
 </style>

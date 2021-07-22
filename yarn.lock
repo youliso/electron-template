@@ -7268,10 +7268,10 @@ truncate-utf8-bytes@^1.0.0:
   dependencies:
     utf8-byte-length "^1.0.1"
 
-ts-jest@^27.0.3:
-  version "27.0.3"
-  resolved "https://registry.nlark.com/ts-jest/download/ts-jest-27.0.3.tgz?cache=0&sync_timestamp=1622996051675&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fts-jest%2Fdownload%2Fts-jest-27.0.3.tgz#808492f022296cde19390bb6ad627c8126bf93f8"
-  integrity sha1-gISS8CIpbN4ZOQu2rWJ8gSa/k/g=
+ts-jest@^27.0.4:
+  version "27.0.4"
+  resolved "https://registry.nlark.com/ts-jest/download/ts-jest-27.0.4.tgz#df49683535831560ccb58f94c023d831b1b80df0"
+  integrity sha1-30loNTWDFWDMtY+UwCPYMbG4DfA=
   dependencies:
     bs-logger "0.x"
     buffer-from "1.x"

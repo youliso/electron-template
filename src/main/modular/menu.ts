@@ -1,24 +1,31 @@
-import { BrowserWindow, ipcMain, Menu, MenuItem, MenuItemConstructorOptions } from 'electron';
+import {
+  BrowserWindow,
+  ipcMain,
+  Menu,
+  nativeImage,
+  MenuItem,
+  MenuItemConstructorOptions
+} from 'electron';
+import { join } from 'path';
+import ico from '@/lib/assets/icon/tray.png';
+import testIcon from '@/lib/assets/icon/test.png';
 
 export class Menus {
-  private menu: Menu = new Menu();
-
-  constructor() {
-  }
+  constructor() {}
 
   /**
    * 监听
    */
   on() {
     ipcMain.on('menu-show', (event) => {
-      const template: Array<(MenuItemConstructorOptions) | (MenuItem)> = [
+      const template: Array<MenuItemConstructorOptions | MenuItem> = [
         {
           label: 'Menu Item 1',
+          icon: nativeImage.createFromPath(join(__dirname, `./${testIcon}`)),
           click: () => {
-            event.sender.send('context-menu-command', 'menu-item-1');
+            event.sender.send('menu-back', 'menu-item-1');
           }
         },
-        { type: 'separator' },
         { label: 'Menu Item 2', type: 'checkbox', checked: true }
       ];
       const menu = Menu.buildFromTemplate(template);
@@ -27,5 +34,4 @@ export class Menus {
       });
     });
   }
-
 }

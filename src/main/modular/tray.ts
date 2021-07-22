@@ -6,7 +6,7 @@ import {
 } from 'electron';
 import { join } from 'path';
 import Window from '@/main/modular/window';
-import ico from '@/lib/assets/tray.png';
+import ico from '@/lib/assets/icon/tray.png';
 
 class Trays {
   private static instance: Trays;

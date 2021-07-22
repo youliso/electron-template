@@ -1,0 +1,13 @@
+.info {
+  width: 100%;
+  height: 100%;
+  padding: 45px 10px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  > .name {
+    padding: 10px 0;
+    font: bold 18px/18px normal;
+  }
+}

@@ -12,7 +12,6 @@
 <script lang="ts">
 import { IpcRendererEvent, BrowserWindowConstructorOptions } from 'electron';
 import { defineComponent, onMounted, onUnmounted } from 'vue';
-import Head from '../components/Head.vue';
 import { argsData } from '@/renderer/store';
 import {
   windowCreate,
@@ -21,7 +20,8 @@ import {
   windowMessageRemove
 } from '@/renderer/utils/window';
 import { getGlobal } from '@/renderer/utils';
-import { menuShow } from '@/renderer/utils/menu';
+import { menuShow, menuOn, menuListenersRemove } from '@/renderer/utils/menu';
+import Head from '@/renderer/views/components/head/index.vue';
 export default defineComponent({
   components: {
     Head
@@ -34,6 +34,10 @@ export default defineComponent({
         menuShow();
       };
     }
+
+    menuOn((event, args) => {
+      console.log(args);
+    });
 
     windowMessageOn('test', (event: IpcRendererEvent, args: any) => {
       //监听弹框测试
@@ -73,6 +77,7 @@ export default defineComponent({
 
     onUnmounted(() => {
       windowMessageRemove('test'); //关闭监听
+      menuListenersRemove();
     });
 
     return {
@@ -86,9 +91,5 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.info {
-  width: 100%;
-  height: 100%;
-  padding: 30px 10px 10px;
-}
+@import './scss/index';
 </style>

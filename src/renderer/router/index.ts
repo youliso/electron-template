@@ -2,25 +2,12 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 import { argsData } from '@/renderer/store';
 import { windowUpdate } from '@/renderer/utils/window';
 
+import pageRoute from '@/renderer/router/modular/page';
+import dialogRoute from '@/renderer/router/modular/dialog';
+
 const Router = createRouter({
   history: createWebHashHistory(),
-  routes: [
-    {
-      path: '/home',
-      name: 'Home',
-      component: () => import('../views/pages/Home.vue')
-    },
-    {
-      path: '/about',
-      name: 'About',
-      component: () => import('../views/pages/About.vue')
-    },
-    {
-      path: '/message',
-      name: 'Message',
-      component: () => import('../views/dialogs/Message.vue')
-    }
-  ]
+  routes: [...pageRoute, ...dialogRoute]
 });
 
 Router.beforeEach((to, from) => {
