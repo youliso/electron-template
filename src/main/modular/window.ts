@@ -36,22 +36,23 @@ export function browserWindowInit(args: BrowserWindowConstructorOptions): Browse
     opt.customize.currentMaximized = opt.parent.isMaximized();
     if (opt.customize.currentMaximized) {
       const displayWorkAreaSize = screen.getPrimaryDisplay().workAreaSize;
-      opt.x = Math.round((displayWorkAreaSize.width - (opt.width || 0)) / 2);
-      opt.y = Math.round((displayWorkAreaSize.height - (opt.height || 0)) / 2);
+      opt.x = ((displayWorkAreaSize.width - (opt.width || 0)) / 2) | 0;
+      opt.y = ((displayWorkAreaSize.height - (opt.height || 0)) / 2) | 0;
     } else {
       const currentPosition = opt.parent.getPosition();
-      opt.x = Math.round(
-        currentPosition[0] + (currentWH.width - (opt.width || opt.customize.currentWidth)) / 2
-      );
-      opt.y = Math.round(
-        currentPosition[1] + (currentWH.height - (opt.height || opt.customize.currentHeight)) / 2
-      );
+      opt.x =
+        (currentPosition[0] + (currentWH.width - (opt.width || opt.customize.currentWidth)) / 2) |
+        0;
+      opt.y =
+        (currentPosition[1] +
+          (currentWH.height - (opt.height || opt.customize.currentHeight)) / 2) |
+        0;
     }
   } else if (Window.getInstance().main) {
     const mainPosition = Window.getInstance().main.getPosition();
     const mainBounds = Window.getInstance().main.getBounds();
-    opt.x = Math.round(mainPosition[0] + (mainBounds.width - opt.width) / 2);
-    opt.y = Math.round(mainPosition[1] + (mainBounds.height - opt.height) / 2);
+    opt.x = (mainPosition[0] + (mainBounds.width - opt.width) / 2) | 0;
+    opt.y = (mainPosition[1] + (mainBounds.height - opt.height) / 2) | 0;
   }
   const win = new BrowserWindow(opt);
   win.customize = {
@@ -237,16 +238,16 @@ export class Window {
    */
   setSize(args: { id: number; size: number[]; resizable: boolean; center: boolean }) {
     let Rectangle: { [key: string]: number } = {
-      width: Math.round(args.size[0]),
-      height: Math.round(args.size[1])
+      width: args.size[0] | 0,
+      height: args.size[1] | 0
     };
     const win = this.get(args.id);
     const winBounds = win.getBounds();
-    const winPosition = win.getPosition();
     if (Rectangle.width === winBounds.width && Rectangle.height === winBounds.height) return;
     if (!args.center) {
-      Rectangle.x = Math.round(winPosition[0] + (winBounds.width - args.size[0]) / 2);
-      Rectangle.y = Math.round(winPosition[1] + (winBounds.height - args.size[1]) / 2);
+      const winPosition = win.getPosition();
+      Rectangle.x = (winPosition[0] + (winBounds.width - args.size[0]) / 2) | 0;
+      Rectangle.y = (winPosition[1] + (winBounds.height - args.size[1]) / 2) | 0;
     }
     win.once('resize', () => {
       if (args.center) win.center();

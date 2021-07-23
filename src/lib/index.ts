@@ -27,17 +27,22 @@ export function swapArr<T>(arr: T[], index1: number, index2: number): void {
 export function dateFormat(fmt: string = 'yyyy-MM-dd'): string {
   let date = new Date();
   let o: { [key: string]: unknown } = {
-    'M+': date.getMonth() + 1,                 //月份
-    'd+': date.getDate(),                    //日
-    'h+': date.getHours(),                   //小时
-    'm+': date.getMinutes(),                 //分
-    's+': date.getSeconds(),                 //秒
+    'M+': date.getMonth() + 1, //月份
+    'd+': date.getDate(), //日
+    'h+': date.getHours(), //小时
+    'm+': date.getMinutes(), //分
+    's+': date.getSeconds(), //秒
     'q+': Math.floor((date.getMonth() + 3) / 3), //季度
-    'S': date.getMilliseconds()             //毫秒
+    S: date.getMilliseconds() //毫秒
   };
-  if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length));
+  if (/(y+)/.test(fmt))
+    fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length));
   for (let k in o)
-    if (new RegExp('(' + k + ')').test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) as string : (('00' + o[k]).substr(('' + o[k]).length)));
+    if (new RegExp('(' + k + ')').test(fmt))
+      fmt = fmt.replace(
+        RegExp.$1,
+        RegExp.$1.length == 1 ? (o[k] as string) : ('00' + o[k]).substr(('' + o[k]).length)
+      );
   return fmt;
 }
 
@@ -70,7 +75,7 @@ export function deepClone(sourceObj: any, targetObj: any) {
  */
 export function debounce(fun: Function, wait: number) {
   let timer: number = null;
-  return function() {
+  return function () {
     if (timer !== null) {
       clearTimeout(timer);
     }
@@ -84,7 +89,7 @@ export function debounce(fun: Function, wait: number) {
 export function throttle(fun: Function, delay: number) {
   let timer: number = null;
   let startTime = Date.now();
-  return function() {
+  return function () {
     let curTime = Date.now();
     let remaining = delay - (curTime - startTime);
     let context = this;
@@ -105,5 +110,5 @@ export function throttle(fun: Function, delay: number) {
  * @param end
  */
 export function random(start: number = 0, end: number = 1) {
-  return Math.floor(Math.random() * (end - start + 1) + start);
+  return (Math.random() * (end - start + 1) + start) | 0;
 }
