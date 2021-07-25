@@ -13,8 +13,8 @@ module.exports = (env) => {
       preload: './src/main/preload/index.ts'
     },
     output: {
-      filename: '[name].bundle.js',
-      chunkFilename: '[id].bundle.js',
+      filename: './js/[name].js',
+      chunkFilename: './js/[id].js',
       path: resolve('dist')
     },
     optimization: {

@@ -21,7 +21,7 @@ export function browserWindowInit(args: BrowserWindowConstructorOptions): Browse
     frame: false,
     show: false,
     webPreferences: {
-      preload: join(__dirname, './preload.bundle.js'),
+      preload: join(__dirname, './preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
       devTools: !app.isPackaged,
@@ -127,7 +127,7 @@ export class Window {
       } catch (e) {
         throw 'not found .port';
       }
-    } else win.loadFile(join(__dirname, './index.html')).catch(logError);
+    } else win.loadFile(join(__dirname, '../index.html')).catch(logError);
   }
 
   /**

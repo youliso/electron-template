@@ -18,8 +18,8 @@ module.exports = (env) => {
       app: './src/renderer/index.ts'
     },
     output: {
-      filename: '[name].bundle.view.js',
-      chunkFilename: '[id].bundle.view.js',
+      filename: './js/[name]v.js',
+      chunkFilename: './js/[id]v.js',
       path: resolve('dist')
     },
     resolve: {
@@ -34,12 +34,13 @@ module.exports = (env) => {
         },
         {
           test: /\.css$/,
-          use: [{
-            loader: miniCssExtractPlugin.loader,
-            options: {
-              publicPath: './'
-            }
-          },
+          use: [
+            {
+              loader: miniCssExtractPlugin.loader,
+              options: {
+                publicPath: '../'
+              }
+            },
             'css-loader'
           ]
         },
@@ -49,7 +50,7 @@ module.exports = (env) => {
             {
               loader: miniCssExtractPlugin.loader,
               options: {
-                publicPath: './'
+                publicPath: '../'
               }
             },
             'css-loader',
@@ -60,8 +61,8 @@ module.exports = (env) => {
     },
     plugins: [
       new miniCssExtractPlugin({
-        filename: '[name].css',
-        chunkFilename: '[id].css'
+        filename: './css/[name].css',
+        chunkFilename: './css/[id].css'
       }),
       new HtmlWebpackPlugin({
         title: name,

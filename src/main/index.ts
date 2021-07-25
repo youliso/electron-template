@@ -2,23 +2,20 @@ import { resolve } from 'path';
 import { app, BrowserWindowConstructorOptions, globalShortcut, ipcMain } from 'electron';
 import { Platforms } from './platform';
 import { logOn, logError } from './modular/log';
-import { fileOn } from './modular/file';
-import { pathOn } from './modular/path';
 import Global from './modular/global';
 import Window from './modular/window';
 import Tray from './modular/tray';
 
 class Init {
-
-  private initWindowOpt: BrowserWindowConstructorOptions = { //初始化创建窗口参数
+  private initWindowOpt: BrowserWindowConstructorOptions = {
+    //初始化创建窗口参数
     customize: {
       isMainWin: true,
       route: '/home'
     }
   };
 
-  constructor() {
-  }
+  constructor() {}
 
   /**
    * 初始化并加载
@@ -43,9 +40,18 @@ class Init {
       });
     }
     //渲染进程崩溃监听
-    app.on('render-process-gone', (event, webContents, details) => logError('[render-process-gone]', webContents.getTitle(), webContents.getURL(), JSON.stringify(details)));
+    app.on('render-process-gone', (event, webContents, details) =>
+      logError(
+        '[render-process-gone]',
+        webContents.getTitle(),
+        webContents.getURL(),
+        JSON.stringify(details)
+      )
+    );
     //子进程崩溃监听
-    app.on('child-process-gone', (event, details) => logError('[child-process-gone]', JSON.stringify(details)));
+    app.on('child-process-gone', (event, details) =>
+      logError('[child-process-gone]', JSON.stringify(details))
+    );
     //关闭所有窗口退出
     app.on('window-all-closed', () => {
       if (process.platform !== 'darwin') {
@@ -60,8 +66,7 @@ class Init {
     //获得焦点时发出
     app.on('browser-window-focus', () => {
       //关闭刷新
-      globalShortcut.register('CommandOrControl+R', () => {
-      });
+      globalShortcut.register('CommandOrControl+R', () => {});
     });
     //失去焦点时发出
     app.on('browser-window-blur', () => {
@@ -86,13 +91,13 @@ class Init {
    * */
   modular() {
     logOn();
-    fileOn();
-    pathOn();
     Global.on();
     Window.on();
     Tray.on();
 
     //自定义模块
+    import('./modular/file').then(({ fileOn }) => fileOn());
+    import('./modular/path').then(({ pathOn }) => pathOn());
     import('./modular/dialog').then(({ Dialog }) => new Dialog().on());
     import('./modular/menu').then(({ Menus }) => new Menus().on());
     import('./modular/session').then(({ Session }) => new Session().on());

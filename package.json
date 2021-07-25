@@ -3,7 +3,7 @@
   "productName": "demo",
   "version": "1.0.0",
   "description": "electron demo",
-  "main": "dist/main.bundle.js",
+  "main": "dist/js/main.js",
   "author": {
     "name": "youliso",
     "email": "youliso@Hotmail.com"
