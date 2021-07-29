@@ -10,7 +10,7 @@
       <div class="title">
         {{ title }}
       </div>
-      <div class="events">
+      <div v-if='eventShow' class="events">
         <div @click="min" class="event min no-drag cursor-pointer"></div>
         <div @click="maxMin" class="event maxmin no-drag cursor-pointer"></div>
         <div @click="close" class="event close no-drag cursor-pointer"></div>
@@ -27,6 +27,12 @@ import { windowClose, windowMaxMin, windowMin } from '@/renderer/utils/window';
 
 export default defineComponent({
   name: 'Head',
+  props: {
+    eventShow: { // 仅 linux win 生效
+      type: Boolean,
+      default: true
+    }
+  },
   setup() {
     const isMacintosh = computed(() => getGlobal('system.platform') === 'darwin');
 

@@ -1,6 +1,7 @@
 import fetch, { RequestInit, Headers } from 'node-fetch';
 import AbortController from 'node-abort-controller';
 import querystring from 'querystring';
+import { isNull } from '@/lib/index';
 
 const { appUrl } = require('@/cfg/index.json');
 
@@ -9,6 +10,7 @@ export interface NetOpt extends RequestInit {
   isStringify?: boolean; //是否stringify参数（非GET请求使用）
   isHeaders?: boolean; //是否获取headers
   data?: any;
+  body?: any;
   type?: NET_RESPONSE_TYPE; //返回数据类型
 }
 
@@ -29,7 +31,7 @@ export function AbortSignal() {
 /**
  * 错误信息包装
  */
-export function errorReturn(msg: string): { code: number, msg: string } {
+export function errorReturn(msg: string): { code: number; msg: string } {
   return { code: 400, msg };
 }
 
@@ -37,7 +39,7 @@ export function errorReturn(msg: string): { code: number, msg: string } {
  * 超时处理
  * @param outTime
  */
-function timeoutPromise(outTime: number): Promise<{ code: number, msg: string }> {
+function timeoutPromise(outTime: number): Promise<{ code: number; msg: string }> {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       reject(errorReturn('超时'));
@@ -61,32 +63,35 @@ function fetchPromise<T>(url: string, sendData: NetOpt): Promise<T> {
         case NET_RESPONSE_TYPE.TEXT:
           return sendData.isHeaders
             ? {
-              headers: await res.headers,
-              data: await res.text()
-            }
+                headers: await res.headers,
+                data: await res.text()
+              }
             : await res.text();
         case NET_RESPONSE_TYPE.JSON:
           return sendData.isHeaders
             ? {
-              headers: await res.headers,
-              data: await res.json()
-            }
+                headers: await res.headers,
+                data: await res.json()
+              }
             : await res.json();
         case NET_RESPONSE_TYPE.BUFFER:
           return sendData.isHeaders
             ? {
-              headers: await res.headers,
-              data: await res.arrayBuffer()
-            }
+                headers: await res.headers,
+                data: await res.arrayBuffer()
+              }
             : await res.arrayBuffer();
         case NET_RESPONSE_TYPE.BLOB:
           return sendData.isHeaders
             ? {
-              headers: await res.headers,
-              data: await res.blob()
-            }
+                headers: await res.headers,
+                data: await res.blob()
+              }
             : await res.blob();
       }
+    })
+    .catch((err) => {
+      throw new Error(err.statusText);
     });
 }
 
@@ -95,7 +100,10 @@ function fetchPromise<T>(url: string, sendData: NetOpt): Promise<T> {
  * @param url
  * @param param
  */
-export async function net<T>(url: string, param: NetOpt = {}): Promise<T | { code: number, msg: string }> {
+export async function net<T>(
+  url: string,
+  param: NetOpt = {}
+): Promise<T | { code: number; msg: string }> {
   if (url.indexOf('http://') === -1 && url.indexOf('https://') === -1) url = appUrl + url;
   let sendData: NetOpt = {
     isHeaders: param.isHeaders,
@@ -106,7 +114,7 @@ export async function net<T>(url: string, param: NetOpt = {}): Promise<T | { cod
           'Content-type': 'application/json;charset=utf-8',
           authorization: param.authorization || ''
         },
-        param.headers || {}
+        param.headers
       )
     ),
     timeout: param.timeout || 30000,
@@ -114,7 +122,9 @@ export async function net<T>(url: string, param: NetOpt = {}): Promise<T | { cod
     method: param.method || 'GET',
     signal: param.signal || null
   };
-  if (!!param.data) {
+  if (!isNull(param.body)) {
+    sendData.body = param.body;
+  } else if (!isNull(param.data)) {
     if (sendData.method === 'GET') url = `${url}?${querystring.stringify(param.data)}`;
     else
       sendData.body = sendData.isStringify
