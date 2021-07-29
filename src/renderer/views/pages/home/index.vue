@@ -1,15 +1,15 @@
 <template>
-  <div class="container">
-    <Head></Head>
-    <div :ref="elDom" class="info">
+  <div class='container'>
+    <Head />
+    <div :ref='elDom' class='info'>
       <div>hello {{ version }}</div>
-      <button @click="toAbout">关于</button>
-      <button @click="test">弹个框</button>
+      <button @click='toAbout'>关于</button>
+      <button @click='test'>弹个框</button>
     </div>
   </div>
 </template>
 
-<script lang="ts">
+<script lang='ts'>
 import { IpcRendererEvent, BrowserWindowConstructorOptions } from 'electron';
 import { defineComponent, onMounted, onUnmounted } from 'vue';
 import { argsData } from '@/renderer/store';
@@ -22,6 +22,7 @@ import {
 import { getGlobal } from '@/renderer/utils';
 import { menuShow, menuOn, menuListenersRemove } from '@/renderer/utils/menu';
 import Head from '@/renderer/views/components/head/index.vue';
+
 export default defineComponent({
   components: {
     Head
@@ -90,6 +91,6 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang='scss' scoped>
 @import './scss/index';
 </style>

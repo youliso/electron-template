@@ -1,19 +1,19 @@
 <template>
-  <div class="container">
+  <div class='container'>
     <Head />
-    <div class="info">
-      <div class="text">
+    <div class='info'>
+      <div class='text'>
         <div>创建传参: {{ data.text }}</div>
         <div>app启动参数: {{ argv }}</div>
       </div>
-      <button @click="test">测试通讯</button>
-      <button @click="test1">测试获取路由id</button>
-      <button class="close" @click="close">确定</button>
+      <button @click='test'>测试通讯</button>
+      <button @click='test1'>测试获取路由id</button>
+      <button class='close' @click='close'>确定</button>
     </div>
   </div>
 </template>
 
-<script lang="ts">
+<script lang='ts'>
 import { defineComponent, onMounted } from 'vue';
 import { argsData } from '@/renderer/store';
 import { getGlobal } from '@/renderer/utils';
@@ -68,6 +68,6 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang='scss' scoped>
 @import './scss/index';
 </style>

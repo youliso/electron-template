@@ -1,21 +1,21 @@
 <template>
-  <div class="container">
+  <div class='container'>
     <Head />
-    <div class="info">
+    <div class='info'>
       <img
-        @click="open"
-        src="https://avatars.githubusercontent.com/u/34784062?s=96&amp;v=4"
-        width="68"
-        height="68"
-        alt="@youliso"
+        @click='open'
+        src='https://avatars.githubusercontent.com/u/34784062?s=96&amp;v=4'
+        width='68'
+        height='68'
+        alt='@youliso'
       />
-      <div @click="open" class="name">youliso</div>
-      <button @click="toHome">首页</button>
+      <div @click='open' class='name'>youliso</div>
+      <button @click='toHome'>首页</button>
     </div>
   </div>
 </template>
 
-<script lang="ts">
+<script lang='ts'>
 import { BrowserWindowConstructorOptions } from 'electron';
 import { defineComponent, onMounted } from 'vue';
 import { windowCreate, windowShow } from '@/renderer/utils/window';
@@ -56,6 +56,6 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang='scss' scoped>
 @import './scss/index';
 </style>
