@@ -26,7 +26,7 @@
 }
 
 @font-face {
-  font-family: ping-fang;
+  font-family: 'PingFang SC';
   src: url('~@/lib/assets/fonts/PingFang-SC-Regular.ttf');
 }
 
@@ -39,14 +39,14 @@ body {
   background-color: transparent;
   position: relative;
   user-select: none;
-  font-family: ping-fang;
+  font-family: 'PingFang SC';
 }
 
 a,
 button,
 select,
 input {
-  font-family: ping-fang;
+  font-family: 'PingFang SC';
 }
 
 .bg-img {
@@ -63,10 +63,6 @@ input {
   -webkit-app-region: no-drag;
 }
 
-.cursor-pointer {
-  cursor: pointer;
-}
-
 .user-select-text {
   user-select: text;
 }
@@ -75,19 +71,18 @@ input {
   width: 100%;
   height: 100%;
   background-color: transparent;
-}
-
-.container {
-  overflow: hidden;
-  width: 100%;
-  height: 100%;
-  background-color: var(--white);
-  color: var(--black);
+  >.container {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    background-color: var(--white);
+    color: var(--black);
+  }
 }
 
 .win32,
 .linux {
-  .container {
+  >#app >.container {
     border: 1px solid var(--platform-theme-color);
   }
 }

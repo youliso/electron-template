@@ -11,9 +11,9 @@
         {{ title }}
       </div>
       <div v-if='eventShow' class="events">
-        <div @click="min" class="event min no-drag cursor-pointer"></div>
-        <div @click="maxMin" class="event maxmin no-drag cursor-pointer"></div>
-        <div @click="close" class="event close no-drag cursor-pointer"></div>
+        <div @click="min" class="event min no-drag"></div>
+        <div @click="maxMin" class="event max-min no-drag"></div>
+        <div @click="close" class="event close no-drag"></div>
       </div>
     </div>
   </div>

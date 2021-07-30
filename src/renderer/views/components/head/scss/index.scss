@@ -46,26 +46,21 @@
         width: 15px;
         height: 15px;
         margin-left: 5px;
-      }
-
-      > .event:hover {
-        opacity: 0.9;
-      }
-
-      > .event:active {
-        opacity: 0.7;
-      }
-
-      > .close {
-        background-color: var(--red);
-      }
-
-      .min {
-        background-color: var(--grey);
-      }
-
-      .maxmin {
-        background-color: var(--cyan);
+        &:hover{
+          opacity: 0.9;
+        }
+        &:active {
+          opacity: 0.7;
+        }
+        &.close {
+          background-color: var(--red);
+        }
+        &.min {
+          background-color: var(--grey);
+        }
+        &.max-min {
+          background-color: var(--cyan);
+        }
       }
     }
   }

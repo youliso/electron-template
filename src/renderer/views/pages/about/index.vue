@@ -1,7 +1,7 @@
 <template>
   <div class='container'>
     <Head />
-    <div class='info'>
+    <div class='about-info'>
       <img
         @click='open'
         src='https://avatars.githubusercontent.com/u/34784062?s=96&amp;v=4'

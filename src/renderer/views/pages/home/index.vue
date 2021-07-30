@@ -1,7 +1,7 @@
 <template>
   <div class='container'>
     <Head />
-    <div :ref='elDom' class='info'>
+    <div :ref='elDom' class='home-info'>
       <div>hello {{ version }}</div>
       <button @click='toAbout'>关于</button>
       <button @click='toBaidu'>打开baidu</button>

@@ -1,7 +1,7 @@
 <template>
   <div class='container'>
     <Head />
-    <div class='info'>
+    <div class='message-info'>
       <div class='text'>
         <div>创建传参: {{ data.text }}</div>
         <div>app启动参数: {{ argv }}</div>
