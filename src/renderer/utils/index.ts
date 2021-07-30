@@ -11,7 +11,7 @@ export function ipcSend(key: string, value?: unknown) {
  * 日志(info)
  * @param args
  */
-export function logInfo(...args: any) {
+export function logInfo(...args: any): void {
   window.ipc.send('log-info', args);
 }
 
@@ -19,7 +19,7 @@ export function logInfo(...args: any) {
  * 日志(error)
  * @param args
  */
-export function logError(...args: any) {
+export function logError(...args: any): void {
   window.ipc.send('log-error', args);
 }
 
@@ -39,7 +39,7 @@ export function sendGlobal(key: string, value: unknown) {
  * 获取全局参数
  * @param key 键
  */
-export function getGlobal(key: string) {
+export function getGlobal<T>(key: string): T {
   return window.ipc.sendSync('global-sharedObject-get', key);
 }
 
@@ -62,13 +62,13 @@ export function getExternPath(path: string): string {
 /**
  * app常用获取路径
  */
-export function getAppPath(key: string) {
+export function getAppPath(key: string): string {
   return window.ipc.sendSync('app-path-get', { key });
 }
 
 /**
  * app打开url
  */
-export function openUrl(url: string) {
+export function openUrl(url: string): void {
   window.ipc.send('app-open-url', { url });
 }

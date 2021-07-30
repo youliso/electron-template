@@ -31,8 +31,8 @@ export function AbortSignal() {
 /**
  * 错误信息包装
  */
-export function errorReturn(msg: string): { code: number; msg: string } {
-  return { code: 400, msg };
+export function errorReturn(msg: Error): { code: number; msg: string } {
+  return { code: 400, msg: msg.message };
 }
 
 /**
@@ -42,7 +42,7 @@ export function errorReturn(msg: string): { code: number; msg: string } {
 function timeoutPromise(outTime: number): Promise<{ code: number; msg: string }> {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      reject(errorReturn('超时'));
+      reject(errorReturn(new Error('超时')));
     }, outTime);
   });
 }
@@ -103,7 +103,7 @@ function fetchPromise<T>(url: string, sendData: NetOpt): Promise<T> {
 export async function net<T>(
   url: string,
   param: NetOpt = {}
-): Promise<T | { code: number; msg: string }> {
+): Promise<T & { code: number; msg: string }> {
   if (url.indexOf('http://') === -1 && url.indexOf('https://') === -1) url = appUrl + url;
   let sendData: NetOpt = {
     isHeaders: param.isHeaders,
@@ -132,6 +132,6 @@ export async function net<T>(
         : JSON.stringify(param.data);
   }
   return Promise.race([timeoutPromise(sendData.timeout), fetchPromise<T>(url, sendData)]).catch(
-    (err) => errorReturn(err.message)
-  );
+    errorReturn
+  ) as Promise<T & { code: number; msg: string }>;
 }
