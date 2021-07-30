@@ -135,6 +135,7 @@ export function windowClose(id?: number) {
 
 /**
  * 窗口显示
+ * @param id 窗口id
  * @param time 延迟显示时间
  */
 export function windowShow(id?: number, time: number = 0) {

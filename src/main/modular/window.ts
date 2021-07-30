@@ -63,6 +63,22 @@ export function browserWindowInit(args: BrowserWindowConstructorOptions): Browse
   return win;
 }
 
+/**
+ * 窗口加载
+ */
+function load(win: BrowserWindow, ini: string) {
+  if (!isNull(win.customize.route)) {
+    if (ini.startsWith('http://')) win.loadURL(ini).catch(logError);
+    else win.loadFile(ini).catch(logError);
+  } else if (!isNull(win.customize.file)) {
+    win.once('ready-to-show', () => win.show());
+    win.loadFile(win.customize.file).catch(logError);
+  } else if (!isNull(win.customize.url)) {
+    win.once('ready-to-show', () => win.show());
+    win.loadURL(win.customize.url).catch(logError);
+  } else throw 'not found load';
+}
+
 export class Window {
   private static instance: Window;
 
@@ -130,27 +146,14 @@ export class Window {
         import('fs').then(({ readFileSync }) => {
           const appPort = readFileSync(join('.port'), 'utf8');
           win.webContents.openDevTools({ mode: 'detach' });
-          if (!isNull(win.customize.route))
-            win.loadURL(`http://localhost:${appPort}`).catch(logError);
-          else if (!isNull(win.customize.file)) {
-            win.once('ready-to-show', () => win.show());
-            win.loadFile(win.customize.file).catch(logError);
-          } else if (!isNull(win.customize.url)) {
-            win.once('ready-to-show', () => win.show());
-            win.loadURL(win.customize.url).catch(logError);
-          } else throw 'not found load';
+          load(win, `http://localhost:${appPort}`);
         });
       } catch (e) {
         throw 'not found .port';
       }
       return;
     }
-
-    if (!isNull(win.customize.route))
-      win.loadFile(join(__dirname, '../index.html')).catch(logError);
-    else if (!isNull(win.customize.file)) win.loadFile(win.customize.file).catch(logError);
-    else if (!isNull(win.customize.url)) win.loadURL(win.customize.url).catch(logError);
-    else throw 'not found load';
+    load(win, join(__dirname, '../index.html'));
   }
 
   /**
