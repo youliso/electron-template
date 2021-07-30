@@ -45,9 +45,8 @@ export class Update {
 
   /**
    * 检查更新
-   * @param messageBack 反馈更新状态
    */
-  open(messageBack: Function) {
+  open(callback: Function) {
     const message: { [key: string]: UpdateMessage } = {
       error: { code: 0, msg: '检查更新出错' },
       checking: { code: 1, msg: '正在检查更新' },
@@ -56,17 +55,17 @@ export class Update {
       updateDownload: { code: 4, msg: '下载完成' },
       updateNotAva: { code: 5, msg: '当前为最新版本' }
     };
-    this.autoUpdater.on('error', () => messageBack(message.error));
-    this.autoUpdater.on('checking-for-update', () => messageBack(message.checking));
-    this.autoUpdater.on('update-available', () => messageBack(message.updateAva));
-    this.autoUpdater.on('update-not-available', () => messageBack(message.updateNotAva));
+    this.autoUpdater.on('error', () => callback(message.error));
+    this.autoUpdater.on('checking-for-update', () => callback(message.checking));
+    this.autoUpdater.on('update-available', () => callback(message.updateAva));
+    this.autoUpdater.on('update-not-available', () => callback(message.updateNotAva));
     // 更新下载进度事件
     this.autoUpdater.on('download-progress', (progressObj) => {
       message.updateDown.value = progressObj;
-      messageBack(message.updateDown);
+      callback(message.updateDown);
     });
     // 下载完成事件
-    this.autoUpdater.on('update-downloaded', () => messageBack(message.updateDownload));
+    this.autoUpdater.on('update-downloaded', () => callback(message.updateDownload));
   }
 
   /**

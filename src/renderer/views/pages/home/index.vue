@@ -4,13 +4,14 @@
     <div :ref='elDom' class='info'>
       <div>hello {{ version }}</div>
       <button @click='toAbout'>关于</button>
+      <button @click='toBaidu'>打开baidu</button>
       <button @click='test'>弹个框</button>
     </div>
   </div>
 </template>
 
 <script lang='ts'>
-import { IpcRendererEvent, BrowserWindowConstructorOptions } from 'electron';
+import type { IpcRendererEvent } from 'electron';
 import { defineComponent, onMounted, onUnmounted } from 'vue';
 import { argsData } from '@/renderer/store';
 import {
@@ -46,7 +47,7 @@ export default defineComponent({
     });
 
     function test() {
-      let data: BrowserWindowConstructorOptions = {
+      windowCreate({
         customize: {
           title: '弹框测试',
           route: '/message',
@@ -55,12 +56,11 @@ export default defineComponent({
         },
         modal: true,
         resizable: true
-      };
-      windowCreate(data);
+      });
     }
 
     function toAbout() {
-      let data: BrowserWindowConstructorOptions = {
+      windowCreate({
         customize: {
           route: '/about',
           isMainWin: true
@@ -68,8 +68,19 @@ export default defineComponent({
         width: 300,
         height: 300,
         resizable: true
-      };
-      windowCreate(data);
+      });
+    }
+
+    function toBaidu() {
+      windowCreate({
+        customize: {
+          url: 'https://baidu.com',
+          parentId: argsData.window.id
+        },
+        width: 800,
+        height: 600,
+        resizable: true
+      });
     }
 
     onMounted(() => {
@@ -85,6 +96,7 @@ export default defineComponent({
       elDom,
       test,
       toAbout,
+      toBaidu,
       version: getGlobal('app.version')
     };
   }

@@ -5,16 +5,9 @@ import { isNull } from '@/lib';
 import { io, Socket as SocketIo } from 'socket.io-client';
 import { ManagerOptions } from 'socket.io-client/build/manager';
 import { SocketOptions } from 'socket.io-client/build/socket';
+import { logError } from '@/main/modular/log';
 
 const { socketUrl } = require('@/cfg/index.json');
-
-
-export enum SOCKET_MSG_TYPE {
-  ERROR,
-  SUCCESS,
-  INIT,
-  CLOSE
-}
 
 /**
  * Socket模块
@@ -28,28 +21,38 @@ export class Socket {
    * url https://socket.io/docs/v3/client-api/#new-Manager-url-options
    */
   public opts: Partial<ManagerOptions & SocketOptions> = {
+    path: '/io',
     auth: {
-      authorization: Global.sharedObject['authorization']
+      authorization: Global.getGlobal<string>('authorization')
     }
   };
 
-  constructor() {
-  }
+  constructor() {}
 
   /**
    * 开启通讯
    */
   open(callback: Function) {
+    const message: { [key: string]: SocketMessage } = {
+      connect: { code: 0, msg: '已连接' },
+      disconnect: { code: 1, msg: '已断开' },
+      close: { code: 2, msg: '已关闭' },
+      error: { code: 3 },
+      value: { code: 4 }
+    };
     this.io = io(socketUrl, this.opts);
-    this.io.on('connect', () => {
-      console.log('[Socket]connect');
+    this.io.on('connect', () => callback(message.connect));
+    this.io.on('disconnect', () => callback(message.disconnect));
+    this.io.on('message', (data) => {
+      message.value.value = data;
+      callback(message.value);
     });
-    this.io.on('disconnect', () => {
-      console.log('[Socket]disconnect');
+    this.io.on('error', (err) => {
+      message.error.msg = err;
+      callback(message.error);
+      logError(err);
     });
-    this.io.on('message', (data: { key: string; value: any; }) => callback(data));
-    this.io.on('error', (data: any) => console.log(`[Socket]error ${data.toString()}`));
-    this.io.on('close', () => console.log('[Socket]close'));
+    this.io.on('close', () => callback(message.close));
   }
 
   /**
@@ -78,17 +81,17 @@ export class Socket {
    */
   on() {
     //设置opts
-    ipcMain.on('socket-setopts', async (event, args) => this.opts = args);
+    ipcMain.on('socket-setopts', async (event, args) => (this.opts = args));
     //重新连接
     ipcMain.on('socket-reconnection', async () => this.reconnection());
     //关闭
     ipcMain.on('socket-close', async () => this.close());
     //打开socket
     ipcMain.on('socket-open', async () => {
-      if (isNull(this.io)) this.open((data: { key: string; value: any; }) => Window.send('socket-back', data));
+      if (isNull(this.io))
+        this.open((data: { key: string; value: any }) => Window.send('socket-back', data));
     });
     //发送消息
     ipcMain.on('socket-send', (event, args) => this.send(args));
   }
-
 }

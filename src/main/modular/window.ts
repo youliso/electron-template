@@ -2,6 +2,7 @@ import { join } from 'path';
 import { app, screen, BrowserWindow, ipcMain, BrowserWindowConstructorOptions } from 'electron';
 import { isNull } from '@/lib';
 import { logError } from '@/main/modular/log';
+
 const { appBackgroundColor, appW, appH } = require('@/cfg/index.json');
 
 /**
@@ -18,7 +19,7 @@ export function browserWindowInit(args: BrowserWindowConstructorOptions): Browse
     titleBarStyle: 'hidden',
     minimizable: true,
     maximizable: true,
-    frame: false,
+    frame: isNull(args.customize.route),
     show: false,
     webPreferences: {
       preload: join(__dirname, './preload.js'),
@@ -95,7 +96,13 @@ export class Window {
    * */
   create(args: BrowserWindowConstructorOptions) {
     for (const i of this.getAll()) {
-      if (i && i.customize.route === args.customize.route && !i.customize.isMultiWindow) {
+      if (
+        i &&
+        !i.customize.isMultiWindow &&
+        ((args.customize.route && args.customize.route === i.customize.route) ||
+          (args.customize.file && args.customize.file === i.customize.file) ||
+          (args.customize.url && args.customize.url === i.customize.url))
+      ) {
         i.focus();
         return;
       }
@@ -109,25 +116,41 @@ export class Window {
       }
       this.main = win;
     }
-    //注入初始化代码
+    // 注入初始化代码
     win.webContents.on('did-finish-load', () => {
       win.webContents.send('window-load', win.customize);
     });
-    //聚焦失焦监听
+    // 聚焦失焦监听
     win.on('blur', () => win.webContents.send('window-blur-focus', 'blur'));
     win.on('focus', () => win.webContents.send('window-blur-focus', 'focus'));
+    // 路由 > html文件 > 网页
     if (!app.isPackaged) {
       //调试模式
       try {
         import('fs').then(({ readFileSync }) => {
           const appPort = readFileSync(join('.port'), 'utf8');
-          win.loadURL(`http://localhost:${appPort}`).catch(logError);
           win.webContents.openDevTools({ mode: 'detach' });
+          if (!isNull(win.customize.route))
+            win.loadURL(`http://localhost:${appPort}`).catch(logError);
+          else if (!isNull(win.customize.file)) {
+            win.once('ready-to-show', () => win.show());
+            win.loadFile(win.customize.file).catch(logError);
+          } else if (!isNull(win.customize.url)) {
+            win.once('ready-to-show', () => win.show());
+            win.loadURL(win.customize.url).catch(logError);
+          } else throw 'not found load';
         });
       } catch (e) {
         throw 'not found .port';
       }
-    } else win.loadFile(join(__dirname, '../index.html')).catch(logError);
+      return;
+    }
+
+    if (!isNull(win.customize.route))
+      win.loadFile(join(__dirname, '../index.html')).catch(logError);
+    else if (!isNull(win.customize.file)) win.loadFile(win.customize.file).catch(logError);
+    else if (!isNull(win.customize.url)) win.loadURL(win.customize.url).catch(logError);
+    else throw 'not found load';
   }
 
   /**

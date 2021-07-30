@@ -1,14 +1,28 @@
 interface Customize {
-  id?: number; //唯一id
-  title?: string; //标题
-  route: string; // 页面路由
-  currentWidth?: number; //父类窗口宽度
-  currentHeight?: number; //父类窗口高度
-  currentMaximized?: boolean; //父类窗口是否全屏
-  data?: any; //数据
-  isMultiWindow?: boolean; //是否支持多窗口
-  isMainWin?: boolean; //是否主窗口(当为true时会替代当前主窗口)
-  parentId?: number; //父窗口id
+  // 唯一id
+  id?: number;
+  // 标题 (仅路由下生效)
+  title?: string;
+  // 指定路由
+  route?: string;
+  // 指定网页
+  url?: string;
+  // 指定html文件
+  file?: string;
+  // 父类窗口宽度
+  currentWidth?: number;
+  // 父类窗口高度
+  currentHeight?: number;
+  // 父类窗口是否全屏
+  currentMaximized?: boolean;
+  // 数据(仅路由下生效)
+  data?: any;
+  // 是否支持多窗口
+  isMultiWindow?: boolean;
+  // 是否主窗口(当为true时会替代当前主窗口)
+  isMainWin?: boolean;
+  // 父窗口id
+  parentId?: number;
 }
 
 declare namespace Electron {
@@ -45,5 +59,11 @@ type windowStatusOpt =
 interface UpdateMessage {
   code: number;
   msg: string;
+  value?: any;
+}
+
+interface SocketMessage {
+  code: number;
+  msg?: string;
   value?: any;
 }
