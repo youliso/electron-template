@@ -3,7 +3,7 @@ import { IpcRendererEvent } from 'electron';
 /**
  * 更新监听
  */
-export function updateOn(listener: (event: IpcRendererEvent, args: any) => void) {
+export function updateOn(listener: (event: IpcRendererEvent, args: UpdateMessage) => void) {
   window.ipc.on('update-back', listener);
 }
 
@@ -13,7 +13,6 @@ export function updateOn(listener: (event: IpcRendererEvent, args: any) => void)
 export function updateListenersRemove() {
   window.ipc.removeAllListeners('update-back');
 }
-
 
 /**
  * 检查更新

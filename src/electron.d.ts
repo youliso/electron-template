@@ -31,14 +31,7 @@ type windowAlwaysOnTopOpt =
   | 'pop-up-menu'
   | 'screen-saver';
 
-type windowFuncOpt =
-  | 'close'
-  | 'hide'
-  | 'show'
-  | 'minimize'
-  | 'maximize'
-  | 'restore'
-  | 'reload';
+type windowFuncOpt = 'close' | 'hide' | 'show' | 'minimize' | 'maximize' | 'restore' | 'reload';
 
 type windowStatusOpt =
   | 'isMaximized'
@@ -48,3 +41,9 @@ type windowStatusOpt =
   | 'isVisible'
   | 'isFocused'
   | 'isModal';
+
+interface UpdateMessage {
+  code: number;
+  msg: string;
+  value?: any;
+}

@@ -40,8 +40,7 @@ export class Update {
     );
     try {
       delDir(updatePendingPath);
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   /**
@@ -49,11 +48,11 @@ export class Update {
    * @param messageBack 反馈更新状态
    */
   open(messageBack: Function) {
-    let message = {
+    const message: { [key: string]: UpdateMessage } = {
       error: { code: 0, msg: '检查更新出错' },
       checking: { code: 1, msg: '正在检查更新' },
       updateAva: { code: 2, msg: '检测到新版本' },
-      updateDown: { code: 3, value: '', msg: '下载中' },
+      updateDown: { code: 3, msg: '下载中' },
       updateDownload: { code: 4, msg: '下载完成' },
       updateNotAva: { code: 5, msg: '当前为最新版本' }
     };
@@ -78,7 +77,7 @@ export class Update {
   checkUpdate(isDel: boolean, autoDownload: boolean = false) {
     if (isDel) this.handleUpdate();
     this.autoUpdater.autoDownload = autoDownload;
-    this.autoUpdater.checkForUpdates().catch();
+    this.autoUpdater.checkForUpdates().catch(logError);
   }
 
   /**

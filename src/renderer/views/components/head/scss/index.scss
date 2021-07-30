@@ -39,13 +39,13 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-right: 10px;
+      padding-right: 5px;
 
       > .event {
         clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
         width: 15px;
         height: 15px;
-        margin-left: 4px;
+        margin-left: 5px;
       }
 
       > .event:hover {
