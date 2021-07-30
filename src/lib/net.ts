@@ -111,7 +111,7 @@ export async function net<T>(
     headers: new Headers(
       Object.assign(
         {
-          'Content-type': 'application/json;charset=utf-8',
+          'content-type': 'application/json;charset=utf-8',
           authorization: param.authorization || ''
         },
         param.headers
