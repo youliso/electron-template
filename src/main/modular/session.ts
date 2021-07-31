@@ -3,36 +3,34 @@ import { ipcMain, session, CookiesGetFilter, CookiesSetDetails } from 'electron'
 /**
  * 监听
  */
-export class Session {
-
+export default class Session {
   /**
    * 头部 headers
    * 键值对 => 域名: Headers
    */
   public urlHeaders: { [key: string]: { [key: string]: string } } = {};
 
-  constructor() {
-  }
+  constructor() {}
 
   /**
    * 拦截指定http/https请求并更换、增加headers
    */
   webRequest() {
-    session.defaultSession.webRequest.onBeforeSendHeaders({
-      urls: [
-        'http://*/*',
-        'https://*/*'
-      ]
-    }, (details, callback) => {
-      const urls = Object.keys(this.urlHeaders);
-      const keys = urls.filter((key: string) => details.url.indexOf(key) === 0);
-      for (let key of keys) {
-        for (let v in this.urlHeaders[key]) {
-          details.requestHeaders[v] = this.urlHeaders[key][v];
+    session.defaultSession.webRequest.onBeforeSendHeaders(
+      {
+        urls: ['http://*/*', 'https://*/*']
+      },
+      (details, callback) => {
+        const urls = Object.keys(this.urlHeaders);
+        const keys = urls.filter((key: string) => details.url.indexOf(key) === 0);
+        for (let key of keys) {
+          for (let v in this.urlHeaders[key]) {
+            details.requestHeaders[v] = this.urlHeaders[key][v];
+          }
         }
+        callback({ requestHeaders: details.requestHeaders });
       }
-      callback({ requestHeaders: details.requestHeaders });
-    });
+    );
   }
 
   /**
@@ -84,7 +82,8 @@ export class Session {
     //获取 Cookies
     ipcMain.handle('session-cookies-get', async (event, args) => this.getCookies(args));
     //移除 Cookies
-    ipcMain.handle('session-cookies-remove', async (event, args) => this.removeCookies(args.url, args.name));
+    ipcMain.handle('session-cookies-remove', async (event, args) =>
+      this.removeCookies(args.url, args.name)
+    );
   }
-
 }

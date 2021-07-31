@@ -12,7 +12,7 @@ const { socketUrl } = require('@/cfg/index.json');
 /**
  * Socket模块
  * */
-export class Socket {
+export default class Socket {
   public io: SocketIo;
 
   /**

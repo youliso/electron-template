@@ -1,6 +1,6 @@
 import { dialog, ipcMain } from 'electron';
 import Window from './window';
-export class Dialog {
+export default class Dialog {
   constructor() {}
   /**
    * 监听

@@ -11,7 +11,7 @@ const updateCfg = require('@/cfg/update.json');
 /**
  * 更新模块 https://www.electron.build/auto-update
  * */
-export class Update {
+export default class Update {
   public autoUpdater: AppUpdater;
 
   constructor() {

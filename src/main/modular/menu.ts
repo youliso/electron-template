@@ -9,7 +9,7 @@ import {
 import { join } from 'path';
 import testIcon from '@/lib/assets/icon/test.png';
 
-export class Menus {
+export default class Menus {
   constructor() {}
 
   /**
