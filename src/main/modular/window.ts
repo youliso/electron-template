@@ -1,5 +1,6 @@
 import { join } from 'path';
-import { app, screen, BrowserWindow, ipcMain, BrowserWindowConstructorOptions } from 'electron';
+import type { BrowserWindowConstructorOptions } from 'electron';
+import { app, screen, ipcMain, BrowserWindow } from 'electron';
 import { isNull } from '@/lib';
 import { logError } from '@/main/modular/log';
 
@@ -81,6 +82,14 @@ function load(win: BrowserWindow, ini: string) {
 
 export class Window {
   private static instance: Window;
+
+  private initWindowOpt: BrowserWindowConstructorOptions = {
+    //初始化创建窗口参数
+    customize: {
+      isMainWin: true,
+      route: '/home'
+    }
+  };
 
   public main: BrowserWindow = null; //当前主页
 

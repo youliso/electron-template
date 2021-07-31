@@ -1,4 +1,4 @@
-import { app, ipcMain, shell } from 'electron';
+import { app, ipcMain } from 'electron';
 import { accessSync, constants } from 'fs';
 import { resolve, normalize } from 'path';
 import { EOL } from 'os';
@@ -38,21 +38,12 @@ export class Global {
     return Global.instance;
   }
 
-  constructor() {
-  }
+  constructor() {}
 
   /**
    * 开启监听
    */
   on() {
-    //app常用获取路径
-    ipcMain.on('app-path-get', (event, args) => {
-      event.returnValue = app.getPath(args.key);
-    });
-    //app打开外部url
-    ipcMain.on('app-open-url', (event, args) => {
-      shell.openExternal(args.url).then();
-    });
     //赋值(sharedObject)
     ipcMain.on('global-sharedObject-set', (event, args) => {
       this.sendGlobal(args.key, args.value);
@@ -137,9 +128,11 @@ export class Global {
    * */
   getInsidePath(path: string): string {
     try {
-      path = normalize(app.isPackaged
-        ? resolve(__dirname, '../inside/' + path)
-        : resolve('./src/lib/inside/' + path));
+      path = normalize(
+        app.isPackaged
+          ? resolve(__dirname, '../inside/' + path)
+          : resolve('./src/lib/inside/' + path)
+      );
       accessSync(path, constants.R_OK);
       return path;
     } catch (e) {
@@ -153,9 +146,11 @@ export class Global {
    * */
   getExternPath(path: string): string {
     try {
-      path = normalize(app.isPackaged
-        ? resolve(__dirname, '../../extern/' + path)
-        : resolve('./src/lib/extern/' + path));
+      path = normalize(
+        app.isPackaged
+          ? resolve(__dirname, '../../extern/' + path)
+          : resolve('./src/lib/extern/' + path)
+      );
       accessSync(path, constants.R_OK);
       return path;
     } catch (e) {
