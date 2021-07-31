@@ -4,7 +4,7 @@ import { getGlobal } from './';
  * 页面初始化加载
  */
 export function domPropertyLoad() {
-  let accent = getGlobal('app.dom');
+  const accent = getGlobal<{ [key: string]: string[] & { [key: string]: string } }>('app.dom');
   for (let i in accent) {
     if (i === 'class') {
       domClassPropertySet(accent[i].join(' '));

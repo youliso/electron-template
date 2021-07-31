@@ -51,6 +51,20 @@ export function delDir(path: string): void {
 }
 
 /**
+ * 删除文件
+ * @param path
+ */
+export function unlink(path: string) {
+  if (path.substr(0, 1) !== '/' && path.indexOf(':') === -1) path = resolve(path);
+  return new Promise((resolve) =>
+    fs.unlink(path, (err) => {
+      if (err) resolve(0);
+      else resolve(1);
+    })
+  );
+}
+
+/**
  * 检查文件是否存在于当前目录中、以及是否可写
  * @return 0 不存在 1 只可读 2 存在可读写
  */
@@ -195,6 +209,7 @@ export function fileOn() {
   );
   ipcMain.handle('file-mkdir', async (event, args) => mkdir(args.path, args.options));
   ipcMain.handle('file-deldir', async (event, args) => delDir(args.path));
+  ipcMain.handle('file-unlink', async (event, args) => unlink(args.path));
   ipcMain.handle('file-access', async (event, args) => access(args.path));
   ipcMain.handle('file-rename', async (event, args) => rename(args.path, args.newPath));
   ipcMain.handle('file-readfile', async (event, args) => readFile(args.path, args.options));

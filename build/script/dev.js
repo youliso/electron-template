@@ -54,14 +54,27 @@ async function startMain() {
 
 function startElectron() {
   let args = ['dist/js/main.js'];
+  const stdoutCss = ['color: #0081ff;', 'color: #ffffff;font-weight: bolder;'];
   if (process.env.npm_execpath.endsWith('yarn.js')) {
     args = args.concat(process.argv.slice(3));
   } else if (process.env.npm_execpath.endsWith('npm-cli.js')) {
     args = args.concat(process.argv.slice(2));
   }
   electronProcess = spawn(electron, args);
-  electronProcess.stdout.on('data', (data) => console.log('[main:stdout]', data.toString()));
-  electronProcess.stderr.on('data', (data) => console.log('[main:stderr]', data.toString()));
+  electronProcess.stdout.on('data', (data) => {
+    const msg = data.toString().trim();
+    if (msg)
+      console.log(
+        `\x1b[34m[main stdout ${new Date().toLocaleTimeString()}]\x1b[0m : \x1b[1mBold${msg}`
+      );
+  });
+  electronProcess.stderr.on('data', (data) => {
+    const msg = data.toString().trim();
+    if (msg)
+      console.log(
+        `\x1b[31m[main stderr ${new Date().toLocaleTimeString()}]\x1b[0m : \x1b[1mBold${msg}`
+      );
+  });
   electronProcess.on('exit', (e) => {
     console.log('exit', e);
   });

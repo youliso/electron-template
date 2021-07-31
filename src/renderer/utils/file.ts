@@ -1,4 +1,4 @@
-import { MakeDirectoryOptions } from 'fs';
+import type { MakeDirectoryOptions } from 'fs';
 
 /**
  * 读取目录下指定后缀文件
@@ -21,6 +21,13 @@ export async function mkdir(path: string, options?: MakeDirectoryOptions) {
  * */
 export async function delDir(path: string) {
   return await window.ipc.invoke('file-deldir', { path });
+}
+
+/**
+ * 删除文件
+ * */
+export async function unlink(path: string) {
+  return await window.ipc.invoke('file-unlink', { path });
 }
 
 /**

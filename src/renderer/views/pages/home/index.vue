@@ -4,7 +4,7 @@
     <div :ref='elDom' class='home-info'>
       <div>hello {{ version }}</div>
       <button @click='toAbout'>关于</button>
-      <button @click='toBaidu'>打开baidu</button>
+      <button @click='toElectron'>打开Electron</button>
       <button @click='test'>弹个框</button>
     </div>
   </div>
@@ -71,10 +71,10 @@ export default defineComponent({
       });
     }
 
-    function toBaidu() {
+    function toElectron() {
       windowCreate({
         customize: {
-          url: 'https://baidu.com',
+          url: 'https://electronjs.org/',
           parentId: argsData.window.id
         },
         width: 800,
@@ -96,7 +96,7 @@ export default defineComponent({
       elDom,
       test,
       toAbout,
-      toBaidu,
+      toElectron,
       version: getGlobal('app.version')
     };
   }

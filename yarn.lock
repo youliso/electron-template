@@ -6485,10 +6485,10 @@ sass-loader@^12.1.0:
     klona "^2.0.4"
     neo-async "^2.6.2"
 
-sass@^1.36.0:
-  version "1.36.0"
-  resolved "https://registry.nlark.com/sass/download/sass-1.36.0.tgz#5912ef9d5d16714171ba11cb17edb274c4bbc07e"
-  integrity sha1-WRLvnV0WcUFxuhHLF+2ydMS7wH4=
+sass@^1.37.0:
+  version "1.37.0"
+  resolved "https://registry.nlark.com/sass/download/sass-1.37.0.tgz#f1b03a9d072ee9053a29d125c8130c78e92827c2"
+  integrity sha1-8bA6nQcu6QU6KdElyBMMeOkoJ8I=
   dependencies:
     chokidar ">=3.0.0 <4.0.0"
 
@@ -7521,10 +7521,10 @@ verror@1.10.0, verror@^1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
-vue-loader@^16.3.1:
-  version "16.3.1"
-  resolved "https://registry.nlark.com/vue-loader/download/vue-loader-16.3.1.tgz#5b675ae28ac97080111e93b26d22adca36dd57aa"
-  integrity sha1-W2da4orJcIARHpOybSKtyjbdV6o=
+vue-loader@^16.4.0:
+  version "16.4.0"
+  resolved "https://registry.nlark.com/vue-loader/download/vue-loader-16.4.0.tgz#79cf923ef00cc396f593b2e7963904640f41cf10"
+  integrity sha1-ec+SPvAMw5b1k7LnljkEZA9BzxA=
   dependencies:
     chalk "^4.1.0"
     hash-sum "^2.0.0"
