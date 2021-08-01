@@ -1,7 +1,6 @@
 import { app, globalShortcut, ipcMain, shell } from 'electron';
 import { resolve } from 'path';
 import { logError } from '@/main/modular/log';
-import { Platforms } from '@/main/platform';
 import Window from '@/main/modular/window';
 
 export class App {
@@ -70,8 +69,6 @@ export class App {
     app.on('activate', () => {
       if (Window.getAll().length === 0) Window.create();
     });
-    // 平台差异
-    await Platforms[process.platform]();
     this.on();
   }
 

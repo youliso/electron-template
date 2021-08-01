@@ -5,8 +5,11 @@ import App from './modular/app';
 import Global from './modular/global';
 import Window from './modular/window';
 import Tray from './modular/tray';
+import { Platforms } from '@/main/platform';
 
 App.start().then(async () => {
+  // 平台差异
+  await Platforms[process.platform]();
   // 主要模块
   Global.on();
   Window.on();
