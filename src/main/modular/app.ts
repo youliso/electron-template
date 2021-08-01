@@ -1,6 +1,7 @@
 import { app, globalShortcut, ipcMain, shell } from 'electron';
 import { resolve } from 'path';
 import { logError } from '@/main/modular/log';
+import { Platforms } from '@/main/platform';
 import Window from '@/main/modular/window';
 
 export class App {
@@ -45,7 +46,7 @@ export class App {
     );
     // 关闭所有窗口退出
     app.on('window-all-closed', () => {
-      app.quit();
+      if (process.platform !== 'darwin') app.quit();
     });
     // 获得焦点时发出
     app.on('browser-window-focus', () => {
@@ -65,6 +66,13 @@ export class App {
     if (!app.isDefaultProtocolClient(app.name, process.execPath, argv))
       app.setAsDefaultProtocolClient(app.name, process.execPath, argv);
     await app.whenReady().catch(logError);
+    // darwin
+    app.on('activate', () => {
+      if (Window.getAll().length === 0) Window.create();
+    });
+    // 平台差异
+    await Platforms[process.platform]();
+    this.on();
   }
 
   /**
@@ -72,10 +80,12 @@ export class App {
    * @param mod
    */
   async use(mod: Promise<any>) {
-    await mod.then((req) => {
-      this.modular[req.default.name] = new req.default();
-      this.modular[req.default.name].on();
-    });
+    await mod
+      .then((req) => {
+        this.modular[req.default.name] = new req.default();
+        this.modular[req.default.name].on();
+      })
+      .catch(logError);
   }
 
   /**
@@ -83,12 +93,14 @@ export class App {
    * @param mods
    */
   async uses(mods: Promise<any>[]) {
-    await Promise.all(mods).then((res) => {
-      for (let i = 0, len = res.length; i < len; i++) {
-        this.modular[res[i].default.name] = new res[i].default();
-        this.modular[res[i].default.name].on();
-      }
-    });
+    return await Promise.all(mods)
+      .then((res) => {
+        for (let i = 0, len = res.length; i < len; i++) {
+          this.modular[res[i].default.name] = new res[i].default();
+          this.modular[res[i].default.name].on();
+        }
+      })
+      .catch(logError);
   }
 
   /**

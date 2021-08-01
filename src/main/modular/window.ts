@@ -85,15 +85,15 @@ function load(win: BrowserWindow, ini: string) {
 export class Window {
   private static instance: Window;
 
+  // 默认创建窗口参数
   private initWindowOpt: BrowserWindowConstructorOptions = {
-    //初始化创建窗口参数
     customize: {
       isMainWin: true,
       route: '/home'
     }
   };
 
-  public main: BrowserWindow = null; //当前主页
+  public main: BrowserWindow = null; // 当前主页
 
   static getInstance() {
     if (!Window.instance) Window.instance = new Window();
@@ -121,7 +121,8 @@ export class Window {
   /**
    * 创建窗口
    * */
-  create(args: BrowserWindowConstructorOptions) {
+  create(args?: BrowserWindowConstructorOptions) {
+    args = args || this.initWindowOpt;
     for (const i of this.getAll()) {
       if (
         i &&
