@@ -7,7 +7,7 @@ import { ManagerOptions } from 'socket.io-client/build/manager';
 import { SocketOptions } from 'socket.io-client/build/socket';
 import { logError } from '@/main/modular/log';
 
-const { socketUrl } = require('@/cfg/index.json');
+const { socketUrl } = require('@/cfg/net.json');
 
 /**
  * Socket模块

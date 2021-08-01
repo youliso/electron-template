@@ -4,17 +4,17 @@ import { app, screen, ipcMain, BrowserWindow } from 'electron';
 import { isNull } from '@/lib';
 import { logError } from '@/main/modular/log';
 
-const { appBackgroundColor, appW, appH } = require('@/cfg/index.json');
+const windowCfg = require('@/cfg/window.json');
 
 /**
  * 窗口配置
  * @param args
  */
 export function browserWindowInit(args: BrowserWindowConstructorOptions): BrowserWindow {
-  args.minWidth = args.minWidth || args.width || appW;
-  args.minHeight = args.minHeight || args.height || appH;
-  args.width = args.width || appW;
-  args.height = args.height || appH;
+  args.minWidth = args.minWidth || args.width || windowCfg.width;
+  args.minHeight = args.minHeight || args.height || windowCfg.height;
+  args.width = args.width || windowCfg.width;
+  args.height = args.height || windowCfg.height;
   let opt: BrowserWindowConstructorOptions = Object.assign(args, {
     autoHideMenuBar: true,
     titleBarStyle: 'hidden',
@@ -30,6 +30,8 @@ export function browserWindowInit(args: BrowserWindowConstructorOptions): Browse
       webSecurity: false
     }
   });
+  if (isNull(opt.backgroundColor) && !isNull(windowCfg.backgroundColor))
+    opt.backgroundColor = windowCfg.backgroundColor;
   if (opt.customize.parentId) {
     opt.parent = Window.getInstance().get(opt.customize.parentId);
     const currentWH = opt.parent.getBounds();
@@ -296,7 +298,7 @@ export class Window {
    * 设置窗口背景色
    */
   setBackgroundColor(args: { id: number; color: string }) {
-    this.get(args.id).setBackgroundColor(args.color || appBackgroundColor);
+    this.get(args.id).setBackgroundColor(args.color || windowCfg.backgroundColor);
   }
 
   /**

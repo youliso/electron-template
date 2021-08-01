@@ -3,7 +3,7 @@ import AbortController from 'node-abort-controller';
 import querystring from 'querystring';
 import { isNull } from '@/lib/index';
 
-const { appUrl } = require('@/cfg/index.json');
+const { appUrl } = require('@/cfg/net.json');
 
 export interface NetOpt extends RequestInit {
   authorization?: string;

@@ -64,12 +64,16 @@ function startElectron() {
   electronProcess.stdout.on('data', (data) => {
     const msg = data.toString().trim();
     if (msg)
-      console.log(`\x1b[34m[main stdout ${new Date().toLocaleTimeString()}]\x1b[0m: \x1b[1m${msg}`);
+      console.log(
+        `\x1b[34m[main stdout ${new Date().toLocaleTimeString()}]\x1b[0m: \x1b[1m${msg}\x1b[0m`
+      );
   });
   electronProcess.stderr.on('data', (data) => {
     const msg = data.toString().trim();
     if (msg)
-      console.log(`\x1b[31m[main stderr ${new Date().toLocaleTimeString()}]\x1b[0m: \x1b[1m${msg}`);
+      console.log(
+        `\x1b[31m[main stderr ${new Date().toLocaleTimeString()}]\x1b[0m: \x1b[1;31m${msg}\x1b[0m`
+      );
   });
   electronProcess.on('exit', (e) => {
     console.log('exit', e);
