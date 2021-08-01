@@ -32,7 +32,7 @@ class Trays {
     this.main = new Tray(nativeImage.createFromPath(join(__dirname, `../${ico}`)));
     this.main.setContextMenu(contextMenu);
     this.main.setToolTip(app.name);
-    this.main.on('double-click', () => Window.func('show'));
+    this.main.on('click', () => Window.func('show'));
   }
 
   /**

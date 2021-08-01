@@ -1,11 +1,11 @@
-import { logOn } from './modular/log';
-import { pathOn } from './modular/path';
-import { fileOn } from './modular/file';
 import App from './modular/app';
 import Global from './modular/global';
 import Window from './modular/window';
 import Tray from './modular/tray';
-import { Platforms } from '@/main/platform';
+import { Platforms } from './platform';
+import { logOn } from './modular/log';
+import { pathOn } from './modular/path';
+import { fileOn } from './modular/file';
 
 App.start().then(async () => {
   // 平台差异
