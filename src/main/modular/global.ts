@@ -2,6 +2,9 @@ import { app, ipcMain } from 'electron';
 import { accessSync, constants } from 'fs';
 import { resolve, normalize } from 'path';
 import { EOL } from 'os';
+import { logError } from '@/main/modular/log';
+import { readFile } from './file';
+import { isNull } from '@/lib';
 
 type Obj<Value> = {} & {
   [key: string]: Value | Obj<Value>;
@@ -39,6 +42,27 @@ export class Global {
   }
 
   constructor() {}
+
+  /**
+   * 挂载配置
+   * @param path 配置文件路径
+   * @param seat 存放位置
+   * @param parse 是否parse
+   * @param opt
+   */
+  async use(
+    path: string,
+    seat: string,
+    parse: boolean,
+    opt?: { encoding?: BufferEncoding; flag?: string }
+  ) {
+    try {
+      const cfg = (await readFile(path, opt || { encoding: 'utf-8' })) as any;
+      if (!isNull(cfg)) this.sendGlobal(seat, parse ? JSON.parse(cfg) : cfg);
+    } catch (e) {
+      logError(`[cfg ${path}]`, e);
+    }
+  }
 
   /**
    * 开启监听
@@ -94,7 +118,7 @@ export class Global {
 
     if (!key.includes('.')) {
       if (Object.prototype.hasOwnProperty.call(this.sharedObject, key)) {
-        console.warn(`The key ${key} looks like already exists on obj.`);
+        console.log(`The key ${key} looks like already exists on obj.`);
       }
       this.sharedObject[key] = value;
     }
@@ -117,7 +141,7 @@ export class Global {
       return;
     }
     if (Object.prototype.hasOwnProperty.call(cur, lastKey)) {
-      console.warn(`The key ${key} looks like already exists on obj.`);
+      console.log(`The key ${key} looks like already exists on obj.`);
     }
     cur[lastKey] = value;
   }

@@ -54,7 +54,6 @@ async function startMain() {
 
 function startElectron() {
   let args = ['dist/js/main.js'];
-  const stdoutCss = ['color: #0081ff;', 'color: #ffffff;font-weight: bolder;'];
   if (process.env.npm_execpath.endsWith('yarn.js')) {
     args = args.concat(process.argv.slice(3));
   } else if (process.env.npm_execpath.endsWith('npm-cli.js')) {
@@ -69,6 +68,7 @@ function startElectron() {
       );
   });
   electronProcess.stderr.on('data', (data) => {
+    console.log(data);
     const msg = data.toString().trim();
     if (msg)
       console.log(
