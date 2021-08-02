@@ -69,7 +69,6 @@ export class App {
     app.on('activate', () => {
       if (Window.getAll().length === 0) Window.create();
     });
-    this.on();
   }
 
   /**
@@ -90,7 +89,7 @@ export class App {
    * @param mods
    */
   async uses(mods: Promise<any>[]) {
-    return await Promise.all(mods)
+    await Promise.all(mods)
       .then((res) => {
         for (let i = 0, len = res.length; i < len; i++) {
           this.modular[res[i].default.name] = new res[i].default();

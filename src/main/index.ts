@@ -7,10 +7,12 @@ import { logOn } from './modular/log';
 import { pathOn } from './modular/path';
 import { fileOn } from './modular/file';
 
-App.start().then(async () => {
+(async () => {
+  await App.start();
   // 平台差异
   await Platforms[process.platform]();
   // 主要模块
+  App.on();
   Global.on();
   Window.on();
   Tray.on();
@@ -32,4 +34,4 @@ App.start().then(async () => {
   Window.create();
   // 托盘
   Tray.create();
-});
+})();

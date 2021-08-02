@@ -51,9 +51,9 @@ export function dateFormat(fmt: string = 'yyyy-MM-dd'): string {
  * @param sourceObj
  * @param targetObj
  */
-export function deepClone(sourceObj: any, targetObj: any) {
+export function deepClone<T>(sourceObj: T, targetObj: T): T {
   let cloneObj: any = {};
-  if (!sourceObj || typeof sourceObj !== 'object' || sourceObj.length === undefined) {
+  if (!sourceObj || typeof sourceObj !== 'object' || (sourceObj as any).length === undefined) {
     return sourceObj;
   }
   if (sourceObj instanceof Array) {
@@ -73,7 +73,7 @@ export function deepClone(sourceObj: any, targetObj: any) {
 /**
  * 防抖
  */
-export function debounce(fun: Function, wait: number) {
+export function debounce(fun: Function, wait: number): Function {
   let timer: number = null;
   return function () {
     if (timer !== null) {
@@ -86,7 +86,7 @@ export function debounce(fun: Function, wait: number) {
 /**
  * 节流
  */
-export function throttle(fun: Function, delay: number) {
+export function throttle(fun: Function, delay: number): Function {
   let timer: number = null;
   let startTime = Date.now();
   return function () {
@@ -109,6 +109,6 @@ export function throttle(fun: Function, delay: number) {
  * @param start
  * @param end
  */
-export function random(start: number = 0, end: number = 1) {
+export function random(start: number = 0, end: number = 1): number {
   return (Math.random() * (end - start + 1) + start) | 0;
 }
