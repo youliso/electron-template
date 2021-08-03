@@ -60,6 +60,14 @@ export function getExternPath(path: string): string {
 }
 
 /**
+ * app重启
+ * @param once 是否立即重启
+ */
+export function relaunch(once: boolean): void {
+  return window.ipc.send('app-relaunch', once);
+}
+
+/**
  * app常用获取路径
  */
 export function getAppPath(key: string): string {

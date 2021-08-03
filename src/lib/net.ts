@@ -3,7 +3,7 @@ import AbortController from 'node-abort-controller';
 import querystring from 'querystring';
 import { isNull } from '@/lib/index';
 
-const { appUrl } = require('@/cfg/net.json');
+const { timeout, appUrl } = require('@/cfg/net.json');
 
 export interface NetOpt extends RequestInit {
   authorization?: string;
@@ -12,6 +12,11 @@ export interface NetOpt extends RequestInit {
   data?: any;
   body?: any;
   type?: NET_RESPONSE_TYPE; //返回数据类型
+}
+
+export interface TimeOutAbort {
+  signal: AbortSignal;
+  id: NodeJS.Timeout;
 }
 
 export enum NET_RESPONSE_TYPE {
@@ -29,22 +34,15 @@ export function AbortSignal() {
 }
 
 /**
- * 错误信息包装
- */
-export function errorReturn(msg: Error): { code: number; msg: string } {
-  return { code: 400, msg: msg.message };
-}
-
-/**
  * 超时处理
  * @param outTime
  */
-function timeoutPromise(outTime: number): Promise<{ code: number; msg: string }> {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      reject(errorReturn(new Error('超时')));
-    }, outTime);
-  });
+function timeOutAbort(outTime: number): TimeOutAbort {
+  const controller = AbortSignal();
+  const timeoutId = setTimeout(() => {
+    controller.abort();
+  }, outTime);
+  return { signal: controller.signal, id: timeoutId };
 }
 
 /**
@@ -90,9 +88,7 @@ function fetchPromise<T>(url: string, sendData: NetOpt): Promise<T> {
             : await res.blob();
       }
     })
-    .catch((err) => {
-      throw new Error(err.statusText);
-    });
+    .catch((err) => ({ code: 400, msg: err.message }));
 }
 
 /**
@@ -100,11 +96,10 @@ function fetchPromise<T>(url: string, sendData: NetOpt): Promise<T> {
  * @param url
  * @param param
  */
-export async function net<T>(
-  url: string,
-  param: NetOpt = {}
-): Promise<T & { code: number; msg: string }> {
+export async function net<T>(url: string, param: NetOpt = {}): Promise<T> {
   if (url.indexOf('http://') === -1 && url.indexOf('https://') === -1) url = appUrl + url;
+  let abort: TimeOutAbort = null;
+  if (isNull(param.signal)) abort = timeOutAbort(param.timeout || timeout);
   let sendData: NetOpt = {
     isHeaders: param.isHeaders,
     isStringify: param.isStringify,
@@ -117,10 +112,10 @@ export async function net<T>(
         param.headers
       )
     ),
-    timeout: param.timeout || 30000,
     type: param.type || NET_RESPONSE_TYPE.TEXT,
     method: param.method || 'GET',
-    signal: param.signal || null
+    // timeout只会在未指定signal下生效
+    signal: abort ? abort.signal : param.signal
   };
   if (!isNull(param.body)) {
     sendData.body = param.body;
@@ -131,7 +126,8 @@ export async function net<T>(
         ? querystring.stringify(param.data)
         : JSON.stringify(param.data);
   }
-  return Promise.race([timeoutPromise(sendData.timeout), fetchPromise<T>(url, sendData)]).catch(
-    errorReturn
-  ) as Promise<T & { code: number; msg: string }>;
+  return fetchPromise<T>(url, sendData).then((req) => {
+    if (abort) clearTimeout(abort.id);
+    return req;
+  });
 }

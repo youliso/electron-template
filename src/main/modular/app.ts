@@ -112,8 +112,9 @@ export class App {
       shell.openExternal(args.url).then();
     });
     //app重启
-    ipcMain.on('app-relaunch', () => {
+    ipcMain.on('app-relaunch', (event, args) => {
       app.relaunch({ args: process.argv.slice(1) });
+      if (args) app.exit(0);
     });
   }
 }
