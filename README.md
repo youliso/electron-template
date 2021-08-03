@@ -6,12 +6,12 @@
 ## 引入依赖问题
 - `外部`不会被打包进asar包内:  
 所有外部依赖放入到 `src/lib/extern`  
-调用 `src/lib/app.ts`  内`getExternPath()` 方法可获取 调试和打包 对应路径   
+调用`getExternPath()` 方法可获取 调试和打包 对应路径   
   
 
 - `内部` 会被打包进asar包内:  
   所有内部依赖放入到 `src/lib/inside`  
-  调用 `src/lib/app.ts`  内`getInsidePath()` 方法可获取 调试和打包 对应路径
+  调用`getInsidePath()` 方法可获取 调试和打包 对应路径
 
 ## electron builder 打包配置
 位于 `build/cfg/build.js` 根据自己需求更改即可   
