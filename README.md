@@ -1,5 +1,5 @@
-# electron-vue 
-一个基于 `electron` & `vue3` 多窗口模式的模板
+# electron-template
+一个基于 `electron` 多窗口模式的模板
 
 ❗注意 `nodejs => 14.17.0`
 
