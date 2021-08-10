@@ -68,7 +68,6 @@ function startElectron() {
       );
   });
   electronProcess.stderr.on('data', (data) => {
-    console.log(data);
     const msg = data.toString().trim();
     if (msg)
       console.log(

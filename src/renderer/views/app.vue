@@ -5,7 +5,7 @@
         :include="keepAliveData.include"
         :exclude="keepAliveData.exclude"
         :max="keepAliveData.max"
-        :key="route.meta.usePathKey ? route.path : undefined"
+        :key="route.meta['usePathKey'] ? route.path : undefined"
       >
         <component :is="Component" />
       </keep-alive>
