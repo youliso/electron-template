@@ -32,3 +32,14 @@ export function domClassPropertySet(value: string) {
 export function domCssPropertySet(key: string, value: any) {
   document.body.style.setProperty(key, value);
 }
+
+/**
+ * 创建元素
+ * @param key
+ * @param css
+ */
+export function domCreateElement<K extends keyof HTMLElementTagNameMap>(key: K, css?: string) {
+  const dom = document.createElement(key);
+  if (css) dom.setAttribute('class', css);
+  return dom;
+}
