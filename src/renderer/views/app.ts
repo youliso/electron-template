@@ -9,10 +9,10 @@ const appDom = dom.getElementById('app');
 
 export default function () {
   const args = customize.get();
-  appDom.appendChild(Head());
   const container = dom.createElement('div');
   container.setAttribute('class', 'container padding');
   container.innerText = `hello world ${JSON.stringify(args)}`;
+  appDom.appendChild(Head());
   appDom.appendChild(container);
-  windowShow(customize.get().id);
+  windowShow(args.id);
 }
