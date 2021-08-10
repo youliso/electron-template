@@ -1,5 +1,5 @@
 import fetch, { RequestInit, Headers } from 'node-fetch';
-import AbortController from 'node-abort-controller';
+import { AbortController } from 'node-abort-controller';
 import querystring from 'querystring';
 import { isNull } from '@/lib/index';
 
