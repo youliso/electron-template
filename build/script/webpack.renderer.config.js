@@ -2,7 +2,6 @@ const { resolve } = require('path');
 const { name } = require('../../package.json');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const miniCssExtractPlugin = require('mini-css-extract-plugin');
-const { VueLoaderPlugin } = require('vue-loader');
 const { ESBuildMinifyPlugin } = require('esbuild-loader');
 const base = require('./webpack.base.config');
 module.exports = (env) => {
@@ -27,10 +26,6 @@ module.exports = (env) => {
     module: {
       rules: [
         ...base.module.rules,
-        {
-          test: /\.vue$/,
-          loader: 'vue-loader'
-        },
         {
           test: /\.css$/,
           use: [
@@ -66,8 +61,7 @@ module.exports = (env) => {
       new HtmlWebpackPlugin({
         title: name,
         template: './build/index.html'
-      }),
-      new VueLoaderPlugin()
+      })
     ],
     optimization: {
       minimize: env === 'production',

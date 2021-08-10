@@ -1,6 +1,5 @@
 import { IpcRendererEvent, BrowserWindowConstructorOptions } from 'electron';
-import { toRaw } from 'vue';
-import { argsData } from '@/renderer/store';
+import Store from '@/renderer/store';
 
 /**
  * 窗口初始化 (i)
@@ -13,7 +12,7 @@ export function windowLoad(listener: (event: IpcRendererEvent, args: Customize) 
  * 窗口数据更新
  */
 export function windowUpdate() {
-  window.ipc.send('window-update', toRaw(argsData.window));
+  window.ipc.send('window-update', Store.sharedObject['window']);
 }
 
 /**
@@ -54,14 +53,14 @@ export function windowMessageSend(
   channel: string, //监听key（保证唯一）
   value: any, //需要发送的内容
   isback: boolean = false, //是否给自身反馈
-  acceptIds: number[] = [argsData.window.parentId] //指定窗口id发送
+  acceptIds: number[] = [Store.sharedObject['window'].parentId] //指定窗口id发送
 ) {
   window.ipc.send('window-message-send', {
     channel,
     value,
     isback,
     acceptIds,
-    id: argsData.window.id
+    id: Store.sharedObject['window'].id
   });
 }
 

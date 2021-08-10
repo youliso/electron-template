@@ -71,18 +71,23 @@ input {
   width: 100%;
   height: 100%;
   background-color: transparent;
-  >.container {
+
+  > .container {
     overflow: hidden;
     width: 100%;
     height: 100%;
     background-color: var(--white);
     color: var(--black);
+
+    &.padding {
+      padding: 32px 10px 10px;
+    }
   }
 }
 
 .win32,
 .linux {
-  >#app >.container {
+  > #app > .container {
     border: 1px solid var(--platform-theme-color);
   }
 }
