@@ -27,19 +27,7 @@ module.exports = (env) => {
       rules: [
         ...base.module.rules,
         {
-          test: /\.css$/,
-          use: [
-            {
-              loader: miniCssExtractPlugin.loader,
-              options: {
-                publicPath: '../'
-              }
-            },
-            'css-loader'
-          ]
-        },
-        {
-          test: /\.scss$/,
+          test: /\.(css|scss)$/,
           use: [
             {
               loader: miniCssExtractPlugin.loader,
