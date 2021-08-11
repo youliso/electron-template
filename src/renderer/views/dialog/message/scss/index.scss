@@ -1,0 +1,17 @@
+.container {
+  > .message-info {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    > .text {
+      word-break: break-all;
+      font: normal 16px sans-serif;
+    }
+
+    > .close {
+      position: absolute;
+      right: 5px;
+      bottom: 5px;
+    }
+  }
+}

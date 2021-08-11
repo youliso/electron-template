@@ -1,5 +1,5 @@
 import { IpcRendererEvent, BrowserWindowConstructorOptions } from 'electron';
-import customize from '@/renderer/store/customize';
+import Store from '@/renderer/store';
 
 /**
  * 窗口初始化 (i)
@@ -12,7 +12,7 @@ export function windowLoad(listener: (event: IpcRendererEvent, args: Customize) 
  * 窗口数据更新
  */
 export function windowUpdate() {
-  window.ipc.send('window-update', customize.get());
+  window.ipc.send('window-update', Store.get('customize'));
 }
 
 /**
@@ -53,14 +53,16 @@ export function windowMessageSend(
   channel: string, //监听key（保证唯一）
   value: any, //需要发送的内容
   isback: boolean = false, //是否给自身反馈
-  acceptIds: number[] = [customize.get().parentId] //指定窗口id发送
+  acceptIds: number[] = [] //指定窗口id发送
 ) {
+  const customize = Store.get<Customize>('customize');
+  if (acceptIds.length === 0) acceptIds = [customize.parentId];
   window.ipc.send('window-message-send', {
     channel,
     value,
     isback,
     acceptIds,
-    id: customize.get().id
+    id: customize.id
   });
 }
 

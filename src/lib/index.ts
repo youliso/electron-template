@@ -15,7 +15,10 @@ export function ranDom(m: number, n: number): number {
 
 /**
  * 数组元素互换
- * */
+ * @param arr
+ * @param index1 需要更换位置的元素初始下标
+ * @param index2 更改后的下标
+ */
 export function swapArr<T>(arr: T[], index1: number, index2: number): void {
   [arr[index1], arr[index2]] = [arr[index2], arr[index1]];
 }
