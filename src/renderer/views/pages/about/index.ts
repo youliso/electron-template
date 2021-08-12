@@ -1,7 +1,6 @@
 import Router from '@/renderer/router';
 import { domCreateElement } from '@/renderer/utils/dom';
 import './scss/index.scss';
-import Head from '@/renderer/views/components/head';
 
 export default function (): View {
   const text = domCreateElement('div', 'text');
