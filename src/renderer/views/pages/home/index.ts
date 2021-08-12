@@ -1,15 +1,12 @@
 import Store from '@/renderer/store';
 import Router from '@/renderer/router';
-import Head from '@/renderer/views/components/head';
-import { windowShow, windowCreate } from '@/renderer/utils/window';
+import { windowCreate } from '@/renderer/utils/window';
 import { domCreateElement } from '@/renderer/utils/dom';
 import { openUrl } from '@/renderer/utils';
 import './scss/index.scss';
 
-export default function () {
-  const appDom = document.getElementById(Store.get<string>('appDom'));
+export default function (): View {
   const args = Store.get<Customize>('customize');
-  const container = domCreateElement('div', 'container padding');
   const vue = domCreateElement('div', 'btn');
   const svelte = domCreateElement('div', 'btn');
   const but = domCreateElement('button', 'but');
@@ -30,7 +27,7 @@ export default function () {
         title: '弹框测试',
         route: '/message',
         parentId: args.id,
-        data: { text: '123' }
+        data: { text: '123', head: { eventsShow: false } }
       },
       width: 400,
       height: 200,
@@ -41,11 +38,7 @@ export default function () {
   about.addEventListener('click', () => {
     Router.go('/about');
   });
-  container.appendChild(vue);
-  container.appendChild(svelte);
-  container.appendChild(but);
-  container.appendChild(about);
-  appDom.appendChild(Head());
-  appDom.appendChild(container);
-  windowShow(args.id);
+  return {
+    dom: [vue, svelte, but, about]
+  };
 }

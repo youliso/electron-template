@@ -1,4 +1,7 @@
 import { getGlobal } from './';
+import { isNull } from '@/lib';
+import { windowShow } from '@/renderer/utils/window';
+import Store from '@/renderer/store';
 
 /**
  * 页面初始化加载
@@ -43,3 +46,52 @@ export function domCreateElement<K extends keyof HTMLElementTagNameMap>(key: K, 
   if (css) dom.setAttribute('class', css);
   return dom;
 }
+
+/**
+ * dom
+ */
+class Dom {
+  private static instance: Dom;
+
+  public appDom: HTMLElement = null;
+  public mainDom: HTMLElement = null;
+  public components: { [key: string]: Component } = {};
+
+  static getInstance() {
+    if (!Dom.instance) Dom.instance = new Dom();
+    return Dom.instance;
+  }
+
+  /**
+   * 初始dom
+   */
+  init(app: string, main: string) {
+    this.appDom = document.getElementById(app);
+    this.mainDom = document.getElementById(main);
+  }
+
+  setComponent(c: Component) {
+    if (c.global) {
+      if (!c.force && !isNull(this.components[c.name])) return;
+      if (this.components[c.name]) this.appDom.removeChild(this.components[c.name].dom);
+      this.components[c.name] = c;
+      this.appDom.appendChild(c.dom);
+    } else this.mainDom.appendChild(c.dom);
+  }
+
+  renderRouter(view: View) {
+    while (this.mainDom.hasChildNodes()) {
+      this.mainDom.removeChild(this.mainDom.firstChild);
+    }
+    if (view.components)
+      for (let i = 0, len = view.components.length; i < len; i++) {
+        this.setComponent(view.components[i]);
+      }
+    for (let i = 0, len = view.dom.length; i < len; i++) {
+      this.mainDom.appendChild(view.dom[i]);
+    }
+    windowShow(Store.get<Customize>('customize').id);
+  }
+}
+
+export default Dom.getInstance();

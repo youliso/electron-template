@@ -4,7 +4,7 @@ import { getGlobal } from '@/renderer/utils';
 import { windowClose, windowMaxMin, windowMin } from '@/renderer/utils/window';
 import './scss/index.scss';
 
-export default function (eventsShow: boolean = true) {
+export default function (eventsShow: boolean = true): Component {
   const args = Store.get<Customize>('customize');
   const info = domCreateElement('div', 'head-info drag');
   const content = domCreateElement('div', 'content');
@@ -30,5 +30,8 @@ export default function (eventsShow: boolean = true) {
     }
   }
   info.appendChild(content);
-  return info;
+  return {
+    name: 'Head',
+    dom: info
+  };
 }

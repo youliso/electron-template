@@ -1,12 +1,14 @@
 import pageRoute from '@/renderer/router/modular/page';
 import dialogRoute from '@/renderer/router/modular/dialog';
 import { isNull, swapArr } from '@/lib';
-import Store from '@/renderer/store';
+import Dom from '@/renderer/utils/dom';
 
-/**
- *
- */
-class Router {
+export interface RouteParams {
+  // 参数
+  params?: any;
+}
+
+export class Router {
   private static instance: Router;
 
   public routes: Route[] = [...dialogRoute, ...pageRoute];
@@ -24,6 +26,7 @@ class Router {
       const route = this.routes[i];
       if (route.path === path) return route;
     }
+    return null;
   }
 
   setHistory(path: string) {
@@ -32,10 +35,6 @@ class Router {
     else swapArr(this.history, index, 0);
   }
 
-  /**
-   * 初始路由
-   * @param route
-   */
   setRoute(route: Route) {
     this.routes.push(route);
   }
@@ -50,41 +49,26 @@ class Router {
   /**
    * 跳转路由
    * @param path
+   * @param params
    */
-  async go(path: string | number) {
-    const appDom = document.getElementById(Store.get<string>('appDom'));
+  async go(path: string | number, params?: RouteParams) {
+    let route: Route = null;
     if (typeof path === 'string') {
-      const route = this.getRoute(path);
-      await route
-        .component()
-        .then((e) => {
-          while (appDom.hasChildNodes()) {
-            appDom.removeChild(appDom.firstChild);
-          }
-          e.default();
-        })
-        .then(() => this.setHistory(route.path))
-        .catch(console.error);
+      route = this.getRoute(path);
     } else {
       const num = Math.abs(path) | 0;
-      if (num <= 0 || num >= this.history.length) {
-        console.warn('beyond the history of the router');
-      } else {
+      if (num > 0 || num < this.history.length) {
         const p = this.history[num];
-        if (!isNull(p)) {
-          await this.getRoute(p)
-            .component()
-            .then((e) => {
-              while (appDom.hasChildNodes()) {
-                appDom.removeChild(appDom.firstChild);
-              }
-              e.default();
-            })
-            .then(() => this.setHistory(p))
-            .catch(console.error);
-        } else console.warn('beyond the history of the router');
+        if (!isNull(p)) route = this.getRoute(p);
       }
     }
+    if (!route) console.warn('beyond the history of the router');
+    else
+      await route
+        .component()
+        .then((e) => Dom.renderRouter(e.default()))
+        .then(() => this.setHistory(route.path))
+        .catch(console.error);
   }
 }
 

@@ -27,7 +27,7 @@ export function swapArr<T>(arr: T[], index1: number, index2: number): void {
  * 日期转换
  * @param fmt yy-MM-dd hh:mm:ss
  * */
-export function dateFormat(fmt: string = 'yyyy-MM-dd'): string {
+export function dateFormat(fmt: string = 'yyyy-MM-dd hh:mm:ss'): string {
   let date = new Date();
   let o: { [key: string]: unknown } = {
     'M+': date.getMonth() + 1, //月份

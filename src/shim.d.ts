@@ -4,6 +4,22 @@ interface Route {
   component: () => Promise<any>;
 }
 
+interface Component {
+  // 组件名称
+  name: string;
+  // 是否全局组件
+  global?: boolean;
+  // 是否强制渲染(仅全局组件下生效)
+  force?: boolean;
+  // 组件元素
+  dom: HTMLElement;
+}
+
+interface View {
+  components?: Component[];
+  dom: HTMLElement[];
+}
+
 declare module '*.svg';
 declare module '*.png';
 declare module '*.ico';

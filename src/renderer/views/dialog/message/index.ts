@@ -1,14 +1,12 @@
 import Store from '@/renderer/store';
-import Head from '@/renderer/views/components/head';
 import { domCreateElement } from '@/renderer/utils/dom';
 import { getGlobal } from '@/renderer/utils';
-import { windowClose, windowMaxMin, windowMin, windowShow } from '@/renderer/utils/window';
+import { windowClose } from '@/renderer/utils/window';
 import './scss/index.scss';
+import Head from '@/renderer/views/components/head';
 
-export default function () {
-  const appDom = document.getElementById(Store.get<string>('appDom'));
+export default function (): View {
   const args = Store.get<Customize>('customize');
-  const container = domCreateElement('div', 'container padding');
   const info = domCreateElement('div', 'message-info');
   const text = domCreateElement('div', 'text');
   const text1 = domCreateElement('div');
@@ -22,8 +20,9 @@ export default function () {
   text.appendChild(text2);
   info.appendChild(text);
   info.appendChild(but);
-  container.appendChild(info);
-  appDom.appendChild(Head());
-  appDom.appendChild(container);
-  windowShow(args.id);
+
+  return {
+    components: [Head(false)],
+    dom: [info]
+  };
 }
