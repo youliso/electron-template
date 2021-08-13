@@ -66,7 +66,10 @@ export class Router {
     else
       await route
         .component()
-        .then((e) => Dom.renderRouter(e.default()))
+        .then((e) => {
+          Dom.renderRouter(e.default());
+          if (e?.onReady) e.onReady();
+        })
         .then(() => this.setHistory(route.path))
         .catch(console.error);
   }

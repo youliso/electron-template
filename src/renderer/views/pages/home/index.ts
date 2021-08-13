@@ -1,10 +1,12 @@
 import Store from '@/renderer/store';
 import Router from '@/renderer/router';
-import { windowCreate } from '@/renderer/utils/window';
+import { windowCreate, windowShow } from '@/renderer/utils/window';
 import { domCreateElement, domObserver } from '@/renderer/utils/dom';
 import { openUrl } from '@/renderer/utils';
 import './scss/index.scss';
 import { dateFormat } from '@/lib';
+
+const args = Store.get<Customize>('customize');
 
 function testRender() {
   const test = domCreateElement('div', 'text');
@@ -25,8 +27,11 @@ function testRender() {
   return test;
 }
 
+export function onReady() {
+  windowShow(args.id);
+}
+
 export default function (): View {
-  const args = Store.get<Customize>('customize');
   const vue = domCreateElement('div', 'btn');
   const svelte = domCreateElement('div', 'btn');
   const but = domCreateElement('button', 'but');

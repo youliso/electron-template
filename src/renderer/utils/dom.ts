@@ -113,7 +113,6 @@ class Dom {
     for (let i = 0, len = view.dom.length; i < len; i++) {
       this.mainDom.appendChild(view.dom[i]);
     }
-    windowShow(Store.get<Customize>('customize').id);
   }
 }
 

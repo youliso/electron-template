@@ -2,6 +2,10 @@ import Router from '@/renderer/router';
 import { domCreateElement } from '@/renderer/utils/dom';
 import './scss/index.scss';
 
+export function onReady() {
+  console.log('about');
+}
+
 export default function (): View {
   const text = domCreateElement('div', 'text');
   const home = domCreateElement('button', 'but');

@@ -1,11 +1,16 @@
 import Store from '@/renderer/store';
 import { domCreateElement } from '@/renderer/utils/dom';
 import { getGlobal } from '@/renderer/utils';
-import { windowClose } from '@/renderer/utils/window';
+import { windowClose, windowShow } from '@/renderer/utils/window';
 import './scss/index.scss';
 
+const args = Store.get<Customize>('customize');
+
+export function onReady() {
+  windowShow(args.id);
+}
+
 export default function (): View {
-  const args = Store.get<Customize>('customize');
   const info = domCreateElement('div', 'message-info');
   const text = domCreateElement('div', 'text');
   const text1 = domCreateElement('div');
