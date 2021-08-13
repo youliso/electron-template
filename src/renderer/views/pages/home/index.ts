@@ -32,7 +32,7 @@ export function onReady() {
 }
 
 export function onUnmounted() {
-  console.log(123);
+  console.log('unmounted');
 }
 
 export default function (): View {

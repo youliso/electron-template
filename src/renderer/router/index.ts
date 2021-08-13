@@ -3,11 +3,6 @@ import dialogRoute from '@/renderer/router/modular/dialog';
 import { isNull, swapArr } from '@/lib';
 import Dom from '@/renderer/utils/dom';
 
-export interface RouteParams {
-  // 参数
-  params?: any;
-}
-
 export class Router {
   private static instance: Router;
 
@@ -72,7 +67,7 @@ export class Router {
             this.current?.onUnmounted();
             delete this.current;
           }
-          Dom.renderRouter(e.default());
+          Dom.renderRouter(e.default(params));
           if (e?.onReady) e.onReady();
           this.current = e;
         })

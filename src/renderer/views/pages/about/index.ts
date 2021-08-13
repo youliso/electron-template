@@ -10,7 +10,7 @@ export function onUnmounted() {
   console.log('unmounted');
 }
 
-export default function (): View {
+export default function (params?: RouteParams): View {
   const text = domCreateElement('div', 'text');
   const home = domCreateElement('button', 'but');
   text.innerText = '关于';

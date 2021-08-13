@@ -4,6 +4,8 @@ interface Route {
   component: () => Promise<any>;
 }
 
+type RouteParams = any;
+
 interface Component {
   // 组件名称
   name: string;
