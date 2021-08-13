@@ -25,11 +25,6 @@
   background: transparent;
 }
 
-@font-face {
-  font-family: 'PingFang SC';
-  src: url('~@/lib/assets/fonts/PingFang-SC-Regular.ttf');
-}
-
 html,
 body {
   width: 100%;
@@ -39,14 +34,6 @@ body {
   background-color: transparent;
   position: relative;
   user-select: none;
-  font-family: 'PingFang SC';
-}
-
-a,
-button,
-select,
-input {
-  font-family: 'PingFang SC';
 }
 
 .bg-img {

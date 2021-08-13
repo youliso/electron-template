@@ -6,6 +6,7 @@ import { Platforms } from './platform';
 import { logOn } from './modular/log';
 import { pathOn } from './modular/path';
 import { fileOn } from './modular/file';
+import { AbortSignal } from '@/lib/net';
 
 (async () => {
   await App.start();

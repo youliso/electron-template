@@ -1,5 +1,4 @@
 import fetch, { RequestInit, Headers } from 'node-fetch';
-import { AbortController } from 'node-abort-controller';
 import querystring from 'querystring';
 import { isNull } from '@/lib/index';
 
@@ -29,16 +28,17 @@ export enum NET_RESPONSE_TYPE {
 /**
  * 创建 AbortController
  */
-export function AbortSignal() {
-  return new AbortController();
+export async function AbortSignal() {
+  if (typeof window !== 'undefined') return new AbortController();
+  else return import('node-abort-controller').then(({ AbortController }) => new AbortController());
 }
 
 /**
  * 超时处理
  * @param outTime
  */
-function timeOutAbort(outTime: number): TimeOutAbort {
-  const controller = AbortSignal();
+async function timeOutAbort(outTime: number): Promise<TimeOutAbort> {
+  const controller = await AbortSignal();
   const timeoutId = setTimeout(() => {
     controller.abort();
   }, outTime);
@@ -99,7 +99,7 @@ function fetchPromise<T>(url: string, sendData: NetOpt): Promise<T> {
 export async function net<T>(url: string, param: NetOpt = {}): Promise<T> {
   if (url.indexOf('http://') === -1 && url.indexOf('https://') === -1) url = appUrl + url;
   let abort: TimeOutAbort = null;
-  if (isNull(param.signal)) abort = timeOutAbort(param.timeout || timeout);
+  if (isNull(param.signal)) abort = await timeOutAbort(param.timeout || timeout);
   let sendData: NetOpt = {
     isHeaders: param.isHeaders,
     isStringify: param.isStringify,
