@@ -22,6 +22,10 @@ interface View {
   dom: HTMLElement[];
 }
 
+declare module '*.lazy.scss' {
+  function use(): void;
+  function unuse(): void;
+}
 declare module '*.css';
 declare module '*.scss';
 declare module '*.svg';

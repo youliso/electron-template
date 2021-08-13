@@ -1,7 +1,5 @@
 import { getGlobal } from './';
 import { isNull } from '@/lib';
-import { windowShow } from '@/renderer/utils/window';
-import Store from '@/renderer/store';
 
 /**
  * 页面初始化加载
