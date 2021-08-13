@@ -2,12 +2,17 @@ import Store from '@/renderer/store';
 import { domCreateElement } from '@/renderer/utils/dom';
 import { getGlobal } from '@/renderer/utils';
 import { windowClose, windowShow } from '@/renderer/utils/window';
-import './scss/index.scss';
+import styles from './scss/index.lazy.scss';
 
 const args = Store.get<Customize>('customize');
 
 export function onReady() {
+  styles.use();
   windowShow(args.id);
+}
+
+export function onUnmounted() {
+  styles.unuse();
 }
 
 export default function (): View {

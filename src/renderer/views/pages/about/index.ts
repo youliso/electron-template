@@ -1,13 +1,13 @@
 import Router from '@/renderer/router';
 import { domCreateElement } from '@/renderer/utils/dom';
-import './scss/index.scss';
+import styles from '@/renderer/views/dialog/message/scss/index.lazy.scss';
 
 export function onReady() {
-  console.log('about');
+  styles.use();
 }
 
 export function onUnmounted() {
-  console.log('unmounted');
+  styles.unuse();
 }
 
 export default function (params?: RouteParams): View {

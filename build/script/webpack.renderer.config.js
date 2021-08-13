@@ -1,7 +1,6 @@
 const { resolve } = require('path');
 const { name } = require('../../package.json');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const miniCssExtractPlugin = require('mini-css-extract-plugin');
 const { ESBuildMinifyPlugin } = require('esbuild-loader');
 const base = require('./webpack.base.config');
 module.exports = (env) => {
@@ -27,14 +26,14 @@ module.exports = (env) => {
       rules: [
         ...base.module.rules,
         {
-          test: /\.(css|scss)$/,
+          test: /\.(sa|sc|c)ss$/,
+          exclude: /\.lazy\.(sa|sc|c)ss$/i,
+          use: ['style-loader', 'css-loader', 'sass-loader']
+        },
+        {
+          test: /\.lazy\.(sa|sc|c)ss$/i,
           use: [
-            {
-              loader: miniCssExtractPlugin.loader,
-              options: {
-                publicPath: '../'
-              }
-            },
+            { loader: 'style-loader', options: { injectType: 'lazyStyleTag' } },
             'css-loader',
             'sass-loader'
           ]
@@ -42,10 +41,6 @@ module.exports = (env) => {
       ]
     },
     plugins: [
-      new miniCssExtractPlugin({
-        filename: './css/[name].css',
-        chunkFilename: './css/[id].css'
-      }),
       new HtmlWebpackPlugin({
         title: name,
         template: './build/index.html'

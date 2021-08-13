@@ -3,8 +3,8 @@ import Router from '@/renderer/router';
 import { windowCreate, windowShow } from '@/renderer/utils/window';
 import { domCreateElement, domObserver } from '@/renderer/utils/dom';
 import { openUrl } from '@/renderer/utils';
-import './scss/index.scss';
 import { dateFormat } from '@/lib';
+import styles from './scss/index.lazy.scss';
 
 const args = Store.get<Customize>('customize');
 
@@ -28,11 +28,12 @@ function testRender() {
 }
 
 export function onReady() {
+  styles.use();
   windowShow(args.id);
 }
 
 export function onUnmounted() {
-  console.log('unmounted');
+  styles.unuse();
 }
 
 export default function (): View {

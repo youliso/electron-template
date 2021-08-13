@@ -5044,13 +5044,6 @@ mimic-response@^3.1.0:
   resolved "https://registry.nlark.com/mimic-response/download/mimic-response-3.1.0.tgz#2d1d59af9c1b129815accc2c46a022a5ce1fa3c9"
   integrity sha1-LR1Zr5wbEpgVrMwsRqAipc4fo8k=
 
-mini-css-extract-plugin@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.nlark.com/mini-css-extract-plugin/download/mini-css-extract-plugin-2.2.0.tgz#48cb6d2bea8fa9eb36709856e003662eebb3eb92"
-  integrity sha1-SMttK+qPqes2cJhW4ANmLuuz65I=
-  dependencies:
-    schema-utils "^3.1.0"
-
 minimalistic-assert@^1.0.0:
   version "1.0.1"
   resolved "https://registry.nlark.com/minimalistic-assert/download/minimalistic-assert-1.0.1.tgz#2e194de044626d4a10e7f7fbc00ce73e83e4d5c7"
@@ -6789,6 +6782,11 @@ strip-json-comments@~2.0.1:
   version "2.0.1"
   resolved "https://registry.nlark.com/strip-json-comments/download/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
   integrity sha1-PFMZQukIwml8DsNEhYwobHygpgo=
+
+style-loader@^3.2.1:
+  version "3.2.1"
+  resolved "https://registry.nlark.com/style-loader/download/style-loader-3.2.1.tgz?cache=0&sync_timestamp=1626796688625&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fstyle-loader%2Fdownload%2Fstyle-loader-3.2.1.tgz#63cb920ec145c8669e9a50e92961452a1ef5dcde"
+  integrity sha1-Y8uSDsFFyGaemlDpKWFFKh713N4=
 
 sumchecker@^3.0.1:
   version "3.0.1"
