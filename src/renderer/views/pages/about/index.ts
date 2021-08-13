@@ -6,6 +6,10 @@ export function onReady() {
   console.log('about');
 }
 
+export function onUnmounted() {
+  console.log('unmounted');
+}
+
 export default function (): View {
   const text = domCreateElement('div', 'text');
   const home = domCreateElement('button', 'but');

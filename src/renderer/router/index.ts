@@ -12,6 +12,7 @@ export class Router {
   private static instance: Router;
 
   public routes: Route[] = [...dialogRoute, ...pageRoute];
+  public current: any; // 当前路由
   public history: string[] = []; // 路由历史
 
   static getInstance() {
@@ -67,8 +68,13 @@ export class Router {
       await route
         .component()
         .then((e) => {
+          if (this.current?.onUnmounted) {
+            this.current?.onUnmounted();
+            delete this.current;
+          }
           Dom.renderRouter(e.default());
           if (e?.onReady) e.onReady();
+          this.current = e;
         })
         .then(() => this.setHistory(route.path))
         .catch(console.error);

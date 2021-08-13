@@ -31,6 +31,10 @@ export function onReady() {
   windowShow(args.id);
 }
 
+export function onUnmounted() {
+  console.log(123);
+}
+
 export default function (): View {
   const vue = domCreateElement('div', 'btn');
   const svelte = domCreateElement('div', 'btn');
