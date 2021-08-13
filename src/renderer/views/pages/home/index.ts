@@ -1,9 +1,29 @@
 import Store from '@/renderer/store';
 import Router from '@/renderer/router';
 import { windowCreate } from '@/renderer/utils/window';
-import { domCreateElement } from '@/renderer/utils/dom';
+import { domCreateElement, domObserver } from '@/renderer/utils/dom';
 import { openUrl } from '@/renderer/utils';
 import './scss/index.scss';
+import { dateFormat } from '@/lib';
+
+function testRender() {
+  const test = domCreateElement('div', 'text');
+  const testData = domObserver<{ time: string; a: string }>(
+    { time: dateFormat(), a: '1' },
+    (target, p, value) => {
+      if (p === 'time') test.innerText = value;
+    }
+  );
+  test.innerText = dateFormat();
+  setInterval(() => {
+    testData.time = dateFormat();
+    setTimeout(() => {
+      testData.a = Date.now() + '';
+    }, 40);
+  }, 1000);
+
+  return test;
+}
 
 export default function (): View {
   const args = Store.get<Customize>('customize');
@@ -27,7 +47,7 @@ export default function (): View {
         title: '弹框测试',
         route: '/message',
         parentId: args.id,
-        data: { text: '123', head: { eventsShow: false } }
+        data: { text: '123' }
       },
       width: 400,
       height: 200,
@@ -39,6 +59,6 @@ export default function (): View {
     Router.go('/about');
   });
   return {
-    dom: [vue, svelte, but, about]
+    dom: [vue, svelte, testRender(), but, about]
   };
 }

@@ -48,6 +48,29 @@ export function domCreateElement<K extends keyof HTMLElementTagNameMap>(key: K, 
 }
 
 /**
+ * 双向绑定
+ */
+export function domObserver<T>(
+  value: T,
+  callback?: (target: T, p: string, value: any) => void
+): Partial<{ value: T } & T> {
+  const isObject = typeof value === 'object';
+  const handler: ProxyHandler<any> = {
+    get: (target, p) => {
+      return target[p];
+    },
+    set: (target, p, value) => {
+      if (target[p] !== value) {
+        target[p] = value;
+        callback(target, p as string, value);
+      }
+      return true;
+    }
+  };
+  return isObject ? new Proxy(value, handler) : new Proxy({ value }, handler);
+}
+
+/**
  * dom
  */
 class Dom {

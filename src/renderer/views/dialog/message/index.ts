@@ -3,7 +3,6 @@ import { domCreateElement } from '@/renderer/utils/dom';
 import { getGlobal } from '@/renderer/utils';
 import { windowClose } from '@/renderer/utils/window';
 import './scss/index.scss';
-import Head from '@/renderer/views/components/head';
 
 export default function (): View {
   const args = Store.get<Customize>('customize');
@@ -22,7 +21,6 @@ export default function (): View {
   info.appendChild(but);
 
   return {
-    components: [Head(false)],
     dom: [info]
   };
 }
