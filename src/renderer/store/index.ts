@@ -2,6 +2,29 @@ type Obj<Value> = {} & {
   [key: string]: Value | Obj<Value>;
 };
 
+/**
+ * 数据监听
+ */
+export function observer<T>(
+  value: T,
+  callback?: (target: T, p: string, value: any) => void
+): Partial<{ value: T } & T> {
+  const isObject = typeof value === 'object';
+  const handler: ProxyHandler<any> = {
+    get: (target, p) => {
+      return target[p];
+    },
+    set: (target, p, value) => {
+      if (target[p] !== value) {
+        target[p] = value;
+        callback(target, p as string, value);
+      }
+      return true;
+    }
+  };
+  return isObject ? new Proxy(value, handler) : new Proxy({ value }, handler);
+}
+
 class Store {
   private static instance: Store;
 
