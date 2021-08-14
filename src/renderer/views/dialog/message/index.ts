@@ -6,8 +6,11 @@ import styles from './scss/index.lazy.scss';
 
 const args = Store.get<Customize>('customize');
 
-export function onReady() {
+function onLoad() {
   styles.use();
+}
+
+export function onReady() {
   windowShow(args.id);
 }
 

@@ -59,7 +59,7 @@ export class Router {
       }
     }
     if (!route) console.warn('beyond the history of the router');
-    else
+    else {
       await route
         .component()
         .then((e) => {
@@ -67,12 +67,14 @@ export class Router {
             this.current?.onUnmounted();
             delete this.current;
           }
+          if (e?.onLoad) e.onLoad();
           Dom.renderRouter(e.default(params));
           if (e?.onReady) e.onReady();
           this.current = e;
         })
         .then(() => this.setHistory(route.path))
         .catch(console.error);
+    }
   }
 }
 

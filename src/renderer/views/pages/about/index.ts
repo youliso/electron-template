@@ -2,8 +2,12 @@ import Router from '@/renderer/router';
 import { domCreateElement } from '@/renderer/utils/dom';
 import styles from '@/renderer/views/dialog/message/scss/index.lazy.scss';
 
-export function onReady() {
+export function onLoad() {
   styles.use();
+}
+
+export function onReady() {
+  console.log('onReady');
 }
 
 export function onUnmounted() {

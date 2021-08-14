@@ -36,36 +36,13 @@ export function domCssPropertySet(key: string, value: any) {
 
 /**
  * 创建元素
- * @param key
- * @param css
+ * @param el 元素
+ * @param css class名称（可选）
  */
-export function domCreateElement<K extends keyof HTMLElementTagNameMap>(key: K, css?: string) {
-  const dom = document.createElement(key);
+export function domCreateElement<K extends keyof HTMLElementTagNameMap>(el: K, css?: string) {
+  const dom = document.createElement(el);
   if (css) dom.setAttribute('class', css);
   return dom;
-}
-
-/**
- * 双向绑定
- */
-export function domObserver<T>(
-  value: T,
-  callback?: (target: T, p: string, value: any) => void
-): Partial<{ value: T } & T> {
-  const isObject = typeof value === 'object';
-  const handler: ProxyHandler<any> = {
-    get: (target, p) => {
-      return target[p];
-    },
-    set: (target, p, value) => {
-      if (target[p] !== value) {
-        target[p] = value;
-        callback(target, p as string, value);
-      }
-      return true;
-    }
-  };
-  return isObject ? new Proxy(value, handler) : new Proxy({ value }, handler);
 }
 
 /**

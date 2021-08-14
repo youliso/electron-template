@@ -1,7 +1,7 @@
-import Store from '@/renderer/store';
+import Store, { observer } from '@/renderer/store';
 import Router from '@/renderer/router';
 import { windowCreate, windowShow } from '@/renderer/utils/window';
-import { domCreateElement, domObserver } from '@/renderer/utils/dom';
+import { domCreateElement } from '@/renderer/utils/dom';
 import { openUrl } from '@/renderer/utils';
 import { dateFormat } from '@/lib';
 import styles from './scss/index.lazy.scss';
@@ -10,7 +10,7 @@ const args = Store.get<Customize>('customize');
 
 function testRender() {
   const test = domCreateElement('div', 'text');
-  const testData = domObserver<{ time: string; a: string }>(
+  const testData = observer<{ time: string; a: string }>(
     { time: dateFormat(), a: '1' },
     (target, p, value) => {
       if (p === 'time') test.innerText = value;
@@ -27,8 +27,12 @@ function testRender() {
   return test;
 }
 
-export function onReady() {
+export function onLoad() {
+  console.log('123');
   styles.use();
+}
+
+export function onReady() {
   windowShow(args.id);
 }
 
