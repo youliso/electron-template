@@ -6,7 +6,7 @@ import styles from './scss/index.lazy.scss';
 
 const args = Store.get<Customize>('customize');
 
-function onLoad() {
+export function onLoad() {
   styles.use();
 }
 
