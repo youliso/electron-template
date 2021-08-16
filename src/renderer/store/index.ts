@@ -74,7 +74,7 @@ class Store {
   }
 
   observer<T>(
-    params: { key: string; value: T; isSet: boolean },
+    params: { key?: string; value: T; isSet?: boolean },
     callback?: (target: T, p: string, value: any) => void
   ): Partial<{ value: T } & T> {
     const isObject = typeof params.value === 'object';
@@ -93,7 +93,7 @@ class Store {
     const ob = isObject
       ? new Proxy(params.value, handler)
       : new Proxy({ value: params.value }, handler);
-    if (params.isSet) this.set<T>(params.key, ob);
+    if (params.key && params.isSet) this.set<T>(params.key, ob);
     return ob;
   }
 }

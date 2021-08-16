@@ -11,7 +11,7 @@ const args = Store.get<Customize>('customize');
 function testRender() {
   const test = domCreateElement('div', 'text');
   const testData = Store.observer<{ time: string; a: string }>(
-    { key: 'testData', value: { time: dateFormat(), a: '1' }, isSet: false },
+    { value: { time: dateFormat(), a: '1' } },
     (target, p, value) => {
       if (p === 'time') test.innerText = value;
     }
