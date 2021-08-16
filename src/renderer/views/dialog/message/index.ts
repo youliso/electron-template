@@ -18,7 +18,12 @@ export function onUnmounted() {
   styles.unuse();
 }
 
+function hideEvents() {
+  Store.get<{ value: boolean }>('head-events').value = false;
+}
+
 export default function (): View {
+  hideEvents();
   const info = domCreateElement('div', 'message-info');
   const text = domCreateElement('div', 'text');
   const text1 = domCreateElement('div');
@@ -32,7 +37,6 @@ export default function (): View {
   text.appendChild(text2);
   info.appendChild(text);
   info.appendChild(but);
-
   return {
     dom: [info]
   };

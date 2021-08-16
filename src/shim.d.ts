@@ -23,7 +23,10 @@ interface View {
 }
 
 declare module '*.lazy.scss' {
+  // 加载
   function use(): void;
+
+  // 移除
   function unuse(): void;
 }
 declare module '*.css';

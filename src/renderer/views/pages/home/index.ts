@@ -1,4 +1,4 @@
-import Store, { observer } from '@/renderer/store';
+import Store from '@/renderer/store';
 import Router from '@/renderer/router';
 import { windowCreate, windowShow } from '@/renderer/utils/window';
 import { domCreateElement } from '@/renderer/utils/dom';
@@ -10,8 +10,8 @@ const args = Store.get<Customize>('customize');
 
 function testRender() {
   const test = domCreateElement('div', 'text');
-  const testData = observer<{ time: string; a: string }>(
-    { time: dateFormat(), a: '1' },
+  const testData = Store.observer<{ time: string; a: string }>(
+    { key: 'testData', value: { time: dateFormat(), a: '1' }, isSet: false },
     (target, p, value) => {
       if (p === 'time') test.innerText = value;
     }
