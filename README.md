@@ -1,7 +1,8 @@
 # electron-template
 一个基于 `electron` 多窗口模式的模板
 
-❗注意 `nodejs => 14.17.0`
+❗注意 `nodejs => 14.17.0`   
+交流qq群 12354891
 
 ## 引入依赖问题
 - `外部`不会被打包进asar包内:  
