@@ -43,10 +43,12 @@ export function onUnmounted() {
 export default function (): View {
   const vue = domCreateElement('div', 'btn');
   const svelte = domCreateElement('div', 'btn');
+  const react = domCreateElement('div', 'btn');
   const but = domCreateElement('button', 'but');
   const about = domCreateElement('button', 'but');
   vue.innerText = 'vue 模板';
   svelte.innerText = 'svelte 模板';
+  react.innerText = 'react 模板';
   but.innerText = '弹框';
   about.innerText = '关于';
   vue.addEventListener('click', () => {
@@ -54,6 +56,9 @@ export default function (): View {
   });
   svelte.addEventListener('click', () => {
     openUrl('https://github.com/youliso/electron-template/tree/svelte');
+  });
+  react.addEventListener('click', () => {
+    openUrl('https://github.com/youliso/electron-template/tree/react');
   });
   but.addEventListener('click', () => {
     windowCreate({
@@ -73,6 +78,6 @@ export default function (): View {
     Router.go('/about');
   });
   return {
-    dom: [vue, svelte, testRender(), but, about]
+    dom: [vue, svelte, react, testRender(), but, about]
   };
 }
