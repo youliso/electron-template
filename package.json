@@ -20,10 +20,10 @@
     "test": "jest -c build/cfg/jest.json"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.24",
+    "@types/jest": "^27.0.1",
     "@types/node-fetch": "^2.5.12",
     "css-loader": "^6.2.0",
-    "electron": "^13.1.8",
+    "electron": "^13.1.9",
     "electron-builder": "^22.11.7",
     "electron-rebuild": "^3.1.1",
     "esbuild-loader": "^2.14.0",

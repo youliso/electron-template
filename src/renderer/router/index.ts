@@ -36,13 +36,6 @@ export class Router {
   }
 
   /**
-   * 获取当前路由
-   */
-  getIndex() {
-    return this.getRoute(this.history[0]);
-  }
-
-  /**
    * 跳转路由
    * @param path
    * @param params

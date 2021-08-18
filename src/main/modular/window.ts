@@ -145,7 +145,7 @@ export class Window {
       this.main = win;
     }
     // 注入初始化代码
-    win.webContents.on('did-finish-load', () => {
+    win.webContents.once('did-finish-load', () => {
       win.webContents.send('window-load', win.customize);
     });
     // 聚焦失焦监听
