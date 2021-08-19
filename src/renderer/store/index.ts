@@ -73,7 +73,7 @@ class Store {
     cur[lastKey] = value;
   }
 
-  observer<T>(
+  proxy<T>(
     params: { key?: string; value: T; isSet?: boolean },
     callback?: (target: T, p: string, value: any) => void
   ): Partial<{ value: T } & T> {

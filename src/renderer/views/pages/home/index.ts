@@ -10,7 +10,7 @@ const args = Store.get<Customize>('customize');
 
 function testRender() {
   const test = domCreateElement('div', 'text');
-  const testData = Store.observer<{ time: string; a: string }>(
+  const testData = Store.proxy<{ time: string; a: string }>(
     { value: { time: dateFormat(), a: '1' } },
     (target, p, value) => {
       if (p === 'time') test.innerText = value;
