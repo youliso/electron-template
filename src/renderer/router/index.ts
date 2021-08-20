@@ -1,6 +1,5 @@
 import pageRoute from '@/renderer/router/modular/page';
 import dialogRoute from '@/renderer/router/modular/dialog';
-import { isNull, swapArr } from '@/lib';
 import Dom from '@/renderer/utils/dom';
 
 export class Router {
@@ -8,7 +7,7 @@ export class Router {
 
   public routes: Route[] = [...dialogRoute, ...pageRoute];
   public current: any; // 当前路由
-  public history: string[] = []; // 路由历史
+  public history: { path: string; params?: RouteParams }[] = []; // 路由历史
 
   static getInstance() {
     if (!Router.instance) Router.instance = new Router();
@@ -25,49 +24,55 @@ export class Router {
     return null;
   }
 
-  setHistory(path: string) {
-    const index = this.history.indexOf(path);
-    if (index < 0) this.history.unshift(path);
-    else swapArr(this.history, index, 0);
+  setHistory(path: string, params?: RouteParams) {
+    this.history.unshift({ path, params });
   }
 
   setRoute(route: Route) {
     this.routes.push(route);
   }
 
+  async r(route: Route, params?: RouteParams) {
+    await route
+      .component()
+      .then((e) => {
+        if (this.current?.onUnmounted) {
+          this.current?.onUnmounted();
+          delete this.current;
+        }
+        if (e?.onLoad) e.onLoad();
+        Dom.renderRouter(e.default(params));
+        if (e?.onReady) e.onReady();
+        this.current = e;
+      })
+      .then(() => this.setHistory(route.path, params))
+      .catch(console.error);
+  }
+
   /**
    * 跳转路由
-   * @param path
-   * @param params
    */
-  async go(path: string | number, params?: RouteParams) {
-    let route: Route = null;
-    if (typeof path === 'string') {
-      route = this.getRoute(path);
-    } else {
-      const num = Math.abs(path) | 0;
-      if (num > 0 || num < this.history.length) {
-        const p = this.history[num];
-        if (!isNull(p)) route = this.getRoute(p);
-      }
+  async go(path: string, params?: RouteParams) {
+    const route: Route = this.getRoute(path);
+    if (!route) console.warn(`beyond the history of ${path}`);
+    else await this.r(route, params);
+    console.log(this.history);
+  }
+
+  /**
+   * 回退路由
+   */
+  async back(path: number, params?: RouteParams) {
+    let num = Math.abs(path) | 0;
+    let p = this.history[num];
+    if (!p) {
+      console.warn(`beyond the history of back(${path})`);
+      num = this.history.length - 1;
+      p = this.history[num];
     }
-    if (!route) console.warn('beyond the history of the router');
-    else {
-      await route
-        .component()
-        .then((e) => {
-          if (this.current?.onUnmounted) {
-            this.current?.onUnmounted();
-            delete this.current;
-          }
-          if (e?.onLoad) e.onLoad();
-          Dom.renderRouter(e.default(params));
-          if (e?.onReady) e.onReady();
-          this.current = e;
-        })
-        .then(() => this.setHistory(route.path))
-        .catch(console.error);
-    }
+    if (params) p.params = params;
+    this.history.splice(0, num + 1);
+    await this.r(this.getRoute(p.path), p.params);
   }
 }
 

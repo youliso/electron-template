@@ -17,17 +17,18 @@ async function startRenderer() {
   }
   const config = require('./webpack.renderer.config')('development');
   const options = {
-    contentBase: path.resolve('dist'),
+    host: 'localhost',
+    compress: true,
+    port: port,
     hot: true,
-    host: 'localhost'
+    static: {
+      directory: path.resolve('dist')
+    }
   };
-  webpackDevServer.addDevServerEntrypoints(config, options);
+
   const compiler = webpack(config);
-  const server = new webpackDevServer(compiler, options);
-  server.listen(port, 'localhost', () => {});
-  server.invalidate(() => {
-    console.log(`Project is running at http://localhost:${port}`);
-  });
+  const server = new webpackDevServer(options, compiler);
+  server.start();
 }
 
 async function startMain() {

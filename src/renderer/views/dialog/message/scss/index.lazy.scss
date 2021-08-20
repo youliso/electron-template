@@ -7,7 +7,11 @@
       word-break: break-all;
       font: normal 16px sans-serif;
     }
-
+    > .test {
+      position: absolute;
+      right: 50px;
+      bottom: 5px;
+    }
     > .close {
       position: absolute;
       right: 5px;

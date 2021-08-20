@@ -6,10 +6,6 @@ export function onLoad() {
   styles.use();
 }
 
-export function onReady() {
-  console.log('onReady');
-}
-
 export function onUnmounted() {
   styles.unuse();
 }
@@ -17,12 +13,13 @@ export function onUnmounted() {
 export default function (params?: RouteParams): View {
   const text = domCreateElement('div', 'text');
   const home = domCreateElement('button', 'but');
+  const test = domCreateElement('button', 'but');
   text.innerText = '关于';
   home.innerText = '首页';
-  home.addEventListener('click', () => {
-    Router.go('/home');
-  });
+  test.innerText = '首页1';
+  home.addEventListener('click', () => Router.go('/home'));
+  test.addEventListener('click', () => Router.back(1));
   return {
-    dom: [text, home]
+    dom: [text, home, test]
   };
 }

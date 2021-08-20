@@ -1,6 +1,6 @@
 import Store from '@/renderer/store';
 import Router from '@/renderer/router';
-import { windowCreate, windowShow } from '@/renderer/utils/window';
+import { windowCreate, windowMessageOn, windowShow } from '@/renderer/utils/window';
 import { domCreateElement } from '@/renderer/utils/dom';
 import { openUrl } from '@/renderer/utils';
 import { dateFormat } from '@/lib';
@@ -27,9 +27,15 @@ function testRender() {
   return test;
 }
 
+function onTest() {
+  windowMessageOn('test', (event, args) => {
+    console.log(args);
+  });
+}
+
 export function onLoad() {
-  console.log('123');
   styles.use();
+  onTest();
 }
 
 export function onReady() {

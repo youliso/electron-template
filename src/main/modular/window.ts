@@ -1,7 +1,6 @@
 import { join } from 'path';
 import type { BrowserWindowConstructorOptions } from 'electron';
 import { app, screen, ipcMain, BrowserWindow } from 'electron';
-import { isNull } from '@/lib';
 import { logError } from '@/main/modular/log';
 
 const windowCfg = require('@/cfg/window.json');
@@ -20,7 +19,7 @@ export function browserWindowInit(args: BrowserWindowConstructorOptions): Browse
     titleBarStyle: 'hidden',
     minimizable: true,
     maximizable: true,
-    frame: isNull(args.customize.route),
+    frame: !args.customize.route,
     show: false,
     webPreferences: {
       preload: join(__dirname, './preload.js'),
@@ -30,7 +29,7 @@ export function browserWindowInit(args: BrowserWindowConstructorOptions): Browse
       webSecurity: false
     }
   });
-  if (isNull(opt.backgroundColor) && !isNull(windowCfg.backgroundColor))
+  if (!opt.backgroundColor && windowCfg.backgroundColor)
     opt.backgroundColor = windowCfg.backgroundColor;
   if (opt.customize.parentId) {
     opt.parent = Window.getInstance().get(opt.customize.parentId);
@@ -70,13 +69,13 @@ export function browserWindowInit(args: BrowserWindowConstructorOptions): Browse
  * 窗口加载
  */
 function load(win: BrowserWindow, ini: string) {
-  if (!isNull(win.customize.route)) {
+  if (win.customize.route) {
     if (ini.startsWith('http://')) win.loadURL(ini).catch(logError);
     else win.loadFile(ini).catch(logError);
-  } else if (!isNull(win.customize.file)) {
+  } else if (win.customize.file) {
     win.once('ready-to-show', () => win.show());
     win.loadFile(win.customize.file).catch(logError);
-  } else if (!isNull(win.customize.url)) {
+  } else if (win.customize.url) {
     win.once('ready-to-show', () => win.show());
     win.loadURL(win.customize.url).catch(logError);
   } else throw 'not found load';
@@ -125,7 +124,6 @@ export class Window {
     args = args || this.initWindowOpt;
     for (const i of this.getAll()) {
       if (
-        i &&
         !i.customize.isMultiWindow &&
         ((args.customize.route && args.customize.route === i.customize.route) ||
           (args.customize.file && args.customize.file === i.customize.file) ||
@@ -145,9 +143,7 @@ export class Window {
       this.main = win;
     }
     // 注入初始化代码
-    win.webContents.once('did-finish-load', () => {
-      win.webContents.send('window-load', win.customize);
-    });
+    win.webContents.on('did-finish-load', () => win.webContents.send('window-load', win.customize));
     // 聚焦失焦监听
     win.on('blur', () => win.webContents.send('window-blur-focus', 'blur'));
     win.on('focus', () => win.webContents.send('window-blur-focus', 'focus'));
@@ -172,89 +168,39 @@ export class Window {
    * 窗口关闭、隐藏、显示等常用方法
    */
   func(type: windowFuncOpt, id?: number) {
-    switch (type) {
-      case 'close':
-        if (!isNull(id)) {
-          if (this.get(id)) this.get(id).close();
-          return;
-        }
-        for (const i of this.getAll()) if (i) i.close();
-        break;
-      case 'hide':
-        if (!isNull(id)) {
-          if (this.get(id)) this.get(id).hide();
-          return;
-        }
-        for (const i of this.getAll()) if (i) i.hide();
-        break;
-      case 'show':
-        if (!isNull(id)) {
-          if (this.get(id)) this.get(id).show();
-          return;
-        }
-        for (const i of this.getAll()) if (i) i.show();
-        break;
-      case 'minimize':
-        if (!isNull(id)) {
-          if (this.get(id)) this.get(id).minimize();
-          return;
-        }
-        for (const i of this.getAll()) if (i) i.minimize();
-        break;
-      case 'maximize':
-        if (!isNull(id)) {
-          if (this.get(id)) this.get(id).maximize();
-          return;
-        }
-        for (const i of this.getAll()) if (i) i.maximize();
-        break;
-      case 'restore':
-        if (!isNull(id)) {
-          if (this.get(id)) this.get(id).restore();
-          return;
-        }
-        for (const i of this.getAll()) if (i) i.restore();
-        break;
-      case 'reload':
-        if (!isNull(id)) {
-          if (this.get(id)) this.get(id).reload();
-          return;
-        }
-        for (const i of this.getAll()) if (i) i.reload();
-        break;
+    let win: BrowserWindow = null;
+    if (id) {
+      win = this.get(id);
+      if (!win) {
+        console.error(`not found win -> ${id}`);
+        return;
+      }
+      win[type]();
+      return;
     }
+    for (const i of this.getAll()) i[type]();
   }
 
   /**
    * 窗口发送消息
    */
   send(key: string, value: any, id?: number) {
-    if (!isNull(id)) this.get(id).webContents.send(key, value);
-    else for (const i of this.getAll()) if (i) i.webContents.send(key, value);
+    if (id) {
+      const win = this.get(id);
+      if (win) win.webContents.send(key, value);
+    } else for (const i of this.getAll()) i.webContents.send(key, value);
   }
 
   /**
    * 窗口状态
    */
   getStatus(type: windowStatusOpt, id: number) {
-    if (isNull(id)) console.error('Invalid id, the id can not be a empty');
-    else
-      switch (type) {
-        case 'isMaximized':
-          return this.get(id).isMaximized();
-        case 'isMinimized':
-          return this.get(id).isMinimized();
-        case 'isFullScreen':
-          return this.get(id).isFullScreen();
-        case 'isAlwaysOnTop':
-          return this.get(id).isAlwaysOnTop();
-        case 'isVisible':
-          return this.get(id).isVisible();
-        case 'isFocused':
-          return this.get(id).isFocused();
-        case 'isModal':
-          return this.get(id).isModal();
-      }
+    const win = this.get(id);
+    if (!win) {
+      console.error('Invalid id, the id can not be a empty');
+      return;
+    }
+    return win[type]();
   }
 
   /**
@@ -315,13 +261,15 @@ export class Window {
   on() {
     //窗口数据更新
     ipcMain.on('window-update', (event, args) => {
-      if (args && !isNull(args.id)) this.get(args.id).customize = args;
+      if (args?.id) this.get(args.id).customize = args;
     });
     //最大化最小化窗口
     ipcMain.on('window-max-min-size', (event, id) => {
-      if (!isNull(id))
-        if (this.get(id).isMaximized()) this.get(id).unmaximize();
-        else this.get(id).maximize();
+      if (id) {
+        const win = this.get(id);
+        if (win.isMaximized()) win.unmaximize();
+        else win.maximize();
+      }
     });
     //窗口消息
     ipcMain.on('window-fun', (event, args) => this.func(args.type, args.id));
@@ -341,33 +289,21 @@ export class Window {
     ipcMain.on('window-bg-color-set', (event, args) => this.setBackgroundColor(args));
     //窗口消息
     ipcMain.on('window-message-send', (event, args) => {
-      let channel = `window-message-${args.channel}-back`;
-      if (!isNull(args.acceptIds) && args.acceptIds.length > 0) {
-        for (let i of args.acceptIds) {
-          if (this.get(Number(i))) this.get(Number(i)).webContents.send(channel, args.value);
-        }
+      const channel = `window-message-${args.channel}-back`;
+      if (args.acceptIds && args.acceptIds.length > 0) {
+        for (const i of args.acceptIds) this.send(channel, args.value, i);
         return;
       }
-      if (args.isback) {
-        for (const i of this.getAll()) {
-          if (this.get(Number(i))) this.get(Number(i)).webContents.send(channel, args.value);
-        }
-      } else {
-        for (const i of this.getAll()) {
-          if (this.get(Number(i)) && Number(i) !== args.id)
-            this.get(Number(i)).webContents.send(channel, args.value);
-        }
-      }
+      if (args.isback) this.send(channel, args.value);
+      else
+        for (const win of this.getAll())
+          if (win.id !== args.id) win.webContents.send(channel, args.value);
     });
     //通过路由获取窗口id (不传route查全部)
     ipcMain.on('window-id-get', (event, args) => {
-      let winIds: number[] = [];
-      if (args.route) {
-        for (const i of this.getAll()) {
-          if (i && i.customize.route === args.route) winIds.push(i.id);
-        }
-      } else winIds = this.getAll().map((win) => win.id);
-      event.returnValue = winIds;
+      event.returnValue = this.getAll()
+        .filter((win) => (args.route ? win.customize.route === args.route : true))
+        .map((win) => win.id);
     });
   }
 }
