@@ -19,9 +19,12 @@ async function startRenderer() {
   const options = {
     host: 'localhost',
     port: port,
+    compress: true,
     hot: true,
     static: {
-      directory: path.resolve('dist')
+      directory: path.resolve('dist'),
+      serveIndex: true,
+      watch: true
     }
   };
   const compiler = webpack(config);

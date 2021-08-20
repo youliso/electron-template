@@ -56,7 +56,6 @@ export class Router {
     const route: Route = this.getRoute(path);
     if (!route) console.warn(`beyond the history of ${path}`);
     else await this.r(route, params);
-    console.log(this.history);
   }
 
   /**

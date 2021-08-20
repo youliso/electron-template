@@ -16,7 +16,7 @@ export default function (params?: RouteParams): View {
   const test = domCreateElement('button', 'but');
   text.innerText = '关于';
   home.innerText = '首页';
-  test.innerText = '首页1';
+  test.innerText = '首页';
   home.addEventListener('click', () => Router.go('/home'));
   test.addEventListener('click', () => Router.back(1));
   return {
