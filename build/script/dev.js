@@ -18,14 +18,12 @@ async function startRenderer() {
   const config = require('./webpack.renderer.config')('development');
   const options = {
     host: 'localhost',
-    compress: true,
     port: port,
     hot: true,
     static: {
       directory: path.resolve('dist')
     }
   };
-
   const compiler = webpack(config);
   const server = new webpackDevServer(options, compiler);
   server.start();
