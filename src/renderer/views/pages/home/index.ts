@@ -10,12 +10,9 @@ const args = Store.get<Customize>('customize');
 
 function testRender() {
   const test = domCreateElement('div', 'text');
-  const testData = Store.proxy<{ time: string; a: string }>(
-    { value: { time: dateFormat(), a: '1' } },
-    (target, p, value) => {
-      if (p === 'time') test.innerText = value;
-    }
-  );
+  const testData = Store.proxy({ time: dateFormat(), a: '1' }, (value, p: string) => {
+    if (p === 'time') test.innerText = value;
+  });
   test.innerText = dateFormat();
   setInterval(() => {
     testData.time = dateFormat();

@@ -19,7 +19,7 @@ function events(is: boolean, args: Customize) {
   events.appendChild(maxMin);
   events.appendChild(close);
   if (is) content.appendChild(events);
-  Store.proxy<boolean>({ key: 'head-events', value: is, isSet: true }, (target, p, value) => {
+  Store.proxy<boolean>('head-events', is, (value) => {
     if (value) content.appendChild(events);
     else content.removeChild(events);
   });

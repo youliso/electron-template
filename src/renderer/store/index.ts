@@ -2,14 +2,31 @@ type Obj<Value> = {} & {
   [key: string]: Value | Obj<Value>;
 };
 
-class Store {
-  private static instance: Store;
+interface Store {
+  set<Value>(key: string, value: Value): void;
+
+  get<Value>(key: string): Value | undefined;
+
+  proxy<T>(
+    value: T,
+    callback?: (value: any, p: string, target: any) => void
+  ): Partial<{ value: T } & T>;
+
+  proxy<T>(
+    key: string,
+    value: T,
+    callback?: (value: any, p: string, target: any) => void
+  ): Partial<{ value: T } & T>;
+}
+
+class Stores {
+  private static instance: Stores;
 
   public data: { [key: string]: any } = {};
 
-  static getInstance() {
-    if (!Store.instance) Store.instance = new Store();
-    return Store.instance;
+  static getInstance(): Store {
+    if (!Stores.instance) Stores.instance = new Stores();
+    return Stores.instance;
   }
 
   constructor() {}
@@ -73,11 +90,19 @@ class Store {
     cur[lastKey] = value;
   }
 
-  proxy<T>(
-    params: { key?: string; value: T; isSet?: boolean },
-    callback?: (target: T, p: string, value: any) => void
-  ): Partial<{ value: T } & T> {
-    const isObject = typeof params.value === 'object';
+  proxy(...arg: any) {
+    let key: string;
+    let value: any;
+    let callback: Function;
+    if (typeof arg[0] === 'string') {
+      key = arg[0];
+      value = arg[1];
+      if (arg[2]) callback = arg[2];
+    } else {
+      value = arg[0];
+      if (arg[1]) callback = arg[1];
+    }
+    const isObject = typeof value === 'object';
     const handler: ProxyHandler<any> = {
       get: (target, p) => {
         return target[p];
@@ -85,17 +110,15 @@ class Store {
       set: (target, p, value) => {
         if (target[p] !== value) {
           target[p] = value;
-          callback(target, p as string, value);
+          callback(value, p as string, target);
         }
         return true;
       }
     };
-    const ob = isObject
-      ? new Proxy(params.value, handler)
-      : new Proxy({ value: params.value }, handler);
-    if (params.key && params.isSet) this.set<T>(params.key, ob);
+    const ob = isObject ? new Proxy(value, handler) : new Proxy({ value }, handler);
+    if (key) this.set(key, ob);
     return ob;
   }
 }
 
-export default Store.getInstance();
+export default Stores.getInstance();
