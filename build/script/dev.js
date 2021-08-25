@@ -21,6 +21,7 @@ async function startRenderer() {
     host: 'localhost',
     port: port,
     hot: true,
+    liveReload: false,
     static: path.resolve('dist')
   };
   const compiler = webpack(config);
