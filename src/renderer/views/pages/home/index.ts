@@ -7,21 +7,26 @@ import { dateFormat } from '@/lib';
 import styles from './scss/index.lazy.scss';
 
 const args = Store.get<Customize>('customize');
+let listData: StoreProxy<string[]>;
+let testData: StoreProxy<{ time: string; a: string }>;
 
 function testRender() {
   const test = domCreateElement('div', 'text');
-  let list: string[] = [];
-  const listData = Store.proxy(list, (value, p: string) => {
-    console.log(listData, p);
+  listData = Store.proxy([], (value, p: string) => {
+    console.log(listData.proxy, p);
   });
-  const testData = Store.proxy({ time: dateFormat(), a: '1' }, (value, p: string) => {
+  testData = Store.proxy({ time: dateFormat(), a: '1' }, (value, p: string) => {
     if (p === 'time') test.innerText = value;
   });
   test.innerText = dateFormat();
-  setInterval(() => {
-    listData.push(Date.now() + '');
-    testData.a = Date.now() + '';
-    testData.time = dateFormat();
+  const ls = setInterval(() => {
+    try {
+      listData.proxy.push(Date.now() + '');
+      testData.proxy.a = Date.now() + '';
+      testData.proxy.time = dateFormat();
+    } catch (e) {
+      clearInterval(ls);
+    }
   }, 1000);
 
   return test;
@@ -44,6 +49,8 @@ export function onReady() {
 
 export function onUnmounted() {
   styles.unuse();
+  if (listData) listData.revoke();
+  if (testData) testData.revoke();
 }
 
 export default function (): View {

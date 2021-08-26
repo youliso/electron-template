@@ -19,7 +19,7 @@ export function onUnmounted() {
 }
 
 function hideEvents() {
-  Store.get<{ value: boolean }>('head-events').value = false;
+  Store.get<StoreProxy<{ value: boolean }>>('head-events').proxy.value = false;
 }
 
 export default function (): View {

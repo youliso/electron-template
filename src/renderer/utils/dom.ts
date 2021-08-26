@@ -71,7 +71,10 @@ class Dom {
   setComponent(c: Component) {
     if (c.global) {
       if (!c.force && !isNull(this.components[c.name])) return;
-      if (this.components[c.name]) this.appDom.removeChild(this.components[c.name].dom);
+      if (this.components[c.name]) {
+        this.appDom.removeChild(this.components[c.name].dom);
+        delete this.components[c.name];
+      }
       this.components[c.name] = c;
       this.appDom.appendChild(c.dom);
     } else this.mainDom.appendChild(c.dom);

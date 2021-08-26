@@ -2,23 +2,6 @@ type Obj<Value> = {} & {
   [key: string]: Value | Obj<Value>;
 };
 
-interface Store {
-  set<Value>(key: string, value: Value): void;
-
-  get<Value>(key: string): Value | undefined;
-
-  proxy<T>(
-    value: T,
-    callback?: (value: any, p: string, target: any) => void
-  ): Partial<{ value: T } & T>;
-
-  proxy<T>(
-    key: string,
-    value: T,
-    callback?: (value: any, p: string, target: any) => void
-  ): Partial<{ value: T } & T>;
-}
-
 class Stores {
   private static instance: Stores;
 
@@ -26,7 +9,7 @@ class Stores {
 
   static getInstance(): Store {
     if (!Stores.instance) Stores.instance = new Stores();
-    return Stores.instance;
+    return Stores.instance as Store;
   }
 
   constructor() {}
@@ -96,15 +79,20 @@ class Stores {
     let callback: Function;
     if (typeof arg[0] === 'string') {
       key = arg[0];
-      value = arg[1];
+      if (typeof arg[1] === 'function') callback = arg[1];
+      else value = arg[1];
       if (arg[2]) callback = arg[2];
     } else {
       value = arg[0];
       if (arg[1]) callback = arg[1];
     }
+    if (key) {
+      const proxy = this.get(key);
+      if (proxy) return proxy;
+    }
     let data = value;
     if (typeof value !== 'object' && !Array.isArray(value)) data = { value };
-    const ob = new Proxy(data, {
+    const ob = Proxy.revocable(data, {
       get: (target, p) => {
         return target[p];
       },
@@ -118,6 +106,14 @@ class Stores {
     });
     if (key) this.set(key, ob);
     return ob;
+  }
+
+  removeProxy<T>(key: string) {
+    const proxy = this.get<StoreProxy<T>>(key);
+    if (proxy) {
+      proxy.revoke();
+      this.set(key, null);
+    }
   }
 }
 

@@ -26,6 +26,7 @@ function events(is: boolean, args: Customize) {
 }
 
 export default function (): Component {
+  Store.removeProxy('head-events');
   const args = Store.get<Customize>('customize');
   const title = domCreateElement('div', 'title');
   title.innerText = args.title || getGlobal('app.name');
