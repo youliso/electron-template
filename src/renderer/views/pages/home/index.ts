@@ -10,15 +10,18 @@ const args = Store.get<Customize>('customize');
 
 function testRender() {
   const test = domCreateElement('div', 'text');
+  let list: string[] = [];
+  const listData = Store.proxy(list, (value, p: string) => {
+    console.log(listData, p);
+  });
   const testData = Store.proxy({ time: dateFormat(), a: '1' }, (value, p: string) => {
     if (p === 'time') test.innerText = value;
   });
   test.innerText = dateFormat();
   setInterval(() => {
+    listData.push(Date.now() + '');
+    testData.a = Date.now() + '';
     testData.time = dateFormat();
-    setTimeout(() => {
-      testData.a = Date.now() + '';
-    }, 40);
   }, 1000);
 
   return test;

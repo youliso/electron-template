@@ -102,8 +102,9 @@ class Stores {
       value = arg[0];
       if (arg[1]) callback = arg[1];
     }
-    const isObject = typeof value === 'object';
-    const handler: ProxyHandler<any> = {
+    let data = value;
+    if (typeof value !== 'object' && !Array.isArray(value)) data = { value };
+    const ob = new Proxy(data, {
       get: (target, p) => {
         return target[p];
       },
@@ -114,8 +115,7 @@ class Stores {
         }
         return true;
       }
-    };
-    const ob = isObject ? new Proxy(value, handler) : new Proxy({ value }, handler);
+    });
     if (key) this.set(key, ob);
     return ob;
   }

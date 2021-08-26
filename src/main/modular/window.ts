@@ -124,17 +124,17 @@ export class Window {
     args = args || this.initWindowOpt;
     for (const i of this.getAll()) {
       if (
-        !i.customize.isMultiWindow &&
-        ((args.customize.route && args.customize.route === i.customize.route) ||
-          (args.customize.file && args.customize.file === i.customize.file) ||
-          (args.customize.url && args.customize.url === i.customize.url))
+        !i.customize?.isMultiWindow &&
+        ((args.customize?.route && args.customize.route === i.customize?.route) ||
+          (args.customize?.file && args.customize.file === i.customize?.file) ||
+          (args.customize?.url && args.customize.url === i.customize?.url))
       ) {
         i.focus();
         return;
       }
     }
     const win = browserWindowInit(args);
-    if (win.customize.isMainWin) {
+    if (win.customize?.isMainWin) {
       //是否主窗口
       if (this.main && !this.main.isDestroyed()) {
         this.main.close();
@@ -259,11 +259,11 @@ export class Window {
    * 开启监听
    */
   on() {
-    //窗口数据更新
+    // 窗口数据更新
     ipcMain.on('window-update', (event, args) => {
       if (args?.id) this.get(args.id).customize = args;
     });
-    //最大化最小化窗口
+    // 最大化最小化窗口
     ipcMain.on('window-max-min-size', (event, id) => {
       if (id) {
         const win = this.get(id);
@@ -271,23 +271,23 @@ export class Window {
         else win.maximize();
       }
     });
-    //窗口消息
+    // 窗口消息
     ipcMain.on('window-fun', (event, args) => this.func(args.type, args.id));
-    //窗口状态
+    // 窗口状态
     ipcMain.handle('window-status', (event, args) => this.getStatus(args.type, args.id));
-    //创建窗口
+    // 创建窗口
     ipcMain.on('window-new', (event, args) => this.create(args));
-    //设置窗口是否置顶
+    // 设置窗口是否置顶
     ipcMain.on('window-always-top-set', (event, args) => this.setAlwaysOnTop(args));
-    //设置窗口大小
+    // 设置窗口大小
     ipcMain.on('window-size-set', (event, args) => this.setSize(args));
-    //设置窗口最小大小
+    // 设置窗口最小大小
     ipcMain.on('window-min-size-set', (event, args) => this.setMinSize(args));
-    //设置窗口最大大小
+    // 设置窗口最大大小
     ipcMain.on('window-max-size-set', (event, args) => this.setMaxSize(args));
-    //设置窗口背景颜色
+    // 设置窗口背景颜色
     ipcMain.on('window-bg-color-set', (event, args) => this.setBackgroundColor(args));
-    //窗口消息
+    // 窗口消息
     ipcMain.on('window-message-send', (event, args) => {
       const channel = `window-message-${args.channel}-back`;
       if (args.acceptIds && args.acceptIds.length > 0) {
@@ -302,7 +302,7 @@ export class Window {
     //通过路由获取窗口id (不传route查全部)
     ipcMain.on('window-id-get', (event, args) => {
       event.returnValue = this.getAll()
-        .filter((win) => (args.route ? win.customize.route === args.route : true))
+        .filter((win) => (args.route ? win.customize?.route === args.route : true))
         .map((win) => win.id);
     });
   }
