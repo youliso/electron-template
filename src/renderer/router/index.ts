@@ -32,7 +32,7 @@ export class Router {
     this.routes.push(route);
   }
 
-  async r(route: Route, params?: RouteParams) {
+  async r(route: Route, params?: RouteParams, isHistory: boolean = true) {
     await route
       .component()
       .then((e) => {
@@ -45,14 +45,22 @@ export class Router {
         if (e?.onReady) e.onReady();
         this.current = e;
       })
-      .then(() => this.setHistory(route.path, params))
+      .then(() => {
+        if (isHistory) this.setHistory(route.path, params);
+      })
       .catch(console.error);
+  }
+
+  async replace(path: string, params?: RouteParams) {
+    const route: Route = this.getRoute(path);
+    if (!route) console.warn(`beyond the history of ${path}`);
+    else await this.r(route, params, false);
   }
 
   /**
    * 跳转路由
    */
-  async go(path: string, params?: RouteParams) {
+  async push(path: string, params?: RouteParams) {
     const route: Route = this.getRoute(path);
     if (!route) console.warn(`beyond the history of ${path}`);
     else await this.r(route, params);

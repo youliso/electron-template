@@ -88,7 +88,7 @@ export default function (): View {
     });
   });
   about.addEventListener('click', () => {
-    Router.go('/about');
+    Router.replace('/about');
   });
   return {
     dom: [vue, svelte, react, testRender(), but, about]
