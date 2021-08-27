@@ -20,7 +20,7 @@ export function sessionCookiesGet(args: CookiesGetFilter) {
  * 设置 cookies
  * @param args
  */
-export function sessionCookiesSet(args: CookiesSetDetails) {
+export async function sessionCookiesSet(args: CookiesSetDetails) {
   return window.ipc.invoke('session-cookies-set', args);
 }
 
@@ -29,6 +29,6 @@ export function sessionCookiesSet(args: CookiesSetDetails) {
  * @param url
  * @param name
  */
-export function sessionCookiesRemove(url: string, name: string) {
+export async function sessionCookiesRemove(url: string, name: string) {
   return window.ipc.invoke('session-cookies-remove', { url, name });
 }

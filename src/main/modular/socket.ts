@@ -16,7 +16,7 @@ export default class Socket {
   public io: SocketIo;
 
   /**
-   * socket.io参数
+   * sockezt.io参数
    * 参考 ManagerOptions & SocketOptions
    * url https://socket.io/docs/v3/client-api/#new-Manager-url-options
    */

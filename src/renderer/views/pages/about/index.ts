@@ -11,10 +11,8 @@ export function onUnmounted() {
 }
 
 export default function (params?: RouteParams): View {
-  const text = domCreateElement('div', 'text');
-  const home = domCreateElement('button', 'but');
-  text.innerText = '关于';
-  home.innerText = '首页';
+  const text = domCreateElement('div', 'text', '关于');
+  const home = domCreateElement('button', 'but', '首页');
   home.addEventListener('click', () => Router.replace('/home'));
   return {
     dom: [text, home]

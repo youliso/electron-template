@@ -12,16 +12,15 @@ let testData: StoreProxy<{ time: string; a: string }>;
 
 function testRender() {
   const test = domCreateElement('div', 'text');
-  listData = Store.proxy([], (value, p: string) => {
-    console.log(listData.proxy, p);
-  });
+  // listData = Store.proxy([], (value, p: string) => {
+  //   console.log(listData.proxy, p);
+  // });
   testData = Store.proxy({ time: dateFormat(), a: '1' }, (value, p: string) => {
     if (p === 'time') test.innerText = value;
   });
   test.innerText = dateFormat();
   const ls = setInterval(() => {
     try {
-      listData.proxy.push(Date.now() + '');
       testData.proxy.a = Date.now() + '';
       testData.proxy.time = dateFormat();
     } catch (e) {
@@ -54,16 +53,11 @@ export function onUnmounted() {
 }
 
 export default function (): View {
-  const vue = domCreateElement('div', 'btn');
-  const svelte = domCreateElement('div', 'btn');
-  const react = domCreateElement('div', 'btn');
-  const but = domCreateElement('button', 'but');
-  const about = domCreateElement('button', 'but');
-  vue.innerText = 'vue 模板';
-  svelte.innerText = 'svelte 模板';
-  react.innerText = 'react 模板';
-  but.innerText = '弹框';
-  about.innerText = '关于';
+  const vue = domCreateElement('div', 'btn', 'vue 模板');
+  const svelte = domCreateElement('div', 'btn', 'svelte 模板');
+  const react = domCreateElement('div', 'btn', 'react 模板');
+  const but = domCreateElement('button', 'but', '弹框');
+  const about = domCreateElement('button', 'but', '关于');
   vue.addEventListener('click', () => {
     openUrl('https://github.com/youliso/electron-template/tree/vue');
   });

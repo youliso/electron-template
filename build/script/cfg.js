@@ -23,8 +23,8 @@ config.nsis.allowToChangeInstallationDirectory = true; //是否允许用户修�
 config.win.requestedExecutionLevel = ['asInvoker', 'highestAvailable'][0]; //应用权限
 config.win.target = [];
 // config.win.target.push({ //单文件
-//     "target": "portable"
-//     // "arch": ["x64"]
+//     "target": "portable",
+//     "arch": ["ia32"]
 // });
 config.win.target.push({
   //nsis打包

@@ -23,8 +23,8 @@ export default class Session {
       (details, callback) => {
         const urls = Object.keys(this.urlHeaders);
         const keys = urls.filter((key: string) => details.url.indexOf(key) === 0);
-        for (let key of keys) {
-          for (let v in this.urlHeaders[key]) {
+        for (const key of keys) {
+          for (const v in this.urlHeaders[key]) {
             details.requestHeaders[v] = this.urlHeaders[key][v];
           }
         }
@@ -55,8 +55,8 @@ export default class Session {
    * 如果存在，则会覆盖原先 cookie.
    * @param details
    */
-  setCookies(details: CookiesSetDetails) {
-    return session.defaultSession.cookies.set(details);
+  async setCookies(details: CookiesSetDetails) {
+    await session.defaultSession.cookies.set(details);
   }
 
   /**
@@ -64,8 +64,8 @@ export default class Session {
    * @param url
    * @param name
    */
-  removeCookies(url: string, name: string) {
-    return session.defaultSession.cookies.remove(url, name);
+  async removeCookies(url: string, name: string) {
+    await session.defaultSession.cookies.remove(url, name);
   }
 
   /**

@@ -26,14 +26,10 @@ export default function (): View {
   hideEvents();
   const info = domCreateElement('div', 'message-info');
   const text = domCreateElement('div', 'text');
-  const text1 = domCreateElement('div');
-  const text2 = domCreateElement('div');
-  const send = domCreateElement('button', 'test');
-  const but = domCreateElement('button', 'close');
-  text1.innerText = `创建传参: ${JSON.stringify(args.data)}`;
-  text2.innerText = `app启动参数: ${getGlobal('app.argv')}`;
-  but.innerText = '确定';
-  send.innerText = '发送消息';
+  const text1 = domCreateElement('div', null, `创建传参: ${JSON.stringify(args.data)}`);
+  const text2 = domCreateElement('div', null, `app启动参数: ${getGlobal('app.argv')}`);
+  const send = domCreateElement('button', 'test', '发送消息');
+  const but = domCreateElement('button', 'close', '确定');
   but.addEventListener('click', () => windowClose(args.id));
   send.addEventListener('click', () => windowMessageSend('test', Date.now()));
   text.appendChild(text1);

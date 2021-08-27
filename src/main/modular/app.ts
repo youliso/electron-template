@@ -26,6 +26,7 @@ export class App {
         // 当运行第二个实例时,将会聚焦到main窗口
         if (Window.main) {
           if (Window.main.isMinimized()) Window.main.restore();
+          Window.main.show();
           Window.main.focus();
         }
       });

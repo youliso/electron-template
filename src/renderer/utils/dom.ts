@@ -38,10 +38,16 @@ export function domCssPropertySet(key: string, value: any) {
  * 创建元素
  * @param el 元素
  * @param css class名称（可选）
+ * @param text 文本（可选）
  */
-export function domCreateElement<K extends keyof HTMLElementTagNameMap>(el: K, css?: string) {
+export function domCreateElement<K extends keyof HTMLElementTagNameMap>(
+  el: K,
+  css?: string,
+  text?: string
+) {
   const dom = document.createElement(el);
   if (css) dom.setAttribute('class', css);
+  if (text) dom.innerText = text;
   return dom;
 }
 
