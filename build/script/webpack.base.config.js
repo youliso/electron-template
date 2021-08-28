@@ -7,8 +7,11 @@ module.exports = {
     __dirname: false,
     __filename: false
   },
+  externals: {
+    'node-abort-controller': 'require("node-abort-controller")'
+  },
   resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
+    extensions: ['.ts', '.js'],
     alias: {
       dist: resolve('dist'),
       '@': resolve('src')
