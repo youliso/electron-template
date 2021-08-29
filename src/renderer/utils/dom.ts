@@ -47,7 +47,7 @@ export function domCreateElement<K extends keyof HTMLElementTagNameMap>(
 ) {
   const dom = document.createElement(el);
   if (css) dom.setAttribute('class', css);
-  if (text) dom.innerText = text;
+  if (text) dom.textContent = text;
   return dom;
 }
 
