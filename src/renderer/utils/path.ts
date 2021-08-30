@@ -2,6 +2,10 @@ export function sep(): string {
   return window.ipc.sendSync('path-sep');
 }
 
+export function isAbsolute(path: string): string {
+  return window.ipc.sendSync('path-isAbsolute', path);
+}
+
 export function dirname(path: string): string {
   return window.ipc.sendSync('path-dirname', path);
 }

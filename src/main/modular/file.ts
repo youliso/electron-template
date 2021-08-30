@@ -1,6 +1,6 @@
 import fs, { MakeDirectoryOptions } from 'fs';
 import { createInterface } from 'readline';
-import { resolve, extname } from 'path';
+import { resolve, extname, isAbsolute } from 'path';
 import { isNull } from '@/lib';
 import { ipcMain } from 'electron';
 
@@ -10,7 +10,7 @@ import { ipcMain } from 'electron';
  * @param suffix
  */
 export function fileBySuffix(path: string, suffix: string) {
-  if (path.substr(0, 1) !== '/' && path.indexOf(':') === -1) path = resolve(path);
+  if (!isAbsolute(path)) path = resolve(path);
   try {
     let files: string[] = [];
     let dirArray = fs.readdirSync(path);
@@ -34,7 +34,7 @@ export function fileBySuffix(path: string, suffix: string) {
  * 删除目录和内部文件
  * */
 export function delDir(path: string): void {
-  if (path.substr(0, 1) !== '/' && path.indexOf(':') === -1) path = resolve(path);
+  if (!isAbsolute(path)) path = resolve(path);
   let files = [];
   if (fs.existsSync(path)) {
     files = fs.readdirSync(path);
@@ -55,7 +55,7 @@ export function delDir(path: string): void {
  * @param path
  */
 export function unlink(path: string) {
-  if (path.substr(0, 1) !== '/' && path.indexOf(':') === -1) path = resolve(path);
+  if (!isAbsolute(path)) path = resolve(path);
   return new Promise((resolve) =>
     fs.unlink(path, (err) => {
       if (err) resolve(0);
@@ -69,7 +69,7 @@ export function unlink(path: string) {
  * @return 0 不存在 1 只可读 2 存在可读写
  */
 export function access(path: string) {
-  if (path.substr(0, 1) !== '/' && path.indexOf(':') === -1) path = resolve(path);
+  if (!isAbsolute(path)) path = resolve(path);
   return new Promise((resolve) =>
     fs.access(path, fs.constants.F_OK, (err) => {
       if (err) err.code === 'ENOENT' ? resolve(0) : resolve(1);
@@ -83,7 +83,7 @@ export function access(path: string) {
  * @return 0 失败 1 成功
  */
 export function rename(path: string, newPath: string) {
-  if (path.substr(0, 1) !== '/' && path.indexOf(':') === -1) path = resolve(path);
+  if (!isAbsolute(path)) path = resolve(path);
   if (newPath.substr(0, 1) !== '/' && newPath.indexOf(':') === -1) newPath = resolve(newPath);
   return new Promise((resolve) => {
     fs.rename(path, newPath, (err) => {
@@ -99,7 +99,7 @@ export function rename(path: string, newPath: string) {
  * @param options 选项
  */
 export function readFile(path: string, options?: { encoding?: BufferEncoding; flag?: string }) {
-  if (path.substr(0, 1) !== '/' && path.indexOf(':') === -1) path = resolve(path);
+  if (!isAbsolute(path)) path = resolve(path);
   return new Promise((resolve) =>
     fs.readFile(path, options, (err, data) => {
       if (err) resolve(0);
@@ -114,7 +114,7 @@ export function readFile(path: string, options?: { encoding?: BufferEncoding; fl
  * @param index
  */
 export function readLine(path: string, index?: number): Promise<string | any[]> | null {
-  if (path.substr(0, 1) !== '/' && path.indexOf(':') === -1) path = resolve(path);
+  if (!isAbsolute(path)) path = resolve(path);
   const io = createInterface({
     input: fs.createReadStream(path)
   });
@@ -149,7 +149,7 @@ export function readLine(path: string, index?: number): Promise<string | any[]> 
  * @returns 0 失败 1成功
  */
 export async function mkdir(path: string, options: MakeDirectoryOptions) {
-  if (path.substr(0, 1) !== '/' && path.indexOf(':') === -1) path = resolve(path);
+  if (!isAbsolute(path)) path = resolve(path);
   return new Promise((resolve) => {
     fs.mkdir(path, options || { recursive: true }, (err) => {
       if (err) {
@@ -169,7 +169,7 @@ export async function writeFile(
   data: string | Buffer,
   options?: { encoding?: BufferEncoding; mode?: number | string; flag?: string }
 ) {
-  if (path.substr(0, 1) !== '/' && path.indexOf(':') === -1) path = resolve(path);
+  if (!isAbsolute(path)) path = resolve(path);
   return new Promise((resolve) =>
     fs.writeFile(path, data, options, (err) => {
       if (err) {
@@ -189,7 +189,7 @@ export async function appendFile(
   data: string | Uint8Array,
   options?: { encoding?: BufferEncoding; mode?: number | string; flag?: string }
 ) {
-  if (path.substr(0, 1) !== '/' && path.indexOf(':') === -1) path = resolve(path);
+  if (!isAbsolute(path)) path = resolve(path);
   return new Promise((resolve) =>
     fs.appendFile(path, data, options, (err) => {
       if (err) {
