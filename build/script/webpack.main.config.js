@@ -8,6 +8,9 @@ module.exports = (env) => {
     mode: env,
     devtool: env === 'production' ? undefined : base.devtool,
     target: 'electron-main',
+    externals: {
+      'node-abort-controller': 'require("node-abort-controller")'
+    },
     entry: {
       main: './src/main/index.ts',
       preload: './src/main/preload/index.ts'
