@@ -27,9 +27,12 @@ import { fileOn } from './modular/file';
     import('./modular/update'),
     import('./modular/socket')
   ]);
+
   // 挂载配置文件
-  // await Global.use('文件路径', 'test', true);
-  // 获取挂载内容 Global.getGlobal('test');
+  // await Global.use(app.getPath('userData') + '/cfg/index.json', 'test', true);
+  // 获取挂载内容
+  // Global.getGlobal('test');
+
   // 窗口
   Window.create();
   // 托盘

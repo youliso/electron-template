@@ -1,4 +1,5 @@
 import { statSync, writeFileSync, appendFileSync } from 'fs';
+import { sep } from 'path';
 import { app, ipcMain } from 'electron';
 import { dateFormat } from '@/lib';
 import { EOL } from 'os';
@@ -10,7 +11,8 @@ const logFile: string = app.getPath('logs');
  * @param val
  */
 export function logInfo(...val: any): void {
-  let data = '', date = dateFormat();
+  const path = logFile + `${sep}info-${dateFormat('yyyy-MM-dd')}.log`;
+  let data = '';
   val.forEach((e: any) => {
     try {
       if (typeof e === 'object') data += JSON.stringify(e);
@@ -19,12 +21,7 @@ export function logInfo(...val: any): void {
       data += e;
     }
   });
-  try {
-    statSync(logFile + `/info-${date}.log`);
-  } catch (e) {
-    writeFileSync(logFile + `/info-${date}.log`, '');
-  }
-  appendFileSync(logFile + `/info-${date}.log`, `[${dateFormat('yy-MM-dd hh:mm:ss')}] [info] ${data}${EOL}`);
+  write(path, `[${dateFormat('yy-MM-dd hh:mm:ss')}] [info] ${data}${EOL}`);
 }
 
 /**
@@ -32,7 +29,8 @@ export function logInfo(...val: any): void {
  * @param val
  */
 export function logError(...val: any): void {
-  let data = '', date = dateFormat();
+  const path = logFile + `${sep}error-${dateFormat('yyyy-MM-dd')}.log`;
+  let data = '';
   val.forEach((e: any) => {
     try {
       if (typeof e === 'object') data += JSON.stringify(e);
@@ -41,12 +39,17 @@ export function logError(...val: any): void {
       data += e;
     }
   });
+  write(path, `[${dateFormat('yy-MM-dd hh:mm:ss')}] [error] ${data}${EOL}`);
+}
+
+function write(path: string, data: string) {
   try {
-    statSync(logFile + `/error-${date}.log`);
+    statSync(path);
   } catch (e) {
-    writeFileSync(logFile + `/error-${date}.log`, '');
+    writeFileSync(path, data);
+    return;
   }
-  appendFileSync(logFile + `/error-${date}.log`, `[${dateFormat('yy-MM-dd hh:mm:ss')}] [error] ${data}${EOL}`);
+  appendFileSync(path, data);
 }
 
 /**

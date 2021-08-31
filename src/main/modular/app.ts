@@ -19,46 +19,7 @@ export class App {
    * 启动主进程
    */
   async start() {
-    // 默认单例根据自己需要改
-    if (!app.requestSingleInstanceLock()) app.quit();
-    else {
-      app.on('second-instance', (event, argv) => {
-        // 当运行第二个实例时,将会聚焦到main窗口
-        if (Window.main) {
-          if (Window.main.isMinimized()) Window.main.restore();
-          Window.main.show();
-          Window.main.focus();
-        }
-      });
-    }
-    // 渲染进程崩溃监听
-    app.on('render-process-gone', (event, webContents, details) =>
-      logError(
-        '[render-process-gone]',
-        webContents.getTitle(),
-        webContents.getURL(),
-        JSON.stringify(details)
-      )
-    );
-    // 子进程崩溃监听
-    app.on('child-process-gone', (event, details) =>
-      logError('[child-process-gone]', JSON.stringify(details))
-    );
-    // 关闭所有窗口退出
-    app.on('window-all-closed', () => {
-      if (process.platform !== 'darwin') app.quit();
-    });
-    // 获得焦点时发出
-    app.on('browser-window-focus', () => {
-      // 关闭刷新
-      globalShortcut.register('CommandOrControl+R', () => {});
-    });
-    // 失去焦点时发出
-    app.on('browser-window-blur', () => {
-      // 注销关闭刷新
-      globalShortcut.unregister('CommandOrControl+R');
-    });
-    app.allowRendererProcessReuse = true;
+    this.appOn();
     // 协议调起
     let argv = [];
     if (!app.isPackaged) argv.push(resolve(process.argv[1]));
@@ -98,6 +59,51 @@ export class App {
         }
       })
       .catch(logError);
+  }
+
+  /**
+   * 主进程监听
+   */
+  appOn() {
+    // 默认单例根据自己需要改
+    if (!app.requestSingleInstanceLock()) app.quit();
+    else {
+      app.on('second-instance', (event, argv) => {
+        // 当运行第二个实例时,将会聚焦到main窗口
+        if (Window.main) {
+          if (Window.main.isMinimized()) Window.main.restore();
+          Window.main.show();
+          Window.main.focus();
+        }
+      });
+    }
+    // 渲染进程崩溃监听
+    app.on('render-process-gone', (event, webContents, details) =>
+      logError(
+        '[render-process-gone]',
+        webContents.getTitle(),
+        webContents.getURL(),
+        JSON.stringify(details)
+      )
+    );
+    // 子进程崩溃监听
+    app.on('child-process-gone', (event, details) =>
+      logError('[child-process-gone]', JSON.stringify(details))
+    );
+    // 关闭所有窗口退出
+    app.on('window-all-closed', () => {
+      if (process.platform !== 'darwin') app.quit();
+    });
+    // 获得焦点时发出
+    app.on('browser-window-focus', () => {
+      // 关闭刷新
+      globalShortcut.register('CommandOrControl+R', () => {});
+    });
+    // 失去焦点时发出
+    app.on('browser-window-blur', () => {
+      // 注销关闭刷新
+      globalShortcut.unregister('CommandOrControl+R');
+    });
   }
 
   /**
