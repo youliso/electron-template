@@ -19,7 +19,6 @@ module.exports = (env) => {
       chunkFilename: './js/[id]v.js',
       path: resolve('dist')
     },
-    externals: base.externals,
     resolve: base.resolve,
     module: {
       rules: [

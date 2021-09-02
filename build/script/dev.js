@@ -16,7 +16,6 @@ async function startRenderer() {
     throw 'not found .port';
   }
   const config = require('./webpack.renderer.config')('development');
-  config.plugins.push(new webpack.HotModuleReplacementPlugin());
   const options = {
     host: 'localhost',
     port: port,
@@ -25,7 +24,6 @@ async function startRenderer() {
     static: path.resolve('dist')
   };
   const compiler = webpack(config);
-  // webpackDevServer.addAdditionalEntries(compiler, options);
   const server = new webpackDevServer(options, compiler);
   server.start();
 }

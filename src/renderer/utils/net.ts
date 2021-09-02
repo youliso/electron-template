@@ -1,5 +1,3 @@
-import fetch, { RequestInit, Headers } from 'node-fetch';
-import { AbortController as NodeAbortController } from 'node-abort-controller';
 import querystring from 'querystring';
 
 const { timeout, appUrl } = require('@/cfg/net.json');
@@ -10,6 +8,7 @@ export interface NetOpt extends RequestInit {
   isHeaders?: boolean; //是否获取headers
   data?: any;
   body?: any;
+  timeout?: number;
   type?: NET_RESPONSE_TYPE; //返回数据类型
 }
 
@@ -29,8 +28,7 @@ export enum NET_RESPONSE_TYPE {
  * 创建 AbortController
  */
 export function AbortSignal() {
-  if (typeof window !== 'undefined') return new AbortController();
-  else return new NodeAbortController();
+  return new AbortController();
 }
 
 /**
@@ -88,7 +86,7 @@ function fetchPromise<T>(url: string, sendData: NetOpt): Promise<T> {
             : await res.blob();
       }
     })
-    .catch((err) => ({ code: 400, msg: err.message }));
+    .catch((err) => ({ code: 400, msg: err.message })) as Promise<T>;
 }
 
 /**
@@ -96,7 +94,7 @@ function fetchPromise<T>(url: string, sendData: NetOpt): Promise<T> {
  * @param url
  * @param param
  */
-export async function net<T>(url: string, param: NetOpt = {}): Promise<T> {
+export default async function net<T>(url: string, param: NetOpt = {}): Promise<T> {
   if (!url.startsWith('http://') && !url.startsWith('https://')) url = appUrl + url;
   let abort: TimeOutAbort = null;
   if (!param.signal) abort = timeOutAbort(param.timeout || timeout);

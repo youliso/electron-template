@@ -1,4 +1,4 @@
-import { net } from '@/lib/net';
+import { net } from '@/main/modular/net';
 
 test('net get baidu', async () => {
   let req = await net<string>('https://www.baidu.com');

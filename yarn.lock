@@ -2049,6 +2049,11 @@ cssstyle@^2.3.0:
   dependencies:
     cssom "~0.3.6"
 
+data-uri-to-buffer@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.nlark.com/data-uri-to-buffer/download/data-uri-to-buffer-3.0.1.tgz#594b8973938c5bc2c33046535785341abc4f3636"
+  integrity sha1-WUuJc5OMW8LDMEZTV4U0GrxPNjY=
+
 data-urls@^2.0.0:
   version "2.0.0"
   resolved "https://registry.nlark.com/data-urls/download/data-urls-2.0.0.tgz#156485a72963a970f5d5821aaf642bef2bf2db9b"
@@ -2403,10 +2408,10 @@ electron-publish@22.11.7:
     lazy-val "^1.0.5"
     mime "^2.5.2"
 
-electron-rebuild@^3.2.2:
-  version "3.2.2"
-  resolved "https://registry.nlark.com/electron-rebuild/download/electron-rebuild-3.2.2.tgz#b7bdcc6bb7a8868a517dfb341282ca5a4c7e502e"
-  integrity sha1-t73Ma7eohopRffs0EoLKWkx+UC4=
+electron-rebuild@^3.2.3:
+  version "3.2.3"
+  resolved "https://registry.nlark.com/electron-rebuild/download/electron-rebuild-3.2.3.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.nlark.com%2Felectron-rebuild%2Fdownload%2Felectron-rebuild-3.2.3.tgz#2c0b06b7b1a5240fec96f1d368d04222e2590c3d"
+  integrity sha1-LAsGt7GlJA/slvHTaNBCIuJZDD0=
   dependencies:
     "@malept/cross-spawn-promise" "^2.0.0"
     colors "^1.3.3"
@@ -2791,6 +2796,13 @@ fd-slicer@~1.1.0:
   integrity sha1-JcfInLH5B3+IkbvmHY85Dq4lbx4=
   dependencies:
     pend "~1.2.0"
+
+fetch-blob@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.nlark.com/fetch-blob/download/fetch-blob-3.1.2.tgz#6bc438675f3851ecea51758ac91f6a1cd1bacabd"
+  integrity sha1-a8Q4Z184UezqUXWKyR9qHNG6yr0=
+  dependencies:
+    web-streams-polyfill "^3.0.3"
 
 filelist@^1.0.1:
   version "1.0.2"
@@ -4673,10 +4685,13 @@ node-api-version@^0.1.4:
   dependencies:
     semver "^7.3.5"
 
-node-fetch@^2.6.1:
-  version "2.6.1"
-  resolved "https://registry.nlark.com/node-fetch/download/node-fetch-2.6.1.tgz?cache=0&sync_timestamp=1626684723711&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fnode-fetch%2Fdownload%2Fnode-fetch-2.6.1.tgz#045bd323631f76ed2e2b55573394416b639a0052"
-  integrity sha1-BFvTI2Mfdu0uK1VXM5RBa2OaAFI=
+node-fetch@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.nlark.com/node-fetch/download/node-fetch-3.0.0.tgz?cache=0&sync_timestamp=1630426994439&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fnode-fetch%2Fdownload%2Fnode-fetch-3.0.0.tgz#79da7146a520036f2c5f644e4a26095f17e411ea"
+  integrity sha1-edpxRqUgA28sX2ROSiYJXxfkEeo=
+  dependencies:
+    data-uri-to-buffer "^3.0.1"
+    fetch-blob "^3.1.2"
 
 node-forge@^0.10.0:
   version "0.10.0"
@@ -5501,10 +5516,10 @@ sass-loader@^12.1.0:
     klona "^2.0.4"
     neo-async "^2.6.2"
 
-sass@^1.38.2:
-  version "1.38.2"
-  resolved "https://registry.nlark.com/sass/download/sass-1.38.2.tgz?cache=0&sync_timestamp=1630138808188&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fsass%2Fdownload%2Fsass-1.38.2.tgz#970045d9966180002a8c8f3820fc114cddb42822"
-  integrity sha1-lwBF2ZZhgAAqjI84IPwRTN20KCI=
+sass@^1.39.0:
+  version "1.39.0"
+  resolved "https://registry.nlark.com/sass/download/sass-1.39.0.tgz#6c64695d1c437767c8f1a4e471288e831f81d035"
+  integrity sha1-bGRpXRxDd2fI8aTkcSiOgx+B0DU=
   dependencies:
     chokidar ">=3.0.0 <4.0.0"
 
@@ -6367,6 +6382,11 @@ wcwidth@^1.0.1:
   dependencies:
     defaults "^1.0.3"
 
+web-streams-polyfill@^3.0.3:
+  version "3.1.0"
+  resolved "https://registry.nlark.com/web-streams-polyfill/download/web-streams-polyfill-3.1.0.tgz#86f983b4f44745502b0d8563d9ef3afc609d4465"
+  integrity sha1-hvmDtPRHRVArDYVj2e86/GCdRGU=
+
 webidl-conversions@^5.0.0:
   version "5.0.0"
   resolved "https://registry.nlark.com/webidl-conversions/download/webidl-conversions-5.0.0.tgz#ae59c8a00b121543a2acc65c0434f57b0fc11aff"
@@ -6389,10 +6409,10 @@ webpack-dev-middleware@^5.0.0:
     range-parser "^1.2.1"
     schema-utils "^3.0.0"
 
-webpack-dev-server@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.nlark.com/webpack-dev-server/download/webpack-dev-server-4.0.0.tgz#fb4906e91182154bba54a66e6e06f84c1e3c0a80"
-  integrity sha1-+0kG6RGCFUu6VKZubgb4TB48CoA=
+webpack-dev-server@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.nlark.com/webpack-dev-server/download/webpack-dev-server-4.1.0.tgz?cache=0&sync_timestamp=1630431445407&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fwebpack-dev-server%2Fdownload%2Fwebpack-dev-server-4.1.0.tgz#1c7a7b77bdafec334a8b81d26c586f793001b5ca"
+  integrity sha1-HHp7d72v7DNKi4HSbFhveTABtco=
   dependencies:
     ansi-html "^0.0.7"
     bonjour "^3.5.0"
