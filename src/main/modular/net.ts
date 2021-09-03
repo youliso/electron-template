@@ -6,11 +6,7 @@ import querystring from 'querystring';
 
 const { timeout, appUrl } = require('@/cfg/net.json');
 
-export enum NET_RESPONSE_TYPE {
-  TEXT,
-  JSON,
-  BUFFER
-}
+type NET_RESPONSE_TYPE = 'TEXT' | 'JSON' | 'BUFFER';
 
 export interface NetOpt extends ClientRequestConstructorOptions {
   authorization?: string;
@@ -21,7 +17,7 @@ export interface NetOpt extends ClientRequestConstructorOptions {
   // 是否下载文件
   isDownload?: boolean;
   onRequest?: (abort: ClientRequest) => void;
-  onDownloadProgress?: (status: boolean, chunk?: Buffer) => void;
+  onDownload?: (status: boolean, chunk?: Buffer) => void;
   headers?: { [key: string]: string };
   encoding?: BufferEncoding;
   data?: any;
@@ -56,7 +52,7 @@ export function request<T>(url: string, params: NetOpt = {}): Promise<T> {
       },
       params.headers
     );
-    if (!params.type) params.type = NET_RESPONSE_TYPE.JSON;
+    if (!params.type) params.type = 'JSON';
     if (params.data && sendData.method === 'GET') {
       sendData.url += `?${querystring.stringify(params.data)}`;
     }
@@ -72,8 +68,8 @@ export function request<T>(url: string, params: NetOpt = {}): Promise<T> {
     });
     request.on('response', (response) => {
       response.on('data', (chunk) => {
-        if (params.type === NET_RESPONSE_TYPE.BUFFER && params.isDownload) {
-          params.onDownloadProgress(true, chunk);
+        if (params.type === 'TEXT' && params.isDownload) {
+          params.onDownload(true, chunk);
           return;
         }
         chunks.push(chunk);
@@ -87,18 +83,18 @@ export function request<T>(url: string, params: NetOpt = {}): Promise<T> {
         }
         let result: unknown | T;
         switch (params.type) {
-          case NET_RESPONSE_TYPE.BUFFER:
+          case 'BUFFER':
             if (params.isDownload) {
-              params.onDownloadProgress(false);
+              params.onDownload(false);
               result = 'downloaded';
               break;
             }
             result = data;
             break;
-          case NET_RESPONSE_TYPE.JSON:
+          case 'JSON':
             result = JSON.parse(data.toString());
             break;
-          case NET_RESPONSE_TYPE.TEXT:
+          case 'TEXT':
             result = data.toString(params.encoding || 'utf8');
             break;
         }
