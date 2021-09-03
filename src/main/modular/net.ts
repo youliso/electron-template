@@ -17,7 +17,11 @@ export interface NetOpt extends ClientRequestConstructorOptions {
   // 是否下载文件
   isDownload?: boolean;
   onRequest?: (abort: ClientRequest) => void;
-  onDownload?: (status: boolean, chunk?: Buffer) => void;
+  onDownload?: (
+    status: boolean,
+    chunk?: Buffer,
+    headers?: Record<string, string | string[]>
+  ) => void;
   headers?: { [key: string]: string };
   encoding?: BufferEncoding;
   data?: any;
@@ -69,7 +73,7 @@ export function request<T>(url: string, params: NetOpt = {}): Promise<T> {
     request.on('response', (response) => {
       response.on('data', (chunk) => {
         if (params.type === 'TEXT' && params.isDownload) {
-          params.onDownload(true, chunk);
+          params.onDownload(true, chunk, response.headers);
           return;
         }
         chunks.push(chunk);
