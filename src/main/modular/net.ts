@@ -111,7 +111,7 @@ export function request<T>(url: string, params: NetOpt = {}): Promise<T> {
     }
     request.end();
     if (params.onRequest) params.onRequest(request);
-    setTimeout(() => request.abort(), params.timeout || timeout);
+    if (!params.isDownload) setTimeout(() => request.abort(), params.timeout || timeout);
   });
 }
 
