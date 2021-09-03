@@ -57,6 +57,7 @@ export default function (): View {
   const vue = domCreateElement('div', 'btn', 'vue 模板');
   const svelte = domCreateElement('div', 'btn', 'svelte 模板');
   const react = domCreateElement('div', 'btn', 'react 模板');
+  const baidu = domCreateElement('button', 'but', '打开baidu');
   const but = domCreateElement('button', 'but', '弹框');
   const about = domCreateElement('button', 'but', '关于');
   vue.addEventListener('click', () => {
@@ -82,10 +83,21 @@ export default function (): View {
       resizable: true
     });
   });
+  baidu.addEventListener('click', () => {
+    windowCreate({
+      customize: {
+        url: 'https://baidu.com/',
+        parentId: args.id
+      },
+      width: 800,
+      height: 600,
+      resizable: true
+    });
+  });
   about.addEventListener('click', () => {
     Router.replace('/about');
   });
   return {
-    dom: [vue, svelte, react, testRender(), but, about]
+    dom: [vue, svelte, react, testRender(), but, about, baidu]
   };
 }

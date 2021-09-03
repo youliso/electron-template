@@ -16,7 +16,7 @@ export function browserWindowInit(args: BrowserWindowConstructorOptions): Browse
   args.height = args.height || windowCfg.height;
   let opt: BrowserWindowConstructorOptions = Object.assign(args, {
     autoHideMenuBar: true,
-    titleBarStyle: 'hidden',
+    titleBarStyle: args.customize.route ? 'hidden' : 'default',
     minimizable: true,
     maximizable: true,
     frame: !args.customize.route,
