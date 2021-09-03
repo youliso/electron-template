@@ -14,11 +14,16 @@ export enum NET_RESPONSE_TYPE {
 
 export interface NetOpt extends ClientRequestConstructorOptions {
   authorization?: string;
-  isStringify?: boolean; //是否stringify参数（非GET请求使用）
-  isHeaders?: boolean; //是否获取headers
+  // 是否stringify参数（非GET请求使用）
+  isStringify?: boolean;
+  // 是否获取headers
+  isHeaders?: boolean;
+  // 是否下载文件
+  isDownload?: boolean;
+  onRequest?: (abort: ClientRequest) => void;
+  onDownloadProgress?: (status: boolean, chunk?: Buffer) => void;
   headers?: { [key: string]: string };
   encoding?: BufferEncoding;
-  onRequest?: (abort: ClientRequest) => void;
   data?: any;
   type?: NET_RESPONSE_TYPE;
   timeout?: number;
@@ -32,6 +37,11 @@ export interface UploadOpt {
   headers?: { [key: string]: string };
 }
 
+/**
+ * 请求
+ * @param url
+ * @param params
+ */
 export function request<T>(url: string, params: NetOpt = {}): Promise<T> {
   return new Promise((resolve, reject) => {
     if (!url.startsWith('http://') && !url.startsWith('https://')) url = appUrl + url;
@@ -62,6 +72,10 @@ export function request<T>(url: string, params: NetOpt = {}): Promise<T> {
     });
     request.on('response', (response) => {
       response.on('data', (chunk) => {
+        if (params.type === NET_RESPONSE_TYPE.BUFFER && params.isDownload) {
+          params.onDownloadProgress(true, chunk);
+          return;
+        }
         chunks.push(chunk);
         size += chunk.length;
       });
@@ -74,6 +88,11 @@ export function request<T>(url: string, params: NetOpt = {}): Promise<T> {
         let result: unknown | T;
         switch (params.type) {
           case NET_RESPONSE_TYPE.BUFFER:
+            if (params.isDownload) {
+              params.onDownloadProgress(false);
+              result = 'downloaded';
+              break;
+            }
             result = data;
             break;
           case NET_RESPONSE_TYPE.JSON:
@@ -100,6 +119,17 @@ export function request<T>(url: string, params: NetOpt = {}): Promise<T> {
   });
 }
 
+/**
+ * 上传
+ */
+function dataToFormData(boundary: string, key: string, value: string) {
+  return `--${boundary}\r\nContent-Disposition: form-data; name="${key}"\r\n\r\n${value}\r\n`;
+}
+
+/**
+ * @param url
+ * @param params
+ */
 export function upload(url: string, params: UploadOpt) {
   return new Promise((resolve, reject) => {
     if (!url.startsWith('http://') && !url.startsWith('https://')) url = appUrl + url;
@@ -162,8 +192,4 @@ export function upload(url: string, params: UploadOpt) {
     });
     readStream.pipe(request as unknown as NodeJS.WritableStream, { end: false });
   });
-}
-
-function dataToFormData(boundary: string, key: string, value: string) {
-  return `--${boundary}\r\nContent-Disposition: form-data; name="${key}"\r\n\r\n${value}\r\n`;
 }
