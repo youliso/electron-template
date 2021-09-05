@@ -6415,10 +6415,10 @@ webpack-sources@^3.2.0:
   resolved "https://registry.nlark.com/webpack-sources/download/webpack-sources-3.2.0.tgz?cache=0&sync_timestamp=1627898333297&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fwebpack-sources%2Fdownload%2Fwebpack-sources-3.2.0.tgz#b16973bcf844ebcdb3afde32eda1c04d0b90f89d"
   integrity sha1-sWlzvPhE682zr94y7aHATQuQ+J0=
 
-webpack@^5.51.2:
-  version "5.51.2"
-  resolved "https://registry.nlark.com/webpack/download/webpack-5.51.2.tgz#f765d258b0bf6abda3c5f21bf855a25720e9796f"
-  integrity sha1-92XSWLC/ar2jxfIb+FWiVyDpeW8=
+webpack@^5.52.0:
+  version "5.52.0"
+  resolved "https://registry.nlark.com/webpack/download/webpack-5.52.0.tgz#88d997c2c3ebb62abcaa453d2a26e0fd917c71a3"
+  integrity sha1-iNmXwsPrtiq8qkU9Kibg/ZF8caM=
   dependencies:
     "@types/eslint-scope" "^3.7.0"
     "@types/estree" "^0.0.50"
