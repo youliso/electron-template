@@ -14,7 +14,7 @@ export interface NetOpt extends ClientRequestConstructorOptions {
   isStringify?: boolean;
   // 是否获取headers
   isHeaders?: boolean;
-  onRequest?: (abort: ClientRequest) => void;
+  onRequest?: (request: ClientRequest) => void;
   headers?: { [key: string]: string };
   timeout?: number;
   data?: any;
