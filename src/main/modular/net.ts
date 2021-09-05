@@ -14,128 +14,33 @@ export interface NetOpt extends ClientRequestConstructorOptions {
   isStringify?: boolean;
   // 是否获取headers
   isHeaders?: boolean;
-  // 是否下载文件
-  isDownload?: boolean;
   onRequest?: (abort: ClientRequest) => void;
-  onDownload?: (
-    status: boolean,
-    chunk?: Buffer,
-    headers?: Record<string, string | string[]>
-  ) => void;
   headers?: { [key: string]: string };
-  encoding?: BufferEncoding;
+  timeout?: number;
   data?: any;
   type?: NET_RESPONSE_TYPE;
-  timeout?: number;
-}
-
-export interface UploadOpt {
-  filePath: string;
+  encoding?: BufferEncoding;
+  // 是否下载请求
+  isDownload?: boolean;
+  onDownload?: (chunk?: Buffer, length?: number) => void;
+  // 是否上传请求
+  isUpload?: boolean;
+  filePath?: string;
   fileName?: string;
   onUploadProgress?: (status: string, size?: number, fullSize?: number) => void;
-  data?: { [key: string]: string };
-  headers?: { [key: string]: string };
 }
 
-/**
- * 请求
- * @param url
- * @param params
- */
-export function request<T>(url: string, params: NetOpt = {}): Promise<T> {
-  return new Promise((resolve, reject) => {
-    if (!url.startsWith('http://') && !url.startsWith('https://')) url = appUrl + url;
-    let sendData: ClientRequestConstructorOptions = {
-      url,
-      method: params.method || 'GET'
-    };
-    const headers = Object.assign(
-      {
-        'content-type': 'application/json;charset=utf-8',
-        authorization: params.authorization || ''
-      },
-      params.headers
-    );
-    if (!params.type) params.type = 'JSON';
-    if (params.data && sendData.method === 'GET') {
-      sendData.url += `?${querystring.stringify(params.data)}`;
-    }
-    let chunks: Buffer[] = [];
-    let size: number = 0;
-    const request = net.request(sendData);
-    for (const header in headers) request.setHeader(header, headers[header]);
-    request.on('abort', () => {
-      reject(new Error('abort'));
-    });
-    request.on('error', (err) => {
-      reject(err);
-    });
-    request.on('response', (response) => {
-      response.on('data', (chunk) => {
-        if (params.type === 'TEXT' && params.isDownload) {
-          params.onDownload(true, chunk, response.headers);
-          return;
-        }
-        chunks.push(chunk);
-        size += chunk.length;
-      });
-      response.on('end', () => {
-        const data = Buffer.concat(chunks, size);
-        if (response.statusCode >= 400) {
-          reject(new Error(data.toString()));
-          return;
-        }
-        let result: unknown | T;
-        switch (params.type) {
-          case 'BUFFER':
-            if (params.isDownload) {
-              params.onDownload(false);
-              result = 'downloaded';
-              break;
-            }
-            result = data;
-            break;
-          case 'JSON':
-            result = JSON.parse(data.toString());
-            break;
-          case 'TEXT':
-            result = data.toString(params.encoding || 'utf8');
-            break;
-        }
-        if (params.isHeaders) resolve({ data: result, headers: response.headers } as unknown as T);
-        else resolve(result as unknown as T);
-      });
-    });
-    if (params.data && sendData.method !== 'GET') {
-      const data = params.isStringify
-        ? querystring.stringify(params.data)
-        : JSON.stringify(params.data);
-      if (typeof params.data !== 'string') request.write(data);
-      else request.write(data);
-    }
-    request.end();
-    if (params.onRequest) params.onRequest(request);
-    if (!params.isDownload) setTimeout(() => request.abort(), params.timeout || timeout);
-  });
-}
-
-/**
- * 上传
- */
 function dataToFormData(boundary: string, key: string, value: string) {
   return `--${boundary}\r\nContent-Disposition: form-data; name="${key}"\r\n\r\n${value}\r\n`;
 }
 
 /**
- * @param url
+ * 上传
+ * @param sendData
  * @param params
  */
-export function upload(url: string, params: UploadOpt) {
+function upload(sendData: ClientRequestConstructorOptions, params: NetOpt = {}) {
   return new Promise((resolve, reject) => {
-    if (!url.startsWith('http://') && !url.startsWith('https://')) url = appUrl + url;
-    let sendData: ClientRequestConstructorOptions = {
-      url
-    };
     const boundary = '--' + Math.random().toString(16);
     const headers = Object.assign(
       {
@@ -191,5 +96,140 @@ export function upload(url: string, params: UploadOpt) {
       request.end('\r\n--' + boundary + '--\r\n');
     });
     readStream.pipe(request as unknown as NodeJS.WritableStream, { end: false });
+  });
+}
+
+/**
+ * 下载
+ * @param sendData
+ * @param params
+ */
+function download(sendData: ClientRequestConstructorOptions, params: NetOpt = {}) {
+  return new Promise((resolve, reject) => {
+    const headers = Object.assign({}, params.headers);
+    params.type = 'BUFFER';
+    let chunks: Buffer[] = [];
+    let size: number = 0;
+    const request = net.request(sendData);
+    for (const header in headers) request.setHeader(header, headers[header]);
+    request.on('abort', () => {
+      reject(new Error('abort'));
+    });
+    request.on('error', (err) => {
+      reject(err);
+    });
+    request.on('response', (response) => {
+      response.on('data', (chunk) => {
+        if (params.onDownload) {
+          params.onDownload(chunk, Number(response.headers['content-length'] || 0));
+          return;
+        }
+        chunks.push(chunk);
+        size += chunk.length;
+      });
+      response.on('end', () => {
+        if (response.statusCode >= 400) {
+          reject(new Error('error'));
+          return;
+        }
+        let result: unknown;
+        if (params.onDownload) {
+          result = {
+            msg: 'downloaded',
+            length: Number(response.headers['content-length'] || 0)
+          };
+        } else {
+          result = Buffer.concat(chunks, size);
+        }
+        if (params.isHeaders) resolve({ data: result, headers: response.headers });
+        else resolve(result);
+      });
+    });
+    request.end();
+    if (params.onRequest) params.onRequest(request);
+    if (!params.isDownload) setTimeout(() => request.abort(), params.timeout || timeout);
+  });
+}
+
+/**
+ * 请求
+ * @param url
+ * @param params
+ */
+export default function request<T>(url: string, params: NetOpt = {}): Promise<T> {
+  if (!url.startsWith('http://') && !url.startsWith('https://')) url = appUrl + url;
+  let sendData: ClientRequestConstructorOptions = {
+    url,
+    method: params.method || 'GET'
+  };
+  if (!params.isUpload && params.data && sendData.method === 'GET') {
+    sendData.url += `?${querystring.stringify(params.data)}`;
+  }
+  if (params.isUpload) {
+    return upload(sendData, params) as Promise<T>;
+  }
+  if (params.isDownload) {
+    return download(sendData, params) as Promise<T>;
+  }
+  return new Promise((resolve, reject) => {
+    const headers = Object.assign(
+      {
+        'content-type': 'application/json;charset=utf-8',
+        authorization: params.authorization || ''
+      },
+      params.headers
+    );
+    if (!params.type) params.type = 'JSON';
+    let chunks: Buffer[] = [];
+    let size: number = 0;
+    const request = net.request(sendData);
+    for (const header in headers) request.setHeader(header, headers[header]);
+    request.on('abort', () => {
+      reject(new Error('abort'));
+    });
+    request.on('error', (err) => {
+      reject(err);
+    });
+    request.on('response', (response) => {
+      response.on('data', (chunk) => {
+        chunks.push(chunk);
+        size += chunk.length;
+      });
+      response.on('end', () => {
+        const data = Buffer.concat(chunks, size);
+        if (response.statusCode >= 400) {
+          reject(new Error(data.toString()));
+          return;
+        }
+        let result: unknown;
+        switch (params.type) {
+          case 'BUFFER':
+            result = data;
+            break;
+          case 'JSON':
+            try {
+              result = JSON.parse(data.toString());
+            } catch (e) {
+              result = data.toString(params.encoding || 'utf8');
+            }
+            break;
+          case 'TEXT':
+            result = data.toString(params.encoding || 'utf8');
+            break;
+        }
+        if (params.isHeaders) resolve({ data: result, headers: response.headers } as unknown as T);
+        else resolve(result as unknown as T);
+      });
+    });
+    if (params.data && sendData.method !== 'GET') {
+      const data = params.isStringify
+        ? querystring.stringify(params.data)
+        : JSON.stringify(params.data);
+      if (typeof params.data !== 'string') request.write(data);
+      else request.write(data);
+    }
+    request.end();
+    if (params.onRequest) params.onRequest(request);
+    setTimeout(() => request.abort(), params.timeout || timeout);
   });
 }
