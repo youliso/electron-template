@@ -86,12 +86,7 @@ export class Window {
   private static instance: Window;
 
   // 默认创建窗口参数
-  private initWindowOpt: BrowserWindowConstructorOptions = {
-    customize: {
-      isMainWin: true,
-      route: '/home'
-    }
-  };
+  private initWindowOpt: BrowserWindowConstructorOptions = windowCfg.init;
 
   public main: BrowserWindow = null; // 当前主页
 
