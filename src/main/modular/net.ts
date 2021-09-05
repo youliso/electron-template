@@ -26,7 +26,7 @@ export interface NetOpt extends ClientRequestConstructorOptions {
   isUpload?: boolean;
   filePath?: string;
   fileName?: string;
-  onUploadProgress?: (status: string, size?: number, fullSize?: number) => void;
+  onUploadProgress?: (status: 'open' | 'ing' | 'end', size?: number, fullSize?: number) => void;
 }
 
 function dataToFormData(boundary: string, key: string, value: string) {
