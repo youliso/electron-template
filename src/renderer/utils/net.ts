@@ -8,15 +8,13 @@ export interface NetOpt extends RequestInit {
   data?: any;
   body?: any;
   timeout?: number;
-  type?: NET_RESPONSE_TYPE; //返回数据类型
+  type?: 'TEXT' | 'JSON' | 'BUFFER' | 'BLOB'; //返回数据类型
 }
 
 export interface TimeOutAbort {
   signal: AbortSignal;
   id: NodeJS.Timeout;
 }
-
-type NET_RESPONSE_TYPE = 'TEXT' | 'JSON' | 'BUFFER' | 'BLOB';
 
 /**
  * 创建 AbortController

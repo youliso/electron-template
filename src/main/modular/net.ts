@@ -6,8 +6,6 @@ import querystring from 'querystring';
 
 const { timeout, appUrl } = require('@/cfg/net.json');
 
-type NET_RESPONSE_TYPE = 'TEXT' | 'JSON' | 'BUFFER';
-
 export interface NetOpt extends ClientRequestConstructorOptions {
   // 是否stringify参数（非GET请求使用）
   isStringify?: boolean;
@@ -17,7 +15,7 @@ export interface NetOpt extends ClientRequestConstructorOptions {
   headers?: { [key: string]: string };
   timeout?: number;
   data?: any;
-  type?: NET_RESPONSE_TYPE;
+  type?: 'TEXT' | 'JSON' | 'BUFFER';
   encoding?: BufferEncoding;
   // 是否下载请求
   isDownload?: boolean;
