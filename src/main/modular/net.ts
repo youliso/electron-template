@@ -9,7 +9,6 @@ const { timeout, appUrl } = require('@/cfg/net.json');
 type NET_RESPONSE_TYPE = 'TEXT' | 'JSON' | 'BUFFER';
 
 export interface NetOpt extends ClientRequestConstructorOptions {
-  authorization?: string;
   // 是否stringify参数（非GET请求使用）
   isStringify?: boolean;
   // 是否获取headers
@@ -174,8 +173,7 @@ export default function request<T>(url: string, params: NetOpt = {}): Promise<T>
   return new Promise((resolve, reject) => {
     const headers = Object.assign(
       {
-        'content-type': 'application/json;charset=utf-8',
-        authorization: params.authorization || ''
+        'content-type': 'application/json;charset=utf-8'
       },
       params.headers
     );

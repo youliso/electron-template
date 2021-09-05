@@ -3,7 +3,6 @@ import querystring from 'querystring';
 const { timeout, appUrl } = require('@/cfg/net.json');
 
 export interface NetOpt extends RequestInit {
-  authorization?: string;
   isStringify?: boolean; //是否stringify参数（非GET请求使用）
   isHeaders?: boolean; //是否获取headers
   data?: any;
@@ -99,8 +98,7 @@ export default async function net<T>(url: string, param: NetOpt = {}): Promise<T
     headers: new Headers(
       Object.assign(
         {
-          'content-type': 'application/json;charset=utf-8',
-          authorization: param.authorization || ''
+          'content-type': 'application/json;charset=utf-8'
         },
         param.headers
       )
