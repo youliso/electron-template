@@ -12,7 +12,7 @@ function events(is: boolean) {
   const events = domCreateElement('div', 'events');
   const min = domCreateElement('div', 'event min no-drag');
   const maxMin = domCreateElement('div', 'event max-min no-drag');
-  const close = domCreateElement('div', 'event min no-drag');
+  const close = domCreateElement('div', 'event close no-drag');
   min.addEventListener('click', () => windowMin(args.id));
   maxMin.addEventListener('click', () => windowMaxMin(args.id));
   close.addEventListener('click', () => windowClose(args.id));
