@@ -2,16 +2,17 @@ import Store from '@/renderer/store';
 import { domCreateElement } from '@/renderer/utils/dom';
 import { getGlobal } from '@/renderer/utils';
 import { windowClose, windowMaxMin, windowMin } from '@/renderer/utils/window';
-import './scss/index.scss';
+import styles from './scss/index.lazy.scss';
 
+const args = Store.get<Customize>('customize');
 const info = domCreateElement('div', 'head-info drag');
 const content = domCreateElement('div', 'content');
 
-function events(is: boolean, args: Customize) {
+function events(is: boolean) {
   const events = domCreateElement('div', 'events');
   const min = domCreateElement('div', 'event min no-drag');
   const maxMin = domCreateElement('div', 'event max-min no-drag');
-  const close = domCreateElement('div', 'event close no-drag');
+  const close = domCreateElement('div', 'event min no-drag');
   min.addEventListener('click', () => windowMin(args.id));
   maxMin.addEventListener('click', () => windowMaxMin(args.id));
   close.addEventListener('click', () => windowClose(args.id));
@@ -27,20 +28,22 @@ function events(is: boolean, args: Customize) {
 
 export default function (): Component {
   Store.removeProxy('head-events');
-  const args = Store.get<Customize>('customize');
-  const title = domCreateElement('div', 'title');
-  title.innerText = args.title || getGlobal('app.name');
+  const title = domCreateElement('div', 'title', args.title || getGlobal<string>('app.name'));
   if (getGlobal('system.platform') === 'darwin') {
     content.appendChild(document.createElement('div'));
     content.appendChild(title);
   } else {
     content.appendChild(title);
-    events(true, args);
+    events(true);
   }
   info.appendChild(content);
   return {
     name: 'Head',
     global: true,
-    dom: info
+    dom: info,
+    css: {
+      use: styles.use,
+      unuse: styles.unuse
+    }
   };
 }

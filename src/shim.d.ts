@@ -35,6 +35,11 @@ interface Component {
   force?: boolean;
   // 组件元素
   dom: HTMLElement;
+  // css加载
+  css?: {
+    use: () => void;
+    unuse: () => void;
+  };
 }
 
 interface View {

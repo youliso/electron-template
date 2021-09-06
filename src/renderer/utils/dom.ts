@@ -42,11 +42,14 @@ export function domCssPropertySet(key: string, value: any) {
  */
 export function domCreateElement<K extends keyof HTMLElementTagNameMap>(
   el: K,
-  css?: string,
+  css?: string | string[],
   text?: string
 ) {
   const dom = document.createElement(el);
-  if (css) dom.setAttribute('class', css);
+  if (css) {
+    if (typeof css === 'string') dom.setAttribute('class', css);
+    else dom.setAttribute('class', (css as string[]).join(' '));
+  }
   if (text) dom.textContent = text;
   return dom;
 }
@@ -78,12 +81,17 @@ class Dom {
     if (c.global) {
       if (!c.force && !isNull(this.components[c.name])) return;
       if (this.components[c.name]) {
+        this.components[c.name].css?.unuse();
         this.appDom.removeChild(this.components[c.name].dom);
         delete this.components[c.name];
       }
       this.components[c.name] = c;
+      c.css?.use();
       this.appDom.appendChild(c.dom);
-    } else this.mainDom.appendChild(c.dom);
+    } else {
+      c.css?.use();
+      this.mainDom.appendChild(c.dom);
+    }
   }
 
   renderRouter(view: View) {
