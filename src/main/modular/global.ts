@@ -110,15 +110,15 @@ export class Global {
     return cur as unknown as Value;
   }
 
-  sendGlobal<Value>(key: string, value: Value): void {
+  sendGlobal<Value>(key: string, value: Value, exists: boolean = false): void {
     if (key === '') {
       console.error('Invalid key, the key can not be a empty string');
       return;
     }
 
     if (!key.includes('.')) {
-      if (Object.prototype.hasOwnProperty.call(this.sharedObject, key)) {
-        console.log(`The key ${key} looks like already exists on obj.`);
+      if (Object.prototype.hasOwnProperty.call(this.sharedObject, key) && exists) {
+        console.warn(`The key ${key} looks like already exists on obj.`);
       }
       this.sharedObject[key] = value;
     }
@@ -140,8 +140,8 @@ export class Global {
       console.error(`Invalid key ${key} because the value of this key is not a object.`);
       return;
     }
-    if (Object.prototype.hasOwnProperty.call(cur, lastKey)) {
-      console.log(`The key ${key} looks like already exists on obj.`);
+    if (Object.prototype.hasOwnProperty.call(cur, lastKey) && exists) {
+      console.warn(`The key ${key} looks like already exists on obj.`);
     }
     cur[lastKey] = value;
   }
