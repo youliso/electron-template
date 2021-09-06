@@ -77,8 +77,7 @@ function fetchPromise<T>(url: string, sendData: NetOpt): Promise<T> {
               }
             : await res.blob();
       }
-    })
-    .catch((err) => ({ code: 400, msg: err.message })) as Promise<T>;
+    });
 }
 
 /**
