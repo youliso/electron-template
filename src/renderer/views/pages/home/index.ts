@@ -59,6 +59,7 @@ export default function (): View {
   const react = domCreateElement('div', 'btn', 'react 模板');
   const baidu = domCreateElement('button', 'but', '打开baidu');
   const but = domCreateElement('button', 'but', '弹框');
+  const demo = domCreateElement('button', 'but', 'demo');
   const about = domCreateElement('button', 'but', '关于');
   vue.addEventListener('click', () => {
     openUrl('https://github.com/youliso/electron-template/tree/vue');
@@ -83,6 +84,18 @@ export default function (): View {
       resizable: true
     });
   });
+  demo.addEventListener('click', () => {
+    windowCreate({
+      customize: {
+        title: 'demo',
+        route: '/demo',
+        parentId: args.id
+      },
+      width: 800,
+      height: 600,
+      resizable: true
+    });
+  });
   baidu.addEventListener('click', () => {
     windowCreate({
       customize: {
@@ -98,6 +111,6 @@ export default function (): View {
     Router.replace('/about');
   });
   return {
-    dom: [vue, svelte, react, testRender(), but, about, baidu]
+    dom: [vue, svelte, react, testRender(), but, demo, about, baidu]
   };
 }
