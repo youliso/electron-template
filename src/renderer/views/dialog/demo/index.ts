@@ -47,19 +47,32 @@ function bgm() {
   audio.setSrc('https://img-qn.51miz.com/preview/sound/00/23/00/51miz-S230038-F96C71EB-thumb.mp3');
   audio.load();
 }
+
 const arr = new Uint8Array(audio.analyser.frequencyBinCount);
 const BCount = audio.analyser.frequencyBinCount;
 const barWidth = (window.innerWidth / BCount) * 1.5;
 let barHeight: number;
+
 function bc() {
   requestAnimationFrame(bc);
   audio.analyser.getByteFrequencyData(arr);
   ctx3.clearRect(0, 0, window.innerWidth, window.innerHeight);
   ctx3.fillStyle = '#1cbbb4';
-  for (let i = 0, x = 0; i < BCount; i++) {
+  const xx = window.innerWidth / 2;
+  for (let i = 0, xl = xx, xr = xx; i < BCount; i++) {
+    if (xl < 0 || xr > window.innerWidth) {
+      break;
+    }
     barHeight = arr[i];
-    ctx3.fillRect(x, window.innerHeight - barHeight, barWidth, barHeight);
-    x += barWidth + 1;
+    const y = window.innerHeight / 2 - barHeight / 2;
+    ctx3.fillRect(xl, y, barWidth, barHeight);
+    ctx3.fillRect(xl, y, barWidth, 1);
+    if (xl !== xx) {
+      ctx3.fillRect(xr, y, barWidth, barHeight);
+      ctx3.fillRect(xr, y, barWidth, 1);
+    }
+    xl -= barWidth + 1;
+    xr += barWidth + 1;
   }
 }
 
