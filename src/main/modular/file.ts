@@ -1,7 +1,6 @@
 import fs, { MakeDirectoryOptions } from 'fs';
 import { createInterface } from 'readline';
 import { resolve, extname } from 'path';
-import { isNull } from '@/lib';
 import { ipcMain } from 'electron';
 
 /**
@@ -116,7 +115,7 @@ export function readLine(path: string, index?: number): Promise<string | any[]> 
         io.on('line', (line) => {
           line = line.replace(/(^\s*)|(\s*$)/g, '');
           io.close();
-          if (isNull(line)) line = null;
+          if (!line) line = null;
           resolve(line);
         });
         break;
@@ -127,7 +126,7 @@ export function readLine(path: string, index?: number): Promise<string | any[]> 
           indes++;
           if (index && indes === index) io.close();
           line = line.replace(/(^\s*)|(\s*$)/g, '');
-          if (!isNull(line)) data.push(line);
+          if (line) data.push(line);
         });
         io.on('close', () => resolve(data));
     }

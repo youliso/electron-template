@@ -1,5 +1,5 @@
-import { getGlobal } from '@/renderer/utils';
-import { normalize } from '@/renderer/utils/path';
+import { getGlobal } from '@/renderer/common';
+import { normalize } from '@/renderer/common/path';
 
 const platform: string = getGlobal<string>('system.platform');
 

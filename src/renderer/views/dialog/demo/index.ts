@@ -1,7 +1,7 @@
 import Store from '@/renderer/store';
-import { domCreateElement } from '@/renderer/utils/dom';
-import { windowShow } from '@/renderer/utils/window';
-import audio from '@/renderer/utils/audio';
+import { domCreateElement } from '@/renderer/common/dom';
+import { windowShow } from '@/renderer/common/window';
+import audio from '@/renderer/common/audio';
 import styles from './scss/index.lazy.scss';
 
 const args = Store.get<Customize>('customize');

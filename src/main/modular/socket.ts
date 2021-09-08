@@ -1,7 +1,6 @@
 import { ipcMain } from 'electron';
 import Global from './global';
 import Window from './window';
-import { isNull } from '@/lib';
 import { io, Socket as SocketIo } from 'socket.io-client';
 import { ManagerOptions } from 'socket.io-client/build/manager';
 import { SocketOptions } from 'socket.io-client/build/socket';
@@ -88,7 +87,7 @@ export default class Socket {
     ipcMain.on('socket-close', async () => this.close());
     //打开socket
     ipcMain.on('socket-open', async () => {
-      if (isNull(this.io))
+      if (!this.io)
         this.open((data: { key: string; value: any }) => Window.send('socket-back', data));
     });
     //发送消息

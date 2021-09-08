@@ -1,5 +1,5 @@
-import { windowLoad } from '@/renderer/utils/window';
-import { domPropertyLoad } from '@/renderer/utils/dom';
+import { windowLoad } from '@/renderer/common/window';
+import { domPropertyLoad } from '@/renderer/common/dom';
 import Store from '@/renderer/store';
 import '@/renderer/views/scss/color.scss';
 import '@/renderer/views/scss/index.scss';

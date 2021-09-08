@@ -1,7 +1,7 @@
 import Store from '@/renderer/store';
-import { domCreateElement } from '@/renderer/utils/dom';
-import { getGlobal } from '@/renderer/utils';
-import { windowClose, windowMessageSend, windowShow } from '@/renderer/utils/window';
+import { domCreateElement } from '@/renderer/common/dom';
+import { getGlobal } from '@/renderer/common';
+import { windowClose, windowMessageSend, windowShow } from '@/renderer/common/window';
 import styles from './scss/index.lazy.scss';
 
 const args = Store.get<Customize>('customize');

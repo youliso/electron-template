@@ -4,7 +4,6 @@ import { resolve, normalize } from 'path';
 import { EOL } from 'os';
 import { logError } from '@/main/modular/log';
 import { readFile } from './file';
-import { isNull } from '@/lib';
 
 type Obj<Value> = {} & {
   [key: string]: Value | Obj<Value>;
@@ -58,7 +57,7 @@ export class Global {
   ) {
     try {
       const cfg = (await readFile(path, opt || { encoding: 'utf-8' })) as any;
-      if (!isNull(cfg)) this.sendGlobal(seat, parse ? JSON.parse(cfg) : cfg);
+      if (!cfg) this.sendGlobal(seat, parse ? JSON.parse(cfg) : cfg);
     } catch (e) {
       logError(`[cfg ${path}]`, e);
     }

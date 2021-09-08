@@ -1,5 +1,4 @@
 import { getGlobal } from './';
-import { isNull } from '@/lib';
 
 /**
  * 页面初始化加载
@@ -79,7 +78,7 @@ class Dom {
 
   setComponent(c: Component) {
     if (c.global) {
-      if (!c.force && !isNull(this.components[c.name])) return;
+      if (!c.force && this.components[c.name]) return;
       if (this.components[c.name]) {
         this.components[c.name].css?.unuse();
         this.appDom.removeChild(this.components[c.name].dom);

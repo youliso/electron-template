@@ -1,8 +1,7 @@
 import Store from '@/renderer/store';
 import Router from '@/renderer/router';
-import { windowCreate, windowMessageOn, windowShow } from '@/renderer/utils/window';
-import { domCreateElement } from '@/renderer/utils/dom';
-import { openUrl } from '@/renderer/utils';
+import { windowCreate, windowMessageOn, windowShow } from '@/renderer/common/window';
+import { domCreateElement } from '@/renderer/common/dom';
 import { dateFormat } from '@/lib';
 import styles from './scss/index.lazy.scss';
 
@@ -54,22 +53,10 @@ export function onUnmounted() {
 }
 
 export default function (): View {
-  const vue = domCreateElement('div', 'btn', 'vue 模板');
-  const svelte = domCreateElement('div', 'btn', 'svelte 模板');
-  const react = domCreateElement('div', 'btn', 'react 模板');
   const baidu = domCreateElement('button', 'but', '打开baidu');
   const but = domCreateElement('button', 'but', '弹框');
   const demo = domCreateElement('button', 'but', 'demo');
   const about = domCreateElement('button', 'but', '关于');
-  vue.addEventListener('click', () => {
-    openUrl('https://github.com/youliso/electron-template/tree/vue');
-  });
-  svelte.addEventListener('click', () => {
-    openUrl('https://github.com/youliso/electron-template/tree/svelte');
-  });
-  react.addEventListener('click', () => {
-    openUrl('https://github.com/youliso/electron-template/tree/react');
-  });
   but.addEventListener('click', () => {
     windowCreate({
       customize: {
@@ -111,6 +98,6 @@ export default function (): View {
     Router.replace('/about');
   });
   return {
-    dom: [vue, svelte, react, testRender(), but, demo, about, baidu]
+    dom: [testRender(), but, demo, about, baidu]
   };
 }

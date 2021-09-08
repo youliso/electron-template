@@ -1,6 +1,6 @@
 import pageRoute from '@/renderer/router/modular/page';
 import dialogRoute from '@/renderer/router/modular/dialog';
-import Dom from '@/renderer/utils/dom';
+import Dom from '@/renderer/common/dom';
 
 export class Router {
   private static instance: Router;
