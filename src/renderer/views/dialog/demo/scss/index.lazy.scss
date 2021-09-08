@@ -5,7 +5,18 @@
     width: 100%;
     height: 100%;
 
-    >.c1,.c2{
+    >.bgm-but{
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      padding: 2px 20px;
+      font: bolder 14px/26px normal;
+      color: var(--white);
+      background-color: var(--cyan);
+      z-index: 1;
+    }
+
+    >.c1,.c2,.c3{
       position: absolute;
       bottom: 0;
       left: 0;
@@ -21,6 +32,9 @@
 
     > .c2 {
       background: #000;
+    }
+    >.c3{
+      background-color: transparent;
     }
   }
 }

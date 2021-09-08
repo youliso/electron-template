@@ -1,17 +1,33 @@
 import Store from '@/renderer/store';
 import { domCreateElement } from '@/renderer/utils/dom';
 import { windowShow } from '@/renderer/utils/window';
+import audio from '@/renderer/utils/audio';
 import styles from './scss/index.lazy.scss';
 
 const args = Store.get<Customize>('customize');
 const info = domCreateElement('div', 'demo-info');
+const bgmBut = domCreateElement('div', 'bgm-but', '播放');
 const c1 = domCreateElement('canvas', 'c1');
 const c2 = domCreateElement('canvas', 'c2');
+const c3 = domCreateElement('canvas', 'c3');
 const ctx1 = c1.getContext('2d');
 const ctx2 = c2.getContext('2d');
-
+const ctx3 = c3.getContext('2d');
+info.appendChild(bgmBut);
 info.appendChild(c1);
 info.appendChild(c2);
+info.appendChild(c3);
+
+bgmBut.addEventListener('click', (event) => {
+  event.stopPropagation();
+  if (audio.type) {
+    bgmBut.textContent = '播放';
+    audio.pause();
+  } else {
+    bgmBut.textContent = '暂停';
+    audio.play();
+  }
+});
 
 export function onLoad() {
   styles.use();
@@ -19,10 +35,32 @@ export function onLoad() {
 
 export function onReady() {
   windowShow(args.id);
+  bgm();
+  bc();
 }
 
 export function onUnmounted() {
   styles.unuse();
+}
+
+function bgm() {
+  audio.setSrc('https://img-qn.51miz.com/preview/sound/00/23/00/51miz-S230038-F96C71EB-thumb.mp3');
+  audio.load();
+}
+const arr = new Uint8Array(audio.analyser.frequencyBinCount);
+const BCount = audio.analyser.frequencyBinCount;
+const barWidth = (window.innerWidth / BCount) * 1.5;
+let barHeight: number;
+function bc() {
+  requestAnimationFrame(bc);
+  audio.analyser.getByteFrequencyData(arr);
+  ctx3.clearRect(0, 0, window.innerWidth, window.innerHeight);
+  ctx3.fillStyle = '#1cbbb4';
+  for (let i = 0, x = 0; i < BCount; i++) {
+    barHeight = arr[i];
+    ctx3.fillRect(x, window.innerHeight - barHeight, barWidth, barHeight);
+    x += barWidth + 1;
+  }
 }
 
 function rand(min: number, max: number) {
@@ -143,8 +181,8 @@ function init() {
 }
 
 function resize() {
-  cw = c1.width = c2.width = window.innerWidth;
-  ch = c1.height = c2.height = window.innerHeight;
+  cw = c1.width = c2.width = c3.width = window.innerWidth;
+  ch = c1.height = c2.height = c3.height = window.innerHeight;
   create();
 }
 
