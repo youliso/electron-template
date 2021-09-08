@@ -5,7 +5,7 @@
   "init": {
     "customize": {
       "isMainWin": true,
-      "route": "/home"
+      "route": "/demo"
     }
   }
 }
