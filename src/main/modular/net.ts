@@ -2,7 +2,7 @@ import type { ClientRequestConstructorOptions, ClientRequest } from 'electron';
 import { net } from 'electron';
 import { createReadStream, statSync } from 'fs';
 import { basename, extname } from 'path';
-import querystring from 'querystring';
+import { queryParams } from '@/lib';
 
 const { timeout, appUrl } = require('@/cfg/net.json');
 
@@ -160,7 +160,7 @@ export default function request<T>(url: string, params: NetOpt = {}): Promise<T>
     method: params.method || 'GET'
   };
   if (!params.isUpload && params.data && sendData.method === 'GET') {
-    sendData.url += `?${querystring.stringify(params.data)}`;
+    sendData.url += `?${queryParams(params.data)}`;
   }
   if (params.isUpload) {
     return upload(sendData, params) as Promise<T>;
@@ -218,11 +218,10 @@ export default function request<T>(url: string, params: NetOpt = {}): Promise<T>
       });
     });
     if (params.data && sendData.method !== 'GET') {
-      const data = params.isStringify
-        ? querystring.stringify(params.data)
-        : JSON.stringify(params.data);
-      if (typeof params.data !== 'string') request.write(data);
-      else request.write(data);
+      if (typeof params.data !== 'string') {
+        const data = params.isStringify ? queryParams(params.data) : JSON.stringify(params.data);
+        request.write(data);
+      } else request.write(params.data);
     }
     request.end();
     if (params.onRequest) params.onRequest(request);

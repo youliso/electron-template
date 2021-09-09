@@ -1,4 +1,4 @@
-import querystring from 'querystring';
+import { queryParams } from '@/lib';
 
 const { timeout, appUrl } = require('@/cfg/net.json');
 
@@ -108,11 +108,9 @@ export default async function net<T>(url: string, param: NetOpt = {}): Promise<T
   if (param.body) {
     sendData.body = param.body;
   } else if (param.data) {
-    if (sendData.method === 'GET') url = `${url}?${querystring.stringify(param.data)}`;
+    if (sendData.method === 'GET') url = `${url}?${queryParams(param.data)}`;
     else
-      sendData.body = sendData.isStringify
-        ? querystring.stringify(param.data)
-        : JSON.stringify(param.data);
+      sendData.body = sendData.isStringify ? queryParams(param.data) : JSON.stringify(param.data);
   }
   return fetchPromise<T>(url, sendData).then((req) => {
     if (abort) clearTimeout(abort.id);
