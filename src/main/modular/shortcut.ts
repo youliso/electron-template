@@ -1,5 +1,6 @@
 import { globalShortcut, ipcMain } from 'electron';
 import { deepCopy } from '@/lib';
+import Window from '@/main/modular/window';
 
 export type Accelerator = {
   // 名称
@@ -117,8 +118,14 @@ class Shortcut {
    * 监听
    */
   on() {
-    ipcMain.on('shortcut-register', (event, args) => this.register(args));
-    ipcMain.on('shortcut-registerAll', (event, args) => this.registerAll(args));
+    ipcMain.on('shortcut-register', (event, args: Accelerator) => {
+      args.callback = () => Window.send(`shortcut-${args.key}-back`, true);
+      this.register(args);
+    });
+    ipcMain.on('shortcut-registerAll', (event, args: Accelerator) => {
+      args.callback = () => Window.send(`shortcut-${args.keys.join('-')}-back`, true);
+      this.registerAll(args);
+    });
     ipcMain.on('shortcut-unregister', (event, args) => this.unregister(args));
     ipcMain.on('shortcut-unregisterAll', () => this.unregisterAll());
     ipcMain.on('shortcut-get', (event, args) => {

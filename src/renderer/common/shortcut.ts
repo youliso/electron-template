@@ -1,19 +1,31 @@
 import type { Accelerator } from '@/main/modular/shortcut';
+import type { IpcRendererEvent } from 'electron';
+
+/**
+ * 快捷键监听
+ * @param key
+ * @param listener
+ */
+export function shortcutOn(key: string, listener: (event: IpcRendererEvent, args: any) => void) {
+  window.ipc.on(`shortcut-${key}-back`, listener);
+}
 
 /**
  * 注册快捷键
- * @param accelerator
+ * @param name
+ * @param key
  */
-export function shortcut(accelerator: Accelerator): void {
-  window.ipc.send('shortcut-register', accelerator);
+export function shortcut(name: string, key: string): void {
+  window.ipc.send('shortcut-register', { name, key });
 }
 
 /**
  * 批量注册快捷键
- * @param accelerator
+ * @param name
+ * @param keys
  */
-export function shortcutAll(accelerator: Accelerator): void {
-  window.ipc.send('shortcut-registerAll', accelerator);
+export function shortcutAll(name: string, keys: string[]): void {
+  window.ipc.send('shortcut-registerAll', { name, keys });
 }
 
 /**
