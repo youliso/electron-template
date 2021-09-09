@@ -1,4 +1,5 @@
 import App from './modular/app';
+import Shortcut from './modular/shortcut';
 import Global from './modular/global';
 import Window from './modular/window';
 import Tray from './modular/tray';
@@ -13,6 +14,7 @@ import { fileOn } from './modular/file';
   await Platforms[process.platform]();
   // 主要模块
   App.on();
+  Shortcut.on();
   Global.on();
   Window.on();
   Tray.on();

@@ -4,6 +4,7 @@ import { windowCreate, windowMessageOn, windowShow } from '@/renderer/common/win
 import { domCreateElement } from '@/renderer/common/dom';
 import { dateFormat } from '@/lib';
 import styles from './scss/index.lazy.scss';
+import { shortcutGetAll } from '@/renderer/common/shortcut';
 
 const args = Store.get<Customize>('customize');
 // let listData: StoreProxy<string[]>;
@@ -56,6 +57,7 @@ export default function (): View {
   const baidu = domCreateElement('button', 'but', '打开baidu');
   const but = domCreateElement('button', 'but', '弹框');
   const demo = domCreateElement('button', 'but', 'demo');
+  const shortcut = domCreateElement('button', 'but', '获取已注册shortcut');
   const about = domCreateElement('button', 'but', '关于');
   but.addEventListener('click', () => {
     windowCreate({
@@ -94,10 +96,13 @@ export default function (): View {
       resizable: true
     });
   });
+  shortcut.addEventListener('click', () => {
+    console.log(shortcutGetAll());
+  });
   about.addEventListener('click', () => {
     Router.replace('/about');
   });
   return {
-    dom: [testRender(), but, demo, about, baidu]
+    dom: [testRender(), but, demo, about, shortcut, baidu]
   };
 }

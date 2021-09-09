@@ -21,7 +21,6 @@
   },
   "include": [
     "src/**/*.d.ts",
-    "src/**/*.vue",
     "src/**/*.ts",
     "test/**/*.ts"
   ]

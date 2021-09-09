@@ -1,6 +1,7 @@
-import { app, globalShortcut, ipcMain, shell } from 'electron';
+import { app, ipcMain, shell } from 'electron';
 import { resolve } from 'path';
 import { logError } from '@/main/modular/log';
+import Shortcut from '@/main/modular/shortcut';
 import Window from '@/main/modular/window';
 
 export class App {
@@ -30,6 +31,20 @@ export class App {
     // darwin
     app.on('activate', () => {
       if (Window.getAll().length === 0) Window.create();
+    });
+    // 获得焦点时发出
+    app.on('browser-window-focus', () => {
+      // 关闭刷新
+      Shortcut.register({
+        name: '关闭刷新',
+        key: 'CommandOrControl+R',
+        callback: () => {}
+      });
+    });
+    // 失去焦点时发出
+    app.on('browser-window-blur', () => {
+      // 注销关闭刷新
+      Shortcut.unregister('CommandOrControl+R');
     });
   }
 
@@ -93,16 +108,6 @@ export class App {
     // 关闭所有窗口退出
     app.on('window-all-closed', () => {
       if (process.platform !== 'darwin') app.quit();
-    });
-    // 获得焦点时发出
-    app.on('browser-window-focus', () => {
-      // 关闭刷新
-      globalShortcut.register('CommandOrControl+R', () => {});
-    });
-    // 失去焦点时发出
-    app.on('browser-window-blur', () => {
-      // 注销关闭刷新
-      globalShortcut.unregister('CommandOrControl+R');
     });
   }
 

@@ -51,26 +51,27 @@ export function dateFormat(fmt: string = 'yyyy-MM-dd hh:mm:ss'): string {
 
 /**
  * 深拷贝
- * @param sourceObj
- * @param targetObj
+ * @param obj
  */
-export function deepClone<T>(sourceObj: T, targetObj: T): T {
-  let cloneObj: any = {};
-  if (!sourceObj || typeof sourceObj !== 'object' || (sourceObj as any).length === undefined) {
-    return sourceObj;
-  }
-  if (sourceObj instanceof Array) {
-    cloneObj = sourceObj.concat();
-  } else {
-    for (let i in sourceObj) {
-      if (typeof sourceObj[i] === 'object') {
-        cloneObj[i] = deepClone(sourceObj[i], {});
-      } else {
-        cloneObj[i] = sourceObj[i];
-      }
+export function deepCopy<T>(obj: any): T {
+  const isArray = Array.isArray(obj);
+  let result: any = {};
+  if (isArray) result = [];
+  let temp = null;
+  let key = null;
+  let keys = Object.keys(obj);
+  keys.map((item, index) => {
+    key = item;
+    temp = obj[key];
+    if (temp && typeof temp === 'object') {
+      if (isArray) result.push(deepCopy(temp));
+      else result[key] = deepCopy(temp);
+    } else {
+      if (isArray) result.push(temp);
+      else result[key] = temp;
     }
-  }
-  return cloneObj;
+  });
+  return result;
 }
 
 /**
