@@ -10,6 +10,7 @@ const windowCfg = require('@/cfg/window.json');
  * @param args
  */
 export function browserWindowInit(args: BrowserWindowConstructorOptions): BrowserWindow {
+  args.customize = args.customize || {};
   args.minWidth = args.minWidth || args.width || windowCfg.width;
   args.minHeight = args.minHeight || args.height || windowCfg.height;
   args.width = args.width || windowCfg.width;
@@ -32,6 +33,7 @@ export function browserWindowInit(args: BrowserWindowConstructorOptions): Browse
   });
   if (!opt.backgroundColor && windowCfg.backgroundColor)
     opt.backgroundColor = windowCfg.backgroundColor;
+  if (!opt.customize.hasOwnProperty('isHead')) opt.customize.isHead = true;
   if (opt.customize.parentId) {
     opt.parent = Window.getInstance().get(opt.customize.parentId);
     const currentWH = opt.parent.getBounds();

@@ -17,6 +17,8 @@ interface Customize {
   currentMaximized?: boolean;
   // 数据(仅路由下生效)
   data?: any;
+  // 是否显示顶部导航
+  isHead?: boolean;
   // 是否支持多窗口
   isMultiWindow?: boolean;
   // 是否主窗口(当为true时会替代当前主窗口)

@@ -5,10 +5,8 @@ import { windowClose, windowMaxMin, windowMin } from '@/renderer/common/window';
 import styles from './scss/index.lazy.scss';
 
 const args = Store.get<Customize>('customize');
-const info = domCreateElement('div', 'head-info drag');
-const content = domCreateElement('div', 'content');
 
-function events(is: boolean) {
+function events(content: HTMLDivElement, is: boolean) {
   const events = domCreateElement('div', 'events');
   const min = domCreateElement('div', 'event min no-drag');
   const maxMin = domCreateElement('div', 'event max-min no-drag');
@@ -28,13 +26,15 @@ function events(is: boolean) {
 
 export default function (): Component {
   Store.removeProxy('head-events');
+  const info = domCreateElement('div', 'head-info drag');
+  const content = domCreateElement('div', 'content');
   const title = domCreateElement('div', 'title', args.title || getGlobal<string>('app.name'));
   if (getGlobal('system.platform') === 'darwin') {
     content.appendChild(document.createElement('div'));
     content.appendChild(title);
   } else {
     content.appendChild(title);
-    events(true);
+    events(content, true);
   }
   info.appendChild(content);
   return {
