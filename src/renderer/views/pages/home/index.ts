@@ -3,8 +3,8 @@ import Router from '@/renderer/router';
 import { windowCreate, windowMessageOn, windowShow } from '@/renderer/common/window';
 import { domCreateElement } from '@/renderer/common/dom';
 import { dateFormat } from '@/lib';
-import styles from './scss/index.lazy.scss';
 import { shortcutGetAll } from '@/renderer/common/shortcut';
+import styles from './scss/index.lazy.scss';
 
 const args = Store.get<Customize>('customize');
 // let listData: StoreProxy<string[]>;

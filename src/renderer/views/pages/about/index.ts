@@ -1,6 +1,6 @@
 import Router from '@/renderer/router';
 import { domCreateElement } from '@/renderer/common/dom';
-import styles from '@/renderer/views/dialog/message/scss/index.lazy.scss';
+import styles from './scss/index.lazy.scss';
 
 export function onLoad() {
   styles.use();

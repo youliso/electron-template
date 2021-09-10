@@ -60,15 +60,8 @@ body {
   background-color: transparent;
 
   > #container {
-    overflow: hidden;
     width: 100%;
     height: 100%;
-    background-color: var(--white);
-    color: var(--black);
-
-    &.padding {
-      padding: 32px 10px 10px;
-    }
   }
 }
 
