@@ -17,6 +17,8 @@ function pathToSrc(path: string) {
 
 class Audios {
   public static instance: Audios;
+  // 当前播放源
+  public src: string = null;
   // 播放状态 1播放 0 暂停
   public type: 0 | 1 = 0;
   // 播放位置
@@ -115,8 +117,18 @@ class Audios {
   }
 
   async play(path?: string) {
-    if (path) this.currentAudio.src = pathToSrc(path);
-    if (this.currentAudio.src) this.currentAudio.load();
+    if (path) {
+      const src = pathToSrc(path);
+      this.currentAudio.src = src;
+      this.src = src;
+      return;
+    }
+    if (!path && !this.currentAudio.src && this.src) {
+      this.currentAudio.src = this.src;
+      return;
+    }
+    if (this.currentAudio.src && !isNaN(this.currentAudio.duration))
+      this.currentAudio.play().catch(console.warn);
   }
 
   async pause() {
@@ -133,8 +145,11 @@ class Audios {
   }
 
   setSrc(path: string) {
-    this.currentAudio.src = pathToSrc(path);
-    this.pause();
+    this.src = pathToSrc(path);
+  }
+
+  clearSrc() {
+    delete this.src;
   }
 
   async load() {
@@ -181,7 +196,11 @@ class Audios {
   }
 
   //显示时间为分钟
-  showTime(s: number) {
+  showTime() {
+    return `${this.timeToStr(this.ingTime)} / ${this.timeToStr(this.allTime)}`;
+  }
+
+  private timeToStr(s: number) {
     let t: string = Number(s).toFixed(0);
     return Math.floor(Number(t) / 60) + ' : ' + (Number(t) % 60);
   }
