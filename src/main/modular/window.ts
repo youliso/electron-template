@@ -142,6 +142,9 @@ export class Window {
     }
     // 注入初始化代码
     win.webContents.on('did-finish-load', () => win.webContents.send('window-load', win.customize));
+    // 窗口最大最小监听
+    win.on('maximize', () => win.webContents.send('window-maximize-status', 'maximize'));
+    win.on('unmaximize', () => win.webContents.send('window-maximize-status', 'unmaximize'));
     // 聚焦失焦监听
     win.on('blur', () => win.webContents.send('window-blur-focus', 'blur'));
     win.on('focus', () => win.webContents.send('window-blur-focus', 'focus'));
@@ -270,9 +273,12 @@ export class Window {
       }
     });
     // 窗口消息
-    ipcMain.on('window-fun', (event, args) => this.func(args.type, args.id));
+    ipcMain.on('window-func', (event, args) => this.func(args.type, args.id));
     // 窗口状态
-    ipcMain.handle('window-status', (event, args) => this.getStatus(args.type, args.id));
+    ipcMain.on(
+      'window-status',
+      (event, args) => (event.returnValue = this.getStatus(args.type, args.id))
+    );
     // 创建窗口
     ipcMain.on('window-new', (event, args) => this.create(args));
     // 设置窗口是否置顶

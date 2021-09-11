@@ -18,7 +18,9 @@ export function windowUpdate() {
 /**
  * 窗口聚焦失焦监听
  */
-export function windowBlurFocus(listener: (event: IpcRendererEvent, args: any) => void) {
+export function windowBlurFocusOn(
+  listener: (event: IpcRendererEvent, args: 'blur' | 'focus') => void
+) {
   window.ipc.on('window-blur-focus', listener);
 }
 
@@ -27,6 +29,22 @@ export function windowBlurFocus(listener: (event: IpcRendererEvent, args: any) =
  */
 export function windowBlurFocusRemove() {
   window.ipc.removeAllListeners('window-blur-focus');
+}
+
+/**
+ * 窗口大小化监听
+ */
+export function windowMaximizeOn(
+  listener: (event: IpcRendererEvent, args: 'maximize' | 'unmaximize') => void
+) {
+  window.ipc.on('window-maximize-status', listener);
+}
+
+/**
+ * 关闭窗口大小化监听
+ */
+export function windowMaximizeRemove() {
+  window.ipc.removeAllListeners('window-maximize-status');
 }
 
 /**
@@ -76,8 +94,8 @@ export function windowCreate(args: BrowserWindowConstructorOptions) {
 /**
  * 窗口状态
  */
-export async function windowStatus(id: number, type: windowStatusOpt) {
-  return await window.ipc.invoke('window-status', { type, id });
+export function windowStatus(id: number, type: windowStatusOpt): boolean {
+  return window.ipc.sendSync('window-status', { type, id });
 }
 
 /**
@@ -131,7 +149,7 @@ export function windowMaxMin(id: number) {
  * 关闭窗口 (传id则对应窗口否则全部窗口)
  */
 export function windowClose(id?: number) {
-  window.ipc.send('window-fun', { type: 'close', id });
+  window.ipc.send('window-func', { type: 'close', id });
 }
 
 /**
@@ -140,28 +158,28 @@ export function windowClose(id?: number) {
  * @param time 延迟显示时间
  */
 export function windowShow(id?: number, time: number = 0) {
-  setTimeout(() => window.ipc.send('window-fun', { type: 'show', id }), time);
+  setTimeout(() => window.ipc.send('window-func', { type: 'show', id }), time);
 }
 
 /**
  * 窗口隐藏
  */
 export function windowHide(id?: number) {
-  window.ipc.send('window-fun', { type: 'hide', id });
+  window.ipc.send('window-func', { type: 'hide', id });
 }
 
 /**
  * 最小化窗口 (传id则对应窗口否则全部窗口)
  */
 export function windowMin(id?: number) {
-  window.ipc.send('window-fun', { type: 'minimize', id });
+  window.ipc.send('window-func', { type: 'minimize', id });
 }
 
 /**
  * 最大化窗口 (传id则对应窗口否则全部窗口)
  */
 export function windowMax(id?: number) {
-  window.ipc.send('window-fun', { type: 'maximize', id });
+  window.ipc.send('window-func', { type: 'maximize', id });
 }
 
 /**
