@@ -5,8 +5,10 @@ import Head from '@/renderer/views/components/head';
 
 export default class About implements View {
   static instance = true;
-  el: HTMLDivElement;
-  components = [new Head()];
+  components = {
+    Head: new Head()
+  };
+
   countDom: HTMLButtonElement;
   count: number = 0;
 
@@ -34,14 +36,15 @@ export default class About implements View {
   }
 
   render() {
-    this.el = domCreateElement('div', 'info');
+    const el = domCreateElement('div', 'info');
     const text = domCreateElement('div', 'text', '关于');
     const home = domCreateElement('button', 'but', '首页');
     this.countDom = domCreateElement('button', 'but', `${this.count} add`);
     home.addEventListener('click', () => Router.replace('/home', { unInstance: false }));
     this.countDom.addEventListener('click', () => this.countAdd());
-    this.el.appendChild(text);
-    this.el.appendChild(home);
-    this.el.appendChild(this.countDom);
+    el.appendChild(text);
+    el.appendChild(home);
+    el.appendChild(this.countDom);
+    return el;
   }
 }

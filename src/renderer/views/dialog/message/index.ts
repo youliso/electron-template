@@ -8,8 +8,9 @@ import Head from '@/renderer/views/components/head';
 const args = Store.get<Customize>('customize');
 
 export default class Message implements View {
-  el: HTMLDivElement;
-  components = [new Head(false)];
+  components = {
+    Head: new Head(false)
+  };
 
   onLoad() {
     styles.use();
@@ -24,7 +25,7 @@ export default class Message implements View {
   }
 
   render() {
-    this.el = domCreateElement('div', 'info');
+    const el = domCreateElement('div', 'info');
     const text = domCreateElement('div', 'text');
     const text1 = domCreateElement('div', null, `创建传参: ${JSON.stringify(args.data)}`);
     const text2 = domCreateElement('div', null, `app启动参数: ${getGlobal('app.argv')}`);
@@ -34,8 +35,9 @@ export default class Message implements View {
     send.addEventListener('click', () => windowMessageSend('test', Date.now()));
     text.appendChild(text1);
     text.appendChild(text2);
-    this.el.appendChild(send);
-    this.el.appendChild(text);
-    this.el.appendChild(but);
+    el.appendChild(send);
+    el.appendChild(text);
+    el.appendChild(but);
+    return el;
   }
 }

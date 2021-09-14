@@ -36,19 +36,16 @@ interface OldVCKey {
 
 interface VSource {
   name?: string;
-  el: HTMLElement;
-  components?: Component[];
+  components?: { [key: string]: Component };
   onLoad: (params?: RouteParams) => void;
   onReady?: () => void;
   onUnmounted: () => void;
   onActivated?: (params?: RouteParams) => void;
   onDeactivated?: () => void;
-  render: () => void;
+  render: () => HTMLElement;
 }
 
-interface Component extends VSource {
-  name: string;
-}
+interface Component extends VSource {}
 
 interface View extends VSource {
   instance?: boolean;

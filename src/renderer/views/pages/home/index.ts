@@ -12,8 +12,9 @@ const args = Store.get<Customize>('customize');
 export default class Home implements View {
   private testData: StoreProxy<string>;
   private testInterval: NodeJS.Timer;
-  el: HTMLDivElement;
-  components = [new Head()];
+  components = {
+    Head: new Head()
+  };
 
   onLoad() {
     styles.use();
@@ -47,7 +48,7 @@ export default class Home implements View {
   }
 
   render() {
-    this.el = domCreateElement('div', 'info');
+    const el = domCreateElement('div', 'info');
     const baidu = domCreateElement('button', 'but', '打开baidu');
     const but = domCreateElement('button', 'but', '弹框');
     const shortcut = domCreateElement('button', 'but', '获取已注册shortcut');
@@ -83,10 +84,11 @@ export default class Home implements View {
     about.addEventListener('click', () => {
       Router.replace('/about');
     });
-    this.el.appendChild(this.testRender());
-    this.el.appendChild(but);
-    this.el.appendChild(about);
-    this.el.appendChild(shortcut);
-    this.el.appendChild(baidu);
+    el.appendChild(this.testRender());
+    el.appendChild(but);
+    el.appendChild(about);
+    el.appendChild(shortcut);
+    el.appendChild(baidu);
+    return el;
   }
 }

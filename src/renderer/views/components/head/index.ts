@@ -7,8 +7,6 @@ import styles from './scss/index.lazy.scss';
 const args = Store.get<Customize>('customize');
 
 export default class Head implements Component {
-  name = 'Head';
-  el: HTMLDivElement;
   isHead: boolean;
 
   constructor(isHead: boolean = true) {
@@ -38,7 +36,7 @@ export default class Head implements Component {
   }
 
   render() {
-    this.el = domCreateElement('div', 'head-info drag');
+    const el = domCreateElement('div', 'head-info drag');
     const content = domCreateElement('div', 'content');
     const title = domCreateElement('div', 'title', args.title || getGlobal<string>('app.name'));
     if (getGlobal('system.platform') === 'darwin') {
@@ -48,6 +46,7 @@ export default class Head implements Component {
       content.appendChild(title);
       this.events(content);
     }
-    this.el.appendChild(content);
+    el.appendChild(content);
+    return el;
   }
 }

@@ -119,18 +119,18 @@ export class Router {
         c: [],
         v: `v-${this.current.name}`
       };
-      if (this.current.components) o.c = this.current.components.map((e) => `c-${e.name}`);
+      if (this.current.components) o.c = Object.keys(this.current.components).map((c) => `c-${c}`);
       oldVc = o;
       delete this.current;
     }
     return oldVc;
   }
 
-  renderComponent(component: Component) {
+  renderComponent(componentKey: string, component: Component) {
     component.onLoad();
-    component.render();
-    component.el.setAttribute('id', `c-${component.name}`);
-    this.appDom.appendChild(component.el);
+    const el = component.render();
+    el.setAttribute('id', `c-${componentKey}`);
+    this.appDom.appendChild(el);
     if (component.onReady) component.onReady();
     return component;
   }
@@ -142,14 +142,15 @@ export class Router {
       }
       this.appDom.removeChild(document.getElementById(oldVc.v));
     }
-    view.render();
-    view.el.setAttribute('id', `v-${view.name}`);
-    this.appDom.appendChild(view.el);
-    if (view.components && view.components.length > 0) {
-      let i = 0;
-      while (i < view.components.length) {
-        view.components[i] = this.renderComponent(view.components[i]);
-        i++;
+    const el = view.render();
+    el.setAttribute('id', `v-${view.name}`);
+    this.appDom.appendChild(el);
+    if (view.components) {
+      for (const componentKey in view.components) {
+        view.components[componentKey] = this.renderComponent(
+          componentKey,
+          view.components[componentKey]
+        );
       }
     }
   }
