@@ -1,21 +1,24 @@
 import Store from '@/renderer/store';
-import { domCreateElement } from '@/renderer/common/dom';
+import { domCreateElement, Component } from '@/renderer/common/dom';
 import { getGlobal } from '@/renderer/common';
 import { windowClose, windowMaxMin, windowMin } from '@/renderer/common/window';
 import styles from './scss/index.lazy.scss';
 
 const args = Store.get<Customize>('customize');
 
-export default class Head implements Component {
+export default class Head extends Component {
   isHead: boolean;
 
   constructor(isHead: boolean = true) {
+    super();
     this.isHead = isHead;
   }
 
   onLoad(params?: RouteParams) {
     styles.use();
   }
+
+  onReady() {}
 
   onUnmounted() {
     styles.unuse();

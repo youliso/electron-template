@@ -1,7 +1,7 @@
 import Store from '@/renderer/store';
 import Router from '@/renderer/router';
 import { windowCreate, windowMessageOn, windowShow } from '@/renderer/common/window';
-import { domCreateElement } from '@/renderer/common/dom';
+import { domCreateElement, View } from '@/renderer/common/dom';
 import { dateFormat } from '@/lib';
 import { shortcutGetAll } from '@/renderer/common/shortcut';
 import Head from '@/renderer/views/components/head';
@@ -9,7 +9,7 @@ import styles from './scss/index.lazy.scss';
 
 const args = Store.get<Customize>('customize');
 
-export default class Home implements View {
+export default class Home extends View {
   private testData: StoreProxy<string>;
   private testInterval: NodeJS.Timer;
   components = {

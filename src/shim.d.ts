@@ -20,6 +20,7 @@ interface Store {
 
 interface Route {
   path: string;
+  instance?: boolean;
   component: () => Promise<any>;
 }
 
@@ -35,20 +36,23 @@ interface OldVCKey {
 }
 
 interface VSource {
-  name?: string;
+  $name?: string;
+  $el?: HTMLElement;
   components?: { [key: string]: Component };
-  onLoad: (params?: RouteParams) => void;
+  onLoad?: (params?: RouteParams) => void;
   onReady?: () => void;
-  onUnmounted: () => void;
+  onUnmounted?: () => void;
   onActivated?: (params?: RouteParams) => void;
   onDeactivated?: () => void;
-  render: () => HTMLElement;
+  render?: () => HTMLElement;
 }
 
-interface Component extends VSource {}
+interface Component extends VSource {
+  $currentName: string;
+}
 
 interface View extends VSource {
-  instance?: boolean;
+  $instance?: boolean;
 }
 
 declare module '*.lazy.scss' {

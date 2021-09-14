@@ -1,6 +1,24 @@
 import { getGlobal } from './';
 
 /**
+ * 组件
+ */
+export class Component implements VSource {
+  $currentName: string;
+  $name: string;
+  $el: HTMLElement;
+}
+
+/**
+ * 页面
+ */
+export class View implements VSource {
+  $instance: boolean;
+  $name: string;
+  $el: HTMLElement;
+}
+
+/**
  * 页面初始化加载
  */
 export function domPropertyLoad() {
