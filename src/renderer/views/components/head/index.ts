@@ -21,7 +21,6 @@ export default class Head implements Component {
 
   onUnmounted() {
     styles.unuse();
-    Store.removeProxy('head-events');
   }
 
   events(content: HTMLDivElement) {
