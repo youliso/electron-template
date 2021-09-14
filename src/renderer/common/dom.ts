@@ -38,73 +38,20 @@ export function domCssPropertySet(key: string, value: any) {
  * @param el 元素
  * @param css class名称（可选）
  * @param text 文本（可选）
+ * @param html （可选）
  */
 export function domCreateElement<K extends keyof HTMLElementTagNameMap>(
   el: K,
   css?: string | string[],
-  text?: string
+  text?: string,
+  html?: string
 ) {
   const dom = document.createElement(el);
   if (css) {
     if (typeof css === 'string') dom.setAttribute('class', css);
-    else dom.setAttribute('class', (css as string[]).join(' '));
+    else dom.setAttribute('class', css.join(' '));
   }
   if (text) dom.textContent = text;
+  if (html) dom.innerHTML = html;
   return dom;
 }
-
-/**
- * dom
- */
-class Dom {
-  private static instance: Dom;
-
-  public appDom: HTMLElement = null;
-  public mainDom: HTMLElement = null;
-  public components: { [key: string]: Component } = {};
-
-  static getInstance() {
-    if (!Dom.instance) Dom.instance = new Dom();
-    return Dom.instance;
-  }
-
-  /**
-   * 初始dom
-   */
-  init(app: string, main: string) {
-    this.appDom = document.getElementById(app);
-    this.mainDom = document.getElementById(main);
-  }
-
-  setComponent(c: Component) {
-    if (c.global) {
-      if (!c.force && this.components[c.name]) return;
-      if (this.components[c.name]) {
-        this.components[c.name].css?.unuse();
-        this.appDom.removeChild(this.components[c.name].dom);
-        delete this.components[c.name];
-      }
-      this.components[c.name] = c;
-      c.css?.use();
-      this.appDom.appendChild(c.dom);
-    } else {
-      c.css?.use();
-      this.mainDom.appendChild(c.dom);
-    }
-  }
-
-  renderRouter(view: View) {
-    while (this.mainDom.hasChildNodes()) {
-      this.mainDom.removeChild(this.mainDom.firstChild);
-    }
-    if (view.components)
-      for (let i = 0, len = view.components.length; i < len; i++) {
-        this.setComponent(view.components[i]);
-      }
-    for (let i = 0, len = view.dom.length; i < len; i++) {
-      this.mainDom.appendChild(view.dom[i]);
-    }
-  }
-}
-
-export default Dom.getInstance();

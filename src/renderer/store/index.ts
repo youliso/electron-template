@@ -5,7 +5,9 @@ type Obj<Value> = {} & {
 class Stores {
   private static instance: Stores;
 
-  public data: { [key: string]: any } = {};
+  public indexData: { [key: string]: any } = {};
+
+  public proxyData: { [key: string]: any } = {};
 
   static getInstance(): Store {
     if (!Stores.instance) Stores.instance = new Stores();
@@ -20,12 +22,12 @@ class Stores {
       return;
     }
 
-    if (!key.includes('.') && Object.prototype.hasOwnProperty.call(this.data, key)) {
-      return this.data[key] as Value;
+    if (!key.includes('.') && Object.prototype.hasOwnProperty.call(this.indexData, key)) {
+      return this.indexData[key] as Value;
     }
 
     const levels = key.split('.');
-    let cur = this.data;
+    let cur = this.indexData;
     for (const level of levels) {
       if (Object.prototype.hasOwnProperty.call(cur, level)) {
         cur = cur[level] as unknown as Obj<Value>;
@@ -33,27 +35,26 @@ class Stores {
         return;
       }
     }
-
     return cur as unknown as Value;
   }
 
-  set<Value>(key: string, value: Value): void {
+  set<Value>(key: string, value: Value, exists: boolean = false): void {
     if (key === '') {
       console.error('Invalid key, the key can not be a empty string');
       return;
     }
 
     if (!key.includes('.')) {
-      if (Object.prototype.hasOwnProperty.call(this.data, key)) {
+      if (Object.prototype.hasOwnProperty.call(this.indexData, key) && exists) {
         console.log(`The key ${key} looks like already exists on obj.`);
       }
-      this.data[key] = value;
+      this.indexData[key] = value;
     }
 
     const levels = key.split('.');
     const lastKey = levels.pop()!;
 
-    let cur = this.data;
+    let cur = this.indexData;
     for (const level of levels) {
       if (Object.prototype.hasOwnProperty.call(cur, level)) {
         cur = cur[level];
@@ -67,7 +68,7 @@ class Stores {
       console.error(`Invalid key ${key} because the value of this key is not a object.`);
       return;
     }
-    if (Object.prototype.hasOwnProperty.call(cur, lastKey)) {
+    if (Object.prototype.hasOwnProperty.call(cur, lastKey) && exists) {
       console.log(`The key ${key} looks like already exists on obj.`);
     }
     cur[lastKey] = value;
@@ -77,17 +78,18 @@ class Stores {
     let key: string;
     let value: any;
     let callback: Function;
-    if (typeof arg[0] === 'string') {
+    if (arg.length === 3) {
       key = arg[0];
       if (typeof arg[1] === 'function') callback = arg[1];
       else value = arg[1];
       if (arg[2]) callback = arg[2];
-    } else {
+    }
+    if (arg.length === 2) {
       value = arg[0];
       if (arg[1]) callback = arg[1];
     }
     if (key) {
-      const proxy = this.get(key);
+      const proxy = this.proxyData[key];
       if (proxy) return proxy;
     }
     let data = value;
@@ -104,15 +106,19 @@ class Stores {
         return true;
       }
     });
-    if (key) this.set(key, ob);
+    if (key) this.proxyData[key] = ob;
     return ob;
   }
 
-  removeProxy<T>(key: string) {
-    const proxy = this.get<StoreProxy<T>>(key);
+  getProxy<T>(key: string): StoreProxy<T> {
+    return this.proxyData[key];
+  }
+
+  removeProxy(key: string) {
+    const proxy = this.proxyData[key];
     if (proxy) {
       proxy.revoke();
-      this.set(key, null);
+      delete this.proxyData[key];
     }
   }
 }

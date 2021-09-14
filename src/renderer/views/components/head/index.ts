@@ -6,44 +6,49 @@ import styles from './scss/index.lazy.scss';
 
 const args = Store.get<Customize>('customize');
 
-function events(content: HTMLDivElement, is: boolean) {
-  const events = domCreateElement('div', 'events');
-  const min = domCreateElement('div', 'event min no-drag');
-  const maxMin = domCreateElement('div', 'event max-min no-drag');
-  const close = domCreateElement('div', 'event close no-drag');
-  min.addEventListener('click', () => windowMin(args.id));
-  maxMin.addEventListener('click', () => windowMaxMin(args.id));
-  close.addEventListener('click', () => windowClose(args.id));
-  events.appendChild(min);
-  events.appendChild(maxMin);
-  events.appendChild(close);
-  if (is) content.appendChild(events);
-  Store.proxy<boolean>('head-events', is, (value) => {
-    if (value) content.appendChild(events);
-    else content.removeChild(events);
-  });
-}
+export default class Head implements Component {
+  name = 'Head';
+  el: HTMLDivElement;
+  isHead: boolean;
 
-export default function (): Component {
-  Store.removeProxy('head-events');
-  const info = domCreateElement('div', 'head-info drag');
-  const content = domCreateElement('div', 'content');
-  const title = domCreateElement('div', 'title', args.title || getGlobal<string>('app.name'));
-  if (getGlobal('system.platform') === 'darwin') {
-    content.appendChild(document.createElement('div'));
-    content.appendChild(title);
-  } else {
-    content.appendChild(title);
-    events(content, true);
+  constructor(isHead: boolean = true) {
+    this.isHead = isHead;
   }
-  info.appendChild(content);
-  return {
-    name: 'Head',
-    global: true,
-    dom: info,
-    css: {
-      use: styles.use,
-      unuse: styles.unuse
+
+  onLoad(params?: RouteParams) {
+    styles.use();
+  }
+
+  onUnmounted() {
+    styles.unuse();
+    Store.removeProxy('head-events');
+  }
+
+  events(content: HTMLDivElement) {
+    const events = domCreateElement('div', 'events');
+    const min = domCreateElement('div', 'event min no-drag');
+    const maxMin = domCreateElement('div', 'event max-min no-drag');
+    const close = domCreateElement('div', 'event close no-drag');
+    min.addEventListener('click', () => windowMin(args.id));
+    maxMin.addEventListener('click', () => windowMaxMin(args.id));
+    close.addEventListener('click', () => windowClose(args.id));
+    events.appendChild(min);
+    events.appendChild(maxMin);
+    events.appendChild(close);
+    if (this.isHead) content.appendChild(events);
+  }
+
+  render() {
+    this.el = domCreateElement('div', 'head-info drag');
+    const content = domCreateElement('div', 'content');
+    const title = domCreateElement('div', 'title', args.title || getGlobal<string>('app.name'));
+    if (getGlobal('system.platform') === 'darwin') {
+      content.appendChild(document.createElement('div'));
+      content.appendChild(title);
+    } else {
+      content.appendChild(title);
+      this.events(content);
     }
-  };
+    this.el.appendChild(content);
+  }
 }

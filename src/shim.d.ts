@@ -1,11 +1,9 @@
-type StoreProxy<T> = { proxy: T; revoke: () => void };
+type StoreProxy<T> = { proxy: T & { value: T }; revoke: () => void };
 
 interface Store {
   set<Value>(key: string, value: Value): void;
 
   get<Value>(key: string): Value | undefined;
-
-  proxy<T>(key: string, callback?: (value: any, p: string, target: any) => void): StoreProxy<T>;
 
   proxy<T>(value: T, callback?: (value: any, p: string, target: any) => void): StoreProxy<T>;
 
@@ -15,36 +13,45 @@ interface Store {
     callback?: (value: any, p: string, target: any) => void
   ): StoreProxy<T>;
 
+  getProxy<T>(key: string): StoreProxy<T>;
+
   removeProxy<T>(key: string): void;
 }
 
 interface Route {
   path: string;
-  name: string;
   component: () => Promise<any>;
 }
 
-type RouteParams = any;
-
-interface Component {
-  // 组件名称
-  name: string;
-  // 是否全局组件
-  global?: boolean;
-  // 是否强制渲染(仅全局组件下生效)
-  force?: boolean;
-  // 组件元素
-  dom: HTMLElement;
-  // css加载
-  css?: {
-    use: () => void;
-    unuse: () => void;
-  };
+interface RouteParams {
+  // 销毁单例(仅在单例模式生效)
+  unInstance?: boolean;
+  data?: any;
 }
 
-interface View {
+interface OldVCKey {
+  c: string[];
+  v: string;
+}
+
+interface VSource {
+  name?: string;
+  el: HTMLElement;
   components?: Component[];
-  dom: HTMLElement[];
+  onLoad: (params?: RouteParams) => void;
+  onReady?: () => void;
+  onUnmounted: () => void;
+  onActivated?: (params?: RouteParams) => void;
+  onDeactivated?: () => void;
+  render: () => void;
+}
+
+interface Component extends VSource {
+  name: string;
+}
+
+interface View extends VSource {
+  instance?: boolean;
 }
 
 declare module '*.lazy.scss' {

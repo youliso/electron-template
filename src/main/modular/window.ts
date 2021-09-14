@@ -33,7 +33,6 @@ export function browserWindowInit(args: BrowserWindowConstructorOptions): Browse
   });
   if (!opt.backgroundColor && windowCfg.backgroundColor)
     opt.backgroundColor = windowCfg.backgroundColor;
-  if (!opt.customize.hasOwnProperty('isHead')) opt.customize.isHead = true;
   if (opt.customize.parentId) {
     opt.parent = Window.getInstance().get(opt.customize.parentId);
     const currentWH = opt.parent.getBounds();
