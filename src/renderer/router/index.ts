@@ -1,11 +1,12 @@
 import pageRoute from '@/renderer/router/modular/page';
 import dialogRoute from '@/renderer/router/modular/dialog';
+import { domCreateElement } from '@/renderer/common/dom';
 
 export class Router {
   private static instance: Router;
+  private instances: { [key: string]: View } = {};
 
-  public appDom: HTMLElement = null;
-  public instances: { [key: string]: View } = {};
+  public appDom: HTMLElement = document.body;
   public routes: Route[] = [...dialogRoute, ...pageRoute];
   // 当前路由
   public current: View;
@@ -18,14 +19,6 @@ export class Router {
   }
 
   constructor() {}
-
-  /**
-   * 初始dom
-   */
-  init(el: string, route?: string) {
-    this.appDom = document.getElementById(el);
-    if (route) this.replace(route).catch(console.error);
-  }
 
   getRoute(path: string) {
     for (let i = 0, len = this.routes.length; i < len; i++) {
@@ -43,6 +36,10 @@ export class Router {
     this.routes.push(route);
   }
 
+  unInstance(name: string) {
+    delete this.instances[name];
+  }
+
   async replace(path: string, params?: RouteParams) {
     const route: Route = this.getRoute(path);
     if (!route) console.warn(`beyond the history of ${path}`);
@@ -55,7 +52,7 @@ export class Router {
   async push(path: string, params?: RouteParams) {
     const route: Route = this.getRoute(path);
     if (!route) console.warn(`beyond the history of ${path}`);
-    else await this.rIng(route, params);
+    else await this.rIng(route, params, true);
   }
 
   /**
@@ -71,121 +68,101 @@ export class Router {
     }
     if (params) p.params = params;
     this.history.splice(0, num + 1);
-    await this.rIng(this.getRoute(p.path), p.params);
+    await this.rIng(this.getRoute(p.path), p.params, false);
   }
 
-  async rIng(route: Route, params?: RouteParams, isHistory: boolean = true) {
+  private async rIng(route: Route, params?: RouteParams, isHistory: boolean = true) {
     await route
       .component()
-      .then((View) => {
-        if (route.instance) {
-          let view = this.instances[View.default.name];
-          const initLoad = !view;
-          if (initLoad) {
-            view = new View.default() as View;
-            view.$instance = true;
-            if (!view.$name) view.$name = View.default.name;
-          }
-          const oldVc = this.getCurrentDom(params?.unInstance);
-          if (initLoad) view.onLoad(params);
-          else view.onActivated(params);
-          this.renderView(view, params, oldVc);
-          this.current = view;
-          if (initLoad) this.instances[view.$name] = view;
-          if (initLoad && view.onReady) view.onReady();
-          return;
-        }
-        const view = new View.default() as View;
-        if (!view.$name) view.$name = View.default.name;
-        const oldVc = this.getCurrentDom(params?.unInstance);
-        view.onLoad(params);
-        this.renderView(view, params, oldVc);
-        this.current = view;
-        if (view.onReady) view.onReady();
-      })
-      .then(() => {
-        if (isHistory) this.setHistory(route.path, params);
-      })
+      .then((View) => this.pretreatment(route, View, params))
+      .then(() => isHistory && this.setHistory(route.path, params))
       .catch(console.error);
   }
 
-  getCurrentDom(instance?: boolean) {
-    let oldVc: OldVCKey = null;
+  private pretreatment(route: Route, View: any, params?: RouteParams) {
+    let view: View;
+    if (route.instance) {
+      view = this.instances[View.default.name];
+      const initLoad = !this.instances[View.default.name];
+      if (initLoad) {
+        view = new View.default() as View;
+        view.$instance = true;
+        if (!view.$name) view.$name = View.default.name;
+      }
+      this.unCurrent();
+      if (initLoad) view.onLoad(params);
+      else view.onActivated(params);
+      this.renderView(view, params);
+      this.current = view;
+      if (initLoad) view.onReady();
+      return;
+    }
+    view = new View.default() as View;
+    if (!view.$name) view.$name = View.default.name;
+    this.unCurrent();
+    view.onLoad(params);
+    this.renderView(view, params);
+    this.current = view;
+    view.onReady();
+  }
+
+  private unCurrent() {
     if (this.current) {
-      if (instance === null || instance === undefined) instance = this.current.$instance;
-      else instance = !instance;
-      if (instance) {
+      if (this.current.$instance) {
+        this.instances[this.current.$name] = this.current;
         if (this.current.components) {
           for (const componentKey in this.current.components) {
-            const c = this.current.components[componentKey];
-            if (c.onDeactivated) c.onDeactivated();
+            this.current.components[componentKey].onDeactivated();
           }
         }
-        if (this.current.onDeactivated) this.current.onDeactivated();
+        this.current.onDeactivated();
       } else {
         delete this.instances[this.current.$name];
         if (this.current.components) {
           for (const componentKey in this.current.components) {
-            const c = this.current.components[componentKey];
-            if (c.onDeactivated) c.onUnmounted();
+            this.current.components[componentKey].onUnmounted();
           }
         }
         this.current.onUnmounted();
       }
-      let o: OldVCKey = {
-        c: [],
-        v: `v-${this.current.$name}`
-      };
-      if (this.current.components) o.c = Object.keys(this.current.components).map((c) => `c-${c}`);
-      oldVc = o;
+      this.appDom.removeChild(this.current.$el);
       delete this.current;
     }
-    return oldVc;
   }
 
-  renderComponent(currentName: string, componentKey: string, component: Component) {
-    component.onLoad();
-    const el = component.render();
-    el.setAttribute('id', `c-${componentKey}`);
-    this.appDom.appendChild(el);
-    component.$currentName = currentName;
-    component.$name = componentKey;
-    component.$el = el;
-    if (component.onReady) component.onReady();
-    return component;
-  }
-
-  renderView(view: View, params?: RouteParams, oldVc?: OldVCKey) {
-    if (oldVc) {
-      for (const i of oldVc.c) {
-        this.appDom.removeChild(document.getElementById(i));
-      }
-      this.appDom.removeChild(document.getElementById(oldVc.v));
-    }
+  private renderView(view: View, params?: RouteParams) {
     if (view.$el) {
-      this.appDom.appendChild(view.$el);
       if (view.components) {
         for (const componentKey in view.components) {
-          const c = view.components[componentKey];
-          if (c.onActivated) c.onActivated(params);
-          this.appDom.appendChild(c.$el);
+          view.components[componentKey].onActivated(params);
         }
       }
+      this.appDom.appendChild(view.$el);
       return;
     }
-    const el = view.render();
-    el.setAttribute('id', `v-${view.$name}`);
-    this.appDom.appendChild(el);
+    const viewEl = domCreateElement('div', 'container');
+    const cl = view.render();
+    if (Array.isArray(cl)) for (const v of cl) viewEl.appendChild(v);
+    else viewEl.appendChild(cl);
     if (view.components) {
+      const componentsEl = domCreateElement('div', 'components');
       for (const componentKey in view.components) {
-        view.components[componentKey] = this.renderComponent(
-          view.$name,
-          componentKey,
-          view.components[componentKey]
-        );
+        const component = view.components[componentKey];
+        component.onLoad();
+        const el = domCreateElement('div', `component ${componentKey.toLowerCase()}`);
+        const cl = component.render();
+        if (Array.isArray(cl)) for (const v of cl) el.appendChild(v);
+        else el.appendChild(cl);
+        componentsEl.appendChild(el);
+        component.$currentName = view.$name;
+        component.$name = componentKey;
+        component.$el = el;
+        component.onReady();
       }
+      viewEl.appendChild(componentsEl);
     }
-    view.$el = el;
+    this.appDom.appendChild(viewEl);
+    view.$el = viewEl;
   }
 }
 

@@ -24,16 +24,7 @@ interface Route {
   component: () => Promise<any>;
 }
 
-interface RouteParams {
-  // 销毁单例(仅在单例模式生效)
-  unInstance?: boolean;
-  data?: any;
-}
-
-interface OldVCKey {
-  c: string[];
-  v: string;
-}
+type RouteParams = any;
 
 interface VSource {
   $name?: string;
@@ -44,7 +35,7 @@ interface VSource {
   onUnmounted?: () => void;
   onActivated?: (params?: RouteParams) => void;
   onDeactivated?: () => void;
-  render?: () => HTMLElement;
+  render?: () => HTMLElement | HTMLElement[];
 }
 
 interface Component extends VSource {

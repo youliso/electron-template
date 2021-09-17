@@ -1,9 +1,9 @@
 import Router from '@/renderer/router';
-import { domCreateElement } from '@/renderer/common/dom';
+import { View, domCreateElement } from '@/renderer/common/dom';
 import styles from './scss/index.lazy.scss';
 import Head from '@/renderer/views/components/head';
 
-export default class About implements View {
+export default class About extends View {
   components = {
     Head: new Head()
   };
@@ -21,6 +21,7 @@ export default class About implements View {
 
   onDeactivated() {
     styles.unuse();
+    // Router.unInstance(this.$name);
   }
 
   onReady() {}

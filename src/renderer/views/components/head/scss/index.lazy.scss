@@ -1,17 +1,17 @@
-.darwin {
-  .head-info > .content {
+[platform='darwin'] {
+  .component.head > .head-info > .content {
     padding-right: 10px;
   }
 }
 
-.win32,
-.linux {
-  .head-info > .content {
+[platform='win32'],
+[platform='linux'] {
+  .component.head > .head-info > .content {
     padding-left: 10px;
   }
 }
 
-.head-info {
+.component.head > .head-info {
   position: absolute;
   top: 0;
   left: 0;
@@ -46,18 +46,23 @@
         width: 15px;
         height: 15px;
         margin-left: 5px;
-        &:hover{
+
+        &:hover {
           opacity: 0.9;
         }
+
         &:active {
           opacity: 0.7;
         }
+
         &.close {
           background-color: var(--red);
         }
+
         &.min {
           background-color: var(--grey);
         }
+
         &.max-min {
           background-color: var(--cyan);
         }
