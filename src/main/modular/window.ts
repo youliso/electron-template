@@ -15,6 +15,8 @@ export function browserWindowInit(args: BrowserWindowConstructorOptions): Browse
   args.minHeight = args.minHeight || args.height || windowCfg.height;
   args.width = args.width || windowCfg.width;
   args.height = args.height || windowCfg.height;
+  // darwin下modal会造成整个窗口关闭(?)
+  if (process.platform === 'darwin') delete args.modal;
   let opt: BrowserWindowConstructorOptions = Object.assign(args, {
     autoHideMenuBar: true,
     titleBarStyle: args.customize.route ? 'hidden' : 'default',
