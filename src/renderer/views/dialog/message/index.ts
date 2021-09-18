@@ -1,5 +1,5 @@
 import Store from '@/renderer/store';
-import { domCreateElement } from '@/renderer/common/dom';
+import { domCreateElement, View } from '@/renderer/common/dom';
 import { getGlobal } from '@/renderer/common';
 import { windowClose, windowMessageSend, windowShow } from '@/renderer/common/window';
 import styles from './scss/index.lazy.scss';
@@ -7,7 +7,7 @@ import Head from '@/renderer/views/components/head';
 
 const args = Store.get<Customize>('customize');
 
-export default class Message implements View {
+export default class Message extends View {
   components = {
     Head: new Head(false)
   };
