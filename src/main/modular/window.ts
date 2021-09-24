@@ -28,7 +28,6 @@ export function browserWindowInit(args: BrowserWindowConstructorOptions): Browse
       preload: join(__dirname, './preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
-      nativeWindowOpen: true,
       devTools: !app.isPackaged,
       webSecurity: false
     }

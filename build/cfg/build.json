@@ -3,7 +3,7 @@
   "productName": "demo",
   "appId": "org.demo",
   "copyright": "MIT",
-  "asar": false,
+  "asar": true,
   "directories": {
     "output": "out"
   },
