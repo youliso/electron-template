@@ -53,6 +53,7 @@ export default class Home extends View {
     const but = domCreateElement('button', 'but', '弹框');
     const shortcut = domCreateElement('button', 'but', '获取已注册shortcut');
     const about = domCreateElement('button', 'but', '关于');
+    const music = domCreateElement('button', 'but', 'music');
     but.addEventListener('click', () => {
       windowCreate({
         customize: {
@@ -82,11 +83,15 @@ export default class Home extends View {
       console.log(shortcutGetAll());
     });
     about.addEventListener('click', () => {
-      Router.replace('/about');
+      Router.push('/about');
+    });
+    music.addEventListener('click', () => {
+      Router.push('/music');
     });
     el.appendChild(this.testRender());
     el.appendChild(but);
     el.appendChild(about);
+    el.appendChild(music);
     el.appendChild(shortcut);
     el.appendChild(baidu);
     return el;

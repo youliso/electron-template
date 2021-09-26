@@ -8,5 +8,5 @@ import '@/renderer/views/scss/index.scss';
 windowLoad(async (_, args) => {
   domPropertyLoad();
   Store.set('customize', args);
-  Router.replace(args.route).catch(console.error);
+  Router.init(args.route);
 });

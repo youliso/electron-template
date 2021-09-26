@@ -40,7 +40,7 @@ export default class About extends View {
     const text = domCreateElement('div', 'text', '关于');
     const home = domCreateElement('button', 'but', '首页');
     this.countDom = domCreateElement('button', 'but', `${this.count} add`);
-    home.addEventListener('click', () => Router.replace('/home'));
+    home.addEventListener('click', () => Router.back());
     this.countDom.addEventListener('click', () => this.countAdd());
     el.appendChild(text);
     el.appendChild(home);

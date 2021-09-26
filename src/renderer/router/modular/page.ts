@@ -7,6 +7,11 @@ const Router: Route[] = [
     path: '/about',
     instance: true,
     component: () => import('@/renderer/views/pages/about/index')
+  },
+  {
+    path: '/music',
+    instance: true,
+    component: () => import('@/renderer/views/pages/music/index')
   }
 ];
 

@@ -20,6 +20,10 @@ export class Router {
 
   constructor() {}
 
+  init(path: string) {
+    this.push(path).catch(console.error);
+  }
+
   getRoute(path: string) {
     for (let i = 0, len = this.routes.length; i < len; i++) {
       const route = this.routes[i];
@@ -58,7 +62,7 @@ export class Router {
   /**
    * 回退路由
    */
-  async back(path: number, params?: RouteParams) {
+  async back(path: number = -1, params?: RouteParams) {
     let num = Math.abs(path) | 0;
     let p = this.history[num];
     if (!p) {
@@ -67,7 +71,7 @@ export class Router {
       p = this.history[num];
     }
     if (params) p.params = params;
-    this.history.splice(0, num + 1);
+    this.history.splice(0, num);
     await this.rIng(this.getRoute(p.path), p.params, false);
   }
 
