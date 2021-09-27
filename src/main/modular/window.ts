@@ -170,7 +170,7 @@ export class Window {
    */
   func(type: windowFuncOpt, id?: number) {
     let win: BrowserWindow = null;
-    if (id) {
+    if (!!id) {
       win = this.get(id);
       if (!win) {
         console.error(`not found win -> ${id}`);
@@ -186,7 +186,7 @@ export class Window {
    * 窗口发送消息
    */
   send(key: string, value: any, id?: number) {
-    if (id) {
+    if (!!id) {
       const win = this.get(id);
       if (win) win.webContents.send(key, value);
     } else for (const i of this.getAll()) i.webContents.send(key, value);
@@ -266,7 +266,7 @@ export class Window {
     });
     // 最大化最小化窗口
     ipcMain.on('window-max-min-size', (event, id) => {
-      if (id) {
+      if (!!id) {
         const win = this.get(id);
         if (win.isMaximized()) win.unmaximize();
         else win.maximize();
