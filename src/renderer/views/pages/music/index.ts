@@ -3,7 +3,7 @@ import styles from './scss/index.lazy.scss';
 import { init } from './demo';
 import Head from '@/renderer/views/components/head';
 
-export default class About extends View {
+export default class Music extends View {
   components = {
     Head: new Head()
   };
