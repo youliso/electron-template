@@ -1,9 +1,10 @@
 import Router from '@/renderer/router';
 import { View, domCreateElement } from '@/renderer/common/dom';
-import styles from './scss/index.lazy.scss';
+import indexCss from './scss/index.lazy.scss';
 import Head from '@/renderer/views/components/head';
 
 export default class About extends View {
+  styles = [indexCss];
   components = {
     Head: new Head()
   };
@@ -11,24 +12,15 @@ export default class About extends View {
   countDom: HTMLButtonElement;
   count: number = 0;
 
-  onLoad(params?: RouteParams) {
-    styles.use();
-  }
+  onLoad(params?: RouteParams) {}
 
-  onActivated() {
-    styles.use();
-  }
+  onActivated() {}
 
-  onDeactivated() {
-    styles.unuse();
-    // Router.unInstance(this.$name);
-  }
+  onDeactivated() {}
 
   onReady() {}
 
-  onUnmounted() {
-    styles.unuse();
-  }
+  onUnmounted() {}
 
   countAdd() {
     this.count++;

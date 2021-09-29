@@ -7,6 +7,7 @@ export class Component implements VSource {
   $currentName: string;
   $name: string;
   $el: HTMLElement;
+  styles: any[] = [];
 
   onLoad() {}
 
@@ -26,6 +27,8 @@ export class View implements VSource {
   $instance: boolean;
   $name: string;
   $el: HTMLElement;
+  styles: any[] = [];
+  components = {};
 
   onLoad() {}
 

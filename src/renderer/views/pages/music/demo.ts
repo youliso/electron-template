@@ -31,7 +31,7 @@ bgmBut.addEventListener('click', (event) => {
 
 function bgm() {
   audio.setSrc('https://img-qn.51miz.com/preview/sound/00/23/00/51miz-S230038-F96C71EB-thumb.mp3');
-  // audio.load();
+  audio.loop(true);
 }
 
 const arr = new Uint8Array(audio.analyser.frequencyBinCount);

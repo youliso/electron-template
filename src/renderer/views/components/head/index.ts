@@ -2,11 +2,12 @@ import Store from '@/renderer/store';
 import { domCreateElement, Component } from '@/renderer/common/dom';
 import { getGlobal } from '@/renderer/common';
 import { windowClose, windowMaxMin, windowMin } from '@/renderer/common/window';
-import styles from './scss/index.lazy.scss';
+import indexCss from './scss/index.lazy.scss';
 
 const args = Store.get<Customize>('customize');
 
 export default class Head extends Component {
+  styles = [indexCss];
   isHead: boolean;
 
   constructor(isHead: boolean = true) {
@@ -14,15 +15,11 @@ export default class Head extends Component {
     this.isHead = isHead;
   }
 
-  onLoad(params?: RouteParams) {
-    styles.use();
-  }
+  onLoad(params?: RouteParams) {}
 
   onReady() {}
 
-  onUnmounted() {
-    styles.unuse();
-  }
+  onUnmounted() {}
 
   events(content: HTMLDivElement) {
     const events = domCreateElement('div', 'events');

@@ -5,19 +5,19 @@ import { domCreateElement, View } from '@/renderer/common/dom';
 import { dateFormat } from '@/lib';
 import { shortcutGetAll } from '@/renderer/common/shortcut';
 import Head from '@/renderer/views/components/head';
-import styles from './scss/index.lazy.scss';
+import indexCss from './scss/index.lazy.scss';
 
 const args = Store.get<Customize>('customize');
 
 export default class Home extends View {
   private testData: StoreProxy<string>;
   private testInterval: NodeJS.Timer;
+  styles = [indexCss];
   components = {
     Head: new Head()
   };
 
   onLoad() {
-    styles.use();
     this.onTest();
   }
 
@@ -26,7 +26,6 @@ export default class Home extends View {
   }
 
   onUnmounted() {
-    styles.unuse();
     if (this.testData) this.testData.revoke();
     if (this.testInterval) clearInterval(this.testInterval);
   }

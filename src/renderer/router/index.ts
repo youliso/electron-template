@@ -94,6 +94,7 @@ export class Router {
         if (!view.$name) view.$name = View.default.name;
       }
       this.unCurrent();
+      for (const css of view.styles) css.use();
       if (initLoad) view.onLoad(params);
       else view.onActivated(params);
       this.renderView(view, params);
@@ -104,6 +105,7 @@ export class Router {
     view = new View.default() as View;
     if (!view.$name) view.$name = View.default.name;
     this.unCurrent();
+    for (const css of view.styles) css.use();
     view.onLoad(params);
     this.renderView(view, params);
     this.current = view;
@@ -116,7 +118,9 @@ export class Router {
         this.instances[this.current.$name] = this.current;
         if (this.current.components) {
           for (const componentKey in this.current.components) {
-            this.current.components[componentKey].onDeactivated();
+            const component = this.current.components[componentKey];
+            component.onDeactivated();
+            for (const css of component.styles) css.unuse();
           }
         }
         this.current.onDeactivated();
@@ -124,12 +128,15 @@ export class Router {
         delete this.instances[this.current.$name];
         if (this.current.components) {
           for (const componentKey in this.current.components) {
-            this.current.components[componentKey].onUnmounted();
+            const component = this.current.components[componentKey];
+            component.onUnmounted();
+            for (const css of component.styles) css.unuse();
           }
         }
         this.current.onUnmounted();
       }
       this.appDom.removeChild(this.current.$el);
+      for (const css of this.current.styles) css.unuse();
       delete this.current;
     }
   }
@@ -138,7 +145,9 @@ export class Router {
     if (view.$el) {
       if (view.components) {
         for (const componentKey in view.components) {
-          view.components[componentKey].onActivated(params);
+          const component = view.components[componentKey];
+          for (const css of component.styles) css.use();
+          component.onActivated(params);
         }
       }
       this.appDom.appendChild(view.$el);
@@ -152,6 +161,7 @@ export class Router {
       const componentsEl = domCreateElement('div', 'components');
       for (const componentKey in view.components) {
         const component = view.components[componentKey];
+        for (const css of component.styles) css.use();
         component.onLoad();
         const el = domCreateElement('div', `component ${componentKey.toLowerCase()}`);
         const cl = component.render();

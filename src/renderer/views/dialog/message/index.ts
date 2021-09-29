@@ -2,27 +2,24 @@ import Store from '@/renderer/store';
 import { domCreateElement, View } from '@/renderer/common/dom';
 import { getGlobal } from '@/renderer/common';
 import { windowClose, windowMessageSend, windowShow } from '@/renderer/common/window';
-import styles from './scss/index.lazy.scss';
+import indexCss from './scss/index.lazy.scss';
 import Head from '@/renderer/views/components/head';
 
 const args = Store.get<Customize>('customize');
 
 export default class Message extends View {
+  styles = [indexCss];
   components = {
     Head: new Head(false)
   };
 
-  onLoad() {
-    styles.use();
-  }
+  onLoad() {}
 
   onReady() {
     windowShow(args.id);
   }
 
-  onUnmounted() {
-    styles.unuse();
-  }
+  onUnmounted() {}
 
   render() {
     const el = domCreateElement('div', 'info');

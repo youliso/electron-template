@@ -1,30 +1,23 @@
 import { View } from '@//renderer/common/dom';
-import styles from './scss/index.lazy.scss';
+import indexCss from './scss/index.lazy.scss';
 import { init } from './demo';
 import Head from '@/renderer/views/components/head';
 
 export default class Music extends View {
+  styles = [indexCss];
   components = {
     Head: new Head()
   };
 
-  onLoad(params?: any) {
-    styles.use();
-  }
+  onLoad(params?: any) {}
 
-  onActivated() {
-    styles.use();
-  }
+  onActivated() {}
 
-  onDeactivated() {
-    styles.unuse();
-  }
+  onDeactivated() {}
 
   onReady() {}
 
-  onUnmounted() {
-    styles.unuse();
-  }
+  onUnmounted() {}
 
   render() {
     return init();

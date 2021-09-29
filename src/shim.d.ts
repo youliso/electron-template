@@ -29,6 +29,7 @@ type RouteParams = any;
 interface VSource {
   $name?: string;
   $el?: HTMLElement;
+  styles?: any[];
   components?: { [key: string]: Component };
   onLoad?: (params?: RouteParams) => void;
   onReady?: () => void;
