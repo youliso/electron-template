@@ -30,7 +30,6 @@ interface VSource {
   $name?: string;
   $el?: HTMLElement;
   styles?: any[];
-  components?: { [key: string]: Component };
   onLoad?: (params?: RouteParams) => void;
   onReady?: () => void;
   onUnmounted?: () => void;
@@ -45,6 +44,7 @@ interface Component extends VSource {
 
 interface View extends VSource {
   $instance?: boolean;
+  components?: { [key: string]: Component };
 }
 
 declare module '*.lazy.scss' {
