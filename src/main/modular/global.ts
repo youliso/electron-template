@@ -166,7 +166,7 @@ export class Global {
     try {
       path = normalize(
         app.isPackaged
-          ? resolve(__dirname, '../../extern/' + path)
+          ? resolve(__dirname, '../extern/' + path)
           : resolve('./src/lib/extern/' + path)
       );
       accessSync(path, constants.R_OK);

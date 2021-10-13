@@ -84,8 +84,10 @@ export default class Home extends View {
     about.addEventListener('click', () => {
       Router.push('/about');
     });
-    music.addEventListener('click', () => {
-      Router.push('/music');
+    music.addEventListener('click', async () => {
+      console.log('123');
+      await Router.push('/music');
+      console.log('321');
     });
     el.appendChild(this.testRender());
     el.appendChild(but);
