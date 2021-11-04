@@ -12,7 +12,7 @@ export default class About extends View {
   countDom: HTMLButtonElement;
   count: number = 0;
 
-  onLoad(params?: RouteParams) {}
+  onLoad() {}
 
   onActivated() {}
 

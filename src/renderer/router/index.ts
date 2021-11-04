@@ -11,7 +11,7 @@ export class Router {
   // 当前路由
   public current: View;
   // 路由历史
-  public history: { path: string; params?: RouteParams }[] = [];
+  public history: { path: string; params?: any }[] = [];
 
   static getInstance() {
     if (!Router.instance) Router.instance = new Router();
@@ -32,7 +32,7 @@ export class Router {
     return null;
   }
 
-  setHistory(path: string, params?: RouteParams) {
+  setHistory(path: string, params?: any) {
     this.history.unshift({ path, params });
   }
 
@@ -44,8 +44,9 @@ export class Router {
     delete this.instances[name];
   }
 
-  async replace(path: string, params?: RouteParams) {
+  async replace(path: string, params?: any, instance: boolean = false) {
     const route: Route = this.getRoute(path);
+    if (instance) route.instance = instance;
     if (!route) console.warn(`beyond the history of ${path}`);
     else await this.rIng(route, params, false);
   }
@@ -53,8 +54,9 @@ export class Router {
   /**
    * 跳转路由
    */
-  async push(path: string, params?: RouteParams) {
+  async push(path: string, params?: any, instance: boolean = false) {
     const route: Route = this.getRoute(path);
+    if (instance) route.instance = instance;
     if (!route) console.warn(`beyond the history of ${path}`);
     else await this.rIng(route, params, true);
   }
@@ -62,7 +64,7 @@ export class Router {
   /**
    * 回退路由
    */
-  async back(path: number = -1, params?: RouteParams) {
+  async back(path: number = -1, params?: any) {
     let num = Math.abs(path) | 0;
     let p = this.history[num];
     if (!p) {
@@ -75,7 +77,7 @@ export class Router {
     await this.rIng(this.getRoute(p.path), p.params, false);
   }
 
-  private async rIng(route: Route, params?: RouteParams, isHistory: boolean = true) {
+  private async rIng(route: Route, params?: any, isHistory: boolean = true) {
     await route
       .component()
       .then((View) => this.pretreatment(route, View, params))
@@ -83,7 +85,7 @@ export class Router {
       .catch(console.error);
   }
 
-  private pretreatment(route: Route, View: any, params?: RouteParams) {
+  private pretreatment(route: Route, View: any, params?: any) {
     let view: View;
     if (route.instance) {
       view = this.instances[View.default.name];
@@ -141,7 +143,7 @@ export class Router {
     }
   }
 
-  private renderView(view: View, params?: RouteParams) {
+  private renderView(view: View, params?: any) {
     if (view.$el) {
       if (view.components) {
         for (const componentKey in view.components) {

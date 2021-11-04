@@ -24,16 +24,14 @@ interface Route {
   component: () => Promise<any>;
 }
 
-type RouteParams = any;
-
 interface VSource {
   $name?: string;
   $el?: HTMLElement;
   styles?: any[];
-  onLoad?: (params?: RouteParams) => void;
+  onLoad?: (params?: any) => void;
   onReady?: () => void;
   onUnmounted?: () => void;
-  onActivated?: (params?: RouteParams) => void;
+  onActivated?: (params?: any) => void;
   onDeactivated?: () => void;
   render?: () => HTMLElement | HTMLElement[];
 }
