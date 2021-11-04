@@ -1,7 +1,6 @@
 const { resolve } = require('path');
 const { name } = require('../../package.json');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { ESBuildMinifyPlugin } = require('esbuild-loader');
 const base = require('./webpack.base.config');
 module.exports = (env) => {
   return {
@@ -45,12 +44,7 @@ module.exports = (env) => {
       })
     ],
     optimization: {
-      minimize: env === 'production',
-      minimizer: [
-        new ESBuildMinifyPlugin({
-          target: 'esnext'
-        })
-      ]
+      minimize: env === 'production'
     }
   };
 };

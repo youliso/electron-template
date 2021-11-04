@@ -1,5 +1,4 @@
 const { resolve } = require('path');
-const { ESBuildMinifyPlugin } = require('esbuild-loader');
 const base = require('./webpack.base.config');
 
 module.exports = (env) => {
@@ -18,12 +17,7 @@ module.exports = (env) => {
       path: resolve('dist')
     },
     optimization: {
-      minimize: env === 'production',
-      minimizer: [
-        new ESBuildMinifyPlugin({
-          target: 'esnext'
-        })
-      ]
+      minimize: env === 'production'
     }
   };
 };

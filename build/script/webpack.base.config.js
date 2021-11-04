@@ -17,11 +17,19 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.ts$/,
-        loader: 'esbuild-loader',
-        options: {
-          loader: 'ts',
-          target: 'esnext'
+        test: /\.(ts|js)$/,
+        exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: 'swc-loader',
+          options: {
+            jsc: {
+              parser: {
+                syntax: 'typescript',
+                dynamicImport: true
+              },
+              target: 'es2022'
+            }
+          }
         }
       },
       {

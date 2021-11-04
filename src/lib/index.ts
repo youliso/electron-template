@@ -1,7 +1,7 @@
 /**
  * 判空
  * */
-export function isNull(o: unknown): boolean {
+ export function isNull(o: unknown): boolean {
   return o === '' || o === undefined || o === null || o === 'undefined' || o === 'null';
 }
 
@@ -99,33 +99,33 @@ export function deepCopy<T>(obj: any): T {
 /**
  * 防抖
  */
-export function debounce(fun: Function, wait: number): Function {
+export function debounce(func: Function, wait: number): any {
   let timer: number = null;
   return function () {
-    if (timer !== null) {
-      clearTimeout(timer);
-    }
-    timer = setTimeout(fun, wait);
+    const context = this;
+    const args = arguments; // 存一下传入的参数
+    if (timer) clearTimeout(timer);
+    func.apply(context, args);
+    timer = setTimeout(func, wait);
   };
 }
 
 /**
  * 节流
  */
-export function throttle(fun: Function, delay: number): Function {
+export function throttle(func: Function, delay: number): any {
   let timer: number = null;
   let startTime = Date.now();
   return function () {
-    let curTime = Date.now();
-    let remaining = delay - (curTime - startTime);
-    let context = this;
-    let args = arguments;
-    clearTimeout(timer);
+    const remaining = delay - (Date.now() - startTime);
+    const context = this;
+    const args = arguments;
+    if (timer) clearTimeout(timer);
     if (remaining <= 0) {
-      fun.apply(context, args);
+      func.apply(context, args);
       startTime = Date.now();
     } else {
-      timer = setTimeout(fun, remaining);
+      timer = setTimeout(func, remaining);
     }
   };
 }
