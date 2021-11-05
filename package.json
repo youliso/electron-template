@@ -16,25 +16,19 @@
     "build:win": "node build/script/cfg.js && node build/script/build.js && electron-builder -c build/cfg/build.json --win",
     "build:linux": "node build/script/cfg.js && node build/script/build.js && electron-builder -c build/cfg/build.json --linux",
     "build:mac": "node build/script/cfg.js && node build/script/build.js && electron-builder -c build/cfg/build.json --mac",
-    "postinstall": "electron-builder install-app-deps",
-    "test": "jest -c build/cfg/jest.json"
+    "postinstall": "electron-builder install-app-deps"
   },
   "devDependencies": {
     "@swc/core": "^1.2.105",
-    "@types/jest": "^27.0.2",
     "css-loader": "^6.5.1",
     "electron": "^15.3.0",
     "electron-builder": "^22.13.1",
     "electron-rebuild": "^3.2.3",
     "html-webpack-plugin": "^5.5.0",
-    "jest": "^27.3.1",
-    "prettier": "^2.4.1",
     "sass": "^1.43.4",
     "sass-loader": "^12.3.0",
     "style-loader": "^3.3.1",
     "swc-loader": "^0.1.15",
-    "ts-jest": "^27.0.6",
-    "typescript": "^4.4.4",
     "webpack": "^5.61.0",
     "webpack-dev-server": "^4.4.0"
   },
