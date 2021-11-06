@@ -15,7 +15,7 @@ export default class Head extends Component {
     this.isHead = isHead;
   }
 
-  onLoad(params?: RouteParams) {}
+  onLoad() {}
 
   onReady() {}
 
@@ -26,9 +26,9 @@ export default class Head extends Component {
     const min = domCreateElement('div', 'event min no-drag');
     const maxMin = domCreateElement('div', 'event max-min no-drag');
     const close = domCreateElement('div', 'event close no-drag');
-    min.addEventListener('click', () => windowMin(args.id));
-    maxMin.addEventListener('click', () => windowMaxMin(args.id));
-    close.addEventListener('click', () => windowClose(args.id));
+    min.addEventListener('click', () => windowMin());
+    maxMin.addEventListener('click', () => windowMaxMin());
+    close.addEventListener('click', () => windowClose());
     events.appendChild(min);
     events.appendChild(maxMin);
     events.appendChild(close);

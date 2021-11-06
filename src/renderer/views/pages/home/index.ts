@@ -22,7 +22,7 @@ export default class Home extends View {
   }
 
   onReady() {
-    windowShow(args.id);
+    windowShow();
   }
 
   onUnmounted() {

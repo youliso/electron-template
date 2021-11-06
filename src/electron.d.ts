@@ -3,26 +3,28 @@ interface Customize {
   id?: number;
   // 标题 (仅路由下生效)
   title?: string;
-  // 指定路由
-  route?: string;
   // 指定网页
   url?: string;
-  // 指定html文件
-  file?: string;
+  // 指定路由
+  route?: string;
+  // 参数数据
+  loadOptions?: Electron.LoadURLOptions | Electron.LoadFileOptions;
   // 父类窗口宽度
   currentWidth?: number;
   // 父类窗口高度
   currentHeight?: number;
   // 父类窗口是否全屏
   currentMaximized?: boolean;
-  // 数据(仅路由下生效)
-  data?: any;
-  // 是否支持多窗口
-  isMultiWindow?: boolean;
-  // 是否主窗口(当为true时会替代当前主窗口)
+  // 此路由是否单窗口
+  isOneWindow?: boolean;
+  // 是否主窗口
   isMainWin?: boolean;
   // 父窗口id
   parentId?: number;
+  // 进程参数
+  argv?: any;
+  // 自定义参数
+  data?: any;
 }
 
 declare namespace Electron {

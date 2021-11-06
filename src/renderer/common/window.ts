@@ -94,14 +94,21 @@ export function windowCreate(args: BrowserWindowConstructorOptions) {
 /**
  * 窗口状态
  */
-export function windowStatus(id: number, type: windowStatusOpt): boolean {
+export function windowStatus(
+  type: windowStatusOpt,
+  id: number = Store.get<Customize>('customize').id
+): boolean {
   return window.ipc.sendSync('window-status', { type, id });
 }
 
 /**
  * 窗口置顶
  */
-export function windowAlwaysOnTop(id: number, is: boolean, type?: windowAlwaysOnTopOpt) {
+export function windowAlwaysOnTop(
+  is: boolean,
+  type?: windowAlwaysOnTopOpt,
+  id: number = Store.get<Customize>('customize').id
+) {
   window.ipc.send('window-always-top-set', { id, is, type });
 }
 
@@ -109,46 +116,46 @@ export function windowAlwaysOnTop(id: number, is: boolean, type?: windowAlwaysOn
  * 设置窗口大小
  */
 export function windowSetSize(
-  id: number,
   size: number[],
   resizable: boolean = true,
-  center: boolean = false
+  center: boolean = false,
+  id: number = Store.get<Customize>('customize').id
 ) {
   window.ipc.send('window-size-set', { id, size, resizable, center });
 }
 
 /**
- * 设置窗口最小大小
+ * 设置窗口 最大/最小 大小
  */
-export function windowSetMinSize(id: number, size: number[]) {
-  window.ipc.send('window-min-size-set', { id, size });
-}
-
-/**
- * 设置窗口最小大小
- */
-export function windowSetMaxSize(id: number, size: number[]) {
-  window.ipc.send('window-max-size-set', { id, size });
+export function windowSetMaxMinSize(
+  type: 'max' | 'min',
+  size: number[],
+  id: number = Store.get<Customize>('customize').id
+) {
+  window.ipc.send(`window-${type}-size-set`, { id, size });
 }
 
 /**
  * 设置窗口背景颜色
  */
-export function windowSetBackgroundColor(id: number, color?: string) {
+export function windowSetBackgroundColor(
+  color: string,
+  id: number = Store.get<Customize>('customize').id
+) {
   window.ipc.send('window-bg-color-set', { id, color });
 }
 
 /**
  * 最大化&最小化当前窗口
  */
-export function windowMaxMin(id: number) {
+export function windowMaxMin(id: number = Store.get<Customize>('customize').id) {
   window.ipc.send('window-max-min-size', id);
 }
 
 /**
  * 关闭窗口 (传id则对应窗口否则全部窗口)
  */
-export function windowClose(id?: number) {
+export function windowClose(id: number = Store.get<Customize>('customize').id) {
   window.ipc.send('window-func', { type: 'close', id });
 }
 
@@ -157,28 +164,28 @@ export function windowClose(id?: number) {
  * @param id 窗口id
  * @param time 延迟显示时间
  */
-export function windowShow(id?: number, time: number = 0) {
+export function windowShow(time: number = 0, id: number = Store.get<Customize>('customize').id) {
   setTimeout(() => window.ipc.send('window-func', { type: 'show', id }), time);
 }
 
 /**
  * 窗口隐藏
  */
-export function windowHide(id?: number) {
+export function windowHide(id: number = Store.get<Customize>('customize').id) {
   window.ipc.send('window-func', { type: 'hide', id });
 }
 
 /**
  * 最小化窗口 (传id则对应窗口否则全部窗口)
  */
-export function windowMin(id?: number) {
+export function windowMin(id: number = Store.get<Customize>('customize').id) {
   window.ipc.send('window-func', { type: 'minimize', id });
 }
 
 /**
  * 最大化窗口 (传id则对应窗口否则全部窗口)
  */
-export function windowMax(id?: number) {
+export function windowMax(id: number = Store.get<Customize>('customize').id) {
   window.ipc.send('window-func', { type: 'maximize', id });
 }
 

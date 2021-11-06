@@ -5,6 +5,8 @@ import { EOL } from 'os';
 import { logError } from '@/main/modular/log';
 import { readFile } from './file';
 
+const { single } = require('@/cfg/window.json');
+
 type Obj<Value> = {} & {
   [key: string]: Value | Obj<Value>;
 };
@@ -16,17 +18,18 @@ export class Global {
   private static instance: Global;
 
   public sharedObject: { [key: string]: any } = {
+    // 系统信息
     system: {
-      //系统信息
       EOL,
       version: process.getSystemVersion(),
       platform: process.platform
     },
+    // 应用信息
     app: {
-      //应用信息
+      // 是否单例
+      single,
       name: app.name,
-      version: app.getVersion(),
-      argv: process.argv
+      version: app.getVersion()
     }
   };
 

@@ -1,7 +1,6 @@
-import type { BrowserWindowConstructorOptions } from 'electron';
+import type { BrowserWindowConstructorOptions, LoadFileOptions, LoadURLOptions } from 'electron';
 import { join } from 'path';
 import { app, screen, ipcMain, BrowserWindow } from 'electron';
-import { logError } from '@/main/modular/log';
 import { isNull } from '@/lib';
 
 const windowCfg = require('@/cfg/window.json');
@@ -11,20 +10,21 @@ const windowCfg = require('@/cfg/window.json');
  * @param args
  */
 export function browserWindowInit(args: BrowserWindowConstructorOptions): BrowserWindow {
-  args.customize = args.customize || {};
+  if (!args || !args.customize) throw new Error('not args');
   args.minWidth = args.minWidth || args.width || windowCfg.width;
   args.minHeight = args.minHeight || args.height || windowCfg.height;
   args.width = args.width || windowCfg.width;
   args.height = args.height || windowCfg.height;
   // darwin下modal会造成整个窗口关闭(?)
   if (process.platform === 'darwin') delete args.modal;
+  const isLocal = !args.customize.route;
   let opt: BrowserWindowConstructorOptions = Object.assign(args, {
     autoHideMenuBar: true,
     titleBarStyle: args.customize.route ? 'hidden' : 'default',
     minimizable: true,
     maximizable: true,
-    frame: !args.customize.route,
-    show: false,
+    frame: isLocal,
+    show: isLocal,
     webPreferences: {
       preload: join(__dirname, './preload.js'),
       contextIsolation: true,
@@ -55,43 +55,44 @@ export function browserWindowInit(args: BrowserWindowConstructorOptions): Browse
           (currentWH.height - (opt.height || opt.customize.currentHeight)) / 2) |
         0;
     }
-  } else if (Window.getInstance().main) {
-    const mainPosition = Window.getInstance().main.getPosition();
-    const mainBounds = Window.getInstance().main.getBounds();
-    opt.x = (mainPosition[0] + (mainBounds.width - opt.width) / 2) | 0;
-    opt.y = (mainPosition[1] + (mainBounds.height - opt.height) / 2) | 0;
+  } else {
+    const main = Window.getInstance().getMain();
+    if (main) {
+      const mainPosition = main.getPosition();
+      const mainBounds = main.getBounds();
+      opt.x = (mainPosition[0] + (mainBounds.width - opt.width) / 2) | 0;
+      opt.y = (mainPosition[1] + (mainBounds.height - opt.height) / 2) | 0;
+    }
   }
   const win = new BrowserWindow(opt);
   win.customize = {
     id: win.id,
     ...opt.customize
   };
+  if (!win.customize.argv) win.customize.argv = process.argv;
   return win;
 }
 
 /**
  * 窗口加载
  */
-function load(win: BrowserWindow, ini: string) {
-  if (win.customize.route) {
-    if (ini.startsWith('http://')) win.loadURL(ini).catch(logError);
-    else win.loadFile(ini).catch(logError);
-  } else if (win.customize.file) {
-    win.once('ready-to-show', () => win.show());
-    win.loadFile(win.customize.file).catch(logError);
-  } else if (win.customize.url) {
-    win.once('ready-to-show', () => win.show());
-    win.loadURL(win.customize.url).catch(logError);
-  } else throw 'not found load';
+function load(win: BrowserWindow) {
+  win.webContents.on('did-finish-load', () => win.webContents.send('window-load', win.customize));
+  // 窗口最大最小监听
+  win.on('maximize', () => win.webContents.send('window-maximize-status', 'maximize'));
+  win.on('unmaximize', () => win.webContents.send('window-maximize-status', 'unmaximize'));
+  // 聚焦失焦监听
+  win.on('blur', () => win.webContents.send('window-blur-focus', 'blur'));
+  win.on('focus', () => win.webContents.send('window-blur-focus', 'focus'));
+  if (win.customize.url.startsWith('https://') || win.customize.url.startsWith('http://')) {
+    win.loadURL(win.customize.url, win.customize.loadOptions as LoadURLOptions);
+    return;
+  }
+  win.loadFile(win.customize.url, win.customize.loadOptions as LoadFileOptions);
 }
 
 export class Window {
   private static instance: Window;
-
-  // 默认创建窗口参数
-  private initWindowOpt: BrowserWindowConstructorOptions = windowCfg.init;
-
-  public main: BrowserWindow = null; // 当前主页
 
   static getInstance() {
     if (!Window.instance) Window.instance = new Window();
@@ -117,53 +118,60 @@ export class Window {
   }
 
   /**
+   * 获取主窗口(无主窗口获取后存在窗口)
+   */
+  getMain() {
+    const all = BrowserWindow.getAllWindows().reverse();
+    let win: BrowserWindow = null;
+    for (let index = 0; index < all.length; index++) {
+      const item = all[index];
+      if (index === 0) win = item;
+      if (item.customize.isMainWin) {
+        win = item;
+        break;
+      }
+    }
+    return win;
+  }
+
+  /**
    * 创建窗口
    * */
   create(args?: BrowserWindowConstructorOptions) {
-    args = args || this.initWindowOpt;
-    for (const i of this.getAll()) {
-      if (
-        !i.customize?.isMultiWindow &&
-        ((args.customize?.route && args.customize.route === i.customize?.route) ||
-          (args.customize?.file && args.customize.file === i.customize?.file) ||
-          (args.customize?.url && args.customize.url === i.customize?.url))
-      ) {
-        i.focus();
-        return;
+    args = args || {
+      customize: {
+        route: windowCfg.initRoute
+      }
+    };
+    if (args.customize.isOneWindow) {
+      for (const i of this.getAll()) {
+        if (
+          (args.customize?.route && args.customize.route === i.customize?.route) ||
+          (args.customize?.url && args.customize.url === i.customize?.url)
+        ) {
+          i.focus();
+          return;
+        }
       }
     }
     const win = browserWindowInit(args);
-    if (win.customize?.isMainWin) {
-      //是否主窗口
-      if (this.main && !this.main.isDestroyed()) {
-        this.main.close();
-        delete this.main;
-      }
-      this.main = win;
-    }
-    // 注入初始化代码
-    win.webContents.on('did-finish-load', () => win.webContents.send('window-load', win.customize));
-    // 窗口最大最小监听
-    win.on('maximize', () => win.webContents.send('window-maximize-status', 'maximize'));
-    win.on('unmaximize', () => win.webContents.send('window-maximize-status', 'unmaximize'));
-    // 聚焦失焦监听
-    win.on('blur', () => win.webContents.send('window-blur-focus', 'blur'));
-    win.on('focus', () => win.webContents.send('window-blur-focus', 'focus'));
-    // 路由 > html文件 > 网页
+    // 路由 > url
     if (!app.isPackaged) {
       //调试模式
       try {
         import('fs').then(({ readFileSync }) => {
           const appPort = readFileSync(join('.port'), 'utf8');
           win.webContents.openDevTools({ mode: 'detach' });
-          load(win, `http://localhost:${appPort}`);
+          if (!win.customize.url) win.customize.url = `http://localhost:${appPort}`;
+          load(win);
         });
       } catch (e) {
         throw 'not found .port';
       }
       return;
     }
-    load(win, join(__dirname, '../index.html'));
+    if (!win.customize.url) win.customize.url = join(__dirname, '../index.html');
+    load(win);
   }
 
   /**
