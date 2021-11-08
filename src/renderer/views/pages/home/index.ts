@@ -1,6 +1,11 @@
 import Store from '@/renderer/store';
 import Router from '@/renderer/router';
-import { windowCreate, windowMessageOn, windowShow } from '@/renderer/common/window';
+import {
+  windowCreate,
+  windowMessageOn,
+  windowMessageRemove,
+  windowShow
+} from '@/renderer/common/window';
 import { domCreateElement, View } from '@/renderer/common/dom';
 import { dateFormat } from '@/lib';
 import { shortcutGetAll } from '@/renderer/common/shortcut';
@@ -28,12 +33,17 @@ export default class Home extends View {
   onUnmounted() {
     if (this.testData) this.testData.revoke();
     if (this.testInterval) clearInterval(this.testInterval);
+    this.unTest();
   }
 
   onTest() {
     windowMessageOn('test', (event, args) => {
       console.log(args);
     });
+  }
+
+  unTest() {
+    windowMessageRemove('test');
   }
 
   testRender() {

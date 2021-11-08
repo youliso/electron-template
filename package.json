@@ -19,7 +19,7 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "devDependencies": {
-    "@swc/core": "^1.2.105",
+    "@swc/core": "^1.2.107",
     "css-loader": "^6.5.1",
     "electron": "^15.3.0",
     "electron-builder": "^22.13.1",
