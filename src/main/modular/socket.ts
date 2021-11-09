@@ -2,8 +2,7 @@ import { ipcMain } from 'electron';
 import Global from './global';
 import Window from './window';
 import { io, Socket as SocketIo } from 'socket.io-client';
-import { ManagerOptions } from 'socket.io-client/build/manager';
-import { SocketOptions } from 'socket.io-client/build/socket';
+import type { ManagerOptions, SocketOptions } from 'socket.io-client';
 import { logError } from '@/main/modular/log';
 
 const { socketUrl } = require('@/cfg/net.json');

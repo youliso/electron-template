@@ -21,7 +21,7 @@
   "devDependencies": {
     "@swc/core": "^1.2.107",
     "css-loader": "^6.5.1",
-    "electron": "^15.3.0",
+    "electron": "^15.3.1",
     "electron-builder": "^22.13.1",
     "electron-rebuild": "^3.2.3",
     "html-webpack-plugin": "^5.5.0",

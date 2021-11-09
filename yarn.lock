@@ -1732,10 +1732,10 @@ electron-updater@^4.3.9:
     lodash.isequal "^4.5.0"
     semver "^7.3.5"
 
-electron@^15.3.0:
-  version "15.3.0"
-  resolved "https://registry.npmmirror.com/electron/download/electron-15.3.0.tgz?cache=0&sync_timestamp=1636042316995&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Felectron%2Fdownload%2Felectron-15.3.0.tgz#f9803c5a05b2dac12efc6d4203492c7e204b4819"
-  integrity sha1-+YA8WgWy2sEu/G1CA0ksfiBLSBk=
+electron@^15.3.1:
+  version "15.3.1"
+  resolved "https://registry.npmmirror.com/electron/download/electron-15.3.1.tgz#38ce9dfcd4ec51a33d62de23de15fb5ceeaea25d"
+  integrity sha1-OM6d/NTsUaM9Yt4j3hX7XO6uol0=
   dependencies:
     "@electron/get" "^1.13.0"
     "@types/node" "^14.6.2"
