@@ -1,10 +1,10 @@
-import Store from '@/renderer/store';
+import { getCustomize } from '@/renderer/store';
 import { domCreateElement, View } from '@/renderer/common/dom';
 import { windowClose, windowMessageSend, windowShow } from '@/renderer/common/window';
 import indexCss from './scss/index.lazy.scss';
 import Head from '@/renderer/views/components/head';
 
-const args = Store.get<Customize>('customize');
+const args = getCustomize();
 
 export default class Message extends View {
   styles = [indexCss];

@@ -1,10 +1,10 @@
-import Store from '@/renderer/store';
+import { getCustomize } from '@/renderer/store';
 import { domCreateElement, Component } from '@/renderer/common/dom';
 import { getGlobal } from '@/renderer/common';
 import { windowClose, windowMaxMin, windowMin } from '@/renderer/common/window';
 import indexCss from './scss/index.lazy.scss';
 
-const args = Store.get<Customize>('customize');
+const args = getCustomize();
 
 export default class Head extends Component {
   styles = [indexCss];

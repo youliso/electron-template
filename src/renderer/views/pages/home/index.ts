@@ -1,4 +1,4 @@
-import Store from '@/renderer/store';
+import { getCustomize, testProxy } from '@/renderer/store';
 import Router from '@/renderer/router';
 import {
   windowCreate,
@@ -12,7 +12,7 @@ import { shortcutGetAll } from '@/renderer/common/shortcut';
 import Head from '@/renderer/views/components/head';
 import indexCss from './scss/index.lazy.scss';
 
-const args = Store.get<Customize>('customize');
+const args = getCustomize();
 
 export default class Home extends View {
   private testData: StoreProxy<string>;
@@ -48,7 +48,7 @@ export default class Home extends View {
 
   testRender() {
     const test = domCreateElement('div', 'text');
-    this.testData = Store.proxy(dateFormat(), (value) => (test.textContent = value));
+    this.testData = testProxy(dateFormat(), test);
     test.textContent = dateFormat();
     this.testInterval = setInterval(() => {
       this.testData.proxy.value = dateFormat();

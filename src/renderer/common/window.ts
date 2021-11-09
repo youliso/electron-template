@@ -1,5 +1,5 @@
 import { IpcRendererEvent, BrowserWindowConstructorOptions } from 'electron';
-import Store from '@/renderer/store';
+import { getCustomize } from '@/renderer/store';
 
 /**
  * 窗口初始化 (i)
@@ -12,7 +12,7 @@ export function windowLoad(listener: (event: IpcRendererEvent, args: Customize) 
  * 窗口数据更新
  */
 export function windowUpdate() {
-  window.ipc.send('window-update', Store.get('customize'));
+  window.ipc.send('window-update', getCustomize());
 }
 
 /**
@@ -73,7 +73,7 @@ export function windowMessageSend(
   isback: boolean = false, //是否给自身反馈
   acceptIds: number[] = [] //指定窗口id发送
 ) {
-  const customize = Store.get<Customize>('customize');
+  const customize = getCustomize();
   if (acceptIds.length === 0) acceptIds = [customize.parentId];
   window.ipc.send('window-message-send', {
     channel,
@@ -96,7 +96,7 @@ export function windowCreate(args: BrowserWindowConstructorOptions) {
  */
 export function windowStatus(
   type: windowStatusOpt,
-  id: number = Store.get<Customize>('customize').id
+  id: number = getCustomize().id
 ): boolean {
   return window.ipc.sendSync('window-status', { type, id });
 }
@@ -107,7 +107,7 @@ export function windowStatus(
 export function windowAlwaysOnTop(
   is: boolean,
   type?: windowAlwaysOnTopOpt,
-  id: number = Store.get<Customize>('customize').id
+  id: number = getCustomize().id
 ) {
   window.ipc.send('window-always-top-set', { id, is, type });
 }
@@ -119,7 +119,7 @@ export function windowSetSize(
   size: number[],
   resizable: boolean = true,
   center: boolean = false,
-  id: number = Store.get<Customize>('customize').id
+  id: number = getCustomize().id
 ) {
   window.ipc.send('window-size-set', { id, size, resizable, center });
 }
@@ -130,7 +130,7 @@ export function windowSetSize(
 export function windowSetMaxMinSize(
   type: 'max' | 'min',
   size: number[],
-  id: number = Store.get<Customize>('customize').id
+  id: number = getCustomize().id
 ) {
   window.ipc.send(`window-${type}-size-set`, { id, size });
 }
@@ -140,7 +140,7 @@ export function windowSetMaxMinSize(
  */
 export function windowSetBackgroundColor(
   color: string,
-  id: number = Store.get<Customize>('customize').id
+  id: number = getCustomize().id
 ) {
   window.ipc.send('window-bg-color-set', { id, color });
 }
@@ -148,14 +148,14 @@ export function windowSetBackgroundColor(
 /**
  * 最大化&最小化当前窗口
  */
-export function windowMaxMin(id: number = Store.get<Customize>('customize').id) {
+export function windowMaxMin(id: number = getCustomize().id) {
   window.ipc.send('window-max-min-size', id);
 }
 
 /**
  * 关闭窗口 (传id则对应窗口否则全部窗口)
  */
-export function windowClose(id: number = Store.get<Customize>('customize').id) {
+export function windowClose(id: number = getCustomize().id) {
   window.ipc.send('window-func', { type: 'close', id });
 }
 
@@ -164,28 +164,28 @@ export function windowClose(id: number = Store.get<Customize>('customize').id) {
  * @param id 窗口id
  * @param time 延迟显示时间
  */
-export function windowShow(time: number = 0, id: number = Store.get<Customize>('customize').id) {
+export function windowShow(time: number = 0, id: number = getCustomize().id) {
   setTimeout(() => window.ipc.send('window-func', { type: 'show', id }), time);
 }
 
 /**
  * 窗口隐藏
  */
-export function windowHide(id: number = Store.get<Customize>('customize').id) {
+export function windowHide(id: number = getCustomize().id) {
   window.ipc.send('window-func', { type: 'hide', id });
 }
 
 /**
  * 最小化窗口 (传id则对应窗口否则全部窗口)
  */
-export function windowMin(id: number = Store.get<Customize>('customize').id) {
+export function windowMin(id: number = getCustomize().id) {
   window.ipc.send('window-func', { type: 'minimize', id });
 }
 
 /**
  * 最大化窗口 (传id则对应窗口否则全部窗口)
  */
-export function windowMax(id: number = Store.get<Customize>('customize').id) {
+export function windowMax(id: number = getCustomize().id) {
   window.ipc.send('window-func', { type: 'maximize', id });
 }
 
