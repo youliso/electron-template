@@ -95,7 +95,7 @@ class Stores {
         return true;
       }
     });
-    if (key) this.proxyData[key] = ob;
+    this.proxyData[key] = ob;
     return ob.proxy;
   }
 
