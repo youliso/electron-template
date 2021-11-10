@@ -7,7 +7,7 @@ class Stores {
 
   public indexData: { [key: string]: any } = {};
 
-  public proxyData: { [key: string]: any } = {};
+  public proxyData: { [key: string]: { proxy: any; revoke: () => void } } = {};
 
   static getInstance(): Store {
     if (!Stores.instance) Stores.instance = new Stores();
@@ -74,23 +74,13 @@ class Stores {
     cur[lastKey] = value;
   }
 
-  proxy(...arg: any) {
-    let key: string;
-    let value: any;
-    let callback: Function;
-    if (arg.length === 3) {
-      key = arg[0];
-      if (typeof arg[1] === 'function') callback = arg[1];
-      else value = arg[1];
-      callback = arg[2];
-    } else if (arg.length > 0) {
-      value = arg[0];
-      callback = arg[1];
-    } else throw new Error('无参数');
-    if (key) {
-      const proxy = this.proxyData[key];
-      if (proxy) return proxy;
-    }
+  setProxy(...arg: any) {
+    if (arg.length !== 3) throw new Error('无参数');
+    const key: string = arg[0];
+    const value: any = arg[1];
+    const callback: Function = arg[2];
+    const proxyData = this.proxyData[key];
+    if (proxyData) proxyData.revoke();
     let data = value;
     if (typeof value !== 'object' && !Array.isArray(value)) data = { value };
     const ob = Proxy.revocable(data, {
@@ -106,17 +96,18 @@ class Stores {
       }
     });
     if (key) this.proxyData[key] = ob;
-    return ob;
+    return ob.proxy;
   }
 
-  getProxy<T>(key: string): StoreProxy<T> {
-    return this.proxyData[key];
+  getProxy<T>(key: string): T {
+    const proxyData = this.proxyData[key];
+    return proxyData ? proxyData.proxy : null;
   }
 
   removeProxy(key: string) {
-    const proxy = this.proxyData[key];
-    if (proxy) {
-      proxy.revoke();
+    const proxyData = this.proxyData[key];
+    if (proxyData) {
+      proxyData.revoke();
       delete this.proxyData[key];
     }
   }

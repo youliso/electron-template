@@ -8,6 +8,10 @@ export function getCustomize() {
   return Store.get<Customize>('customize');
 }
 
-export function testProxy(date: string, el: HTMLElement) {
-  return Store.proxy(date, (value) => (el.textContent = value));
+export function testProxy(date: string, el: HTMLElement): ProxyValue<string> {
+  return Store.setProxy('test', date, (value) => (el.textContent = value));
+}
+
+export function testProxyRemove() {
+  Store.removeProxy('test');
 }

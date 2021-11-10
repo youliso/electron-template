@@ -1,4 +1,4 @@
-import { getCustomize, testProxy } from '@/renderer/store';
+import { getCustomize, testProxy, testProxyRemove } from '@/renderer/store';
 import Router from '@/renderer/router';
 import {
   windowCreate,
@@ -15,7 +15,7 @@ import indexCss from './scss/index.lazy.scss';
 const args = getCustomize();
 
 export default class Home extends View {
-  private testData: StoreProxy<string>;
+  private testData: ProxyValue<string>;
   private testInterval: NodeJS.Timer;
   styles = [indexCss];
   components = {
@@ -31,7 +31,7 @@ export default class Home extends View {
   }
 
   onUnmounted() {
-    if (this.testData) this.testData.revoke();
+    if (this.testData) testProxyRemove();
     if (this.testInterval) clearInterval(this.testInterval);
     this.unTest();
   }
@@ -51,7 +51,7 @@ export default class Home extends View {
     this.testData = testProxy(dateFormat(), test);
     test.textContent = dateFormat();
     this.testInterval = setInterval(() => {
-      this.testData.proxy.value = dateFormat();
+      this.testData.value = dateFormat();
     }, 1000);
     return test;
   }

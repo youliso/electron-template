@@ -1,19 +1,17 @@
-type StoreProxy<T> = { proxy: T & { value: T }; revoke: () => void };
+type ProxyValue<T> = T & { value: T };
 
 interface Store {
   set<Value>(key: string, value: Value): void;
 
   get<Value>(key: string): Value | undefined;
 
-  proxy<T>(value: T, callback?: (value: any, p: string, target: any) => void): StoreProxy<T>;
-
-  proxy<T>(
+  setProxy<T>(
     key: string,
     value: T,
     callback?: (value: any, p: string, target: any) => void
-  ): StoreProxy<T>;
+  ): ProxyValue<T>;
 
-  getProxy<T>(key: string): StoreProxy<T>;
+  getProxy<T>(key: string): ProxyValue<T>;
 
   removeProxy<T>(key: string): void;
 }
