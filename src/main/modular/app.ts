@@ -23,7 +23,7 @@ export class App {
    * 启动主进程
    */
   async start() {
-    this.appOn();
+    this.beforeOn();
     // 协议调起
     let argv = [];
     if (!app.isPackaged) argv.push(resolve(process.argv[1]));
@@ -31,24 +31,7 @@ export class App {
     if (!app.isDefaultProtocolClient(app.name, process.execPath, argv))
       app.setAsDefaultProtocolClient(app.name, process.execPath, argv);
     await app.whenReady().catch(logError);
-    // darwin
-    app.on('activate', () => {
-      if (Window.getAll().length === 0) Window.create();
-    });
-    // 获得焦点时发出
-    app.on('browser-window-focus', () => {
-      // 关闭刷新
-      Shortcut.register({
-        name: '关闭刷新',
-        key: 'CommandOrControl+R',
-        callback: () => {}
-      });
-    });
-    // 失去焦点时发出
-    app.on('browser-window-blur', () => {
-      // 注销关闭刷新
-      Shortcut.unregister('CommandOrControl+R');
-    });
+    this.afterOn();
   }
 
   /**
@@ -80,9 +63,9 @@ export class App {
   }
 
   /**
-   * 主进程监听
+   * 监听
    */
-  appOn() {
+  beforeOn() {
     // 默认单例根据自己需要改
     if (!app.requestSingleInstanceLock()) app.quit();
     else {
@@ -125,9 +108,27 @@ export class App {
   }
 
   /**
-   * 开启监听
+   * 监听
    */
-  on() {
+  afterOn() {
+    // darwin
+    app.on('activate', () => {
+      if (Window.getAll().length === 0) Window.create();
+    });
+    // 获得焦点时发出
+    app.on('browser-window-focus', () => {
+      // 关闭刷新
+      Shortcut.register({
+        name: '关闭刷新',
+        key: 'CommandOrControl+R',
+        callback: () => {}
+      });
+    });
+    // 失去焦点时发出
+    app.on('browser-window-blur', () => {
+      // 注销关闭刷新
+      Shortcut.unregister('CommandOrControl+R');
+    });
     //app常用获取路径
     ipcMain.on('app-path-get', (event, args) => {
       event.returnValue = app.getPath(args.key);

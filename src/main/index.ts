@@ -8,12 +8,11 @@ import { logOn } from './modular/log';
 import { pathOn } from './modular/path';
 import { fileOn } from './modular/file';
 
-(async () => {
-  await App.start();
+App.start().then(async () => {
   // 平台差异
   await Platforms[process.platform]();
+
   // 主要模块
-  App.on();
   Shortcut.on();
   Global.on();
   Window.on();
@@ -39,4 +38,4 @@ import { fileOn } from './modular/file';
   Window.create();
   // 托盘
   Tray.create();
-})();
+});
