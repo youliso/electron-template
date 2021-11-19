@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const base = require('./webpack.base.config');
 module.exports = (env) => {
   return {
+    experiments: base.experiments,
     node: {
       ...base.node
     },

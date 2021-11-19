@@ -1,7 +1,7 @@
 {
   "compression": "maximum",
-  "productName": "demo",
-  "appId": "org.demo",
+  "productName": "electron-template",
+  "appId": "org.electron-template",
   "copyright": "MIT",
   "asar": true,
   "directories": {
@@ -40,7 +40,7 @@
     "uninstallerSidebar": "build/icons/modern-wizard.bmp",
     "createDesktopShortcut": true,
     "createStartMenuShortcut": true,
-    "shortcutName": "demo",
+    "shortcutName": "electron-template",
     "include": "build/cfg/installer.nsh",
     "menuCategory": false,
     "displayLanguageSelector": false
@@ -79,7 +79,7 @@
   "linux": {
     "icon": "build/icons",
     "target": "AppImage",
-    "executableName": "demo"
+    "executableName": "electron-template"
   },
   "npmRebuild": true,
   "publish": [

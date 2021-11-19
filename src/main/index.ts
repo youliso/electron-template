@@ -3,39 +3,28 @@ import Shortcut from './modular/shortcut';
 import Global from './modular/global';
 import Window from './modular/window';
 import Tray from './modular/tray';
-import { Platforms } from './platform';
 import { logOn } from './modular/log';
 import { pathOn } from './modular/path';
 import { fileOn } from './modular/file';
 
-App.start().then(async () => {
-  // 平台差异
-  await Platforms[process.platform]();
-
-  // 主要模块
-  Shortcut.on();
-  Global.on();
-  Window.on();
-  Tray.on();
-  logOn();
-  // 可选模块
-  fileOn();
-  pathOn();
-  await App.uses([
-    import('./modular/session'),
-    import('./modular/dialog'),
-    import('./modular/menu'),
-    import('./modular/update'),
-    import('./modular/socket')
-  ]);
-
-  // 挂载配置文件
-  // await Global.use(app.getPath('userData') + '/cfg/index.json', 'test', true);
-  // 获取挂载内容
-  // Global.getGlobal('test');
-
-  // 窗口
-  Window.create();
-  // 托盘
-  Tray.create();
-});
+await App.start();
+// 主要模块
+Shortcut.on();
+Global.on();
+Window.on();
+Tray.on();
+logOn();
+// 可选模块
+fileOn();
+pathOn();
+await App.uses([
+  import('./modular/session'),
+  import('./modular/dialog'),
+  import('./modular/menu'),
+  import('./modular/update'),
+  import('./modular/socket')
+]);
+// 窗口
+Window.create();
+// 托盘
+Tray.create();
