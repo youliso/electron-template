@@ -130,12 +130,12 @@ export class App {
       Shortcut.unregister('CommandOrControl+R');
     });
     //app常用获取路径
-    ipcMain.on('app-path-get', (event, args) => {
-      event.returnValue = app.getPath(args.key);
+    ipcMain.handle('app-path-get', (event, args) => {
+      return app.getPath(args.key);
     });
     //app打开外部url
-    ipcMain.on('app-open-url', (event, args) => {
-      shell.openExternal(args.url).then();
+    ipcMain.handle('app-open-url', async (event, args) => {
+      return await shell.openExternal(args.url);
     });
     //app重启
     ipcMain.on('app-relaunch', (event, args) => {

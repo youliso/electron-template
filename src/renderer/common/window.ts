@@ -94,11 +94,11 @@ export function windowCreate(args: BrowserWindowConstructorOptions) {
 /**
  * 窗口状态
  */
-export function windowStatus(
+export async function windowStatus(
   type: windowStatusOpt,
   id: number = getCustomize().id
-): boolean {
-  return window.ipc.sendSync('window-status', { type, id });
+): Promise<boolean> {
+  return await window.ipc.invoke('window-status', { type, id });
 }
 
 /**
@@ -138,10 +138,7 @@ export function windowSetMaxMinSize(
 /**
  * 设置窗口背景颜色
  */
-export function windowSetBackgroundColor(
-  color: string,
-  id: number = getCustomize().id
-) {
+export function windowSetBackgroundColor(color: string, id: number = getCustomize().id) {
   window.ipc.send('window-bg-color-set', { id, color });
 }
 
@@ -192,6 +189,6 @@ export function windowMax(id: number = getCustomize().id) {
 /**
  * 通过路由获取窗口id (不传route查全部)
  */
-export function windowIdGet(route?: string): number[] {
-  return window.ipc.sendSync('window-id-get', { route });
+export async function windowIdGet(route?: string): Promise<number[]> {
+  return await window.ipc.invoke('window-id-get', { route });
 }

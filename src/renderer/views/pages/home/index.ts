@@ -89,7 +89,7 @@ export default class Home extends View {
       });
     });
     shortcut.addEventListener('click', () => {
-      console.log(shortcutGetAll());
+      shortcutGetAll().then(console.log);
     });
     about.addEventListener('click', () => {
       Router.push('/about');

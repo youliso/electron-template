@@ -38,14 +38,20 @@ export default class Head extends Component {
   render() {
     const el = domCreateElement('div', 'head-info drag');
     const content = domCreateElement('div', 'content');
-    const title = domCreateElement('div', 'title', args.title || getGlobal<string>('app.name'));
-    if (getGlobal('system.platform') === 'darwin') {
-      content.appendChild(document.createElement('div'));
-      content.appendChild(title);
-    } else {
-      content.appendChild(title);
-      this.events(content);
-    }
+    getGlobal<string>('system.platform').then(async (platform) => {
+      const title = domCreateElement(
+        'div',
+        'title',
+        args.title || (await getGlobal<string>('app.name'))
+      );
+      if (platform === 'darwin') {
+        content.appendChild(document.createElement('div'));
+        content.appendChild(title);
+      } else {
+        content.appendChild(title);
+        this.events(content);
+      }
+    });
     el.appendChild(content);
     return el;
   }

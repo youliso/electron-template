@@ -45,8 +45,9 @@ export class View implements VSource {
  * 页面初始化加载
  */
 export function domPropertyLoad() {
-  const platform = getGlobal<string>('system.platform');
-  document.body.setAttribute('platform', platform);
+  getGlobal<string>('system.platform').then((platform) =>
+    document.body.setAttribute('platform', platform)
+  );
 }
 
 /**

@@ -5,7 +5,7 @@ import { routerInit } from '@/renderer/router';
 import '@/renderer/views/scss/color.scss';
 import '@/renderer/views/scss/index.scss';
 
-windowLoad(async (_, args) => {
+windowLoad((_, args) => {
   domPropertyLoad();
   setCustomize(args);
   routerInit(args.route);

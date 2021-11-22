@@ -121,24 +121,24 @@ class Shortcut {
    * 监听
    */
   on() {
-    ipcMain.on('shortcut-register', (event, args: { name: string; key: string | string[] }) => {
+    ipcMain.handle('shortcut-register', (event, args: { name: string; key: string | string[] }) => {
       const accelerator: Accelerator = {
         ...args,
         callback: () => Window.send(`shortcut-back`, args.key)
       };
-      this.register(accelerator);
+      return this.register(accelerator);
     });
-    ipcMain.on('shortcut-unregister', (event, args) => this.unregister(args));
-    ipcMain.on('shortcut-unregisterAll', () => this.unregisterAll());
-    ipcMain.on('shortcut-get', (event, args) => {
+    ipcMain.handle('shortcut-unregister', (event, args) => this.unregister(args));
+    ipcMain.handle('shortcut-unregisterAll', () => this.unregisterAll());
+    ipcMain.handle('shortcut-get', (event, args) => {
       const accelerator = { ...this.get(args) };
       delete accelerator.callback;
-      event.returnValue = accelerator;
+      return accelerator;
     });
-    ipcMain.on('shortcut-getAll', (event) => {
+    ipcMain.handle('shortcut-getAll', (event) => {
       const acceleratorAll = this.getAll();
       acceleratorAll.map((e) => delete e.callback);
-      event.returnValue = acceleratorAll;
+      return acceleratorAll;
     });
   }
 }

@@ -284,10 +284,7 @@ export class Window {
     // 窗口消息
     ipcMain.on('window-func', (event, args) => this.func(args.type, args.id));
     // 窗口状态
-    ipcMain.on(
-      'window-status',
-      (event, args) => (event.returnValue = this.getStatus(args.type, args.id))
-    );
+    ipcMain.handle('window-status', async (event, args) => this.getStatus(args.type, args.id));
     // 创建窗口
     ipcMain.on('window-new', (event, args) => this.create(args));
     // 设置窗口是否置顶
@@ -313,8 +310,8 @@ export class Window {
           if (win.id !== args.id) win.webContents.send(channel, args.value);
     });
     //通过路由获取窗口id (不传route查全部)
-    ipcMain.on('window-id-get', (event, args) => {
-      event.returnValue = this.getAll()
+    ipcMain.handle('window-id-get', async (event, args) => {
+      return this.getAll()
         .filter((win) => (args.route ? win.customize?.route === args.route : true))
         .map((win) => win.id);
     });

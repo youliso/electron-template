@@ -1,19 +1,19 @@
-export function sep(): string {
-  return window.ipc.sendSync('path-sep');
+export async function sep(): Promise<string> {
+  return await window.ipc.invoke('path-sep');
 }
 
-export function isAbsolute(path: string): string {
-  return window.ipc.sendSync('path-isAbsolute', path);
+export async function isAbsolute(path: string): Promise<string> {
+  return await window.ipc.invoke('path-isAbsolute', path);
 }
 
-export function dirname(path: string): string {
-  return window.ipc.sendSync('path-dirname', path);
+export async function dirname(path: string): Promise<string> {
+  return await window.ipc.invoke('path-dirname', path);
 }
 
-export function normalize(path: string): string {
-  return window.ipc.sendSync('path-normalize', path);
+export async function normalize(path: string): Promise<string> {
+  return await window.ipc.invoke('path-normalize', path);
 }
 
-export function basename(path: string): string {
-  return window.ipc.sendSync('path-basename', path);
+export async function basename(path: string): Promise<string> {
+  return await window.ipc.invoke('path-basename', path);
 }

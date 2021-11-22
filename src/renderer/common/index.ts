@@ -28,8 +28,8 @@ export function logError(...args: any): void {
  * @param key 键
  * @param value 值
  */
-export function sendGlobal(key: string, value: unknown) {
-  return window.ipc.sendSync('global-sharedObject-set', {
+export async function sendGlobal(key: string, value: unknown): Promise<void> {
+  return await window.ipc.invoke('global-sharedObject-set', {
     key,
     value
   });
@@ -39,24 +39,24 @@ export function sendGlobal(key: string, value: unknown) {
  * 获取全局参数
  * @param key 键
  */
-export function getGlobal<T>(key: string): T {
-  return window.ipc.sendSync('global-sharedObject-get', key);
+export async function getGlobal<T>(key: string): Promise<T> {
+  return await window.ipc.invoke('global-sharedObject-get', key);
 }
 
 /**
  * 获取内部依赖文件路径(！文件必须都存放在lib/inside 针对打包后内部依赖文件路径问题)
  * @param path lib/inside为起点的相对路径
  * */
-export function getInsidePath(path: string): string {
-  return window.ipc.sendSync('global-insidePath-get', path);
+export async function getInsidePath(path: string): Promise<string> {
+  return await window.ipc.invoke('global-insidePath-get', path);
 }
 
 /**
  * 获取外部依赖文件路径(！文件必须都存放在lib/extern下 针对打包后外部依赖文件路径问题)
  * @param path lib/extern为起点的相对路径
  * */
-export function getExternPath(path: string): string {
-  return window.ipc.sendSync('global-externPath-get', path);
+export async function getExternPath(path: string): Promise<string> {
+  return await window.ipc.invoke('global-externPath-get', path);
 }
 
 /**
@@ -70,13 +70,13 @@ export function relaunch(once: boolean): void {
 /**
  * app常用获取路径
  */
-export function getAppPath(key: string): string {
-  return window.ipc.sendSync('app-path-get', { key });
+export async function getAppPath(key: string): Promise<string> {
+  return await window.ipc.invoke('app-path-get', { key });
 }
 
 /**
  * app打开url
  */
-export function openUrl(url: string): void {
-  window.ipc.send('app-open-url', { url });
+export async function openUrl(url: string): Promise<void> {
+  return await window.ipc.invoke('app-open-url', { url });
 }

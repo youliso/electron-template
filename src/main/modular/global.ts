@@ -66,21 +66,20 @@ export class Global {
    */
   on() {
     //赋值(sharedObject)
-    ipcMain.on('global-sharedObject-set', (event, args) => {
-      this.sendGlobal(args.key, args.value);
-      event.returnValue = 1;
+    ipcMain.handle('global-sharedObject-set', (event, args) => {
+      return this.sendGlobal(args.key, args.value);
     });
     //获取(sharedObject)
-    ipcMain.on('global-sharedObject-get', (event, key) => {
-      event.returnValue = this.getGlobal(key);
+    ipcMain.handle('global-sharedObject-get', (event, key) => {
+      return this.getGlobal(key);
     });
     //获取(insidePath)
-    ipcMain.on('global-insidePath-get', (event, path) => {
-      event.returnValue = this.getInsidePath(path);
+    ipcMain.handle('global-insidePath-get', (event, path) => {
+      return this.getInsidePath(path);
     });
     //获取(externPath)
-    ipcMain.on('global-externPath-get', (event, path) => {
-      event.returnValue = this.getExternPath(path);
+    ipcMain.handle('global-externPath-get', (event, path) => {
+      return this.getExternPath(path);
     });
   }
 

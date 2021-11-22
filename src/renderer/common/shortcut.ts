@@ -14,38 +14,38 @@ export function shortcutOn(listener: (event: IpcRendererEvent, args: any) => voi
  * @param name
  * @param key
  */
-export function shortcut(name: string, key: string | string[]): void {
-  window.ipc.send('shortcut-register', { name, key });
+export async function shortcut(name: string, key: string | string[]): Promise<void> {
+  return await window.ipc.invoke('shortcut-register', { name, key });
 }
 
 /**
  * 清除快捷键
  * @param key
  */
-export function unShortcut(key: string) {
-  window.ipc.send('shortcut-unregister', key);
+export async function unShortcut(key: string): Promise<void> {
+  return await window.ipc.invoke('shortcut-unregister', key);
 }
 
 /**
  * 清空全部快捷键
  */
-export function unShortcutAll() {
-  window.ipc.send('shortcut-unregisterAll');
+export async function unShortcutAll(): Promise<void> {
+  return await window.ipc.invoke('shortcut-unregisterAll');
 }
 
 /**
  * 获取已注册快捷键
  * @param key
  */
-export function shortcutGet(key: string): Accelerator {
-  return window.ipc.sendSync('shortcut-get', key);
+export async function shortcutGet(key: string): Promise<Accelerator> {
+  return await window.ipc.invoke('shortcut-get', key);
 }
 
 /**
  * 获取全部已注册快捷键
  */
-export function shortcutGetAll(): Accelerator[] {
-  return window.ipc.sendSync('shortcut-getAll');
+export async function shortcutGetAll(): Promise<Accelerator[]> {
+  return await window.ipc.invoke('shortcut-getAll');
 }
 
 /**
