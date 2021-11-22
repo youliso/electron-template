@@ -9,6 +9,8 @@ export default class Router {
   public current: View;
   // 路由历史
   public history: { path: string; params?: any }[] = [];
+  // 路由监听
+  public onRoute: (route: Route, params?: any) => void;
 
   constructor(routes: Route[]) {
     this.routes.push(...routes);
@@ -73,6 +75,7 @@ export default class Router {
       .component()
       .then((View) => this.pretreatment(route, View, params))
       .then(() => isHistory && this.setHistory(route.path, params))
+      .then(() => this.onRoute && this.onRoute(route, params))
       .catch(console.error);
   }
 
