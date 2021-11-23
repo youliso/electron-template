@@ -9,7 +9,6 @@ import {
 import { domCreateElement, View } from '@/renderer/common/dom';
 import { dateFormat } from '@/lib';
 import { shortcutGetAll } from '@/renderer/common/shortcut';
-import Head from '@/renderer/views/components/head';
 import indexCss from './scss/index.lazy.scss';
 
 const args = getCustomize();
@@ -18,9 +17,6 @@ export default class Home extends View {
   private testData: ProxyValue<string>;
   private testInterval: NodeJS.Timer;
   styles = [indexCss];
-  components = {
-    Head: new Head()
-  };
 
   onLoad() {
     this.onTest();

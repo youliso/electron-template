@@ -154,12 +154,12 @@ export default class Router {
     if (Array.isArray(cl)) for (const v of cl) viewEl.appendChild(v);
     else viewEl.appendChild(cl);
     if (view.components) {
-      const componentsEl = domCreateElement('div', 'components');
+      const componentsEl = domCreateElement('div', 'view components');
       for (const componentKey in view.components) {
         const component = view.components[componentKey];
         for (const css of component.styles) css.use();
         component.onLoad();
-        const el = domCreateElement('div', `component ${componentKey.toLowerCase()}`);
+        const el = domCreateElement('div', componentKey.toLowerCase());
         const cl = component.render();
         if (Array.isArray(cl)) for (const v of cl) el.appendChild(v);
         else el.appendChild(cl);

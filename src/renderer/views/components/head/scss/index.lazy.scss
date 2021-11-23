@@ -1,17 +1,17 @@
 [platform='darwin'] {
-  .component.head > .head-info > .content {
+  .components > .head > .head-info > .content {
     padding-right: 10px;
   }
 }
 
 [platform='win32'],
 [platform='linux'] {
-  .component.head > .head-info > .content {
+  .components > .head > .head-info > .content {
     padding-left: 10px;
   }
 }
 
-.component.head > .head-info {
+.components > .head > .head-info {
   position: absolute;
   top: 0;
   left: 0;

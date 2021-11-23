@@ -4,8 +4,6 @@ import { getGlobal } from '@/renderer/common';
 import { windowClose, windowMaxMin, windowMin } from '@/renderer/common/window';
 import indexCss from './scss/index.lazy.scss';
 
-const args = getCustomize();
-
 export default class Head extends Component {
   styles = [indexCss];
   isHead: boolean;
@@ -36,6 +34,7 @@ export default class Head extends Component {
   }
 
   render() {
+    const args = getCustomize();
     const el = domCreateElement('div', 'head-info drag');
     const content = domCreateElement('div', 'content');
     getGlobal<string>('system.platform').then(async (platform) => {

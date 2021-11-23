@@ -1,12 +1,12 @@
 import { getGlobal } from '@/renderer/common';
 import { normalize } from '@/renderer/common/path';
 
-const platform: string = getGlobal<string>('system.platform');
+const platform: string = await getGlobal<string>('system.platform');
 
-function pathToSrc(path: string) {
+async function pathToSrc(path: string) {
   try {
     if (!path.startsWith('http://') && !path.startsWith('https://')) {
-      path = normalize(path);
+      path = await normalize(path);
       return `${platform === 'win32' ? 'file:///' : 'file://'}${path.split('\\').join('/')}`;
     }
     return path;
@@ -118,7 +118,7 @@ class Audios {
 
   async play(path?: string) {
     if (path) {
-      const src = pathToSrc(path);
+      const src = await pathToSrc(path);
       this.currentAudio.src = src;
       this.src = src;
       return;
@@ -144,8 +144,8 @@ class Audios {
     });
   }
 
-  setSrc(path: string) {
-    this.src = pathToSrc(path);
+  async setSrc(path: string) {
+    this.src = await pathToSrc(path);
   }
 
   clearSrc() {
