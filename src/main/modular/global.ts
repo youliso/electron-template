@@ -11,6 +11,13 @@ type Obj<Value> = {} & {
   [key: string]: Value | Obj<Value>;
 };
 
+interface Config {
+  path: string;
+  seat: string;
+  parse: boolean;
+  opt?: { encoding?: BufferEncoding; flag?: string };
+}
+
 /**
  * Global
  */
@@ -40,26 +47,33 @@ export class Global {
 
   constructor() {}
 
-  /**
-   * 挂载配置
-   * @param path 配置文件路径
-   * @param seat 存放位置
-   * @param parse 是否parse
-   * @param opt
-   */
-  async use(
-    path: string,
-    seat: string,
-    parse: boolean,
-    opt?: { encoding?: BufferEncoding; flag?: string }
-  ) {
-    try {
-      const cfg = (await readFile(path, opt || { encoding: 'utf-8' })) as any;
-      if (!cfg) this.sendGlobal(seat, parse ? JSON.parse(cfg) : cfg);
-    } catch (e) {
-      logError(`[cfg ${path}]`, e);
-    }
-  }
+  // /**
+  //  * 挂载配置
+  //  * @param path 配置文件路径
+  //  * @param seat 存放位置
+  //  * @param parse 是否parse
+  //  * @param opt
+  //  */
+  // async use(conf: Config | Config[]) {
+  //   if (Array.isArray(conf)) {
+  //     for (let index = 0; index < conf.length; index++) {
+  //       const c = conf[index];
+  //       try {
+  //         const cfg = (await readFile(c.path, c.opt || { encoding: 'utf-8' })) as any;
+  //         if (!cfg) this.sendGlobal(c.seat, c.parse ? JSON.parse(cfg) : cfg);
+  //       } catch (e) {
+  //         logError(`[cfg ${c.path}]`, e);
+  //       }
+  //     }
+  //   } else {
+  //     try {
+  //       const cfg = (await readFile(conf.path, conf.opt || { encoding: 'utf-8' })) as any;
+  //       if (!cfg) this.sendGlobal(conf.seat, conf.parse ? JSON.parse(cfg) : cfg);
+  //     } catch (e) {
+  //       logError(`[cfg ${conf.path}]`, e);
+  //     }
+  //   }
+  // }
 
   /**
    * 开启监听

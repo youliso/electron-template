@@ -29,7 +29,7 @@ config.win.target = [];
 config.win.target.push({
   //nsis打包
   target: 'nsis',
-  arch: ['ia32', 'x64']
+  arch: ['ia32']
 });
 
 //更新配置

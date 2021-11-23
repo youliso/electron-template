@@ -17,7 +17,7 @@ logOn();
 // 可选模块
 fileOn();
 pathOn();
-await App.uses([
+await App.use([
   import('./modular/session'),
   import('./modular/dialog'),
   import('./modular/menu'),
