@@ -4,15 +4,6 @@ import { init } from './demo';
 
 export default class Music extends View {
   styles = [indexCss];
-  onLoad(params?: any) {}
-
-  onActivated() {}
-
-  onDeactivated() {}
-
-  onReady() {}
-
-  onUnmounted() {}
 
   render() {
     return init();

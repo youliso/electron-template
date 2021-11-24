@@ -1,6 +1,5 @@
-import { IpcRendererEvent } from 'electron';
-import { ManagerOptions } from 'socket.io-client/build/manager';
-import { SocketOptions } from 'socket.io-client/build/socket';
+import type { ManagerOptions, SocketOptions } from 'socket.io-client';
+import type { IpcRendererEvent } from 'electron';
 
 /**
  * socket 打开 (注: 只需调用一次,多次调用会造成socket模块多次监听)
