@@ -47,33 +47,33 @@ export class Global {
 
   constructor() {}
 
-  // /**
-  //  * 挂载配置
-  //  * @param path 配置文件路径
-  //  * @param seat 存放位置
-  //  * @param parse 是否parse
-  //  * @param opt
-  //  */
-  // async use(conf: Config | Config[]) {
-  //   if (Array.isArray(conf)) {
-  //     for (let index = 0; index < conf.length; index++) {
-  //       const c = conf[index];
-  //       try {
-  //         const cfg = (await readFile(c.path, c.opt || { encoding: 'utf-8' })) as any;
-  //         if (!cfg) this.sendGlobal(c.seat, c.parse ? JSON.parse(cfg) : cfg);
-  //       } catch (e) {
-  //         logError(`[cfg ${c.path}]`, e);
-  //       }
-  //     }
-  //   } else {
-  //     try {
-  //       const cfg = (await readFile(conf.path, conf.opt || { encoding: 'utf-8' })) as any;
-  //       if (!cfg) this.sendGlobal(conf.seat, conf.parse ? JSON.parse(cfg) : cfg);
-  //     } catch (e) {
-  //       logError(`[cfg ${conf.path}]`, e);
-  //     }
-  //   }
-  // }
+  /**
+   * 挂载配置
+   * @param path 配置文件路径
+   * @param seat 存放位置
+   * @param parse 是否parse
+   * @param opt
+   */
+  async use(conf: Config | Config[]) {
+    if (Array.isArray(conf)) {
+      for (let index = 0; index < conf.length; index++) {
+        const c = conf[index];
+        try {
+          const cfg = (await readFile(c.path, c.opt || { encoding: 'utf-8' })) as any;
+          if (cfg) this.sendGlobal(c.seat, c.parse ? JSON.parse(cfg) : cfg);
+        } catch (e) {
+          logError(`[cfg ${c.path}]`, e);
+        }
+      }
+    } else {
+      try {
+        const cfg = (await readFile(conf.path, conf.opt || { encoding: 'utf-8' })) as any;
+        if (cfg) this.sendGlobal(conf.seat, conf.parse ? JSON.parse(cfg) : cfg);
+      } catch (e) {
+        logError(`[cfg ${conf.path}]`, e);
+      }
+    }
+  }
 
   /**
    * 开启监听
@@ -87,13 +87,9 @@ export class Global {
     ipcMain.handle('global-sharedObject-get', (event, key) => {
       return this.getGlobal(key);
     });
-    //获取(insidePath)
-    ipcMain.handle('global-insidePath-get', (event, path) => {
-      return this.getInsidePath(path);
-    });
-    //获取(externPath)
-    ipcMain.handle('global-externPath-get', (event, path) => {
-      return this.getExternPath(path);
+    //获取依赖路径
+    ipcMain.handle('global-resources-path-get', (event, { type, path }) => {
+      return this.getResourcesPath(type, path);
     });
   }
 
@@ -157,34 +153,28 @@ export class Global {
   }
 
   /**
-   * 获取内部依赖文件路径(！文件必须都存放在lib/inside 针对打包后内部依赖文件路径问题)
-   * @param path lib/inside为起点的相对路径
+   * 获取资源文件路径
    * */
-  getInsidePath(path: string): string {
+  getResourcesPath(type: 'inside' | 'extern' | 'root', path: string): string {
     try {
-      path = normalize(
-        app.isPackaged
-          ? resolve(__dirname, '../inside/' + path)
-          : resolve('./src/lib/inside/' + path)
-      );
-      accessSync(path, constants.R_OK);
-      return path;
-    } catch (e) {
-      throw e;
-    }
-  }
-
-  /**
-   * 获取外部依赖文件路径(！文件必须都存放在lib/extern下 针对打包后外部依赖文件路径问题)
-   * @param path lib/extern为起点的相对路径
-   * */
-  getExternPath(path: string): string {
-    try {
-      path = normalize(
-        app.isPackaged
-          ? resolve(__dirname, '../extern/' + path)
-          : resolve('./src/lib/extern/' + path)
-      );
+      switch (type) {
+        case 'inside':
+          path = app.isPackaged
+            ? resolve(__dirname, '../inside/' + path)
+            : resolve('./resources/inside/' + path);
+          break;
+        case 'extern':
+          path = app.isPackaged
+            ? resolve(__dirname, '../extern/' + path)
+            : resolve('./resources/extern/' + path);
+          break;
+        case 'root':
+          path = app.isPackaged
+            ? resolve(__dirname, '../../' + path)
+            : resolve('./resources/root/' + path);
+          break;
+      }
+      path = normalize(path);
       accessSync(path, constants.R_OK);
       return path;
     } catch (e) {

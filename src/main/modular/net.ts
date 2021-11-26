@@ -2,7 +2,7 @@ import type { ClientRequestConstructorOptions, ClientRequest } from 'electron';
 import { net } from 'electron';
 import { createReadStream, statSync } from 'fs';
 import { basename, extname } from 'path';
-import { queryParams } from '@/lib';
+import { queryParams } from '@/utils';
 
 const { timeout, appUrl } = require('@/cfg/net.json');
 

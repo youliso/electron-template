@@ -7,7 +7,7 @@ import {
   windowShow
 } from '@/renderer/common/window';
 import { domCreateElement, View } from '@/renderer/common/dom';
-import { dateFormat } from '@/lib';
+import { dateFormat } from '@/utils';
 import { shortcutGetAll } from '@/renderer/common/shortcut';
 import indexCss from './scss/index.lazy.scss';
 

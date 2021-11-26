@@ -1,7 +1,7 @@
 import type { BrowserWindowConstructorOptions, LoadFileOptions, LoadURLOptions } from 'electron';
 import { join } from 'path';
 import { app, screen, ipcMain, BrowserWindow } from 'electron';
-import { isNull } from '@/lib';
+import { isNull } from '@/utils';
 
 const windowCfg = require('@/cfg/window.json');
 

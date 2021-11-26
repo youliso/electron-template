@@ -1,5 +1,5 @@
 import { globalShortcut, ipcMain } from 'electron';
-import { deepCopy } from '@/lib';
+import { deepCopy } from '@/utils';
 import Window from '@/main/modular/window';
 
 export type Accelerator = {

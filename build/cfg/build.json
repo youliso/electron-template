@@ -12,7 +12,7 @@
     "node_modules/",
     "dist/",
     {
-      "from": "src/lib/inside",
+      "from": "resources/inside",
       "to": "inside/",
       "filter": [
         "**/*"
@@ -21,11 +21,17 @@
   ],
   "extraResources": [
     {
-      "from": "src/lib/extern",
+      "from": "resources/extern",
       "to": "extern/",
       "filter": [
         "**/*"
       ]
+    }
+  ],
+  "extraFiles": [
+    {
+      "from": "resources/root",
+      "to": "./"
     }
   ],
   "nsis": {

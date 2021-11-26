@@ -44,19 +44,13 @@ export async function getGlobal<T>(key: string): Promise<T> {
 }
 
 /**
- * 获取内部依赖文件路径(！文件必须都存放在lib/inside 针对打包后内部依赖文件路径问题)
- * @param path lib/inside为起点的相对路径
+ * 获取依赖文件路径
  * */
-export async function getInsidePath(path: string): Promise<string> {
-  return await window.ipc.invoke('global-insidePath-get', path);
-}
-
-/**
- * 获取外部依赖文件路径(！文件必须都存放在lib/extern下 针对打包后外部依赖文件路径问题)
- * @param path lib/extern为起点的相对路径
- * */
-export async function getExternPath(path: string): Promise<string> {
-  return await window.ipc.invoke('global-externPath-get', path);
+export async function getResourcesPath(
+  type: 'inside' | 'extern' | 'root',
+  path: string
+): Promise<string> {
+  return await window.ipc.invoke('global-resources-path-get', { type, path });
 }
 
 /**

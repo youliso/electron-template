@@ -1,4 +1,4 @@
-import { queryParams } from '@/lib';
+import { queryParams } from '@/utils';
 
 const { timeout, appUrl } = require('@/cfg/net.json');
 

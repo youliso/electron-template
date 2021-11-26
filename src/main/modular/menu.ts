@@ -7,7 +7,7 @@ import {
   MenuItemConstructorOptions
 } from 'electron';
 import { join } from 'path';
-import testIcon from '@/lib/assets/icon/test.png';
+import testIcon from '@/assets/icon/test.png';
 
 export default class Menus {
   constructor() {}

@@ -1,7 +1,7 @@
 import { statSync, writeFileSync, appendFileSync } from 'fs';
 import { sep } from 'path';
 import { app, ipcMain } from 'electron';
-import { dateFormat } from '@/lib';
+import { dateFormat } from '@/utils';
 import { EOL } from 'os';
 
 const logFile: string = app.getPath('logs');

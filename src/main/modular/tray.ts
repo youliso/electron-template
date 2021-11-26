@@ -1,7 +1,7 @@
 import { app, Menu, Tray, nativeImage } from 'electron';
 import { join } from 'path';
 import Window from '@/main/modular/window';
-import ico from '@/lib/assets/icon/tray.ico';
+import ico from '@/assets/icon/tray.ico';
 
 class Trays {
   private static instance: Trays;
