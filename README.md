@@ -5,9 +5,9 @@
 ❗ 注意 `nodejs => 14.17.0`  
 交流 qq 群 12354891
 
-## 示例问题
+## 示例
 
-如果依赖包或者非框架耦合代码过旧请对照主分支进行修改。
+[vue](https://github.com/youliso/electron-template-vue)
 
 ## electron builder 打包配置
 
@@ -21,7 +21,6 @@
 │   ├── cfg 打包配置
 │   ├── icons 图片
 │   └── script 打包的方法 、本地调试等
-├── example 存放常见前端框架的使用方式的示例
 ├── resources 依赖
 │   ├── extern 外部依赖(打包后位于resources下)
 │   ├── inside 内部依赖(如果开启asar打包 会位于asar下)
