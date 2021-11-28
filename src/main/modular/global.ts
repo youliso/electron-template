@@ -1,6 +1,6 @@
 import { app, ipcMain } from 'electron';
 import { accessSync, constants } from 'fs';
-import { resolve, normalize } from 'path';
+import { resolve, join, normalize } from 'path';
 import { EOL } from 'os';
 import { logError } from '@/main/modular/log';
 import { readFile } from './file';
@@ -154,30 +154,50 @@ export class Global {
 
   /**
    * 获取资源文件路径
+   * 不传path返回此根目录
    * */
-  getResourcesPath(type: 'inside' | 'extern' | 'root', path: string): string {
+  getResourcesPath(type: 'inside' | 'extern' | 'root', path?: string): string {
     try {
       switch (type) {
         case 'inside':
-          path = app.isPackaged
-            ? resolve(__dirname, '../inside/' + path)
-            : resolve('./resources/inside/' + path);
+          if (!path)
+            return app.isPackaged
+              ? resolve(join(__dirname, '..', '..', 'inside'))
+              : resolve(join('resources', 'inside'));
+          path = normalize(
+            app.isPackaged
+              ? resolve(join(__dirname, '..', '..', 'inside', path))
+              : resolve(join('resources', 'inside', path))
+          );
           break;
         case 'extern':
-          path = app.isPackaged
-            ? resolve(__dirname, '../extern/' + path)
-            : resolve('./resources/extern/' + path);
+          if (!path)
+            return app.isPackaged
+              ? resolve(join(__dirname, '..', '..', '..', 'extern'))
+              : resolve(join('resources', 'extern'));
+          path = normalize(
+            app.isPackaged
+              ? resolve(join(__dirname, '..', '..', '..', 'extern', path))
+              : resolve(join('resources', 'extern', path))
+          );
           break;
         case 'root':
-          path = app.isPackaged
-            ? resolve(__dirname, '../../' + path)
-            : resolve('./resources/root/' + path);
+          if (!path)
+            return app.isPackaged
+              ? resolve(join(__dirname, '..', '..', '..', '..'))
+              : resolve(join('resources', 'root'));
+          path = normalize(
+            app.isPackaged
+              ? resolve(join(__dirname, '..', '..', '..', '..', path))
+              : resolve(join('resources', 'root', path))
+          );
           break;
       }
       path = normalize(path);
       accessSync(path, constants.R_OK);
       return path;
     } catch (e) {
+      logError(`[path ${path}]`, e);
       throw e;
     }
   }
