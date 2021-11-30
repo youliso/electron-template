@@ -21,16 +21,6 @@ config.nsis.menuCategory = false; //是否创建开始菜单目录
 config.nsis.shortcutName = name; //快捷方式名称(可中文)
 config.nsis.allowToChangeInstallationDirectory = true; //是否允许用户修改安装为位置
 config.win.requestedExecutionLevel = ['asInvoker', 'highestAvailable'][0]; //应用权限
-config.win.target = [];
-// config.win.target.push({ //单文件
-//     "target": "portable",
-//     "arch": ["ia32"]
-// });
-config.win.target.push({
-  //nsis打包
-  target: 'nsis',
-  arch: ['ia32']
-});
 
 //更新配置
 updateConfig.dirname = `${name.toLowerCase()}-updater`;

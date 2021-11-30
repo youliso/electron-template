@@ -49,5 +49,13 @@ yarn config set electron_mirror https://cdn.npm.taobao.org/dist/electron/
 运行命令
 
 ```shell
-yarn run dev
+yarn dev
+```
+
+## 打包发布
+
+运行命令
+
+```shell
+yarn build win|win32|win64|winp|winp32|winp64|darwin|mac|linux
 ```
