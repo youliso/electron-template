@@ -19,13 +19,13 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "devDependencies": {
-    "@swc/core": "^1.2.113",
+    "@swc/core": "^1.2.114",
     "css-loader": "^6.5.1",
     "electron": "^16.0.2",
     "electron-builder": "^22.14.5",
     "electron-rebuild": "^3.2.5",
     "html-webpack-plugin": "^5.5.0",
-    "sass": "^1.43.5",
+    "sass": "^1.44.0",
     "sass-loader": "^12.3.0",
     "style-loader": "^3.3.1",
     "swc-loader": "^0.1.15",

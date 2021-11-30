@@ -8,9 +8,7 @@
     "output": "out"
   },
   "files": [
-    "out/electron/**/*",
-    "node_modules/",
-    "dist/",
+    "dist/**/*",
     {
       "from": "resources/inside",
       "to": "inside/",
