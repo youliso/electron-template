@@ -40,6 +40,15 @@ config.extraResources = [
   }
 ];
 
+function checkInput(str) {
+  if (optional.indexOf(str) === -1) {
+    console.log('illegal input');
+    r.close()
+    return false
+  }
+  return true
+}
+
 function core(arch) {
   arch = arch.trim();
   let archTag = '';
@@ -123,7 +132,6 @@ function core(arch) {
   });
 }
 
-
 if (!arch) {
   console.log('Which platform is you want to build?');
   console.log(`optional：${optional}    q exit`);
@@ -133,14 +141,11 @@ if (!arch) {
       r.close()
       return
     }
-    if (optional.indexOf(str) === -1) {
-      console.log('illegal input');
-      r.close()
-      return
-    }
+     if(!checkInput(str)) return
     r.pause()
     core(str)
   })
 } else {
+  if(!checkInput(arch)) return
   core(arch)
 }
