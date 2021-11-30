@@ -22,6 +22,10 @@
 │   ├── icons 图片
 │   └── script 打包的方法 、本地调试等
 ├── resources 依赖
+│   ├── platform 对应系统依赖
+│   │   ├── win32
+│   │   ├── darwin
+│   │   └── linux
 │   ├── extern 外部依赖(打包后位于resources下)
 │   ├── inside 内部依赖(如果开启asar打包 会位于asar下)
 │   └── root 和执行文件同级

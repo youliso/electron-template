@@ -47,7 +47,7 @@ export async function getGlobal<T>(key: string): Promise<T> {
  * 获取依赖文件路径
  * */
 export async function getResourcesPath(
-  type: 'inside' | 'extern' | 'root',
+  type: 'platform' | 'inside' | 'extern' | 'root',
   path: string
 ): Promise<string> {
   return await window.ipc.invoke('global-resources-path-get', { type, path });
