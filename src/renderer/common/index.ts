@@ -48,7 +48,7 @@ export async function getGlobal<T>(key: string): Promise<T> {
  * */
 export async function getResourcesPath(
   type: 'platform' | 'inside' | 'extern' | 'root',
-  path: string
+  path?: string
 ): Promise<string> {
   return await window.ipc.invoke('global-resources-path-get', { type, path });
 }
