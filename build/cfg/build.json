@@ -17,15 +17,6 @@
       ]
     }
   ],
-  "extraResources": [
-    {
-      "from": "resources/extern",
-      "to": "extern/",
-      "filter": [
-        "**/*"
-      ]
-    }
-  ],
   "extraFiles": [
     {
       "from": "resources/root",
