@@ -45,7 +45,7 @@ export class Global {
     return Global.instance;
   }
 
-  constructor() {}
+  constructor() { }
 
   /**
    * 挂载配置
@@ -156,28 +156,46 @@ export class Global {
    * 获取资源文件路径
    * 不传path返回此根目录
    * */
-  getResourcesPath(type: 'platform' | 'inside' | 'extern' | 'root', path: string): string {
+  getResourcesPath(type: 'platform' | 'inside' | 'extern' | 'root', path?: string): string {
     try {
       switch (type) {
         case 'platform':
+          if (!path) return app.isPackaged
+            ? resolve(join(__dirname, '..', '..', '..', 'platform', process.platform))
+            : resolve(join('resources', 'platform', process.platform))
           path = app.isPackaged
-            ? resolve(join(__dirname, '..', '..', 'platform', process.platform, path))
+            ? resolve(join(__dirname, '..', '..', '..', 'platform', process.platform, path))
             : resolve(join('resources', 'platform', process.platform, path));
           break;
         case 'inside':
-          path = app.isPackaged
-            ? resolve(join(__dirname, '..', '..', 'inside', path))
-            : resolve(join('resources', 'inside', path));
+          if (!path) return app.isPackaged
+            ? resolve(join(__dirname, '..', '..', 'inside'))
+            : resolve(join('resources', 'inside'))
+          path = normalize(
+            app.isPackaged
+              ? resolve(join(__dirname, '..', '..', 'inside', path))
+              : resolve(join('resources', 'inside', path))
+          );
           break;
         case 'extern':
-          path = app.isPackaged
-            ? resolve(join(__dirname, '..', '..', '..', 'extern', path))
-            : resolve(join('resources', 'extern', path));
+          if (!path) return app.isPackaged
+            ? resolve(join(__dirname, '..', '..', '..', 'extern'))
+            : resolve(join('resources', 'extern'))
+          path = normalize(
+            app.isPackaged
+              ? resolve(join(__dirname, '..', '..', '..', 'extern', path))
+              : resolve(join('resources', 'extern', path))
+          );
           break;
         case 'root':
-          path = app.isPackaged
-            ? resolve(join(__dirname, '..', '..', '..', '..', path))
-            : resolve(join('resources', 'root', path));
+          if (!path) return app.isPackaged
+            ? resolve(join(__dirname, '..', '..', '..', '..'))
+            : resolve(join('resources', 'root'))
+          path = normalize(
+            app.isPackaged
+              ? resolve(join(__dirname, '..', '..', '..', '..', path))
+              : resolve(join('resources', 'root', path))
+          );
           break;
       }
       path = normalize(path);
