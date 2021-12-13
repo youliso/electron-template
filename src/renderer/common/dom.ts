@@ -1,12 +1,10 @@
-import { getGlobal } from './';
-
 /**
  * 组件
  */
 export class Component implements VSource {
-  $currentName: string;
-  $name: string;
-  $el: HTMLElement;
+  $currentName: string | undefined;
+  $name: string | undefined;
+  $el: HTMLElement | undefined;
   styles: any[] = [];
 
   onLoad() {}
@@ -24,9 +22,9 @@ export class Component implements VSource {
  * 页面
  */
 export class View implements VSource {
-  $instance: boolean;
-  $name: string;
-  $el: HTMLElement;
+  $instance: boolean | undefined;
+  $name: string | undefined;
+  $el: HTMLElement | undefined;
   styles: any[] = [];
   components = {};
 
@@ -45,9 +43,7 @@ export class View implements VSource {
  * 页面初始化加载
  */
 export function domPropertyLoad() {
-  getGlobal<string>('system.platform').then((platform) =>
-    document.body.setAttribute('platform', platform)
-  );
+  document.body.setAttribute('platform', window.environment.platform);
 }
 
 /**
@@ -59,7 +55,7 @@ export function domPropertyLoad() {
  */
 export function domCreateElement<K extends keyof HTMLElementTagNameMap>(
   el: K,
-  css?: string | string[],
+  css?: string | string[] | null,
   text?: string,
   html?: string
 ) {

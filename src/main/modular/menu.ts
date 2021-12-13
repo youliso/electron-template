@@ -29,7 +29,7 @@ export default class Menus {
       ];
       const menu = Menu.buildFromTemplate(template);
       menu.popup({
-        window: BrowserWindow.fromWebContents(event.sender)
+        window: BrowserWindow.fromWebContents(event.sender) as BrowserWindow
       });
     });
   }

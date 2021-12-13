@@ -78,6 +78,7 @@ class Shortcut {
    * 清空已注册快捷键
    */
   private delAll() {
+    // @ts-ignore
     delete this.data;
     this.data = [];
   }
@@ -137,6 +138,7 @@ class Shortcut {
     });
     ipcMain.handle('shortcut-getAll', (event) => {
       const acceleratorAll = this.getAll();
+      // @ts-ignore
       acceleratorAll.map((e) => delete e.callback);
       return acceleratorAll;
     });

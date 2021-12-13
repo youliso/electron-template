@@ -9,8 +9,16 @@ interface Ipc {
   removeAllListeners: (channel: string) => this;
 }
 
+interface Environment {
+  EOL: string;
+  systemVersion: string;
+  platform: string;
+  single: boolean;
+}
+
 declare global {
   interface Window {
     ipc: Ipc;
+    environment: Environment;
   }
 }

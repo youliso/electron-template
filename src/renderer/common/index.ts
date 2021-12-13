@@ -62,6 +62,14 @@ export function relaunch(once: boolean): void {
 }
 
 /**
+ * app常用信息
+ * @returns
+ */
+export async function getAppInfo(): Promise<AppInfo> {
+  return await window.ipc.invoke('app-info-get');
+}
+
+/**
  * app常用获取路径
  */
 export async function getAppPath(key: string): Promise<string> {

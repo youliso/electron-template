@@ -1,11 +1,8 @@
 import { app, ipcMain } from 'electron';
 import { accessSync, constants } from 'fs';
 import { resolve, join, normalize } from 'path';
-import { EOL } from 'os';
 import { logError } from '@/main/modular/log';
 import { readFile } from './file';
-
-const { single } = require('@/cfg/window.json');
 
 type Obj<Value> = {} & {
   [key: string]: Value | Obj<Value>;
@@ -24,28 +21,14 @@ interface Config {
 export class Global {
   private static instance: Global;
 
-  public sharedObject: { [key: string]: any } = {
-    // 系统信息
-    system: {
-      EOL,
-      version: process.getSystemVersion(),
-      platform: process.platform
-    },
-    // 应用信息
-    app: {
-      // 是否单例
-      single,
-      name: app.name,
-      version: app.getVersion()
-    }
-  };
+  public sharedObject: { [key: string]: any } = {};
 
   static getInstance() {
     if (!Global.instance) Global.instance = new Global();
     return Global.instance;
   }
 
-  constructor() { }
+  constructor() {}
 
   /**
    * 挂载配置
@@ -156,13 +139,15 @@ export class Global {
    * 获取资源文件路径
    * 不传path返回此根目录
    * */
-   getResourcesPath(type: 'platform' | 'inside' | 'extern' | 'root', path: string = './'): string {
+  getResourcesPath(type: 'platform' | 'inside' | 'extern' | 'root', path: string = './'): string {
     try {
       switch (type) {
         case 'platform':
-          path = normalize(app.isPackaged
-            ? resolve(join(__dirname, '..', '..', '..', 'platform', process.platform, path))
-            : resolve(join('resources', 'platform', process.platform, path)));
+          path = normalize(
+            app.isPackaged
+              ? resolve(join(__dirname, '..', '..', '..', 'platform', process.platform, path))
+              : resolve(join('resources', 'platform', process.platform, path))
+          );
           break;
         case 'inside':
           path = normalize(
@@ -178,7 +163,7 @@ export class Global {
               : resolve(join('resources', 'extern', path))
           );
           break;
-        case 'root':  
+        case 'root':
           path = normalize(
             app.isPackaged
               ? resolve(join(__dirname, '..', '..', '..', '..', path))

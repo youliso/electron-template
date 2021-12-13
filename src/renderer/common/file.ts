@@ -63,7 +63,7 @@ export async function readFile(
  * @param path
  * @param index
  */
-export async function readLine(path: string, index?: number): Promise<string | any[]> | null {
+export async function readLine(path: string, index?: number): Promise<string | any[]> {
   return await window.ipc.invoke('file-readline', { path, index });
 }
 

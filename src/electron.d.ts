@@ -27,6 +27,11 @@ interface Customize {
   data?: any;
 }
 
+interface AppInfo {
+  name: string;
+  version: string;
+}
+
 declare namespace Electron {
   interface BrowserWindow {
     customize: Customize;

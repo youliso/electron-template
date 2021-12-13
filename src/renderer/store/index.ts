@@ -6,7 +6,7 @@ export function setCustomize(args: Customize) {
 }
 
 export function getCustomize() {
-  return Store.get<Customize>('customize');
+  return Store.get<Customize>('customize') as Customize;
 }
 
 /**

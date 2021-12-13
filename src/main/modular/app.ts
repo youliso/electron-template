@@ -3,8 +3,8 @@ import { resolve } from 'path';
 import { logError } from '@/main/modular/log';
 import Shortcut from '@/main/modular/shortcut';
 import Window from '@/main/modular/window';
-import Global from '@/main/modular/global';
 
+const { single } = require('@/cfg/window.json');
 const { initRoute } = require('@/cfg/window.json');
 
 export class App {
@@ -67,7 +67,7 @@ export class App {
     else {
       app.on('second-instance', (event, argv) => {
         // 当运行第二个实例时,将会聚焦到main窗口
-        if (Global.getGlobal('app.single')) {
+        if (single) {
           const main = Window.getMain();
           if (main) {
             if (main.isMinimized()) main.restore();
@@ -124,6 +124,13 @@ export class App {
     app.on('browser-window-blur', () => {
       // 注销关闭刷新
       Shortcut.unregister('CommandOrControl+R');
+    });
+    //app常用信息
+    ipcMain.handle('app-info-get', (event, args) => {
+      return {
+        name: app.name,
+        version: app.getVersion()
+      };
     });
     //app常用获取路径
     ipcMain.handle('app-path-get', (event, args) => {

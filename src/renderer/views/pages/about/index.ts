@@ -5,7 +5,7 @@ import indexCss from './scss/index.lazy.scss';
 export default class About extends View {
   styles = [indexCss];
 
-  countDom: HTMLButtonElement;
+  countDom: HTMLButtonElement | undefined;
   count: number = 0;
 
   onLoad() {}
@@ -20,7 +20,7 @@ export default class About extends View {
 
   countAdd() {
     this.count++;
-    this.countDom.textContent = `${this.count} add`;
+    if (this.countDom) this.countDom.textContent = `${this.count} add`;
   }
 
   render() {

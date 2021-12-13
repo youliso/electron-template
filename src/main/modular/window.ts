@@ -35,8 +35,11 @@ export function browserWindowInit(args: BrowserWindowConstructorOptions): Browse
   });
   if (!opt.backgroundColor && windowCfg.backgroundColor)
     opt.backgroundColor = windowCfg.backgroundColor;
-  if (!isNull(opt.customize.parentId)) {
-    opt.parent = Window.getInstance().get(opt.customize.parentId);
+  const isParentId = !isNull(opt.customize.parentId);
+  let parenWin: BrowserWindow | null = null;
+  if (isParentId) parenWin = Window.getInstance().get(opt.customize.parentId as number);
+  if (isParentId && parenWin) {
+    opt.parent = parenWin;
     const currentWH = opt.parent.getBounds();
     opt.customize.currentWidth = currentWH.width;
     opt.customize.currentHeight = currentWH.height;
@@ -60,8 +63,8 @@ export function browserWindowInit(args: BrowserWindowConstructorOptions): Browse
     if (main) {
       const mainPosition = main.getPosition();
       const mainBounds = main.getBounds();
-      opt.x = (mainPosition[0] + (mainBounds.width - opt.width) / 2) | 0;
-      opt.y = (mainPosition[1] + (mainBounds.height - opt.height) / 2) | 0;
+      opt.x = (mainPosition[0] + (mainBounds.width - (opt.width as number)) / 2) | 0;
+      opt.y = (mainPosition[1] + (mainBounds.height - (opt.height as number)) / 2) | 0;
     }
   }
   const win = new BrowserWindow(opt);
@@ -84,11 +87,13 @@ function load(win: BrowserWindow) {
   // 聚焦失焦监听
   win.on('blur', () => win.webContents.send('window-blur-focus', 'blur'));
   win.on('focus', () => win.webContents.send('window-blur-focus', 'focus'));
-  if (win.customize.url.startsWith('https://') || win.customize.url.startsWith('http://')) {
-    win.loadURL(win.customize.url, win.customize.loadOptions as LoadURLOptions);
-    return;
+  if (win.customize.url) {
+    if (win.customize.url.startsWith('https://') || win.customize.url.startsWith('http://')) {
+      win.loadURL(win.customize.url, win.customize.loadOptions as LoadURLOptions);
+      return;
+    }
+    win.loadFile(win.customize.url, win.customize.loadOptions as LoadFileOptions);
   }
-  win.loadFile(win.customize.url, win.customize.loadOptions as LoadFileOptions);
 }
 
 export class Window {
@@ -122,7 +127,7 @@ export class Window {
    */
   getMain() {
     const all = BrowserWindow.getAllWindows().reverse();
-    let win: BrowserWindow = null;
+    let win: BrowserWindow | null = null;
     for (let index = 0; index < all.length; index++) {
       const item = all[index];
       if (index === 0) win = item;
@@ -140,6 +145,7 @@ export class Window {
   create(args?: BrowserWindowConstructorOptions) {
     args = args || {
       customize: {
+        title: windowCfg.title,
         route: windowCfg.initRoute
       }
     };
@@ -178,9 +184,8 @@ export class Window {
    * 窗口关闭、隐藏、显示等常用方法
    */
   func(type: windowFuncOpt, id?: number) {
-    let win: BrowserWindow = null;
     if (!isNull(id)) {
-      win = this.get(id);
+      const win = this.get(id as number);
       if (!win) {
         console.error(`not found win -> ${id}`);
         return;
@@ -196,7 +201,7 @@ export class Window {
    */
   send(key: string, value: any, id?: number) {
     if (!isNull(id)) {
-      const win = this.get(id);
+      const win = this.get(id as number);
       if (win) win.webContents.send(key, value);
     } else for (const i of this.getAll()) i.webContents.send(key, value);
   }
@@ -217,14 +222,24 @@ export class Window {
    * 设置窗口最小大小
    */
   setMinSize(args: { id: number; size: number[] }) {
-    this.get(args.id).setMinimumSize(args.size[0], args.size[1]);
+    const win = this.get(args.id);
+    if (!win) {
+      console.error('Invalid id, the id can not be a empty');
+      return;
+    }
+    win.setMinimumSize(args.size[0], args.size[1]);
   }
 
   /**
    * 设置窗口最大大小
    */
   setMaxSize(args: { id: number; size: number[] }) {
-    this.get(args.id).setMaximumSize(args.size[0], args.size[1]);
+    const win = this.get(args.id);
+    if (!win) {
+      console.error('Invalid id, the id can not be a empty');
+      return;
+    }
+    win.setMaximumSize(args.size[0], args.size[1]);
   }
 
   /**
@@ -236,6 +251,10 @@ export class Window {
       height: args.size[1] | 0
     };
     const win = this.get(args.id);
+    if (!win) {
+      console.error('Invalid id, the id can not be a empty');
+      return;
+    }
     const winBounds = win.getBounds();
     if (Rectangle.width === winBounds.width && Rectangle.height === winBounds.height) return;
     if (!args.center) {
@@ -255,14 +274,24 @@ export class Window {
    * 设置窗口背景色
    */
   setBackgroundColor(args: { id: number; color: string }) {
-    this.get(args.id).setBackgroundColor(args.color || windowCfg.backgroundColor);
+    const win = this.get(args.id);
+    if (!win) {
+      console.error('Invalid id, the id can not be a empty');
+      return;
+    }
+    win.setBackgroundColor(args.color || windowCfg.backgroundColor);
   }
 
   /**
    * 设置窗口是否置顶
    */
   setAlwaysOnTop(args: { id: number; is: boolean; type?: windowAlwaysOnTopOpt }) {
-    this.get(args.id).setAlwaysOnTop(args.is, args.type || 'normal');
+    const win = this.get(args.id);
+    if (!win) {
+      console.error('Invalid id, the id can not be a empty');
+      return;
+    }
+    win.setAlwaysOnTop(args.is, args.type || 'normal');
   }
 
   /**
@@ -271,12 +300,23 @@ export class Window {
   on() {
     // 窗口数据更新
     ipcMain.on('window-update', (event, args) => {
-      if (args?.id) this.get(args.id).customize = args;
+      if (args?.id) {
+        const win = this.get(args.id);
+        if (!win) {
+          console.error('Invalid id, the id can not be a empty');
+          return;
+        }
+        win.customize = args;
+      }
     });
     // 最大化最小化窗口
     ipcMain.on('window-max-min-size', (event, id) => {
       if (!isNull(id)) {
         const win = this.get(id);
+        if (!win) {
+          console.error('Invalid id, the id can not be a empty');
+          return;
+        }
         if (win.isMaximized()) win.unmaximize();
         else win.maximize();
       }

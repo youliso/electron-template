@@ -6,11 +6,11 @@ export default class Router {
   public appDom: HTMLElement = document.body;
   public routes: Route[] = [];
   // 当前路由
-  public current: View;
+  public current: View | undefined;
   // 路由历史
   public history: { path: string; params?: any }[] = [];
   // 路由监听
-  public onRoute: (route: Route, params?: any) => void;
+  public onRoute: (route: Route, params?: any) => void = () => {};
 
   constructor(routes: Route[]) {
     this.routes.push(...routes);
@@ -38,20 +38,26 @@ export default class Router {
   }
 
   async replace(path: string, params?: any, instance: boolean = false) {
-    const route: Route = this.getRoute(path);
+    const route = this.getRoute(path);
+    if (!route) {
+      console.warn(`beyond the history of ${path}`);
+      return;
+    }
     if (instance) route.instance = instance;
-    if (!route) console.warn(`beyond the history of ${path}`);
-    else await this.rIng(route, params, false);
+    await this.rIng(route, params, false);
   }
 
   /**
    * 跳转路由
    */
   async push(path: string, params?: any, instance: boolean = false) {
-    const route: Route = this.getRoute(path);
+    const route = this.getRoute(path);
+    if (!route) {
+      console.warn(`beyond the history of ${path}`);
+      return;
+    }
     if (instance) route.instance = instance;
-    if (!route) console.warn(`beyond the history of ${path}`);
-    else await this.rIng(route, params, true);
+    await this.rIng(route, params, true);
   }
 
   /**
@@ -67,7 +73,12 @@ export default class Router {
     }
     if (params) p.params = params;
     this.history.splice(0, num);
-    await this.rIng(this.getRoute(p.path), p.params, false);
+    const route = this.getRoute(p.path);
+    if (!route) {
+      console.warn(`beyond the history of ${path}`);
+      return;
+    }
+    await this.rIng(route, p.params, false);
   }
 
   private async rIng(route: Route, params?: any, isHistory: boolean = true) {
@@ -111,7 +122,7 @@ export default class Router {
   private unCurrent() {
     if (this.current) {
       if (this.current.$instance) {
-        this.instances[this.current.$name] = this.current;
+        this.instances[this.current.$name as string] = this.current;
         if (this.current.components) {
           for (const componentKey in this.current.components) {
             const component = this.current.components[componentKey];
@@ -121,7 +132,7 @@ export default class Router {
         }
         this.current.onDeactivated();
       } else {
-        delete this.instances[this.current.$name];
+        delete this.instances[this.current.$name as string];
         if (this.current.components) {
           for (const componentKey in this.current.components) {
             const component = this.current.components[componentKey];
@@ -131,7 +142,7 @@ export default class Router {
         }
         this.current.onUnmounted();
       }
-      this.appDom.removeChild(this.current.$el);
+      this.appDom.removeChild(this.current.$el as HTMLElement);
       for (const css of this.current.styles) css.unuse();
       delete this.current;
     }
@@ -150,9 +161,13 @@ export default class Router {
       return;
     }
     const viewEl = domCreateElement('div', 'container');
-    const cl = view.render();
-    if (Array.isArray(cl)) for (const v of cl) viewEl.appendChild(v);
-    else viewEl.appendChild(cl);
+    if (view.render) {
+      const cl = view.render();
+      if (cl) {
+        if (Array.isArray(cl)) for (const v of cl) viewEl.appendChild(v);
+        else viewEl.appendChild(cl);
+      }
+    }
     if (view.components) {
       const componentsEl = domCreateElement('div', 'view components');
       for (const componentKey in view.components) {
@@ -160,11 +175,15 @@ export default class Router {
         for (const css of component.styles) css.use();
         component.onLoad();
         const el = domCreateElement('div', componentKey.toLowerCase());
-        const cl = component.render();
-        if (Array.isArray(cl)) for (const v of cl) el.appendChild(v);
-        else el.appendChild(cl);
+        if (component.render) {
+          const cl = component.render();
+          if (cl) {
+            if (Array.isArray(cl)) for (const v of cl) el.appendChild(v);
+            else el.appendChild(cl);
+          }
+        }
         componentsEl.appendChild(el);
-        component.$currentName = view.$name;
+        component.$currentName = view.$name as string;
         component.$name = componentKey;
         component.$el = el;
         component.onReady();

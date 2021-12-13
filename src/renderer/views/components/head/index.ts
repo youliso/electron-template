@@ -1,6 +1,5 @@
 import { getCustomize } from '@/renderer/store';
 import { domCreateElement, Component } from '@/renderer/common/dom';
-import { getGlobal } from '@/renderer/common';
 import { windowClose, windowMaxMin, windowMin } from '@/renderer/common/window';
 import indexCss from './scss/index.lazy.scss';
 
@@ -37,20 +36,14 @@ export default class Head extends Component {
     const args = getCustomize();
     const el = domCreateElement('div', 'head-info drag');
     const content = domCreateElement('div', 'content');
-    getGlobal<string>('system.platform').then(async (platform) => {
-      const title = domCreateElement(
-        'div',
-        'title',
-        args.title || (await getGlobal<string>('app.name'))
-      );
-      if (platform === 'darwin') {
-        content.appendChild(document.createElement('div'));
-        content.appendChild(title);
-      } else {
-        content.appendChild(title);
-        this.events(content);
-      }
-    });
+    const title = domCreateElement('div', 'title', args.title);
+    if (window.environment.platform === 'darwin') {
+      content.appendChild(document.createElement('div'));
+      content.appendChild(title);
+    } else {
+      content.appendChild(title);
+      this.events(content);
+    }
     el.appendChild(content);
     return el;
   }
