@@ -20,9 +20,13 @@ class GlobalComponent {
     for (const css of component.styles) css.use();
     component.onLoad();
     const el = domCreateElement('div', key.toLowerCase());
-    const cl = component.render();
-    if (Array.isArray(cl)) for (const v of cl) el.appendChild(v);
-    else el.appendChild(cl);
+    if (component.render) {
+      const cl = component.render();
+      if (cl) {
+        if (Array.isArray(cl)) for (const v of cl) el.appendChild(v);
+        else el.appendChild(cl);
+      }
+    }
     component.$currentName = 'global';
     component.$name = key;
     component.$el = el;
@@ -40,13 +44,13 @@ class GlobalComponent {
       const component = this.components[key];
       component.onUnmounted();
       for (const css of component.styles) css.unuse();
-      this.el.removeChild(component.$el);
+      this.el.removeChild(component.$el as HTMLElement);
     } else {
       for (const componentKey in this.components) {
         const component = this.components[componentKey];
         component.onUnmounted();
         for (const css of component.styles) css.unuse();
-        this.el.removeChild(component.$el);
+        this.el.removeChild(component.$el as HTMLElement);
       }
     }
   }

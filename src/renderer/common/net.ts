@@ -87,7 +87,7 @@ function fetchPromise<T>(url: string, sendData: NetOpt): Promise<T> {
  */
 export default async function net<T>(url: string, param: NetOpt = {}): Promise<T> {
   if (!url.startsWith('http://') && !url.startsWith('https://')) url = appUrl + url;
-  let abort: TimeOutAbort = null;
+  let abort: TimeOutAbort | null = null;
   if (!param.signal) abort = timeOutAbort(param.timeout || timeout);
   let sendData: NetOpt = {
     isHeaders: param.isHeaders,

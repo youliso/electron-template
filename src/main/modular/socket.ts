@@ -11,7 +11,7 @@ const { socketUrl } = require('@/cfg/net.json');
  * Socket模块
  * */
 export default class Socket {
-  public io: SocketIo;
+  public io: SocketIo | undefined;
 
   /**
    * sockezt.io参数

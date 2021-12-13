@@ -1,7 +1,7 @@
 /**
  * 判空
  * */
- export function isNull(o: unknown): boolean {
+export function isNull(o: unknown): boolean {
   return o === '' || o === undefined || o === null || o === 'undefined' || o === 'null';
 }
 
@@ -100,8 +100,9 @@ export function deepCopy<T>(obj: any): T {
  * 防抖
  */
 export function debounce(func: Function, wait: number): any {
-  let timer: number = null;
+  let timer: number | null = null;
   return function () {
+    // @ts-ignore
     const context = this;
     const args = arguments; // 存一下传入的参数
     if (timer) clearTimeout(timer);
@@ -114,10 +115,11 @@ export function debounce(func: Function, wait: number): any {
  * 节流
  */
 export function throttle(func: Function, delay: number): any {
-  let timer: number = null;
+  let timer: number | null = null;
   let startTime = Date.now();
   return function () {
     const remaining = delay - (Date.now() - startTime);
+    // @ts-ignore
     const context = this;
     const args = arguments;
     if (timer) clearTimeout(timer);

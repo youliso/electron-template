@@ -23,11 +23,11 @@ export default class Message extends View {
   render() {
     const el = domCreateElement('div', 'info');
     const text = domCreateElement('div', 'text');
-    const text1 = domCreateElement('div', null, `创建传参: ${JSON.stringify(args.data)}`);
-    const text2 = domCreateElement('div', null, `app启动参数: ${JSON.stringify(args.argv)}`);
+    const text1 = domCreateElement('div', null, `创建传参: ${JSON.stringify(args.data as any)}`);
+    const text2 = domCreateElement('div', null, `app启动参数: ${JSON.stringify(args.argv as any)}`);
     const send = domCreateElement('button', 'test', '发送消息');
     const but = domCreateElement('button', 'close', '确定');
-    but.addEventListener('click', () => windowClose(args.id));
+    but.addEventListener('click', () => windowClose());
     send.addEventListener('click', () => windowMessageSend('test', Date.now()));
     text.appendChild(text1);
     text.appendChild(text2);

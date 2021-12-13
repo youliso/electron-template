@@ -11,5 +11,5 @@ windowLoad((_, args) => {
   domPropertyLoad();
   setCustomize(args);
   GlobalComponent.render('Head', new Head());
-  routerInit(args.route);
+  routerInit(args.route as string);
 });

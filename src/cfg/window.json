@@ -3,5 +3,6 @@
   "height": 600,
   "backgroundColor": "#ffffff",
   "initRoute": "/home",
-  "single": true
+  "single": true,
+  "title": "electron-template"
 }

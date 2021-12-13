@@ -14,8 +14,8 @@ import indexCss from './scss/index.lazy.scss';
 const args = getCustomize();
 
 export default class Home extends View {
-  private testData: ProxyValue<string>;
-  private testInterval: NodeJS.Timer;
+  private testData: ProxyValue<string> | undefined;
+  private testInterval: NodeJS.Timer | undefined;
   styles = [indexCss];
 
   onLoad() {
@@ -47,7 +47,7 @@ export default class Home extends View {
     this.testData = testProxy(dateFormat(), test);
     test.textContent = dateFormat();
     this.testInterval = setInterval(() => {
-      this.testData.value = dateFormat();
+      if (this.testData) this.testData.value = dateFormat();
     }, 1000);
     return test;
   }

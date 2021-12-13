@@ -1,7 +1,6 @@
-import { getGlobal } from '@/renderer/common';
 import { normalize } from '@/renderer/common/path';
 
-const platform: string = await getGlobal<string>('system.platform');
+const platform = window.environment.platform;
 
 async function pathToSrc(path: string) {
   try {
@@ -11,14 +10,14 @@ async function pathToSrc(path: string) {
     }
     return path;
   } catch (e) {
-    return null;
+    return '';
   }
 }
 
 class Audios {
   public static instance: Audios;
   // 当前播放源
-  public src: string = null;
+  public src: string | undefined;
   // 播放状态 1播放 0 暂停
   public type: 0 | 1 = 0;
   // 播放位置
@@ -34,15 +33,15 @@ class Audios {
   // 音量渐进时间(秒)
   public volumeGradualTime: number = 0.7;
   // 音频的数据(可视化)
-  public analyser: AnalyserNode = null;
+  public analyser: AnalyserNode;
   // 音频Context
   private AudioContext: AudioContext = new AudioContext();
   // 当前播放
   private currentAudio: HTMLAudioElement = new Audio();
   // 音频源
-  private sourceAudio: MediaElementAudioSourceNode = null;
+  private sourceAudio: MediaElementAudioSourceNode;
   // 控制节点
-  private gainNode: GainNode = null;
+  private gainNode: GainNode;
 
   static getInstance() {
     if (!Audios.instance) Audios.instance = new Audios();
