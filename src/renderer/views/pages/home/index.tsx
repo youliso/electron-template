@@ -1,3 +1,4 @@
+import { h, View } from '@/renderer/common/h';
 import { getCustomize, testProxy, testProxyRemove } from '@/renderer/store';
 import Router from '@/renderer/router';
 import {
@@ -6,7 +7,6 @@ import {
   windowMessageRemove,
   windowShow
 } from '@/renderer/common/window';
-import { domCreateElement, View } from '@/renderer/common/dom';
 import { dateFormat } from '@/utils';
 import { shortcutGetAll } from '@/renderer/common/shortcut';
 import indexCss from './scss/index.lazy.scss';
@@ -43,7 +43,7 @@ export default class Home extends View {
   }
 
   testRender() {
-    const test = domCreateElement('div', 'text');
+    const test = <div class="text"></div>;
     this.testData = testProxy(dateFormat(), test);
     test.textContent = dateFormat();
     this.testInterval = setInterval(() => {
@@ -53,13 +53,7 @@ export default class Home extends View {
   }
 
   render() {
-    const el = domCreateElement('div', 'info');
-    const baidu = domCreateElement('button', 'but', '打开baidu');
-    const but = domCreateElement('button', 'but', '弹框');
-    const shortcut = domCreateElement('button', 'but', '获取已注册shortcut');
-    const about = domCreateElement('button', 'but', '关于');
-    const music = domCreateElement('button', 'but', 'music');
-    but.addEventListener('click', () => {
+    function tk() {
       windowCreate({
         customize: {
           title: '弹框测试',
@@ -72,8 +66,9 @@ export default class Home extends View {
         modal: true,
         resizable: true
       });
-    });
-    baidu.addEventListener('click', () => {
+    }
+
+    function baidu() {
       windowCreate({
         customize: {
           url: 'https://baidu.com/',
@@ -83,24 +78,27 @@ export default class Home extends View {
         height: 600,
         resizable: true
       });
-    });
-    shortcut.addEventListener('click', () => {
-      shortcutGetAll().then(console.log);
-    });
-    about.addEventListener('click', () => {
-      Router.push('/about');
-    });
-    music.addEventListener('click', async () => {
-      console.log('123');
-      await Router.push('/music');
-      console.log('321');
-    });
-    el.appendChild(this.testRender());
-    el.appendChild(but);
-    el.appendChild(about);
-    el.appendChild(music);
-    el.appendChild(shortcut);
-    el.appendChild(baidu);
-    return el;
+    }
+
+    return (
+      <div class="info">
+        {this.testRender()}
+        <button class="but" onClick={() => baidu()}>
+          百度
+        </button>
+        <button class="but" onClick={() => tk()}>
+          弹框
+        </button>
+        <button class="but" onClick={() => shortcutGetAll().then(console.log)}>
+          获取已注册shortcut
+        </button>
+        <button class="but" onClick={() => Router.push('/about')}>
+          关于
+        </button>
+        <button class="but" onClick={() => Router.push('/music')}>
+          music
+        </button>
+      </div>
+    );
   }
 }

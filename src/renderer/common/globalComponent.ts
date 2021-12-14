@@ -1,4 +1,4 @@
-import { domCreateElement } from '@/renderer/common/dom';
+import { createElement } from '@/renderer/common/h';
 
 class GlobalComponent {
   private static instance: GlobalComponent;
@@ -12,14 +12,14 @@ class GlobalComponent {
   }
 
   constructor() {
-    this.el = domCreateElement('div', 'global components');
+    this.el = createElement('div', 'global components');
     document.body.appendChild(this.el);
   }
 
   render(key: string, component: Component) {
     for (const css of component.styles) css.use();
     component.onLoad();
-    const el = domCreateElement('div', key.toLowerCase());
+    const el = createElement('div', key.toLowerCase());
     if (component.render) {
       const cl = component.render();
       if (cl) {

@@ -1,4 +1,4 @@
-import { View } from '@//renderer/common/dom';
+import { View } from '@//renderer/common/h';
 import indexCss from './scss/index.lazy.scss';
 import { init } from './demo';
 
