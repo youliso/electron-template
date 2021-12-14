@@ -10,7 +10,7 @@ export default class Router {
   // 路由历史
   public history: { path: string; params?: any }[] = [];
   // 路由监听
-  public onRoute: (route: Route, params?: any) => void = () => {};
+  public onBeforeRoute: (route: Route, params?: any) => Promise<boolean> | boolean = () => true;
 
   constructor(routes: Route[]) {
     this.routes.push(...routes);
@@ -82,12 +82,13 @@ export default class Router {
   }
 
   private async rIng(route: Route, params?: any, isHistory: boolean = true) {
-    await route
-      .component()
-      .then((View) => this.pretreatment(route, View, params))
-      .then(() => isHistory && this.setHistory(route.path, params))
-      .then(() => this.onRoute && this.onRoute(route, params))
-      .catch(console.error);
+    const isR = await this.onBeforeRoute(route, params);
+    if (isR)
+      await route
+        .component()
+        .then((View) => this.pretreatment(route, View, params))
+        .then(() => isHistory && this.setHistory(route.path, params))
+        .catch(console.error);
   }
 
   private pretreatment(route: Route, View: any, params?: any) {

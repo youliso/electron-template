@@ -5,8 +5,9 @@ import { updateCustomizeRoute } from '@/renderer/store';
 
 const router = new Router([...pageRoute, ...dialogRoute]);
 
-router.onRoute = (route) => {
+router.onBeforeRoute = (route) => {
   updateCustomizeRoute(route.path);
+  return true;
 };
 
 export function routerInit(route: string) {
