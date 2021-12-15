@@ -7,7 +7,7 @@ export async function isAbsolute(path: string): Promise<string> {
 }
 
 export async function dirname(path: string): Promise<string> {
-  return await window.ipc.invoke('path-func', path);
+  return await window.ipc.invoke('path-dirname', path);
 }
 
 export async function normalize(path: string): Promise<string> {
