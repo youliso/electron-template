@@ -144,6 +144,5 @@ if (!arch) {
     core(str);
   });
 } else {
-  if (!checkInput(arch)) return;
-  core(arch);
+  if (checkInput(arch)) core(arch);
 }
