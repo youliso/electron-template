@@ -11,7 +11,7 @@ module.exports = {
     __filename: false
   },
   resolve: {
-    extensions: ['.ts', '.js'],
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
     alias: {
       dist: resolve('dist'),
       '@': resolve('src')
@@ -20,7 +20,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(ts|js)$/,
+        test: /\.(tsx|jsx|ts|js)$/,
         exclude: /(node_modules|bower_components)/,
         use: {
           loader: 'swc-loader',
@@ -28,7 +28,17 @@ module.exports = {
             jsc: {
               parser: {
                 syntax: 'typescript',
-                dynamicImport: true
+                dynamicImport: true,
+                tsx: true
+              },
+              transform: {
+                react: {
+                  pragma: 'h',
+                  // pragmaFrag: 'F',
+                  throwIfNamespace: true,
+                  development: false,
+                  useBuiltins: false
+                }
               },
               target: 'es2022'
             }

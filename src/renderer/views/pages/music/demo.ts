@@ -1,14 +1,14 @@
-import { domCreateElement } from '@/renderer/common/dom';
+import { createElement } from '@/renderer/common/h';
 import audio from '@/renderer/common/audio';
 import Router from '@/renderer/router';
 
-const info = domCreateElement('div', 'info');
-const bgmBut = domCreateElement('div', 'bgm-but', '播放');
-const back = domCreateElement('div', 'back-but', '返回');
+const info = createElement('div', 'info');
+const bgmBut = createElement('div', 'bgm-but', '播放');
+const back = createElement('div', 'back-but', '返回');
 back.addEventListener('click', () => Router.back());
-const c1 = domCreateElement('canvas', 'c1');
-const c2 = domCreateElement('canvas', 'c2');
-const c3 = domCreateElement('canvas', 'c3');
+const c1 = createElement('canvas', 'c1');
+const c2 = createElement('canvas', 'c2');
+const c3 = createElement('canvas', 'c3');
 const ctx1 = c1.getContext('2d') as CanvasRenderingContext2D;
 const ctx2 = c2.getContext('2d') as CanvasRenderingContext2D;
 const ctx3 = c3.getContext('2d') as CanvasRenderingContext2D;

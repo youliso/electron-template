@@ -22,6 +22,8 @@
     "allowJs": true,
     "importHelpers": true,
     "jsx": "preserve",
+    "jsxFactory": "h",
+    // "jsxFragmentFactory": "F",
     "allowSyntheticDefaultImports": true,
     "paths": {
       "@/*": ["src/*"]
