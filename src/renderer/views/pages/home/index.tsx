@@ -9,6 +9,7 @@ import {
 } from '@/renderer/common/window';
 import { dateFormat } from '@/utils';
 import { shortcutGetAll } from '@/renderer/common/shortcut';
+import { menuShow } from '@/renderer/common/menu';
 import indexCss from './scss/index.lazy.scss';
 
 const args = getCustomize();
@@ -81,7 +82,7 @@ export default class Home extends View {
     }
 
     return (
-      <div class="info">
+      <div class="info" onMouseDown={(e) => e.button === 2 && menuShow()}>
         {this.testRender()}
         <button class="but" onClick={() => baidu()}>
           百度

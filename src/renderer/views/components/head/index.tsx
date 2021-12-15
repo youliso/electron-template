@@ -3,6 +3,7 @@ import { getCustomize } from '@/renderer/store';
 import { windowClose, windowMaxMin, windowMin } from '@/renderer/common/window';
 import indexCss from './scss/index.lazy.scss';
 
+const args = getCustomize();
 export default class Head extends Component {
   styles = [indexCss];
   isHead: boolean;
@@ -23,12 +24,11 @@ export default class Head extends Component {
   }
 
   render() {
-    const args = getCustomize();
     const content = <div class="content"></div>;
     const title = <div class="title">{args.title}</div>;
     if (window.environment.platform === 'darwin') {
       content.appendChild(<div></div>);
-      content.appendChild(<div class="title">{args.title}</div>);
+      content.appendChild(title);
     } else {
       content.appendChild(title);
       if (this.isHead) content.appendChild(this.events());
