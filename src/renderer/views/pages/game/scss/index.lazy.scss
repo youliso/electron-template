@@ -1,0 +1,23 @@
+.info {
+  position: absolute;
+  top: 32px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #000;
+
+  >.tip{
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: var(--white);
+  }
+
+  > .game {
+    display: flex;
+    justify-content: center;
+    > canvas {
+      width: 75%;
+    }
+  }
+}

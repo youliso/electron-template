@@ -99,6 +99,9 @@ export default class Home extends View {
         <button class="but" onClick={() => Router.push('/music')}>
           music
         </button>
+        <button class="but" onClick={() => Router.push('/game')}>
+          game
+        </button>
       </div>
     );
   }
