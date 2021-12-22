@@ -1,8 +1,8 @@
-import { h, View } from '@/renderer/common/h';
+import { h } from '@/renderer/common/h';
 import Router from '@/renderer/router';
 import indexCss from './scss/index.lazy.scss';
 
-export default class About extends View {
+export default class About implements View {
   styles = [indexCss];
 
   render() {

@@ -25,17 +25,19 @@ interface Route {
 interface VSource {
   $name?: string;
   $el?: HTMLElement;
-  styles: any[];
-  onLoad: (params?: any) => void;
-  onReady: () => void;
-  onUnmounted: () => void;
-  onActivated: (params?: any) => void;
-  onDeactivated: () => void;
+  styles?: any[];
+  onLoad?: (params?: any) => void;
+  onReady?: () => void;
+  onUnmounted?: () => void;
+  onActivated?: (params?: any) => void;
+  onDeactivated?: () => void;
   render?: () => HTMLElement | HTMLElement[];
 }
 
 interface Component extends VSource {
   $currentName?: string;
+  onLoad?: () => void;
+  onActivated?: () => void;
 }
 
 interface View extends VSource {

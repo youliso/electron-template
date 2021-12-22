@@ -1,4 +1,4 @@
-import { h, f, View } from '@/renderer/common/h';
+import { h, f } from '@/renderer/common/h';
 import { getCustomize, testProxy, testProxyRemove } from '@/renderer/store';
 import Router from '@/renderer/router';
 import {
@@ -14,7 +14,7 @@ import indexCss from './scss/index.lazy.scss';
 
 const args = getCustomize();
 
-export default class Home extends View {
+export default class Home implements View {
   private testData: ProxyValue<string> | undefined;
   private testInterval: NodeJS.Timer | undefined;
   styles = [indexCss];

@@ -1,4 +1,4 @@
-import { h } from '@/renderer/common/h';
+import { h, renderComponent, unComponent } from '@/renderer/common/h';
 
 class GlobalComponent {
   private static instance: GlobalComponent;
@@ -17,22 +17,12 @@ class GlobalComponent {
   }
 
   render(key: string, component: Component) {
-    for (const css of component.styles) css.use();
-    component.onLoad();
-    const el = h('div', { class: key.toLowerCase() });
-    if (component.render) {
-      const cl = component.render();
-      if (cl) {
-        if (Array.isArray(cl)) for (const v of cl) el.appendChild(v);
-        else el.appendChild(cl);
-      }
-    }
-    component.$currentName = 'global';
-    component.$name = key;
-    component.$el = el;
-    component.onReady();
+    renderComponent(false, component, {
+      currentName: 'global',
+      currentEl: this.el,
+      key
+    });
     this.components[key] = component;
-    this.el.appendChild(el);
   }
 
   get(key?: string) {
@@ -42,16 +32,12 @@ class GlobalComponent {
   unRender(key?: string) {
     if (key) {
       const component = this.components[key];
-      component.onUnmounted();
-      for (const css of component.styles) css.unuse();
-      this.el.removeChild(component.$el as HTMLElement);
-    } else {
-      for (const componentKey in this.components) {
-        const component = this.components[componentKey];
-        component.onUnmounted();
-        for (const css of component.styles) css.unuse();
-        this.el.removeChild(component.$el as HTMLElement);
-      }
+      unComponent(false, component);
+      return;
+    }
+    for (const componentKey in this.components) {
+      const component = this.components[componentKey];
+      unComponent(false, component);
     }
   }
 }

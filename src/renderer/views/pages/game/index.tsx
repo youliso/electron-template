@@ -1,8 +1,8 @@
-import { h, View } from '@/renderer/common/h';
+import { h } from '@/renderer/common/h';
 import indexCss from './scss/index.lazy.scss';
 import { nes_load, nes_un } from './demo';
 
-export default class Game extends View {
+export default class Game implements View {
   styles = [indexCss];
 
   onUnmounted() {

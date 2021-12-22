@@ -1,15 +1,14 @@
-import { h, Component } from '@/renderer/common/h';
+import { h } from '@/renderer/common/h';
 import { getCustomize } from '@/renderer/store';
 import { windowClose, windowMaxMin, windowMin } from '@/renderer/common/window';
 import indexCss from './scss/index.lazy.scss';
 
 const args = getCustomize();
-export default class Head extends Component {
+export default class Head implements Component {
   styles = [indexCss];
   isHead: boolean;
 
   constructor(isHead: boolean = true) {
-    super();
     this.isHead = isHead;
   }
 

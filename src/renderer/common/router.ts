@@ -1,9 +1,8 @@
-import { h } from '@/renderer/common/h';
+import { renderView, unView } from '@/renderer/common/h';
 
 export default class Router {
   private instances: { [key: string]: View } = {};
 
-  public appDom: HTMLElement = document.body;
   public routes: Route[] = [];
   // 当前路由
   public current: View | undefined;
@@ -63,19 +62,17 @@ export default class Router {
   /**
    * 回退路由
    */
-  async back(path: number = -1, params?: any) {
-    let num = Math.abs(path) | 0;
+  async back(num: number = 1, params?: any) {
     let p = this.history[num];
     if (!p) {
-      console.warn(`beyond the history of back(${path})`);
-      num = this.history.length - 1;
-      p = this.history[num];
+      console.error(`beyond the history of back(${num})`);
+      return;
     }
-    if (params) p.params = params;
+    p.params = params;
     this.history.splice(0, num);
     const route = this.getRoute(p.path);
     if (!route) {
-      console.warn(`beyond the history of ${path}`);
+      console.error(`beyond the history of ${p}`);
       return;
     }
     await this.rIng(route, p.params, false);
@@ -95,103 +92,33 @@ export default class Router {
     let view: View;
     if (route.instance) {
       view = this.instances[View.default.name];
-      const initLoad = !this.instances[View.default.name];
-      if (initLoad) {
+      const isLoad = !view;
+      if (isLoad) {
         view = new View.default() as View;
         view.$instance = true;
         if (!view.$name) view.$name = View.default.name;
       }
-      this.unCurrent();
-      for (const css of view.styles) css.use();
-      if (initLoad) view.onLoad(params);
-      else view.onActivated(params);
-      this.renderView(view, params);
+      if (this.current) this.unCurrent();
+      renderView(isLoad, view, params);
       this.current = view;
-      if (initLoad) view.onReady();
       return;
     }
     view = new View.default() as View;
     if (!view.$name) view.$name = View.default.name;
-    this.unCurrent();
-    for (const css of view.styles) css.use();
-    view.onLoad(params);
-    this.renderView(view, params);
+    if (this.current) this.unCurrent();
+    renderView(false, view, params);
     this.current = view;
-    view.onReady();
   }
 
   private unCurrent() {
-    if (this.current) {
-      if (this.current.$instance) {
-        this.instances[this.current.$name as string] = this.current;
-        if (this.current.components) {
-          for (const componentKey in this.current.components) {
-            const component = this.current.components[componentKey];
-            component.onDeactivated();
-            for (const css of component.styles) css.unuse();
-          }
-        }
-        this.current.onDeactivated();
-      } else {
-        delete this.instances[this.current.$name as string];
-        if (this.current.components) {
-          for (const componentKey in this.current.components) {
-            const component = this.current.components[componentKey];
-            component.onUnmounted();
-            for (const css of component.styles) css.unuse();
-          }
-        }
-        this.current.onUnmounted();
-      }
-      this.appDom.removeChild(this.current.$el as HTMLElement);
-      for (const css of this.current.styles) css.unuse();
-      delete this.current;
+    if (!this.current) return;
+    if (this.current.$instance) {
+      this.instances[this.current.$name as string] = this.current;
+      unView(true, this.current);
+    } else {
+      delete this.instances[this.current.$name as string];
+      unView(false, this.current);
     }
-  }
-
-  private renderView(view: View, params?: any) {
-    if (view.$el) {
-      if (view.components) {
-        for (const componentKey in view.components) {
-          const component = view.components[componentKey];
-          for (const css of component.styles) css.use();
-          component.onActivated(params);
-        }
-      }
-      this.appDom.appendChild(view.$el);
-      return;
-    }
-    const viewEl = h('div', { class: 'container' });
-    if (view.render) {
-      const cl = view.render();
-      if (cl) {
-        if (Array.isArray(cl)) for (const v of cl) viewEl.appendChild(v);
-        else viewEl.appendChild(cl);
-      }
-    }
-    if (view.components) {
-      const componentsEl = h('div', { class: 'view components' });
-      for (const componentKey in view.components) {
-        const component = view.components[componentKey];
-        for (const css of component.styles) css.use();
-        component.onLoad();
-        const el = h('div', { class: componentKey.toLowerCase() });
-        if (component.render) {
-          const cl = component.render();
-          if (cl) {
-            if (Array.isArray(cl)) for (const v of cl) el.appendChild(v);
-            else el.appendChild(cl);
-          }
-        }
-        componentsEl.appendChild(el);
-        component.$currentName = view.$name as string;
-        component.$name = componentKey;
-        component.$el = el;
-        component.onReady();
-      }
-      viewEl.appendChild(componentsEl);
-    }
-    this.appDom.appendChild(viewEl);
-    view.$el = viewEl;
+    delete this.current;
   }
 }

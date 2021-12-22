@@ -27,41 +27,6 @@ function transferKnownProperties(source: any, target: any) {
   }
 }
 
-export class Component implements VSource {
-  $currentName: string | undefined;
-  $name: string | undefined;
-  $el: HTMLElement | undefined;
-  styles: any[] = [];
-
-  onLoad() {}
-
-  onReady() {}
-
-  onUnmounted() {}
-
-  onActivated() {}
-
-  onDeactivated() {}
-}
-
-export class View implements VSource {
-  $instance: boolean | undefined;
-  $name: string | undefined;
-  $el: HTMLElement | undefined;
-  styles: any[] = [];
-  components = {};
-
-  onLoad() {}
-
-  onReady() {}
-
-  onUnmounted() {}
-
-  onActivated() {}
-
-  onDeactivated() {}
-}
-
 export type ComponentChild =
   | ComponentChild[]
   | JSX.Element
@@ -126,6 +91,94 @@ export function f({ children }: { children: Node[] }) {
   const element = document.createDocumentFragment();
   children.forEach((node) => element.appendChild(node));
   return element;
+}
+
+export function renderComponent(
+  cache: boolean,
+  component: Component,
+  opt?: {
+    currentName: string;
+    currentEl: HTMLElement;
+    key: string;
+  }
+) {
+  if (component.styles) for (const css of component.styles) css.use();
+  if (cache) component.onActivated && component.onActivated();
+  else component.onLoad && component.onLoad();
+  if (opt) {
+    const el = h('div', { class: opt.key.toLowerCase() });
+    if (component.render) {
+      const cl = component.render();
+      if (cl) {
+        if (Array.isArray(cl)) for (const v of cl) el.appendChild(v);
+        else el.appendChild(cl);
+      }
+    }
+    component.$currentName = opt.currentName;
+    component.$name = opt.key;
+    component.$el = el;
+    opt.currentEl.appendChild(el);
+    component.onReady && component.onReady();
+  }
+}
+
+export function unComponent(cache: boolean, component: Component) {
+  if (cache) component.onDeactivated && component.onDeactivated();
+  else {
+    component.onUnmounted && component.onUnmounted();
+    component.$el && component.$el.parentNode?.removeChild(component.$el);
+  }
+  if (component.styles) for (const css of component.styles) css.unuse();
+}
+
+export function renderView(cache: boolean, view: View, params?: any) {
+  if (view.styles) for (const css of view.styles) css.use();
+  if (!cache && view.onLoad) view.onLoad(params);
+  else if (cache && view.onActivated) view.onActivated(params);
+  if (view.$el) {
+    if (view.components)
+      for (const componentKey in view.components) {
+        const component = view.components[componentKey];
+        renderComponent(true, component);
+      }
+    document.body.appendChild(view.$el);
+    return;
+  }
+  const viewEl = h('div', { class: 'container' });
+  if (view.render) {
+    const cl = view.render();
+    if (cl) {
+      if (Array.isArray(cl)) for (const v of cl) viewEl.appendChild(v);
+      else viewEl.appendChild(cl);
+    }
+  }
+  if (view.components) {
+    const componentsEl = h('div', { class: 'view components' });
+    for (const componentKey in view.components) {
+      const component = view.components[componentKey];
+      renderComponent(false, component, {
+        currentName: view.$name as string,
+        currentEl: componentsEl,
+        key: componentKey
+      });
+    }
+    viewEl.appendChild(componentsEl);
+  }
+  view.$el = viewEl;
+  document.body.appendChild(viewEl);
+  if (!cache && view.onReady) view.onReady();
+}
+
+export function unView(cache: boolean, view: View) {
+  if (view.components)
+    for (const componentKey in view.components) {
+      const component = view.components[componentKey];
+      unComponent(cache, component);
+    }
+  if (cache) view.onDeactivated && view.onDeactivated();
+  else view.onUnmounted && view.onUnmounted();
+  if (view.$el) view.$el.parentNode?.removeChild(view.$el as HTMLElement);
+  if (view.styles) for (const css of view.styles) css.unuse();
 }
 
 declare global {

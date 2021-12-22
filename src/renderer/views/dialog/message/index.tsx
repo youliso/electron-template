@@ -1,4 +1,4 @@
-import { h, View } from '@/renderer/common/h';
+import { h } from '@/renderer/common/h';
 import { getCustomize } from '@/renderer/store';
 import { windowClose, windowMessageSend, windowShow } from '@/renderer/common/window';
 import indexCss from './scss/index.lazy.scss';
@@ -6,7 +6,7 @@ import Head from '@/renderer/views/components/head';
 
 const args = getCustomize();
 
-export default class Message extends View {
+export default class Message implements View {
   styles = [indexCss];
   components = {
     Head: new Head(false)
