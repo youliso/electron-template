@@ -122,6 +122,10 @@ export function h(
   return element;
 }
 
+export function f({ children }: BaseProps) {
+  return h('span', null, children);
+}
+
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace JSX {

@@ -23,7 +23,7 @@
     "importHelpers": true,
     "jsx": "preserve",
     "jsxFactory": "h",
-    // "jsxFragmentFactory": "F",
+    "jsxFragmentFactory": "f",
     "allowSyntheticDefaultImports": true,
     "paths": {
       "@/*": ["src/*"]

@@ -1,4 +1,4 @@
-import { h, View } from '@/renderer/common/h';
+import { h, f, View } from '@/renderer/common/h';
 import { getCustomize, testProxy, testProxyRemove } from '@/renderer/store';
 import Router from '@/renderer/router';
 import {
@@ -99,9 +99,11 @@ export default class Home extends View {
         <button class="but" onClick={() => Router.push('/music')}>
           music
         </button>
-        <button class="but" onClick={() => Router.push('/game')}>
-          game
-        </button>
+        <>
+          <button class="but" onClick={() => Router.push('/game')}>
+            game
+          </button>
+        </>
       </div>
     );
   }

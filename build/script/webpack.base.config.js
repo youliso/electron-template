@@ -34,7 +34,7 @@ module.exports = {
               transform: {
                 react: {
                   pragma: 'h',
-                  // pragmaFrag: 'F',
+                  pragmaFrag: 'f',
                   throwIfNamespace: true,
                   development: false,
                   useBuiltins: false
