@@ -6,7 +6,7 @@
  */
 
 function applyChild(element: HTMLElement, child: ComponentChild) {
-  if (child instanceof HTMLElement) element.appendChild(child);
+  if (child instanceof HTMLElement || child instanceof DocumentFragment) element.appendChild(child);
   else if (typeof child === 'string' || typeof child === 'number')
     element.appendChild(document.createTextNode(child.toString()));
   else console.warn('Unknown type to append: ', child);
@@ -122,8 +122,10 @@ export function h(
   return element;
 }
 
-export function f({ children }: BaseProps) {
-  return h('span', null, children);
+export function f({ children }: { children: Node[] }) {
+  const element = document.createDocumentFragment();
+  children.forEach((node) => element.appendChild(node));
+  return element;
 }
 
 declare global {
