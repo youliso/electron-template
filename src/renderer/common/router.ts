@@ -1,4 +1,4 @@
-import { createElement } from '@/renderer/common/h';
+import { h } from '@/renderer/common/h';
 
 export default class Router {
   private instances: { [key: string]: View } = {};
@@ -161,7 +161,7 @@ export default class Router {
       this.appDom.appendChild(view.$el);
       return;
     }
-    const viewEl = createElement('div', 'container');
+    const viewEl = h('div', { class: 'container' });
     if (view.render) {
       const cl = view.render();
       if (cl) {
@@ -170,12 +170,12 @@ export default class Router {
       }
     }
     if (view.components) {
-      const componentsEl = createElement('div', 'view components');
+      const componentsEl = h('div', { class: 'view components' });
       for (const componentKey in view.components) {
         const component = view.components[componentKey];
         for (const css of component.styles) css.use();
         component.onLoad();
-        const el = createElement('div', componentKey.toLowerCase());
+        const el = h('div', { class: componentKey.toLowerCase() });
         if (component.render) {
           const cl = component.render();
           if (cl) {

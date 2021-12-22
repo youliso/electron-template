@@ -12,7 +12,7 @@ interface Ipc {
 interface Environment {
   EOL: string;
   systemVersion: string;
-  platform: string;
+  platform: NodeJS.Platform;
   single: boolean;
 }
 

@@ -62,23 +62,6 @@ export class View implements VSource {
   onDeactivated() {}
 }
 
-export function createElement<K extends keyof HTMLElementTagNameMap>(
-  el: K,
-  css?: string | string[] | null,
-  text?: string,
-  html?: string
-) {
-  const dom = document.createElement(el);
-  if (css) {
-    if (typeof css === 'string') dom.setAttribute('class', css);
-    else dom.setAttribute('class', css.join(' '));
-  }
-  if (text) dom.textContent = text;
-  if (html) dom.innerHTML = html;
-  return dom;
-}
-
-
 export type ComponentChild =
   | ComponentChild[]
   | JSX.Element
