@@ -16,20 +16,20 @@ class GlobalComponent {
     document.body.appendChild(this.el);
   }
 
-  render(key: string, component: Component) {
-    renderComponent(false, component, {
-      currentName: 'global',
-      currentEl: this.el,
-      key
+  async use(mod: Promise<any>, key?: string) {
+    await mod.then((node: any) => {
+      key = key || (node.default.name as string);
+      const component = new node.default() as Component;
+      renderComponent(false, component, {
+        currentName: 'global',
+        currentEl: this.el,
+        key
+      });
+      this.components[key] = component;
     });
-    this.components[key] = component;
   }
 
-  get(key?: string) {
-    return key ? this.components[key] : this.components;
-  }
-
-  unRender(key?: string) {
+  unuse(key?: string) {
     if (key) {
       const component = this.components[key];
       unComponent(false, component);
@@ -39,6 +39,10 @@ class GlobalComponent {
       const component = this.components[componentKey];
       unComponent(false, component);
     }
+  }
+
+  get(key?: string) {
+    return key ? this.components[key] : this.components;
   }
 }
 

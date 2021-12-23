@@ -39,23 +39,23 @@ export class App {
    * @param mod
    */
   async use(mod: Promise<any> | Promise<any>[]) {
-    if (Array.isArray(mod)) {
-      await Promise.all(mod)
-        .then((res) => {
-          for (let i = 0, len = res.length; i < len; i++) {
-            this.modular[res[i].default.name] = new res[i].default();
-            this.modular[res[i].default.name].on();
-          }
-        })
-        .catch(logError);
-    } else {
+    if (!Array.isArray(mod)) {
       await mod
         .then((req) => {
           this.modular[req.default.name] = new req.default();
           this.modular[req.default.name].on();
         })
         .catch(logError);
+      return;
     }
+    await Promise.all(mod)
+      .then((res) => {
+        for (let i = 0, len = res.length; i < len; i++) {
+          this.modular[res[i].default.name] = new res[i].default();
+          this.modular[res[i].default.name].on();
+        }
+      })
+      .catch(logError);
   }
 
   /**

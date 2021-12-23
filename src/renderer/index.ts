@@ -8,7 +8,6 @@ import '@/renderer/views/scss/index.scss';
 windowLoad(async (_, args) => {
   document.body.setAttribute('platform', window.environment.platform);
   setCustomize(args);
-  const Head = await import('./views/components/head');
-  GlobalComponent.render('Head', new Head.default());
+  await GlobalComponent.use(import('./views/components/head'));
   routerInit(args.route as string);
 });
