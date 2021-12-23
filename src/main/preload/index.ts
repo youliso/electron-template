@@ -1,8 +1,7 @@
 import type { IpcRendererEvent } from 'electron';
 import { contextBridge, ipcRenderer } from 'electron';
 import { EOL } from 'os';
-
-const { single } = require('@/cfg/window.json');
+import { single } from '@/cfg/window.json';
 
 contextBridge.exposeInMainWorld('ipc', {
   send: (channel: string, args?: any) => ipcRenderer.send(channel, args),

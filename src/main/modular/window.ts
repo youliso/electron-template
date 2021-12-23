@@ -2,8 +2,7 @@ import type { BrowserWindowConstructorOptions, LoadFileOptions, LoadURLOptions }
 import { join } from 'path';
 import { app, screen, ipcMain, BrowserWindow } from 'electron';
 import { isNull } from '@/utils';
-
-const windowCfg = require('@/cfg/window.json');
+import windowCfg from '@/cfg/window.json';
 
 /**
  * 窗口配置
@@ -71,8 +70,8 @@ export function browserWindowInit(args: BrowserWindowConstructorOptions): Browse
   //子窗体关闭父窗体获焦 https://github.com/electron/electron/issues/10616
   if (isParentId && parenWin) {
     win.once('closed', () => {
-      parenWin?.focus()
-    })
+      parenWin?.focus();
+    });
   }
   win.customize = {
     id: win.id,
@@ -110,7 +109,7 @@ export class Window {
     return Window.instance;
   }
 
-  constructor() { }
+  constructor() {}
 
   /**
    * 获取窗口

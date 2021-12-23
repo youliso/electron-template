@@ -6,8 +6,7 @@ import { delDir } from '@/main/modular/file';
 import { ipcMain, app } from 'electron';
 import Window from '@/main/modular/window';
 import { logError } from '@/main/modular/log';
-
-const updateCfg = require('@/cfg/update.json');
+import updateCfg from '@/cfg/update.json';
 
 /**
  * 更新模块 https://www.electron.build/auto-update
@@ -17,6 +16,7 @@ export default class Update {
 
   constructor() {
     const options: AllPublishOptions = {
+      // @ts-ignore
       provider: updateCfg.provider,
       url: updateCfg.url
     };

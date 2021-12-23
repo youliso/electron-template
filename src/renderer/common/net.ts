@@ -1,6 +1,5 @@
 import { queryParams } from '@/utils';
-
-const { timeout, appUrl } = require('@/cfg/net.json');
+import { timeout, appUrl } from '@/cfg/net.json';
 
 export interface RequestOpt extends RequestInit {
   isStringify?: boolean; //是否stringify参数（非GET请求使用）

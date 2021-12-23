@@ -4,8 +4,7 @@ import Global from './global';
 import Window from './window';
 import { io, Socket as SocketIo } from 'socket.io-client';
 import { logError } from '@/main/modular/log';
-
-const { socketUrl, socketPath } = require('@/cfg/net.json');
+import { socketUrl, socketPath } from '@/cfg/net.json';
 
 /**
  * Socket模块

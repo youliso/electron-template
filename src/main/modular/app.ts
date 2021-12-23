@@ -3,9 +3,7 @@ import { resolve } from 'path';
 import { logError } from '@/main/modular/log';
 import Shortcut from '@/main/modular/shortcut';
 import Window from '@/main/modular/window';
-
-const { single } = require('@/cfg/window.json');
-const { initRoute } = require('@/cfg/window.json');
+import { single, initRoute } from '@/cfg/window.json';
 
 export class App {
   private static instance: App;
