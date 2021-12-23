@@ -44,9 +44,8 @@ export default class Home implements View {
   }
 
   testRender() {
-    const test = <div class="text"></div>;
+    const test = <div class="text">{dateFormat()}</div>;
     this.testData = testProxy(dateFormat(), test);
-    test.textContent = dateFormat();
     this.testInterval = setInterval(() => {
       if (this.testData) this.testData.value = dateFormat();
     }, 1000);
