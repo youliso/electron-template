@@ -1,4 +1,4 @@
-import { CookiesGetFilter, CookiesSetDetails } from 'electron';
+import type { CookiesGetFilter, CookiesSetDetails } from 'electron';
 
 /**
  * 设置http/https指定域名请求头

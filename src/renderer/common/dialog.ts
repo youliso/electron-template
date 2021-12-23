@@ -1,4 +1,4 @@
-import { OpenDialogOptions } from 'electron';
+import type { OpenDialogOptions } from 'electron';
 
 /**
  * 打开dialog

@@ -1,4 +1,4 @@
-import { IpcRendererEvent, BrowserWindowConstructorOptions } from 'electron';
+import type { IpcRendererEvent, BrowserWindowConstructorOptions } from 'electron';
 import { getCustomize } from '@/renderer/store';
 
 /**

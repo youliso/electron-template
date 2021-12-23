@@ -1,4 +1,4 @@
-import { IpcRendererEvent } from 'electron';
+import type { IpcRendererEvent } from 'electron';
 
 /**
  * 更新监听

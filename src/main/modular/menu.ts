@@ -1,11 +1,5 @@
-import {
-  BrowserWindow,
-  ipcMain,
-  Menu,
-  nativeImage,
-  MenuItem,
-  MenuItemConstructorOptions
-} from 'electron';
+import type { MenuItem, MenuItemConstructorOptions } from 'electron';
+import { BrowserWindow, ipcMain, Menu, nativeImage } from 'electron';
 import { join } from 'path';
 import testIcon from '@/assets/icon/test.png';
 

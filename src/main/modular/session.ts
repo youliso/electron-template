@@ -1,4 +1,5 @@
-import { ipcMain, session, CookiesGetFilter, CookiesSetDetails } from 'electron';
+import type { CookiesGetFilter, CookiesSetDetails } from 'electron';
+import { ipcMain, session } from 'electron';
 
 /**
  * 监听

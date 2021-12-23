@@ -1,6 +1,7 @@
+import type { AllPublishOptions } from 'builder-util-runtime';
+import type { AppUpdater } from 'electron-updater';
 import { join } from 'path';
-import { AppUpdater, AppImageUpdater, MacUpdater, NsisUpdater } from 'electron-updater';
-import { AllPublishOptions } from 'builder-util-runtime';
+import { AppImageUpdater, MacUpdater, NsisUpdater } from 'electron-updater';
 import { delDir } from '@/main/modular/file';
 import { ipcMain, app } from 'electron';
 import Window from '@/main/modular/window';
