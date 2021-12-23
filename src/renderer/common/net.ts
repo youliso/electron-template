@@ -2,11 +2,10 @@ import { queryParams } from '@/utils';
 
 const { timeout, appUrl } = require('@/cfg/net.json');
 
-export interface NetOpt extends RequestInit {
+export interface RequestOpt extends RequestInit {
   isStringify?: boolean; //是否stringify参数（非GET请求使用）
   isHeaders?: boolean; //是否获取headers
   data?: any;
-  body?: any;
   timeout?: number;
   type?: 'TEXT' | 'JSON' | 'BUFFER' | 'BLOB'; //返回数据类型
 }
@@ -40,7 +39,7 @@ function timeOutAbort(outTime: number): TimeOutAbort {
  * @param url
  * @param sendData
  */
-function fetchPromise<T>(url: string, sendData: NetOpt): Promise<T> {
+function fetchPromise<T>(url: string, sendData: RequestOpt): Promise<T> {
   return fetch(url, sendData)
     .then((res) => {
       if (res.status >= 200 && res.status < 300) return res;
@@ -85,11 +84,11 @@ function fetchPromise<T>(url: string, sendData: NetOpt): Promise<T> {
  * @param url
  * @param param
  */
-export default async function net<T>(url: string, param: NetOpt = {}): Promise<T> {
+export default async function request<T>(url: string, param: RequestOpt = {}): Promise<T> {
   if (!url.startsWith('http://') && !url.startsWith('https://')) url = appUrl + url;
   let abort: TimeOutAbort | null = null;
   if (!param.signal) abort = timeOutAbort(param.timeout || timeout);
-  let sendData: NetOpt = {
+  let sendData: RequestOpt = {
     isHeaders: param.isHeaders,
     isStringify: param.isStringify,
     headers: new Headers(
@@ -105,9 +104,7 @@ export default async function net<T>(url: string, param: NetOpt = {}): Promise<T
     // timeout只会在未指定signal下生效
     signal: abort ? abort.signal : param.signal
   };
-  if (param.body) {
-    sendData.body = param.body;
-  } else if (param.data) {
+  if (param.data) {
     if (sendData.method === 'GET') url = `${url}?${queryParams(param.data)}`;
     else
       sendData.body = sendData.isStringify ? queryParams(param.data) : JSON.stringify(param.data);

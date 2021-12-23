@@ -1,5 +1,6 @@
 {
   "timeout": 3000,
   "appUrl": "http://127.0.0.1:3000/",
-  "socketUrl": "http://127.0.0.1:3000/"
+  "socketUrl": "http://127.0.0.1:3000/",
+  "socketPath": "/io"
 }

@@ -5,7 +5,7 @@ import Window from './window';
 import { io, Socket as SocketIo } from 'socket.io-client';
 import { logError } from '@/main/modular/log';
 
-const { socketUrl } = require('@/cfg/net.json');
+const { socketUrl, socketPath } = require('@/cfg/net.json');
 
 /**
  * Socket模块
@@ -19,7 +19,7 @@ export default class Socket {
    * url https://socket.io/docs/v3/client-api/#new-Manager-url-options
    */
   public opts: Partial<ManagerOptions & SocketOptions> = {
-    path: '/io',
+    path: socketPath,
     auth: {
       authorization: Global.getGlobal<string>('authorization')
     }
