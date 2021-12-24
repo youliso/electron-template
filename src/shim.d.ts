@@ -24,7 +24,7 @@ interface Route {
 
 interface VSource {
   $name?: string;
-  $el?: HTMLElement | DocumentFragment;
+  $el?: HTMLElement;
   styles?: any[];
   onLoad?: (params?: any) => void;
   onReady?: () => void;
@@ -38,6 +38,7 @@ interface Component extends VSource {
   $currentName?: string;
   onLoad?: () => void;
   onActivated?: () => void;
+  render?: () => HTMLElement;
 }
 
 interface View extends VSource {

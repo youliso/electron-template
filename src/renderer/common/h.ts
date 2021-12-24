@@ -106,18 +106,13 @@ export function renderComponent(
   if (cache) component.onActivated && component.onActivated();
   else component.onLoad && component.onLoad();
   if (opt) {
-    const el = f({ children: null });
-    if (component.render) {
-      const cl = component.render();
-      if (cl) {
-        if (Array.isArray(cl)) for (const v of cl) el.appendChild(v);
-        else el.appendChild(cl);
-      }
-    }
+    const el = component.render ? component.render() : null;
     component.$currentName = opt.currentName;
     component.$name = opt.key;
-    component.$el = el;
-    opt.currentEl.appendChild(el);
+    if (el) {
+      component.$el = el;
+      opt.currentEl.appendChild(el);
+    }
     component.onReady && component.onReady();
   }
 }
