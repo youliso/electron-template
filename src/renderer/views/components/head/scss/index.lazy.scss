@@ -1,17 +1,17 @@
 [platform='darwin'] {
-  .components > .head > .head-info > .content {
+  .components > .head-info > .content {
     padding-right: 10px;
   }
 }
 
 [platform='win32'],
 [platform='linux'] {
-  .components > .head > .head-info > .content {
+  .components > .head-info > .content {
     padding-left: 10px;
   }
 }
 
-.components > .head > .head-info {
+.components > .head-info {
   position: absolute;
   top: 0;
   left: 0;
@@ -39,7 +39,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-right: 5px;
+      padding-right: 10px;
 
       > .event {
         clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);

@@ -87,9 +87,9 @@ export function h(
   return element;
 }
 
-export function f({ children }: { children: Node[] }) {
+export function f({ children }: { children: Node[] | null }) {
   const element = document.createDocumentFragment();
-  children.forEach((node) => element.appendChild(node));
+  if (children) children.forEach((node) => element.appendChild(node));
   return element;
 }
 
@@ -106,7 +106,7 @@ export function renderComponent(
   if (cache) component.onActivated && component.onActivated();
   else component.onLoad && component.onLoad();
   if (opt) {
-    const el = h('div', { class: opt.key.toLowerCase() });
+    const el = f({ children: null });
     if (component.render) {
       const cl = component.render();
       if (cl) {

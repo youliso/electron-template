@@ -24,7 +24,7 @@ interface Route {
 
 interface VSource {
   $name?: string;
-  $el?: HTMLElement;
+  $el?: HTMLElement | DocumentFragment;
   styles?: any[];
   onLoad?: (params?: any) => void;
   onReady?: () => void;
