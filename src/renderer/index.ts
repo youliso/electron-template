@@ -5,9 +5,9 @@ import GlobalComponent from './common/globalComponent';
 import '@/renderer/views/scss/color.scss';
 import '@/renderer/views/scss/index.scss';
 
-windowLoad(async (_, args) => {
+windowLoad((_, args) => {
   document.body.setAttribute('platform', window.environment.platform);
   setCustomize(args);
-  await GlobalComponent.use(import('./views/components/head'));
+  GlobalComponent.use(import('./views/components/head'), 'head');
   routerInit(args.route as string);
 });
