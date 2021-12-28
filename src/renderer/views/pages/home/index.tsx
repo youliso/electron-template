@@ -10,6 +10,7 @@ import {
 import { dateFormat } from '@/utils';
 import { shortcutGetAll } from '@/renderer/common/shortcut';
 import { menuShow } from '@/renderer/common/menu';
+import { logInfo } from '@/renderer/common';
 import indexCss from './scss/index.lazy.scss';
 
 const args = getCustomize();
@@ -54,29 +55,26 @@ export default class Home implements View {
 
   render() {
     function tk() {
-      windowCreate({
-        customize: {
+      windowCreate(
+        {
           title: '弹框测试',
           route: '/message',
           parentId: args.id,
           data: { text: '123' }
         },
-        width: 400,
-        height: 200,
-        modal: true,
-        resizable: true
-      });
+        {
+          width: 400,
+          height: 200,
+          modal: true,
+          resizable: true
+        }
+      );
     }
 
     function baidu() {
       windowCreate({
-        customize: {
-          url: 'https://baidu.com/',
-          parentId: args.id
-        },
-        width: 800,
-        height: 600,
-        resizable: true
+        url: 'https://baidu.com/',
+        parentId: args.id
       });
     }
 

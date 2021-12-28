@@ -38,7 +38,7 @@ declare namespace Electron {
   }
 
   interface BrowserWindowConstructorOptions {
-    customize: Customize;
+    customize?: Customize;
   }
 }
 

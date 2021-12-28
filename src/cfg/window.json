@@ -1,8 +1,12 @@
 {
-  "width": 800,
-  "height": 600,
-  "backgroundColor": "#ffffff",
-  "initRoute": "/home",
-  "single": true,
-  "title": "electron-template"
+  "isSecondInstanceWin": false,
+  "opt": {
+    "width": 800,
+    "height": 600,
+    "backgroundColor": "#ffffff"
+  },
+  "customize": {
+    "title": "electron-template",
+    "route": "/home"
+  }
 }

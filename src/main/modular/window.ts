@@ -6,20 +6,22 @@ import windowCfg from '@/cfg/window.json';
 
 /**
  * 窗口配置
- * @param args
  */
-export function browserWindowInit(args: BrowserWindowConstructorOptions): BrowserWindow {
-  if (!args || !args.customize) throw new Error('not args');
-  args.minWidth = args.minWidth || args.width || windowCfg.width;
-  args.minHeight = args.minHeight || args.height || windowCfg.height;
-  args.width = args.width || windowCfg.width;
-  args.height = args.height || windowCfg.height;
+export function browserWindowInit(
+  customize: Customize,
+  args: BrowserWindowConstructorOptions = {}
+): BrowserWindow {
+  if (!customize) throw new Error('not customize');
+  args.minWidth = args.minWidth || args.width || windowCfg.opt.width;
+  args.minHeight = args.minHeight || args.height || windowCfg.opt.height;
+  args.width = args.width || windowCfg.opt.width;
+  args.height = args.height || windowCfg.opt.height;
   // darwin下modal会造成整个窗口关闭(?)
   if (process.platform === 'darwin') delete args.modal;
-  const isLocal = !args.customize.route;
+  const isLocal = !customize.route;
   let opt: BrowserWindowConstructorOptions = Object.assign(args, {
     autoHideMenuBar: true,
-    titleBarStyle: args.customize.route ? 'hidden' : 'default',
+    titleBarStyle: customize.route ? 'hidden' : 'default',
     minimizable: true,
     maximizable: true,
     frame: isLocal,
@@ -32,30 +34,27 @@ export function browserWindowInit(args: BrowserWindowConstructorOptions): Browse
       webSecurity: false
     }
   });
-  if (!opt.backgroundColor && windowCfg.backgroundColor)
-    opt.backgroundColor = windowCfg.backgroundColor;
-  const isParentId = !isNull(opt.customize.parentId);
+  if (!opt.backgroundColor && windowCfg.opt.backgroundColor)
+    opt.backgroundColor = windowCfg.opt.backgroundColor;
+  const isParentId = !isNull(customize.parentId);
   let parenWin: BrowserWindow | null = null;
-  if (isParentId) parenWin = Window.getInstance().get(opt.customize.parentId as number);
+  if (isParentId) parenWin = Window.getInstance().get(customize.parentId as number);
   if (isParentId && parenWin) {
     opt.parent = parenWin;
     const currentWH = opt.parent.getBounds();
-    opt.customize.currentWidth = currentWH.width;
-    opt.customize.currentHeight = currentWH.height;
-    opt.customize.currentMaximized = opt.parent.isMaximized();
-    if (opt.customize.currentMaximized) {
+    customize.currentWidth = currentWH.width;
+    customize.currentHeight = currentWH.height;
+    customize.currentMaximized = opt.parent.isMaximized();
+    if (customize.currentMaximized) {
       const displayWorkAreaSize = screen.getPrimaryDisplay().workAreaSize;
       opt.x = ((displayWorkAreaSize.width - (opt.width || 0)) / 2) | 0;
       opt.y = ((displayWorkAreaSize.height - (opt.height || 0)) / 2) | 0;
     } else {
       const currentPosition = opt.parent.getPosition();
       opt.x =
-        (currentPosition[0] + (currentWH.width - (opt.width || opt.customize.currentWidth)) / 2) |
-        0;
+        (currentPosition[0] + (currentWH.width - (opt.width || customize.currentWidth)) / 2) | 0;
       opt.y =
-        (currentPosition[1] +
-          (currentWH.height - (opt.height || opt.customize.currentHeight)) / 2) |
-        0;
+        (currentPosition[1] + (currentWH.height - (opt.height || customize.currentHeight)) / 2) | 0;
     }
   } else {
     const main = Window.getInstance().getMain();
@@ -73,11 +72,9 @@ export function browserWindowInit(args: BrowserWindowConstructorOptions): Browse
       parenWin?.focus();
     });
   }
-  win.customize = {
-    id: win.id,
-    ...opt.customize
-  };
-  if (!win.customize.argv) win.customize.argv = process.argv;
+  if (!customize.argv) customize.argv = process.argv;
+  customize.id = win.id;
+  win.customize = customize;
   return win;
 }
 
@@ -147,25 +144,19 @@ export class Window {
   /**
    * 创建窗口
    * */
-  create(args?: BrowserWindowConstructorOptions) {
-    args = args || {
-      customize: {
-        title: windowCfg.title,
-        route: windowCfg.initRoute
-      }
-    };
-    if (args.customize.isOneWindow) {
+  create(customize: Customize, opt: BrowserWindowConstructorOptions) {
+    if (customize.isOneWindow) {
       for (const i of this.getAll()) {
         if (
-          (args.customize?.route && args.customize.route === i.customize?.route) ||
-          (args.customize?.url && args.customize.url === i.customize?.url)
+          (customize?.route && customize.route === i.customize?.route) ||
+          (customize?.url && customize.url === i.customize?.url)
         ) {
           i.focus();
           return;
         }
       }
     }
-    const win = browserWindowInit(args);
+    const win = browserWindowInit(customize, opt);
     // 路由 > url
     if (!app.isPackaged) {
       //调试模式
@@ -284,7 +275,7 @@ export class Window {
       console.error('Invalid id, the id can not be a empty');
       return;
     }
-    win.setBackgroundColor(args.color || windowCfg.backgroundColor);
+    win.setBackgroundColor(args.color || windowCfg.opt.backgroundColor);
   }
 
   /**
@@ -331,7 +322,7 @@ export class Window {
     // 窗口状态
     ipcMain.handle('window-status', async (event, args) => this.getStatus(args.type, args.id));
     // 创建窗口
-    ipcMain.on('window-new', (event, args) => this.create(args));
+    ipcMain.on('window-new', (event, args) => this.create(args.customize, args.opt));
     // 设置窗口是否置顶
     ipcMain.on('window-always-top-set', (event, args) => this.setAlwaysOnTop(args));
     // 设置窗口大小

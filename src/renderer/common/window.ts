@@ -88,8 +88,8 @@ export function windowMessageSend(
 /**
  * 创建窗口
  */
-export function windowCreate(args: BrowserWindowConstructorOptions) {
-  window.ipc.send('window-new', args);
+export function windowCreate(customize: Customize, opt?: BrowserWindowConstructorOptions) {
+  window.ipc.send('window-new', { customize, opt });
 }
 
 /**

@@ -6,6 +6,7 @@ import Tray from './modular/tray';
 import { logOn } from './modular/log';
 import { pathOn } from './modular/path';
 import { fileOn } from './modular/file';
+import { customize, opt } from '@/cfg/window.json';
 
 await App.start();
 // 主要模块
@@ -25,6 +26,6 @@ await App.use([
   import('./modular/socket')
 ]);
 // 窗口
-Window.create();
+Window.create(customize, opt);
 // 托盘
 Tray.create();

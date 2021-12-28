@@ -17,7 +17,7 @@ config.npmRebuild = true; //是否Rebuild编译
 config.asar = true; //是否asar打包
 
 /** 窗口配置 **/
-windowConfig.title = productName;
+windowConfig.customize.title = productName;
 
 /** win配置 **/
 config.nsis.displayLanguageSelector = false; //安装包语言提示

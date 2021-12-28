@@ -3,7 +3,7 @@ import { resolve } from 'path';
 import { logError } from '@/main/modular/log';
 import Shortcut from '@/main/modular/shortcut';
 import Window from '@/main/modular/window';
-import { single, initRoute } from '@/cfg/window.json';
+import { isSecondInstanceWin, customize, opt } from '@/cfg/window.json';
 
 export class App {
   private static instance: App;
@@ -64,8 +64,8 @@ export class App {
     if (!app.requestSingleInstanceLock()) app.quit();
     else {
       app.on('second-instance', (event, argv) => {
-        // 当运行第二个实例时,将会聚焦到main窗口
-        if (single) {
+        // 当运行第二个实例时是否为创建窗口
+        if (isSecondInstanceWin) {
           const main = Window.getMain();
           if (main) {
             if (main.isMinimized()) main.restore();
@@ -74,12 +74,13 @@ export class App {
           }
           return;
         }
-        Window.create({
-          customize: {
-            route: initRoute,
+        Window.create(
+          {
+            ...customize,
             argv
-          }
-        });
+          },
+          opt
+        );
       });
     }
     // 渲染进程崩溃监听
@@ -107,7 +108,7 @@ export class App {
   afterOn() {
     // darwin
     app.on('activate', () => {
-      if (Window.getAll().length === 0) Window.create();
+      if (Window.getAll().length === 0) Window.create(customize, opt);
     });
     // 获得焦点时发出
     app.on('browser-window-focus', () => {
