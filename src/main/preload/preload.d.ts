@@ -13,7 +13,7 @@ interface Environment {
   EOL: string;
   systemVersion: string;
   platform: NodeJS.Platform;
-  single: boolean;
+  isSecondInstanceWin: boolean;
 }
 
 declare global {
