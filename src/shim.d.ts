@@ -1,20 +1,4 @@
-type ProxyValue<T> = T & { value: T };
-
-interface Store {
-  set<Value>(key: string, value: Value): void;
-
-  get<Value>(key: string): Value | undefined;
-
-  setProxy<T>(
-    key: string,
-    value: T,
-    callback?: (value: any, p: string, target: any) => void
-  ): ProxyValue<T>;
-
-  getProxy<T>(key: string): ProxyValue<T>;
-
-  removeProxy<T>(key: string): void;
-}
+type RefValue<T> = { value: T };
 
 interface Route {
   path: string;

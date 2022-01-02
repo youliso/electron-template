@@ -9,9 +9,9 @@ class Stores {
 
   public proxyData: { [key: string]: { proxy: any; revoke: () => void } } = {};
 
-  static getInstance(): Store {
+  static getInstance() {
     if (!Stores.instance) Stores.instance = new Stores();
-    return Stores.instance as Store;
+    return Stores.instance;
   }
 
   constructor() {}
@@ -73,44 +73,70 @@ class Stores {
     }
     cur[lastKey] = value;
   }
+}
+const Store = Stores.getInstance();
 
-  setProxy(...arg: any) {
-    if (arg.length !== 3) throw new Error('无参数');
-    const key: string = arg[0];
-    const value: any = arg[1];
-    const callback: Function = arg[2];
-    const proxyData = this.proxyData[key];
-    if (proxyData) proxyData.revoke();
-    let data = value;
-    if (typeof value !== 'object' && !Array.isArray(value)) data = { value };
-    const ob = Proxy.revocable(data, {
-      get: (target, p) => {
-        return target[p];
-      },
-      set: (target, p, value) => {
-        if (target[p] !== value) {
-          target[p] = value;
-          callback(value, p as string, target);
-        }
-        return true;
+function revocable(data: any, callback: Function) {
+  return Proxy.revocable(data, {
+    get: (target, p) => {
+      return target[p];
+    },
+    set: (target, p, value) => {
+      if (target[p] !== value) {
+        target[p] = value;
+        callback(value, p as string, target);
       }
-    });
-    this.proxyData[key] = ob;
-    return ob.proxy;
-  }
-
-  getProxy<T>(key: string): T {
-    const proxyData = this.proxyData[key];
-    return proxyData ? proxyData.proxy : null;
-  }
-
-  removeProxy(key: string) {
-    const proxyData = this.proxyData[key];
-    if (proxyData) {
-      proxyData.revoke();
-      delete this.proxyData[key];
+      return true;
     }
-  }
+  });
 }
 
-export default Stores.getInstance();
+export default Store;
+
+export function ref<T>(
+  key: string,
+  value?: T,
+  callback?: (value: any, p: string, target: any) => void
+): RefValue<T>;
+export function ref(key: string, value?: any, callback?: Function) {
+  if (typeof key === 'string' && !value && !callback) return Store.proxyData[key]?.proxy;
+  if (Store.proxyData[key]) {
+    console.warn(`[ref] ${key} exists`);
+    return;
+  }
+  if (!value || !callback) {
+    console.warn(`[ref] ${key} not value|callback`);
+    return;
+  }
+  const ob = revocable({ value }, callback);
+  Store.proxyData[key] = ob;
+  return ob.proxy;
+}
+
+export function reactive<T>(
+  key: string,
+  value?: T,
+  callback?: (value: any, p: string, target: any) => void
+): T;
+export function reactive(key: string, value?: any, callback?: Function) {
+  if (typeof key === 'string' && !value && !callback) return Store.proxyData[key]?.proxy;
+  if (Store.proxyData[key]) {
+    console.warn(`[reactive] ${key} exists`);
+    return;
+  }
+  if (!value || !callback) {
+    console.warn(`[reactive] ${key} not value|callback`);
+    return;
+  }
+  const ob = revocable(value, callback);
+  Store.proxyData[key] = ob;
+  return ob.proxy;
+}
+
+export function revokeProxy(key: string) {
+  const proxyData = Store.proxyData[key];
+  if (proxyData) {
+    proxyData.revoke();
+    delete Store.proxyData[key];
+  }
+}

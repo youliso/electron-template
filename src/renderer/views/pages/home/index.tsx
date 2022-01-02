@@ -1,5 +1,6 @@
 import { h, f } from '@/renderer/common/h';
-import { getCustomize, testProxy, testProxyRemove } from '@/renderer/store';
+import { ref, revokeProxy } from '@/renderer/common/store';
+import { getCustomize } from '@/renderer/store';
 import Router from '@/renderer/router';
 import {
   windowCreate,
@@ -10,13 +11,12 @@ import {
 import { dateFormat } from '@/utils';
 import { shortcutGetAll } from '@/renderer/common/shortcut';
 import { menuShow } from '@/renderer/common/menu';
-import { logInfo } from '@/renderer/common';
 import indexCss from './scss/index.lazy.scss';
 
 const args = getCustomize();
 
 export default class Home implements View {
-  private testData: ProxyValue<string> | undefined;
+  private testData: RefValue<string> | undefined;
   private testInterval: NodeJS.Timer | undefined;
   styles = [indexCss];
 
@@ -29,13 +29,13 @@ export default class Home implements View {
   }
 
   onUnmounted() {
-    if (this.testData) testProxyRemove();
+    if (this.testData) revokeProxy('test');
     if (this.testInterval) clearInterval(this.testInterval);
     this.unTest();
   }
 
   onTest() {
-    windowMessageOn('test', (event, args) => {
+    windowMessageOn('test', (_, args) => {
       console.log(args);
     });
   }
@@ -46,9 +46,9 @@ export default class Home implements View {
 
   testRender() {
     const test = <div class="text">{dateFormat()}</div>;
-    this.testData = testProxy(dateFormat(), test);
+    this.testData = ref('test', dateFormat(), (value) => (test.textContent = value));
     this.testInterval = setInterval(() => {
-      if (this.testData) this.testData.value = dateFormat();
+      (this.testData as RefValue<string>).value = dateFormat();
     }, 1000);
     return test;
   }
