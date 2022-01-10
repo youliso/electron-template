@@ -120,6 +120,77 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
+"@serialport/binding-abstract@9.2.3":
+  version "9.2.3"
+  resolved "https://registry.npmmirror.com/@serialport/binding-abstract/download/@serialport/binding-abstract-9.2.3.tgz#e7dd273357b6a698af7ad58db6f57f62443a0acb"
+  integrity sha1-590nM1e2ppivetWNtvV/YkQ6Css=
+  dependencies:
+    debug "^4.3.2"
+
+"@serialport/binding-mock@9.2.4":
+  version "9.2.4"
+  resolved "https://registry.npmmirror.com/@serialport/binding-mock/download/@serialport/binding-mock-9.2.4.tgz#8adf34742abcee80919e19f1266423ce1c9407e2"
+  integrity sha1-it80dCq87oCRnhnxJmQjzhyUB+I=
+  dependencies:
+    "@serialport/binding-abstract" "9.2.3"
+    debug "^4.3.2"
+
+"@serialport/bindings@9.2.8":
+  version "9.2.8"
+  resolved "https://registry.npmmirror.com/@serialport/bindings/download/@serialport/bindings-9.2.8.tgz#59c2be09d91df922d56de31cb9e21c6736004e39"
+  integrity sha512-hSLxTe0tADZ3LMMGwvEJWOC/TaFQTyPeFalUCsJ1lSQ0k6bPF04JwrtB/C81GetmDBTNRY0GlD0SNtKCc7Dr5g==
+  dependencies:
+    "@serialport/binding-abstract" "9.2.3"
+    "@serialport/parser-readline" "9.2.4"
+    bindings "^1.5.0"
+    debug "^4.3.2"
+    nan "^2.15.0"
+    prebuild-install "^7.0.0"
+
+"@serialport/parser-byte-length@9.2.4":
+  version "9.2.4"
+  resolved "https://registry.npmmirror.com/@serialport/parser-byte-length/download/@serialport/parser-byte-length-9.2.4.tgz#cccdf3a95018d838cee9e7aa86ab3b5ad9e6c00f"
+  integrity sha1-zM3zqVAY2DjO6eeqhqs7WtnmwA8=
+
+"@serialport/parser-cctalk@9.2.4":
+  version "9.2.4"
+  resolved "https://registry.npmmirror.com/@serialport/parser-cctalk/download/@serialport/parser-cctalk-9.2.4.tgz#441533e6afc789e8cc5a017697632217bb33a861"
+  integrity sha1-RBUz5q/HiejMWgF2l2MiF7szqGE=
+
+"@serialport/parser-delimiter@9.2.4":
+  version "9.2.4"
+  resolved "https://registry.npmmirror.com/@serialport/parser-delimiter/download/@serialport/parser-delimiter-9.2.4.tgz#7906162ab5601b52abe7bb011678248f0b50f6c0"
+  integrity sha1-eQYWKrVgG1Kr57sBFngkjwtQ9sA=
+
+"@serialport/parser-inter-byte-timeout@9.2.4":
+  version "9.2.4"
+  resolved "https://registry.npmmirror.com/@serialport/parser-inter-byte-timeout/download/@serialport/parser-inter-byte-timeout-9.2.4.tgz#0ffb7f1449636f6363e894127d1f819b38e91c3c"
+  integrity sha1-D/t/FEljb2Nj6JQSfR+BmzjpHDw=
+
+"@serialport/parser-readline@9.2.4":
+  version "9.2.4"
+  resolved "https://registry.npmmirror.com/@serialport/parser-readline/download/@serialport/parser-readline-9.2.4.tgz#15a4ec7e86ddc33ac84faac7bffd4560e4544ccb"
+  integrity sha1-FaTsfobdwzrIT6rHv/1FYORUTMs=
+  dependencies:
+    "@serialport/parser-delimiter" "9.2.4"
+
+"@serialport/parser-ready@9.2.4":
+  version "9.2.4"
+  resolved "https://registry.npmmirror.com/@serialport/parser-ready/download/@serialport/parser-ready-9.2.4.tgz#e1fc93b9e3057972104db3f9311263397f420f25"
+  integrity sha1-4fyTueMFeXIQTbP5MRJjOX9CDyU=
+
+"@serialport/parser-regex@9.2.4":
+  version "9.2.4"
+  resolved "https://registry.npmmirror.com/@serialport/parser-regex/download/@serialport/parser-regex-9.2.4.tgz#e232a84e00f3e8c366fc65ce20f8f4ac14960448"
+  integrity sha1-4jKoTgDz6MNm/GXOIPj0rBSWBEg=
+
+"@serialport/stream@9.2.4":
+  version "9.2.4"
+  resolved "https://registry.npmmirror.com/@serialport/stream/download/@serialport/stream-9.2.4.tgz#9fce093d0b46ed4599953b4fae81718e050d2b33"
+  integrity sha1-n84JPQtG7UWZlTtProFxjgUNKzM=
+  dependencies:
+    debug "^4.3.2"
+
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
   resolved "https://registry.nlark.com/@sindresorhus/is/download/@sindresorhus/is-0.14.0.tgz#9fb3a3cf3132328151f353de4632e01e52102bea"
@@ -430,6 +501,13 @@
   version "7.3.9"
   resolved "https://registry.npmmirror.com/@types/semver/download/@types/semver-7.3.9.tgz?cache=0&sync_timestamp=1637270038709&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40types%2Fsemver%2Fdownload%2F%40types%2Fsemver-7.3.9.tgz#152c6c20a7688c30b967ec1841d31ace569863fc"
   integrity sha1-FSxsIKdojDC5Z+wYQdMazlaYY/w=
+
+"@types/serialport@^8.0.2":
+  version "8.0.2"
+  resolved "https://registry.npmmirror.com/@types/serialport/download/@types/serialport-8.0.2.tgz#32149f107f66450d4d9760c429923739c97e4a53"
+  integrity sha1-MhSfEH9mRQ1Nl2DEKZI3Ocl+SlM=
+  dependencies:
+    "@types/node" "*"
 
 "@types/serve-index@^1.9.1":
   version "1.9.1"
@@ -896,7 +974,14 @@ binary-extensions@^2.0.0:
   resolved "https://registry.nlark.com/binary-extensions/download/binary-extensions-2.2.0.tgz#75f502eeaf9ffde42fc98829645be4ea76bd9e2d"
   integrity sha1-dfUC7q+f/eQvyYgpZFvk6na9ni0=
 
-bl@^4.1.0:
+bindings@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.npmmirror.com/bindings/download/bindings-1.5.0.tgz#10353c9e945334bc0511a6d90b38fbc7c9c504df"
+  integrity sha1-EDU8npRTNLwFEabZCzj7x8nFBN8=
+  dependencies:
+    file-uri-to-path "1.0.0"
+
+bl@^4.0.3, bl@^4.1.0:
   version "4.1.0"
   resolved "https://registry.nlark.com/bl/download/bl-4.1.0.tgz#451535264182bec2fbbc83a62ab98cf11d9f7b3a"
   integrity sha1-RRU1JkGCvsL7vIOmKrmM8R2fezo=
@@ -1192,6 +1277,11 @@ chalk@^4.0.0, chalk@^4.1.0, chalk@^4.1.1:
     readdirp "~3.6.0"
   optionalDependencies:
     fsevents "~2.3.2"
+
+chownr@^1.1.1:
+  version "1.1.4"
+  resolved "https://registry.npmmirror.com/chownr/download/chownr-1.1.4.tgz?cache=0&sync_timestamp=1632469585630&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fchownr%2Fdownload%2Fchownr-1.1.4.tgz#6fc9d7b42d32a583596337666e7d08084da2cc6b"
+  integrity sha1-b8nXtC0ypYNZYzdmbn0ICE2izGs=
 
 chownr@^2.0.0:
   version "2.0.0"
@@ -1892,7 +1982,7 @@ encoding@^0.1.12:
   dependencies:
     iconv-lite "^0.6.2"
 
-end-of-stream@^1.1.0:
+end-of-stream@^1.1.0, end-of-stream@^1.4.1:
   version "1.4.4"
   resolved "https://registry.nlark.com/end-of-stream/download/end-of-stream-1.4.4.tgz?cache=0&sync_timestamp=1624607958717&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fend-of-stream%2Fdownload%2Fend-of-stream-1.4.4.tgz#5ae64a5f45057baf3626ec14da0ca5e4b2431eb0"
   integrity sha1-WuZKX0UFe682JuwU2gyl5LJDHrA=
@@ -2034,6 +2124,11 @@ execa@^5.0.0:
     signal-exit "^3.0.3"
     strip-final-newline "^2.0.0"
 
+expand-template@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.npmmirror.com/expand-template/download/expand-template-2.0.3.tgz#6e14b3fcee0f3a6340ecb57d2e8918692052a47c"
+  integrity sha1-bhSz/O4POmNA7LV9LokYaSBSpHw=
+
 express@^4.17.1:
   version "4.17.1"
   resolved "https://registry.nlark.com/express/download/express-4.17.1.tgz?cache=0&sync_timestamp=1624607960146&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fexpress%2Fdownload%2Fexpress-4.17.1.tgz#4491fc38605cf51f8629d39c2b5d026f98a4c134"
@@ -2127,6 +2222,11 @@ fd-slicer@~1.1.0:
   dependencies:
     pend "~1.2.0"
 
+file-uri-to-path@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmmirror.com/file-uri-to-path/download/file-uri-to-path-1.0.0.tgz#553a7b8446ff6f684359c445f1e37a05dacc33dd"
+  integrity sha1-VTp7hEb/b2hDWcRF8eN6BdrMM90=
+
 filelist@^1.0.1:
   version "1.0.2"
   resolved "https://registry.nlark.com/filelist/download/filelist-1.0.2.tgz#80202f21462d4d1c2e214119b1807c1bc0380e5b"
@@ -2177,6 +2277,11 @@ fresh@0.5.2:
   version "0.5.2"
   resolved "https://registry.nlark.com/fresh/download/fresh-0.5.2.tgz#3d8cadd90d976569fa835ab1f8e4b23a105605a7"
   integrity sha1-PYyt2Q2XZWn6g1qx+OSyOhBWBac=
+
+fs-constants@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmmirror.com/fs-constants/download/fs-constants-1.0.0.tgz#6be0de9be998ce16af8afc24497b9ee9b7ccd9ad"
+  integrity sha1-a+Dem+mYzhavivwkSXue6bfM2a0=
 
 fs-extra@^10.0.0:
   version "10.0.0"
@@ -2279,6 +2384,11 @@ get-stream@^6.0.0:
   version "6.0.1"
   resolved "https://registry.nlark.com/get-stream/download/get-stream-6.0.1.tgz#a262d8eef67aced57c2852ad6167526a43cbf7b7"
   integrity sha1-omLY7vZ6ztV8KFKtYWdSakPL97c=
+
+github-from-package@0.0.0:
+  version "0.0.0"
+  resolved "https://registry.npmmirror.com/github-from-package/download/github-from-package-0.0.0.tgz#97fb5d96bfde8973313f20e8288ef9a167fa64ce"
+  integrity sha1-l/tdlr/eiXMxPyDoKI75oWf6ZM4=
 
 glob-parent@^5.1.2, glob-parent@~5.1.2:
   version "5.1.2"
@@ -3195,7 +3305,7 @@ minimatch@3.0.4, minimatch@^3.0.4:
   dependencies:
     brace-expansion "^1.1.7"
 
-minimist@^1.2.0, minimist@^1.2.5:
+minimist@^1.2.0, minimist@^1.2.3, minimist@^1.2.5:
   version "1.2.5"
   resolved "https://registry.nlark.com/minimist/download/minimist-1.2.5.tgz?cache=0&sync_timestamp=1624607886507&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fminimist%2Fdownload%2Fminimist-1.2.5.tgz#67d66014b66a6a8aaa0c083c5fd58df4e4e97602"
   integrity sha1-Z9ZgFLZqaoqqDAg8X9WN9OTpdgI=
@@ -3254,6 +3364,11 @@ minizlib@^2.0.0, minizlib@^2.1.1:
     minipass "^3.0.0"
     yallist "^4.0.0"
 
+mkdirp-classic@^0.5.2, mkdirp-classic@^0.5.3:
+  version "0.5.3"
+  resolved "https://registry.npmmirror.com/mkdirp-classic/download/mkdirp-classic-0.5.3.tgz?cache=0&sync_timestamp=1632754279937&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fmkdirp-classic%2Fdownload%2Fmkdirp-classic-0.5.3.tgz#fa10c9115cc6d8865be221ba47ee9bed78601113"
+  integrity sha1-+hDJEVzG2IZb4iG6R+6b7XhgERM=
+
 mkdirp@^0.5.4, mkdirp@^0.5.5:
   version "0.5.5"
   resolved "https://registry.npmmirror.com/mkdirp/download/mkdirp-0.5.5.tgz#d91cefd62d1436ca0f41620e251288d420099def"
@@ -3299,10 +3414,20 @@ multicast-dns@^6.0.1:
     dns-packet "^1.3.1"
     thunky "^1.0.2"
 
+nan@^2.15.0:
+  version "2.15.0"
+  resolved "https://registry.npmmirror.com/nan/download/nan-2.15.0.tgz#3f34a473ff18e15c1b5626b62903b5ad6e665fee"
+  integrity sha1-PzSkc/8Y4VwbVia2KQO1rW5mX+4=
+
 nanoid@^3.1.30:
   version "3.1.30"
   resolved "https://registry.npmmirror.com/nanoid/download/nanoid-3.1.30.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fnanoid%2Fdownload%2Fnanoid-3.1.30.tgz#63f93cc548d2a113dc5dfbc63bfa09e2b9b64362"
   integrity sha1-Y/k8xUjSoRPcXfvGO/oJ4rm2Q2I=
+
+napi-build-utils@^1.0.1:
+  version "1.0.2"
+  resolved "https://registry.npmmirror.com/napi-build-utils/download/napi-build-utils-1.0.2.tgz#b1fddc0b2c46e380a0b7a76f984dd47c41a13806"
+  integrity sha1-sf3cCyxG44Cgt6dvmE3UfEGhOAY=
 
 negotiator@0.6.2, negotiator@^0.6.2:
   version "0.6.2"
@@ -3322,7 +3447,7 @@ no-case@^3.0.4:
     lower-case "^2.0.2"
     tslib "^2.0.3"
 
-node-abi@^3.0.0:
+node-abi@^3.0.0, node-abi@^3.3.0:
   version "3.5.0"
   resolved "https://registry.npmmirror.com/node-abi/download/node-abi-3.5.0.tgz?cache=0&sync_timestamp=1637029404706&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fnode-abi%2Fdownload%2Fnode-abi-3.5.0.tgz#26e8b7b251c3260a5ac5ba5aef3b4345a0229248"
   integrity sha512-LtHvNIBgOy5mO8mPEUtkCW/YCRWYEKshIvqhe1GHHyXEHEB5mgICyYnAcl4qan3uFeRROErKGzatFHPf6kDxWw==
@@ -3414,7 +3539,7 @@ npm-run-path@^4.0.1:
   dependencies:
     path-key "^3.0.0"
 
-npmlog@^4.1.2:
+npmlog@^4.0.1, npmlog@^4.1.2:
   version "4.1.2"
   resolved "https://registry.npmmirror.com/npmlog/download/npmlog-4.1.2.tgz?cache=0&sync_timestamp=1637084993012&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fnpmlog%2Fdownload%2Fnpmlog-4.1.2.tgz#08a7f2a8bf734604779a9efa4ad5cc717abb954b"
   integrity sha1-CKfyqL9zRgR3mp76StXMcXq7lUs=
@@ -3682,6 +3807,25 @@ postcss@^8.2.15:
     picocolors "^1.0.0"
     source-map-js "^0.6.2"
 
+prebuild-install@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.npmmirror.com/prebuild-install/download/prebuild-install-7.0.0.tgz#3c5ce3902f1cb9d6de5ae94ca53575e4af0c1574"
+  integrity sha512-IvSenf33K7JcgddNz2D5w521EgO+4aMMjFt73Uk9FRzQ7P+QZPKrp7qPsDydsSwjGt3T5xRNnM1bj1zMTD5fTA==
+  dependencies:
+    detect-libc "^1.0.3"
+    expand-template "^2.0.3"
+    github-from-package "0.0.0"
+    minimist "^1.2.3"
+    mkdirp-classic "^0.5.3"
+    napi-build-utils "^1.0.1"
+    node-abi "^3.3.0"
+    npmlog "^4.0.1"
+    pump "^3.0.0"
+    rc "^1.2.7"
+    simple-get "^4.0.0"
+    tar-fs "^2.0.0"
+    tunnel-agent "^0.6.0"
+
 prepend-http@^2.0.0:
   version "2.0.0"
   resolved "https://registry.nlark.com/prepend-http/download/prepend-http-2.0.0.tgz?cache=0&sync_timestamp=1628547378604&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fprepend-http%2Fdownload%2Fprepend-http-2.0.0.tgz#e92434bfa5ea8c19f41cdfd401d741a3c819d897"
@@ -3788,7 +3932,7 @@ raw-body@2.4.0:
     iconv-lite "0.4.24"
     unpipe "1.0.0"
 
-rc@^1.2.8:
+rc@^1.2.7, rc@^1.2.8:
   version "1.2.8"
   resolved "https://registry.nlark.com/rc/download/rc-1.2.8.tgz#cd924bf5200a075b83c188cd6b9e211b7fc0d3ed"
   integrity sha1-zZJL9SAKB1uDwYjNa54hG3/A0+0=
@@ -3822,7 +3966,7 @@ readable-stream@^2.0.1, readable-stream@^2.0.6, readable-stream@^2.2.2:
     string_decoder "~1.1.1"
     util-deprecate "~1.0.1"
 
-readable-stream@^3.0.6, readable-stream@^3.4.0, readable-stream@^3.6.0:
+readable-stream@^3.0.6, readable-stream@^3.1.1, readable-stream@^3.4.0, readable-stream@^3.6.0:
   version "3.6.0"
   resolved "https://registry.nlark.com/readable-stream/download/readable-stream-3.6.0.tgz#337bbda3adc0706bd3e024426a286d4b4b2c9198"
   integrity sha1-M3u9o63AcGvT4CRCaihtS0sskZg=
@@ -4091,6 +4235,23 @@ serialize-javascript@^6.0.0:
   dependencies:
     randombytes "^2.1.0"
 
+serialport@^9.2.8:
+  version "9.2.8"
+  resolved "https://registry.npmmirror.com/serialport/download/serialport-9.2.8.tgz#abf9f59ac50ac3d130f6a10de141765a9d86da73"
+  integrity sha512-FsWpMQgSJxi93JgWl5xM1f9/Z8IjRJuaUEoHqLf8FPBLw7gMhInuHOBhI2onQufWIYPGTz3H3oGcu1nCaK1EfA==
+  dependencies:
+    "@serialport/binding-mock" "9.2.4"
+    "@serialport/bindings" "9.2.8"
+    "@serialport/parser-byte-length" "9.2.4"
+    "@serialport/parser-cctalk" "9.2.4"
+    "@serialport/parser-delimiter" "9.2.4"
+    "@serialport/parser-inter-byte-timeout" "9.2.4"
+    "@serialport/parser-readline" "9.2.4"
+    "@serialport/parser-ready" "9.2.4"
+    "@serialport/parser-regex" "9.2.4"
+    "@serialport/stream" "9.2.4"
+    debug "^4.3.2"
+
 serve-index@^1.9.1:
   version "1.9.1"
   resolved "https://registry.nlark.com/serve-index/download/serve-index-1.9.1.tgz#d3768d69b1e7d82e5ce050fff5b453bea12a9239"
@@ -4145,6 +4306,20 @@ signal-exit@^3.0.0, signal-exit@^3.0.2, signal-exit@^3.0.3:
   version "3.0.5"
   resolved "https://registry.npmmirror.com/signal-exit/download/signal-exit-3.0.5.tgz#9e3e8cc0c75a99472b44321033a7702e7738252f"
   integrity sha1-nj6MwMdamUcrRDIQM6dwLnc4JS8=
+
+simple-concat@^1.0.0:
+  version "1.0.1"
+  resolved "https://registry.npmmirror.com/simple-concat/download/simple-concat-1.0.1.tgz#f46976082ba35c2263f1c8ab5edfe26c41c9552f"
+  integrity sha1-9Gl2CCujXCJj8cirXt/ibEHJVS8=
+
+simple-get@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.npmmirror.com/simple-get/download/simple-get-4.0.0.tgz#73fa628278d21de83dadd5512d2cc1f4872bd675"
+  integrity sha1-c/pignjSHeg9rdVRLSzB9Icr1nU=
+  dependencies:
+    decompress-response "^6.0.0"
+    once "^1.3.1"
+    simple-concat "^1.0.0"
 
 slash@^3.0.0:
   version "3.0.0"
@@ -4405,6 +4580,27 @@ tapable@^2.0.0, tapable@^2.1.1, tapable@^2.2.0:
   resolved "https://registry.nlark.com/tapable/download/tapable-2.2.1.tgz?cache=0&sync_timestamp=1631526972264&other_urls=https%3A%2F%2Fregistry.nlark.com%2Ftapable%2Fdownload%2Ftapable-2.2.1.tgz#1967a73ef4060a82f12ab96af86d52fdb76eeca0"
   integrity sha1-GWenPvQGCoLxKrlq+G1S/bdu7KA=
 
+tar-fs@^2.0.0:
+  version "2.1.1"
+  resolved "https://registry.npmmirror.com/tar-fs/download/tar-fs-2.1.1.tgz#489a15ab85f1f0befabb370b7de4f9eb5cbe8784"
+  integrity sha1-SJoVq4Xx8L76uzcLfeT561y+h4Q=
+  dependencies:
+    chownr "^1.1.1"
+    mkdirp-classic "^0.5.2"
+    pump "^3.0.0"
+    tar-stream "^2.1.4"
+
+tar-stream@^2.1.4:
+  version "2.2.0"
+  resolved "https://registry.npmmirror.com/tar-stream/download/tar-stream-2.2.0.tgz#acad84c284136b060dc3faa64474aa9aebd77287"
+  integrity sha1-rK2EwoQTawYNw/qmRHSqmuvXcoc=
+  dependencies:
+    bl "^4.0.3"
+    end-of-stream "^1.4.1"
+    fs-constants "^1.0.0"
+    inherits "^2.0.3"
+    readable-stream "^3.1.1"
+
 tar@^6.0.2, tar@^6.0.5, tar@^6.1.2:
   version "6.1.11"
   resolved "https://registry.nlark.com/tar/download/tar-6.1.11.tgz?cache=0&sync_timestamp=1629994977916&other_urls=https%3A%2F%2Fregistry.nlark.com%2Ftar%2Fdownload%2Ftar-6.1.11.tgz#6760a38f003afa1b2ffd0ffe9e9abbd0eab3d621"
@@ -4492,6 +4688,13 @@ tslib@^2.0.3:
   version "2.3.1"
   resolved "https://registry.nlark.com/tslib/download/tslib-2.3.1.tgz#e8a335add5ceae51aa261d32a490158ef042ef01"
   integrity sha1-6KM1rdXOrlGqJh0ypJAVjvBC7wE=
+
+tunnel-agent@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.npmmirror.com/tunnel-agent/download/tunnel-agent-0.6.0.tgz#27a5dea06b36b04a0a9966774b290868f0fc40fd"
+  integrity sha1-J6XeoGs2sEoKmWZ3SykIaPD8QP0=
+  dependencies:
+    safe-buffer "^5.0.1"
 
 tunnel@^0.0.6:
   version "0.0.6"

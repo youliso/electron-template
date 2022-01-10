@@ -5,6 +5,7 @@ const base = require('./webpack.base.config');
 module.exports = (env) => {
   return {
     experiments: base.experiments,
+    externals: base.externals,
     node: {
       ...base.node
     },

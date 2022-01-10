@@ -17,6 +17,7 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "devDependencies": {
+    "@types/serialport": "^8.0.2",
     "@swc/core": "^1.2.127",
     "css-loader": "^6.5.1",
     "electron": "^16.0.6",
@@ -33,6 +34,7 @@
   },
   "dependencies": {
     "electron-updater": "^4.6.1",
+    "serialport": "^9.2.8",
     "socket.io-client": "^4.4.1"
   }
 }
