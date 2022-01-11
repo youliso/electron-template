@@ -3,7 +3,7 @@ type RefValue<T> = { value: T };
 interface Route {
   path: string;
   instance?: boolean;
-  component: () => Promise<any>;
+  component: any;
 }
 
 interface VSource {

@@ -80,34 +80,23 @@ export default class Router {
 
   private async rIng(route: Route, params?: any, isHistory: boolean = true) {
     const isR = await this.onBeforeRoute(route, params);
-    if (isR)
-      await route
-        .component()
-        .then((View) => this.pretreatment(route, View, params))
-        .then(() => isHistory && this.setHistory(route.path, params))
-        .catch(console.error);
-  }
-
-  private pretreatment(route: Route, View: any, params?: any) {
-    let view: View;
-    if (route.instance) {
-      view = this.instances[View.default.name];
-      const isLoad = !view;
-      if (isLoad) {
-        view = new View.default() as View;
-        view.$instance = true;
-        if (!view.$name) view.$name = View.default.name;
-      }
-      if (this.current) this.unCurrent();
-      renderView(isLoad, view, params);
-      this.current = view;
-      return;
+    if (!isR) return;
+    const component = route.component.prototype
+      ? route.component
+      : (await route.component()).default;
+    let view: View | undefined;
+    let isLoad: boolean = false;
+    if (route.instance) view = this.instances[component.name];
+    if (view) isLoad = true;
+    if (!isLoad) {
+      view = new component() as View;
+      view.$instance = route.instance || false;
+      if (!view.$name) view.$name = component.name;
     }
-    view = new View.default() as View;
-    if (!view.$name) view.$name = View.default.name;
     if (this.current) this.unCurrent();
-    renderView(false, view, params);
+    renderView(isLoad, view as View, params);
     this.current = view;
+    isHistory && this.setHistory(route.path, params);
   }
 
   private unCurrent() {

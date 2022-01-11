@@ -1,7 +1,9 @@
+import home from '@/renderer/views/pages/home/index';
+
 const Router: Route[] = [
   {
     path: '/home',
-    component: () => import('@/renderer/views/pages/home/index')
+    component: home
   },
   {
     path: '/about',
