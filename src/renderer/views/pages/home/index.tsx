@@ -72,10 +72,16 @@ export default class Home implements View {
     }
 
     function baidu() {
-      windowCreate({
-        url: 'https://baidu.com/',
-        parentId: args.id
-      });
+      windowCreate(
+        {
+          url: 'https://baidu.com/',
+          parentId: args.id
+        },
+        {
+          width: 1280,
+          height: 720
+        }
+      );
     }
 
     return (
