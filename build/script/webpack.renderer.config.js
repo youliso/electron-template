@@ -51,7 +51,7 @@ module.exports = (env) => {
     }
   };
 
-  for (const i in dependencies) config.externals.push(`/node_modules/${i}`);
+  for (const i in dependencies) config.externals.push(`node_modules/${i}`);
 
   return config;
 };
