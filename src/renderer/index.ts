@@ -5,8 +5,9 @@ import '@/renderer/views/scss/color.scss';
 import '@/renderer/views/scss/index.scss';
 
 windowLoad((_, args) => {
-  document.body.setAttribute('platform', window.environment.platform);
   setCustomize(args);
-  GlobalComponent.use(import('./views/components/head'), 'head');
-  import('@/renderer/router').then(({ routerInit }) => routerInit(args.route as string));
+  document.body.setAttribute('platform', window.environment.platform);
+  GlobalComponent.use(import('./views/components/head'), 'head').then(() =>
+    import('@/renderer/router').then(({ routerInit }) => routerInit(args.route as string))
+  );
 });

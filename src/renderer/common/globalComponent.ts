@@ -21,7 +21,7 @@ class GlobalComponent {
       key = key || (node.default.name as string);
       const component = new node.default() as Component;
       renderComponent(false, component, {
-        currentName: 'global',
+        currentPath: 'global',
         currentEl: this.el,
         key
       });

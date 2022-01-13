@@ -7,7 +7,7 @@ interface Route {
 }
 
 interface VSource {
-  $name?: string;
+  $path?: string;
   $el?: HTMLElement;
   styles?: any[];
   onLoad?: (params?: any) => void;
@@ -19,7 +19,7 @@ interface VSource {
 }
 
 interface Component extends VSource {
-  $currentName?: string;
+  $currentPath?: string;
   onLoad?: () => void;
   onActivated?: () => void;
   render?: () => HTMLElement;

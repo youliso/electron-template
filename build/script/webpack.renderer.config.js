@@ -1,11 +1,12 @@
 const { resolve } = require('path');
-const { name } = require('../../package.json');
+const { name, dependencies } = require('../../package.json');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const base = require('./webpack.base.config');
+
 module.exports = (env) => {
-  return {
+  let config = {
     experiments: base.experiments,
-    externals: base.externals,
+    externals: [],
     node: {
       ...base.node
     },
@@ -16,8 +17,8 @@ module.exports = (env) => {
       app: './src/renderer/index.ts'
     },
     output: {
-      filename: './js/[name]v.js',
-      chunkFilename: './js/[id]v.js',
+      filename: './js/[name].v.js',
+      chunkFilename: './js/[id].v.js',
       path: resolve('dist')
     },
     resolve: base.resolve,
@@ -49,4 +50,8 @@ module.exports = (env) => {
       minimize: env === 'production'
     }
   };
+
+  for (const i in dependencies) config.externals.push(`/node_modules/${i}`);
+
+  return config;
 };

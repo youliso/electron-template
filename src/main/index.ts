@@ -3,6 +3,11 @@ import Shortcut from './modular/shortcut';
 import Global from './modular/global';
 import Window from './modular/window';
 import Tray from './modular/tray';
+import Session from './modular/session';
+import Dialog from './modular/dialog';
+import Menu from './modular/menu';
+import Update from './modular/update';
+import Socket from './modular/socket';
 import { logOn } from './modular/log';
 import { pathOn } from './modular/path';
 import { fileOn } from './modular/file';
@@ -18,13 +23,7 @@ logOn();
 // 可选模块
 fileOn();
 pathOn();
-await App.use([
-  import('./modular/session'),
-  import('./modular/dialog'),
-  import('./modular/menu'),
-  import('./modular/update'),
-  import('./modular/socket')
-]);
+await App.use([Session, Dialog, Menu, Update, Socket]);
 // 窗口
 Window.create(customize, opt);
 // 托盘

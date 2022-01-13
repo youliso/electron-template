@@ -5,9 +5,6 @@ module.exports = {
   experiments: {
     topLevelAwait: true
   },
-  externals: {
-    serialport: 'require("serialport")'
-  },
   node: {
     global: false,
     __dirname: false,

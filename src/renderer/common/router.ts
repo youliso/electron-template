@@ -10,6 +10,7 @@ export default class Router {
   public history: { path: string; params?: any }[] = [];
   // 路由监听
   public onBeforeRoute: (route: Route, params?: any) => Promise<boolean> | boolean = () => true;
+  public onAfterRoute: (route: Route, params?: any) => Promise<void> | void = () => {};
 
   constructor(routes: Route[]) {
     this.routes.push(...routes);
@@ -86,26 +87,27 @@ export default class Router {
       : (await route.component()).default;
     let view: View | undefined;
     let isLoad: boolean = false;
-    if (route.instance) view = this.instances[component.name];
+    if (route.instance) view = this.instances[route.path];
     if (view) isLoad = true;
     if (!isLoad) {
       view = new component() as View;
       view.$instance = route.instance || false;
-      if (!view.$name) view.$name = component.name;
+      if (!view.$path) view.$path = route.path;
     }
     if (this.current) this.unCurrent();
     renderView(isLoad, view as View, params);
     this.current = view;
     isHistory && this.setHistory(route.path, params);
+    await this.onAfterRoute(route, params);
   }
 
   private unCurrent() {
     if (!this.current) return;
     if (this.current.$instance) {
-      this.instances[this.current.$name as string] = this.current;
+      this.instances[this.current.$path as string] = this.current;
       unView(true, this.current);
     } else {
-      delete this.instances[this.current.$name as string];
+      delete this.instances[this.current.$path as string];
       unView(false, this.current);
     }
     delete this.current;

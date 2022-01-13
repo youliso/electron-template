@@ -97,7 +97,7 @@ export function renderComponent(
   cache: boolean,
   component: Component,
   opt?: {
-    currentName: string;
+    currentPath: string;
     currentEl: HTMLElement;
     key: string;
   }
@@ -107,8 +107,8 @@ export function renderComponent(
   else component.onLoad && component.onLoad();
   if (opt) {
     const el = component.render ? component.render() : null;
-    component.$currentName = opt.currentName;
-    component.$name = opt.key;
+    component.$currentPath = opt.currentPath;
+    component.$path = opt.key;
     if (el) {
       component.$el = el;
       opt.currentEl.appendChild(el);
@@ -152,7 +152,7 @@ export function renderView(cache: boolean, view: View, params?: any) {
     for (const componentKey in view.components) {
       const component = view.components[componentKey];
       renderComponent(false, component, {
-        currentName: view.$name as string,
+        currentPath: view.$path as string,
         currentEl: componentsEl,
         key: componentKey
       });
