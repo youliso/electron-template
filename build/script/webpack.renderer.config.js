@@ -1,12 +1,11 @@
 const { resolve } = require('path');
-const { name, dependencies } = require('../../package.json');
+const { productName } = require('../../package.json');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const base = require('./webpack.base.config');
 
 module.exports = (env) => {
   let config = {
     experiments: base.experiments,
-    externals: [],
     node: {
       ...base.node
     },
@@ -42,7 +41,7 @@ module.exports = (env) => {
     },
     plugins: [
       new HtmlWebpackPlugin({
-        title: name,
+        title: productName,
         template: './build/index.html'
       })
     ],
@@ -50,8 +49,6 @@ module.exports = (env) => {
       minimize: env === 'production'
     }
   };
-
-  for (const i in dependencies) config.externals.push(`node_modules/${i}`);
 
   return config;
 };
