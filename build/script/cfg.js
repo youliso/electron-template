@@ -4,6 +4,9 @@ const config = require('../cfg/build.json');
 const windowConfig = require('../../src/cfg/window.json');
 const updateConfig = require('../../src/cfg/update.json');
 
+/** 渲染进程不需要打包到file的包 */
+// config.files.push('!**/node_modules/包名');
+
 /**  config配置  **/
 config.publish = [
   {
