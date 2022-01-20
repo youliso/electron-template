@@ -96,7 +96,7 @@ export function windowCreate(customize: Customize, opt?: BrowserWindowConstructo
  * 窗口状态
  */
 export async function windowStatus(
-  type: windowStatusOpt,
+  type: WindowStatusOpt,
   id: number = getCustomize().id as number
 ): Promise<boolean> {
   return await window.ipc.invoke('window-status', { type, id });
@@ -107,7 +107,7 @@ export async function windowStatus(
  */
 export function windowAlwaysOnTop(
   is: boolean,
-  type?: windowAlwaysOnTopOpt,
+  type?: WindowAlwaysOnTopOpt,
   id: number = getCustomize().id as number
 ) {
   window.ipc.send('window-always-top-set', { id, is, type });
@@ -185,6 +185,17 @@ export function windowMin(id: number = getCustomize().id as number) {
  */
 export function windowMax(id: number = getCustomize().id as number) {
   window.ipc.send('window-func', { type: 'maximize', id });
+}
+
+/**
+ * window函数
+ */
+export function windowFunc(
+  type: WindowFuncOpt,
+  data?: any[],
+  id: number = getCustomize().id as number
+) {
+  window.ipc.send('window-func', { type, data, id });
 }
 
 /**

@@ -42,7 +42,7 @@ declare namespace Electron {
   }
 }
 
-type windowAlwaysOnTopOpt =
+type WindowAlwaysOnTopOpt =
   | 'normal'
   | 'floating'
   | 'torn-off-menu'
@@ -52,9 +52,9 @@ type windowAlwaysOnTopOpt =
   | 'pop-up-menu'
   | 'screen-saver';
 
-type windowFuncOpt = 'close' | 'hide' | 'show' | 'minimize' | 'maximize' | 'restore' | 'reload';
+type WindowFuncOpt = 'close' | 'hide' | 'show' | 'minimize' | 'maximize' | 'restore' | 'reload';
 
-type windowStatusOpt =
+type WindowStatusOpt =
   | 'isMaximized'
   | 'isMinimized'
   | 'isFullScreen'

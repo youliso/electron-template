@@ -1,7 +1,6 @@
 import type { BrowserWindowConstructorOptions, LoadFileOptions, LoadURLOptions } from 'electron';
 import { join } from 'path';
 import { app, screen, ipcMain, BrowserWindow } from 'electron';
-import { isNull } from '@/utils';
 import windowCfg from '@/cfg/window.json';
 
 /**
@@ -36,7 +35,7 @@ export function browserWindowInit(
   });
   if (!opt.backgroundColor && windowCfg.opt.backgroundColor)
     opt.backgroundColor = windowCfg.opt.backgroundColor;
-  const isParentId = !isNull(customize.parentId);
+  const isParentId = customize.parentId !== null && customize.parentId !== undefined;
   let parenWin: BrowserWindow | null = null;
   if (isParentId) parenWin = Window.getInstance().get(customize.parentId as number);
   if (isParentId && parenWin) {
@@ -179,24 +178,27 @@ export class Window {
   /**
    * 窗口关闭、隐藏、显示等常用方法
    */
-  func(type: windowFuncOpt, id?: number) {
-    if (!isNull(id)) {
+  func(type: WindowFuncOpt, id?: number, data?: any[]) {
+    if (id !== null && id !== undefined) {
       const win = this.get(id as number);
       if (!win) {
         console.error(`not found win -> ${id}`);
         return;
       }
-      win[type]();
+      // @ts-ignore
+      data ? win[type](...data) : win[type]();
       return;
     }
-    for (const i of this.getAll()) i[type]();
+    // @ts-ignore
+    if (data) for (const i of this.getAll()) i[type](...data);
+    else for (const i of this.getAll()) i[type]();
   }
 
   /**
    * 窗口发送消息
    */
   send(key: string, value: any, id?: number) {
-    if (!isNull(id)) {
+    if (id !== null && id !== undefined) {
       const win = this.get(id as number);
       if (win) win.webContents.send(key, value);
     } else for (const i of this.getAll()) i.webContents.send(key, value);
@@ -205,7 +207,7 @@ export class Window {
   /**
    * 窗口状态
    */
-  getStatus(type: windowStatusOpt, id: number) {
+  getStatus(type: WindowStatusOpt, id: number) {
     const win = this.get(id);
     if (!win) {
       console.error('Invalid id, the id can not be a empty');
@@ -281,7 +283,7 @@ export class Window {
   /**
    * 设置窗口是否置顶
    */
-  setAlwaysOnTop(args: { id: number; is: boolean; type?: windowAlwaysOnTopOpt }) {
+  setAlwaysOnTop(args: { id: number; is: boolean; type?: WindowAlwaysOnTopOpt }) {
     const win = this.get(args.id);
     if (!win) {
       console.error('Invalid id, the id can not be a empty');
@@ -307,7 +309,7 @@ export class Window {
     });
     // 最大化最小化窗口
     ipcMain.on('window-max-min-size', (event, id) => {
-      if (!isNull(id)) {
+      if (id !== null && id !== undefined) {
         const win = this.get(id);
         if (!win) {
           console.error('Invalid id, the id can not be a empty');
@@ -318,7 +320,7 @@ export class Window {
       }
     });
     // 窗口消息
-    ipcMain.on('window-func', (event, args) => this.func(args.type, args.id));
+    ipcMain.on('window-func', (event, args) => this.func(args.type, args.id, args.data));
     // 窗口状态
     ipcMain.handle('window-status', async (event, args) => this.getStatus(args.type, args.id));
     // 创建窗口
