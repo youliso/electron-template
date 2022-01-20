@@ -1,5 +1,5 @@
 const { resolve } = require('path');
-const { productName } = require('../../package.json');
+const { productName } = require('../package.json');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const base = require('./webpack.base.config');
 
@@ -42,7 +42,7 @@ module.exports = (env) => {
     plugins: [
       new HtmlWebpackPlugin({
         title: productName,
-        template: './build/index.html'
+        template: './resources/build/index.html'
       })
     ],
     optimization: {

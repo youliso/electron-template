@@ -10,10 +10,10 @@
   },
   "license": "MIT",
   "scripts": {
-    "dev": "node build/script/cfg.js && node build/script/dev.js",
+    "dev": "node scripts/cfg.js && node scripts/dev.js",
     "rebuild": "electron-rebuild -f",
-    "updcfg": "node build/script/cfg.js",
-    "build": "node build/script/cfg.js && node build/script/build.js",
+    "updcfg": "node scripts/cfg.js",
+    "build": "node scripts/cfg.js && node scripts/build.js",
     "postinstall": "electron-builder install-app-deps"
   },
   "devDependencies": {

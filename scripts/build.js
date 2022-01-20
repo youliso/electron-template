@@ -3,7 +3,7 @@ const path = require('path');
 const { exec } = require('child_process');
 const readline = require('readline');
 const webpack = require('webpack');
-const config = require('../cfg/build.json');
+const config = require('../resources/build/cfg/build.json');
 const main = require('./webpack.main.config'); //主进程
 const renderer = require('./webpack.renderer.config'); //子进程
 let [, , arch] = process.argv;
@@ -101,16 +101,16 @@ function core(arch) {
       filter: ['**/*']
     });
   } catch (err) {}
-  fs.writeFileSync('./build/cfg/build.json', JSON.stringify(config, null, 2)); //写入配置
+  fs.writeFileSync('./resources/build/cfg/build.json', JSON.stringify(config, null, 2)); //写入配置
   deleteFolderRecursive(path.resolve('dist')); //清除dist
   webpack([{ ...main('production') }, { ...renderer('production') }], (err, stats) => {
     if (err || stats.hasErrors()) throw err;
-    console.log(`electron-builder -c build/cfg/build.json --${archTag}`);
+    console.log(`electron-builder -c resources/build/cfg/build.json --${archTag}`);
     const s = setInterval(() => {
       console.log('building...');
     }, 5000);
     const c = exec(
-      `electron-builder -c build/cfg/build.json --${archTag}`,
+      `electron-builder -c resources/build/cfg/build.json --${archTag}`,
       {
         cwd: path.resolve()
       },

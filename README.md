@@ -17,18 +17,18 @@
 ## 模块大致文件结构参考
 
 ```
-├── build 打包所需的文件
-│   ├── cfg 打包配置
-│   ├── icons 图片
-│   └── script 打包的方法 、本地调试等
-├── resources 依赖
-│   ├── platform 对应系统依赖
+├── resources 资源
+│   ├── build 打包所需的文件
+│   │   ├── cfg 打包配置
+│   │   └── icons 图片
+│   ├── platform 对应系统依赖 (自行创建)
 │   │   ├── win32
 │   │   ├── darwin
 │   │   └── linux
-│   ├── extern 外部依赖(打包后位于resources下)
-│   ├── inside 内部依赖(如果开启asar打包 会位于asar下)
+│   ├── extern 外部资源(打包后位于resources下)
+│   ├── inside 内部资源(如果开启asar打包 会位于asar下)
 │   └── root 和执行文件同级
+├── scripts 打包的方法 、本地调试等
 └── src
     ├── cfg 本地配置和 请求配置之类
     ├── utils 一些依赖方法(主、渲染可通用)
