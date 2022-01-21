@@ -90,12 +90,6 @@ export function upload(url: string, params: RequestUploadOpt) {
     request.write(
       `--${boundary}\r\nContent-Disposition: form-data; name="file"; filename="${params.fileName}"\r\n\r\n`
     );
-    request.on('abort', () => {
-      reject(new Error('abort'));
-    });
-    request.on('error', (err) => {
-      reject(err);
-    });
     request.on('destroyed', () => {
       reject(new Error('destroy'));
     });
