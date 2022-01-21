@@ -55,14 +55,6 @@ export function browserWindowInit(
       opt.y =
         (currentPosition[1] + (currentWH.height - (opt.height || customize.currentHeight)) / 2) | 0;
     }
-  } else {
-    const main = Window.getInstance().getMain();
-    if (main) {
-      const mainPosition = main.getPosition();
-      const mainBounds = main.getBounds();
-      opt.x = (mainPosition[0] + (mainBounds.width - (opt.width as number)) / 2) | 0;
-      opt.y = (mainPosition[1] + (mainBounds.height - (opt.height as number)) / 2) | 0;
-    }
   }
   const win = new BrowserWindow(opt);
   //子窗体关闭父窗体获焦 https://github.com/electron/electron/issues/10616
