@@ -21,7 +21,7 @@ export interface RequestUploadOpt extends RequestInit {
 export interface RequestDownloadOpt extends RequestInit {
   // 是否stringify参数（非GET请求使用）
   isStringify?: boolean;
-  onDown?: (length?: number, allLength?: number) => void;
+  onDown?: (chunk?: Buffer, allLength?: number) => void;
 }
 
 /**
@@ -146,10 +146,7 @@ export function upload(url: string, params: RequestUploadOpt) {
  * @param sendData
  * @param params
  */
-export function download(
-  url: string,
-  params: RequestDownloadOpt = {}
-): Promise<Buffer | { data: Buffer; headers: HeadersInit }> {
+export function download(url: string, params: RequestDownloadOpt = {}) {
   return new Promise((resolve, reject) => {
     params.method = params.method || 'GET';
     params.args = params.args || { method: params.method };
@@ -161,16 +158,25 @@ export function download(
     function ing(response: IncomingMessage) {
       const allLength = Number(response.headers['content-length'] || 0);
       response.on('data', (chunk) => {
+        if (params.onDown) {
+          params.onDown(chunk, allLength);
+          return;
+        }
         chunks.push(chunk);
         size += chunk.length;
-        params.onDown && params.onDown(size, allLength);
       });
       response.on('end', () => {
         if (response.statusCode && response.statusCode >= 400) {
           reject(new Error(response.statusCode + ''));
           return;
         }
-        const result = Buffer.concat(chunks, size);
+        let result: unknown;
+        if (params.onDown) {
+          result = {
+            msg: 'downloaded',
+            allLength
+          };
+        } else result = Buffer.concat(chunks, size);
         if (params.isHeaders) resolve({ data: result, headers: response.headers });
         else resolve(result);
       });
