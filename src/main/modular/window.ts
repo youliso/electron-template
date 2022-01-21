@@ -37,7 +37,8 @@ export function browserWindowInit(
     opt.backgroundColor = windowCfg.opt.backgroundColor;
   const isParentId = customize.parentId !== null && customize.parentId !== undefined;
   let parenWin: BrowserWindow | null = null;
-  if (isParentId) parenWin = Window.getInstance().get(customize.parentId as number);
+  if (isParentId && typeof customize.parentId === 'number')
+    parenWin = Window.getInstance().get(customize.parentId);
   if (isParentId && parenWin) {
     opt.parent = parenWin;
     const currentWH = opt.parent.getBounds();
