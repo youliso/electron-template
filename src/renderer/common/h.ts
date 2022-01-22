@@ -89,7 +89,7 @@ export function h(
 
 export function f({ children }: { children: Node[] | null }) {
   const element = document.createDocumentFragment();
-  if (children) children.forEach((node) => element.appendChild(node));
+  children && children.forEach((node) => element.appendChild(node));
   return element;
 }
 

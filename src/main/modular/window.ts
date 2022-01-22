@@ -35,10 +35,12 @@ export function browserWindowInit(
   });
   if (!opt.backgroundColor && windowCfg.opt.backgroundColor)
     opt.backgroundColor = windowCfg.opt.backgroundColor;
-  const isParentId = customize.parentId !== null && customize.parentId !== undefined;
+  const isParentId =
+    customize.parentId !== null &&
+    customize.parentId !== undefined &&
+    typeof customize.parentId === 'number';
   let parenWin: BrowserWindow | null = null;
-  if (isParentId && typeof customize.parentId === 'number')
-    parenWin = Window.getInstance().get(customize.parentId);
+  if (isParentId) parenWin = Window.getInstance().get(customize.parentId as number);
   if (isParentId && parenWin) {
     opt.parent = parenWin;
     const currentWH = opt.parent.getBounds();
