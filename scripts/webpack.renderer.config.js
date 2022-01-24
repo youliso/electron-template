@@ -10,7 +10,6 @@ module.exports = (env) => {
       ...base.node
     },
     mode: env,
-    devtool: env === 'production' ? undefined : base.devtool,
     target: 'web',
     entry: {
       app: './src/renderer/index.ts'
@@ -49,6 +48,8 @@ module.exports = (env) => {
       minimize: env === 'production'
     }
   };
+
+  if (env === 'production') config.devtool = base.devtool;
 
   return config;
 };

@@ -7,7 +7,6 @@ module.exports = (env) => {
     ...base,
     externals: {},
     mode: env,
-    devtool: env === 'production' ? undefined : base.devtool,
     target: 'electron-main',
     entry: {
       main: './src/main/index.ts',
@@ -21,6 +20,8 @@ module.exports = (env) => {
       minimize: env === 'production'
     }
   };
+
+  if (env === 'production') config.devtool = base.devtool;
 
   for (const i in dependencies) config.externals[i] = `require("${i}")`;
 
