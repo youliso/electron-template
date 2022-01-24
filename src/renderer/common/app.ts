@@ -1,13 +1,4 @@
 /**
- * 发送ipc消息
- * @param key
- * @param value
- */
-export function ipcSend(key: string, value?: unknown) {
-  window.ipc.send(key, value);
-}
-
-/**
  * 日志(info)
  * @param args
  */

@@ -1,4 +1,4 @@
-import { getResourcesPath } from '@/renderer/common';
+import { getResourcesPath } from '@/renderer/common/app';
 import { readFile } from '@/renderer/common/file';
 const jsnes = require('./jsnes.min');
 
