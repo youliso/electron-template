@@ -5,7 +5,7 @@
 ❗ 注意 `nodejs => 14.17.0`  
 交流 qq 群 12354891
 
-## 示例
+## 主流框架模板
 
 [vue @mlmdflr](https://github.com/mlmdflr/xps-electron-vue-template)
 
