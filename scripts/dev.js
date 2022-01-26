@@ -73,7 +73,7 @@ function startElectron() {
       );
   });
   electronProcess.on('exit', (e) => {
-    console.log('exit', e);
+    console.log('[main exit]');
   });
   electronProcess.on('close', () => {
     if (!manualRestart) process.exit();
