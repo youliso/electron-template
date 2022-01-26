@@ -7,7 +7,7 @@
 
 ## 示例
 
-[vue](https://github.com/youliso/electron-template-vue)
+[vue @mlmdflr](https://github.com/mlmdflr/xps-electron-vue-template)
 
 ## electron builder 打包配置
 
