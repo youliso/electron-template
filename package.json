@@ -17,10 +17,10 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "devDependencies": {
-    "@swc/core": "^1.2.133",
+    "@swc/core": "^1.2.135",
     "@types/serialport": "^8.0.2",
     "css-loader": "^6.5.1",
-    "electron": "^16.0.7",
+    "electron": "^16.0.8",
     "electron-builder": "^22.14.5",
     "electron-rebuild": "^3.2.7",
     "html-webpack-plugin": "^5.5.0",
