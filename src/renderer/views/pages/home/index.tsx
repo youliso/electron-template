@@ -57,6 +57,7 @@ export default class Home implements View {
     function tk() {
       windowCreate(
         {
+          headNative: true,
           title: '弹框测试',
           route: '/message',
           parentId: args.id,

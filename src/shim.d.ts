@@ -2,6 +2,7 @@ type RefValue<T> = { value: T };
 
 interface Route {
   path: string;
+  title?: string;
   instance?: boolean;
   component: any;
 }

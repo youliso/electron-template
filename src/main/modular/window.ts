@@ -17,14 +17,15 @@ export function browserWindowInit(
   args.height = args.height || windowCfg.opt.height;
   // darwin下modal会造成整个窗口关闭(?)
   if (process.platform === 'darwin') delete args.modal;
-  const isLocal = !customize.route;
+  customize.headNative =
+    customize.headNative !== null && customize.headNative !== undefined ? customize.headNative : !customize.route;
   let opt: BrowserWindowConstructorOptions = Object.assign(args, {
     autoHideMenuBar: true,
     titleBarStyle: customize.route ? 'hidden' : 'default',
     minimizable: true,
     maximizable: true,
-    frame: isLocal,
-    show: isLocal,
+    frame: customize.headNative,
+    show: !customize.route,
     webPreferences: {
       preload: join(__dirname, './preload.js'),
       contextIsolation: true,
@@ -139,12 +140,9 @@ export class Window {
    * 创建窗口
    * */
   create(customize: Customize, opt: BrowserWindowConstructorOptions) {
-    if (customize.isOneWindow) {
+    if (customize.isOneWindow && !customize.url) {
       for (const i of this.getAll()) {
-        if (
-          (customize?.route && customize.route === i.customize?.route) ||
-          (customize?.url && customize.url === i.customize?.url)
-        ) {
+        if (customize?.route && customize.route === i.customize?.route) {
           i.focus();
           return;
         }

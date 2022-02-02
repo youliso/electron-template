@@ -4,10 +4,14 @@ import GlobalComponent from '@/renderer/common/globalComponent';
 import '@/renderer/views/scss/color.scss';
 import '@/renderer/views/scss/index.scss';
 
-windowLoad((_, args) => {
+windowLoad(async (_, args) => {
   setCustomize(args);
+  if (args.title) document.title = args.title;
   document.body.setAttribute('platform', window.environment.platform);
-  GlobalComponent.use(import('./views/components/head'), 'head').then(() =>
-    import('@/renderer/router').then(({ routerInit }) => routerInit(args.route as string))
-  );
+  document.body.setAttribute('headNative', args.headNative + '' || 'false');
+  !args.headNative &&
+    GlobalComponent.use(import('./views/components/head'), 'head').then(() =>
+      import('@/renderer/router').then(({ routerInit }) => routerInit(args.route as string))
+    );
+  import('@/renderer/router').then(({ routerInit }) => routerInit(args.route as string));
 });

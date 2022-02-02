@@ -96,6 +96,7 @@ export default class Router {
     }
     if (this.current) this.unCurrent();
     renderView(isLoad, view as View, params);
+    if (route.title) document.title = route.title;
     this.current = view;
     isHistory && this.setHistory(route.path, params);
     await this.onAfterRoute(route, params);

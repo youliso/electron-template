@@ -1,5 +1,4 @@
 const { resolve } = require('path');
-const { productName } = require('../package.json');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const base = require('./webpack.base.config');
 
@@ -40,7 +39,6 @@ module.exports = (env) => {
     },
     plugins: [
       new HtmlWebpackPlugin({
-        title: productName,
         template: './resources/build/index.html'
       })
     ],
