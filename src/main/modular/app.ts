@@ -3,7 +3,8 @@ import { resolve } from 'path';
 import { logError } from '@/main/modular/log';
 import Shortcut from '@/main/modular/shortcut';
 import Window from '@/main/modular/window';
-import { isSecondInstanceWin, customize, opt } from '@/cfg/window.json';
+import { isDisableHardwareAcceleration, isSecondInstanceWin } from '@/cfg/app.json';
+import { customize, opt } from '@/cfg/window.json';
 
 export class App {
   private static instance: App;
@@ -54,6 +55,8 @@ export class App {
    * 监听
    */
   beforeOn() {
+    //关闭硬件加速
+    isDisableHardwareAcceleration && app.disableHardwareAcceleration();
     // 默认单例根据自己需要改
     if (!app.requestSingleInstanceLock()) app.quit();
     else {
