@@ -18,10 +18,12 @@ export function browserWindowInit(
   // darwin下modal会造成整个窗口关闭(?)
   if (process.platform === 'darwin') delete args.modal;
   customize.headNative =
-    customize.headNative !== null && customize.headNative !== undefined ? customize.headNative : !customize.route;
+    customize.headNative !== null && customize.headNative !== undefined
+      ? customize.headNative
+      : !customize.route;
   let opt: BrowserWindowConstructorOptions = Object.assign(args, {
     autoHideMenuBar: true,
-    titleBarStyle: customize.route ? 'hidden' : 'default',
+    titleBarStyle: customize.headNative ? 'default' : 'hidden',
     minimizable: true,
     maximizable: true,
     frame: customize.headNative,
