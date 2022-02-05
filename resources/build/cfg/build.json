@@ -3,6 +3,9 @@
   "productName": "electron-template",
   "appId": "org.electron-template",
   "copyright": "MIT",
+  "electronDownload": {
+    "customDir": "v17.0.0"
+  },
   "asar": true,
   "directories": {
     "output": "out"
