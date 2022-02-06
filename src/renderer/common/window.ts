@@ -130,7 +130,7 @@ export function windowSetSize(
  */
 export function windowSetMaxMinSize(
   type: 'max' | 'min',
-  size: number[],
+  size: number | undefined[],
   id: number = getCustomize().id as number
 ) {
   window.ipc.send(`window-${type}-size-set`, { id, size });
