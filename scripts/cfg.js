@@ -5,7 +5,8 @@ const windowConfig = require('../src/cfg/window.json');
 const updateConfig = require('../src/cfg/update.json');
 const { version } = require('../node_modules/electron/package.json'); //electron version
 
-config.electronDownload.customDir = `v${version}`;
+// 如果镜像为https://npmmirror.com/mirrors/electron 请如下设置customDir
+// config.electronDownload.customDir = `v${version}`;
 
 /** 渲染进程不需要打包到file的包 */
 // config.files.push('!**/node_modules/包名');

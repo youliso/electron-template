@@ -36,20 +36,12 @@
     └── renderer 渲染进程模块
 ```
 
-### 安装中的网络问题
-
-- `electron`:
+### electron相关镜像源
 
 ```shell
-yarn config set electron_mirror https://cdn.npm.taobao.org/dist/electron/
-```
-
-## 运行调试
-
-运行命令
-
-```shell
-yarn dev
+CHROMEDRIVER_CDNURL=http://npm.taobao.org/mirrors/chromedriver/
+ELECTRON_BUILDER_BINARIES_MIRROR=http://npm.taobao.org/mirrors/electron-builder-binaries/
+electron_mirror=https://cdn.npm.taobao.org/dist/electron/
 ```
 
 ## 打包发布
@@ -57,5 +49,5 @@ yarn dev
 运行命令
 
 ```shell
-yarn build win|win32|win64|winp|winp32|winp64|darwin|mac|linux
+[pnpm|yarn|npm] build win|win32|win64|winp|winp32|winp64|darwin|mac|linux
 ```
