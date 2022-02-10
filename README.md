@@ -39,9 +39,9 @@
 ### electron相关镜像源
 
 ```shell
-registry=https://registry.npmmirror.com
-electron_mirror=https://npmmirror.com/mirrors/electron/
 electron_builder_binaries_mirror=https://npmmirror.com/mirrors/electron-builder-binaries/
+ELECTRON_CUSTOM_DIR={{ version }}
+ELECTRON_MIRROR=https://cdn.npmmirror.com/binaries/electron/v
 ```
 
 ## 打包发布

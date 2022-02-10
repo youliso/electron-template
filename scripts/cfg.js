@@ -4,15 +4,6 @@ const config = require('../resources/build/cfg/build.json');
 const windowConfig = require('../src/cfg/window.json');
 const updateConfig = require('../src/cfg/update.json');
 
-// 对于淘宝镜像的处理(暂时)
-if (process.env['npm_config_electron_mirror'] === 'https://npmmirror.com/mirrors/electron/') {
-  config.electronDownload = {
-    customDir: `v${require('electron/package.json').version}`
-  };
-} else {
-  delete config.electronDownload;
-}
-
 /** 渲染进程不需要打包到file的包 */
 // config.files.push('!**/node_modules/包名');
 
