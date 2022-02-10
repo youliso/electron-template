@@ -39,9 +39,9 @@
 ### electron相关镜像源
 
 ```shell
-CHROMEDRIVER_CDNURL=http://npm.taobao.org/mirrors/chromedriver/
-ELECTRON_BUILDER_BINARIES_MIRROR=http://npm.taobao.org/mirrors/electron-builder-binaries/
-electron_mirror=https://cdn.npm.taobao.org/dist/electron/
+registry=https://registry.npmmirror.com
+electron_mirror=https://npmmirror.com/mirrors/electron/
+electron_builder_binaries_mirror=https://npmmirror.com/mirrors/electron-builder-binaries/
 ```
 
 ## 打包发布
