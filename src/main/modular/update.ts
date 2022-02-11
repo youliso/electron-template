@@ -25,7 +25,7 @@ export default class Update {
     else this.autoUpdater = new AppImageUpdater(options);
     //本地开发环境，使用调试app-update.yml地址
     if (!app.isPackaged && !(process.platform === 'darwin')) {
-      this.autoUpdater.updateConfigPath = join('build/cfg/app-update.yml');
+      this.autoUpdater.updateConfigPath = join('resources/build/cfg/app-update.yml');
     }
   }
 
