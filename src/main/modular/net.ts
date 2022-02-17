@@ -156,6 +156,12 @@ export function download(url: string, params: RequestDownloadOpt = {}) {
     let chunks: Buffer[] = [];
     let size: number = 0;
     function ing(response: IncomingMessage) {
+      if (response.statusCode && response.statusCode === 301) {
+        download(response.headers.location as string, params)
+          .then(resolve)
+          .catch(reject);
+        return;
+      }
       const allLength = Number(response.headers['content-length'] || 0);
       response.on('data', (chunk) => {
         if (params.onDown) {
@@ -212,6 +218,12 @@ export default function request<T>(url: string, params: RequestOpt = {}): Promis
     let chunks: Buffer[] = [];
     let size: number = 0;
     function ing(response: IncomingMessage) {
+      if (response.statusCode && response.statusCode === 301) {
+        request<T>(response.headers.location as string, params)
+          .then(resolve)
+          .catch(reject);
+        return;
+      }
       response.on('data', (chunk) => {
         chunks.push(chunk);
         size += chunk.length;
@@ -242,16 +254,16 @@ export default function request<T>(url: string, params: RequestOpt = {}): Promis
         else resolve(result as unknown as T);
       });
     }
-    const request = requestInit(url, params.args, ing);
-    request.on('destroyed', () => reject(new Error('destroy')));
-    request.on('error', (err) => reject(err));
-    for (const header in headers) request.setHeader(header, headers[header] as string);
+    const req = requestInit(url, params.args, ing);
+    req.on('destroyed', () => reject(new Error('destroy')));
+    req.on('error', (err) => reject(err));
+    for (const header in headers) req.setHeader(header, headers[header] as string);
     if (params.data && params.method !== 'GET') {
       if (typeof params.data !== 'string') {
         const data = params.isStringify ? queryParams(params.data) : JSON.stringify(params.data);
-        request.write(data);
-      } else request.write(params.data);
+        req.write(data);
+      } else req.write(params.data);
     }
-    request.end();
+    req.end();
   });
 }
