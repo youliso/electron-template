@@ -33,6 +33,14 @@ export default class Router {
     else this.routes.push(route);
   }
 
+  renderMod(styles: any, dom: HTMLElement) {
+    if (!this.current) return;
+    styles.use();
+    !this.current?.styles && (this.current.styles = []);
+    this.current.styles.push(styles);
+    return dom;
+  }
+
   unInstance(name: string) {
     delete this.instances[name];
   }
@@ -43,7 +51,7 @@ export default class Router {
       console.warn(`beyond the history of ${path}`);
       return;
     }
-    if (instance) route.instance = instance;
+    instance && (route.instance = instance);
     await this.rIng(route, params, false);
   }
 
@@ -56,7 +64,7 @@ export default class Router {
       console.warn(`beyond the history of ${path}`);
       return;
     }
-    if (instance) route.instance = instance;
+    instance && (route.instance = instance);
     await this.rIng(route, params, true);
   }
 
@@ -87,16 +95,16 @@ export default class Router {
       : (await route.component()).default;
     let view: View | undefined;
     let isLoad: boolean = false;
-    if (route.instance) view = this.instances[route.path];
-    if (view) isLoad = true;
+    route.instance && (view = this.instances[route.path]);
+    view && (isLoad = true);
     if (!isLoad) {
       view = new component() as View;
       view.$instance = route.instance || false;
-      if (!view.$path) view.$path = route.path;
+      !view.$path && (view.$path = route.path);
     }
-    if (this.current) this.unCurrent();
+    this.current && this.unCurrent();
     renderView(isLoad, view as View, params);
-    if (route.title) document.title = route.title;
+    route.title && (document.title = route.title);
     this.current = view;
     isHistory && this.setHistory(route.path, params);
     await this.onAfterRoute(route, params);

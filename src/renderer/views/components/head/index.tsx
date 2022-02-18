@@ -1,11 +1,10 @@
 import { h } from '@/renderer/common/h';
 import { getCustomize } from '@/renderer/store';
 import { windowClose, windowMaxMin, windowMin } from '@/renderer/common/window';
-import indexCss from './scss/index.lazy.scss';
 
 const args = getCustomize();
 export default class Head implements Component {
-  styles = [indexCss];
+  styles = [import('./style/index.l.scss')];
   isHead: boolean;
 
   constructor(isHead: boolean = true) {

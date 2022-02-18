@@ -24,11 +24,11 @@ module.exports = (env) => {
         ...base.module.rules,
         {
           test: /\.(sa|sc|c)ss$/i,
-          exclude: /\.lazy\.(sa|sc|c)ss$/i,
+          exclude: /\.l\.(sa|sc|c)ss$/i,
           use: ['style-loader', 'css-loader', 'sass-loader']
         },
         {
-          test: /\.lazy\.(sa|sc|c)ss$/i,
+          test: /\.l\.(sa|sc|c)ss$/i,
           use: [
             { loader: 'style-loader', options: { injectType: 'lazyStyleTag' } },
             'css-loader',

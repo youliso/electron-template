@@ -1,12 +1,11 @@
 import { h } from '@/renderer/common/h';
 import { getCustomize } from '@/renderer/store';
 import { windowMessageSend, windowShow } from '@/renderer/common/window';
-import indexCss from './scss/index.lazy.scss';
 
 const args = getCustomize();
 
 export default class Message implements View {
-  styles = [indexCss];
+  styles = [import('./style/index.l.scss')];
 
   onReady() {
     windowShow();

@@ -11,14 +11,13 @@ import {
 import { dateFormat } from '@/utils';
 import { shortcutGetAll } from '@/renderer/common/shortcut';
 import { menuShow } from '@/renderer/common/menu';
-import indexCss from './scss/index.lazy.scss';
 
 const args = getCustomize();
 
 export default class Home implements View {
+  styles = [import('./style/index.l.scss')];
   private testData: RefValue<string> | undefined;
   private testInterval: NodeJS.Timer | undefined;
-  styles = [indexCss];
 
   onLoad() {
     this.onTest();

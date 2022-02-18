@@ -93,7 +93,7 @@ export function f({ children }: { children: Node[] | null }) {
   return element;
 }
 
-export function renderComponent(
+export async function renderComponent(
   cache: boolean,
   component: Component,
   opt?: {
@@ -102,7 +102,16 @@ export function renderComponent(
     key: string;
   }
 ) {
-  if (component.styles) for (const css of component.styles) css.use();
+  if (component.styles && Array.isArray(component.styles) && component.styles.length > 0) {
+    if (component.styles[0] instanceof Promise) {
+      await Promise.all(component.styles).then((styles) => {
+        component.styles = styles.map((e) => {
+          e.default.use();
+          return e.default;
+        });
+      });
+    } else component.styles.forEach((e) => e.use());
+  }
   if (cache) component.onActivated && component.onActivated();
   else component.onLoad && component.onLoad();
   if (opt) {
@@ -126,16 +135,30 @@ export function unComponent(cache: boolean, component: Component) {
   if (component.styles) for (const css of component.styles) css.unuse();
 }
 
-export function renderView(cache: boolean, view: View, params?: any) {
-  if (view.styles) for (const css of view.styles) css.use();
+export async function renderView(cache: boolean, view: View, params?: any) {
+  if (view.styles && Array.isArray(view.styles) && view.styles.length > 0) {
+    if (view.styles[0] instanceof Promise) {
+      await Promise.all(view.styles).then((styles) => {
+        view.styles = styles.map((e) => {
+          e.default.use();
+          return e.default;
+        });
+      });
+    } else view.styles.forEach((e) => e.use());
+  }
   if (!cache && view.onLoad) view.onLoad(params);
   else if (cache && view.onActivated) view.onActivated(params);
   if (view.$el) {
-    if (view.components)
-      for (const componentKey in view.components) {
-        const component = view.components[componentKey];
-        renderComponent(true, component);
-      }
+    view.components &&
+      (await Promise.all(
+        Object.keys(view.components).map((key) =>
+          renderComponent(true, (view.components as { [key: string]: Component })[key])
+        )
+      ));
+    for (const componentKey in view.components) {
+      const component = view.components[componentKey];
+      renderComponent(true, component);
+    }
     document.body.appendChild(view.$el);
     return;
   }
@@ -149,14 +172,15 @@ export function renderView(cache: boolean, view: View, params?: any) {
   }
   if (view.components) {
     const componentsEl = h('div', { class: 'view components' });
-    for (const componentKey in view.components) {
-      const component = view.components[componentKey];
-      renderComponent(false, component, {
-        currentPath: view.$path as string,
-        currentEl: componentsEl,
-        key: componentKey
-      });
-    }
+    await Promise.all(
+      Object.keys(view.components).map((key) =>
+        renderComponent(true, (view.components as { [key: string]: Component })[key], {
+          currentPath: view.$path as string,
+          currentEl: componentsEl,
+          key
+        })
+      )
+    );
     viewEl.appendChild(componentsEl);
   }
   view.$el = viewEl;
@@ -167,8 +191,7 @@ export function renderView(cache: boolean, view: View, params?: any) {
 export function unView(cache: boolean, view: View) {
   if (view.components)
     for (const componentKey in view.components) {
-      const component = view.components[componentKey];
-      unComponent(cache, component);
+      unComponent(cache, view.components[componentKey]);
     }
   if (cache) view.onDeactivated && view.onDeactivated();
   else view.onUnmounted && view.onUnmounted();

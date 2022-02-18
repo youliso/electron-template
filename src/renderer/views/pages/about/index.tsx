@@ -1,9 +1,8 @@
 import { h } from '@/renderer/common/h';
 import Router from '@/renderer/router';
-import indexCss from './scss/index.lazy.scss';
 
 export default class About implements View {
-  styles = [indexCss];
+  styles = [import('./style/index.l.scss')];
 
   render() {
     return (

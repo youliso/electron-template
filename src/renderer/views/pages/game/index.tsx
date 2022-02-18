@@ -1,9 +1,9 @@
 import { h } from '@/renderer/common/h';
-import indexCss from './scss/index.lazy.scss';
 import { nes_load, nes_un } from './demo';
+import router from '@/renderer/router';
 
 export default class Game implements View {
-  styles = [indexCss];
+  styles = [import('./style/index.l.scss')];
 
   onUnmounted() {
     nes_un();
@@ -23,6 +23,9 @@ export default class Game implements View {
           A Button: A
           <br />B Button: S
         </div>
+        <button class="but" onClick={() => router.back()}>
+          返回
+        </button>
       </div>
     );
   }

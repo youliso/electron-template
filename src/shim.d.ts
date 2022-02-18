@@ -31,7 +31,7 @@ interface View extends VSource {
   components?: { [key: string]: Component };
 }
 
-declare module '*.lazy.scss' {
+declare module '*.l.scss' {
   // 加载
   function use(): void;
 
