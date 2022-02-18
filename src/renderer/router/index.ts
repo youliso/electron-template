@@ -12,8 +12,4 @@ router.onBeforeRoute = (route) => {
 
 router.onAfterRoute = (route) => {};
 
-export function routerInit(route: string) {
-  router.push(route);
-}
-
 export default router;

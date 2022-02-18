@@ -10,5 +10,5 @@ windowLoad((_, args) => {
   document.body.setAttribute('platform', window.environment.platform);
   document.body.setAttribute('headNative', args.headNative + '');
   !args.headNative && GlobalComponent.use(import('./views/components/head'), 'head');
-  import('@/renderer/router').then(({ routerInit }) => routerInit(args.route as string));
+  import('@/renderer/router').then((router) => router.default.push(args.route as string));
 });
