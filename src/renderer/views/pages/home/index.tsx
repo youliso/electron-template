@@ -44,8 +44,8 @@ export default class Home implements View {
   }
 
   testRender() {
-    const test = <div class="text">{dateFormat()}</div>;
     this.testData = ref('test', dateFormat(), (value) => (test.textContent = value));
+    const test = <div class="text">{this.testData.value}</div>;
     this.testInterval = setInterval(() => {
       (this.testData as RefValue<string>).value = dateFormat();
     }, 1000);
