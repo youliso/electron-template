@@ -43,8 +43,8 @@ export function browserWindowInit(
     customize.parentId !== undefined &&
     typeof customize.parentId === 'number';
   let parenWin: BrowserWindow | null = null;
-  if (isParentId) parenWin = Window.getInstance().get(customize.parentId as number);
-  if (isParentId && parenWin) {
+  isParentId && (parenWin = Window.getInstance().get(customize.parentId as number));
+  if (parenWin) {
     opt.parent = parenWin;
     const currentWH = opt.parent.getBounds();
     customize.currentWidth = currentWH.width;
