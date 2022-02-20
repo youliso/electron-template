@@ -1,6 +1,5 @@
 import type { MenuItem, MenuItemConstructorOptions } from 'electron';
 import { BrowserWindow, ipcMain, Menu, nativeImage } from 'electron';
-import { join } from 'path';
 import testIcon from '@/assets/icon/test.png';
 
 export default class Menus {
@@ -14,7 +13,7 @@ export default class Menus {
       const template: Array<MenuItemConstructorOptions | MenuItem> = [
         {
           label: 'Menu Item 1',
-          icon: nativeImage.createFromPath(join(__dirname, `../${testIcon}`)),
+          icon: nativeImage.createFromDataURL(testIcon),
           click: () => {
             event.sender.send('menu-back', 'menu-item-1');
           }
