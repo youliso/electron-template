@@ -30,6 +30,6 @@ export default class Head implements Component {
       content.appendChild(title);
       if (this.isHead) content.appendChild(this.events());
     }
-    return <div class={style}>{content}</div>;
+    return <div class={style+' drag'}>{content}</div>;
   }
 }
