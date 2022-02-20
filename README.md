@@ -7,5 +7,5 @@
 [文档地址](https://mlmdflr.cc/doc)
 
 ## 主流框架模板
-[vue @mlmdflr](https://github.com/mlmdflr/xps-electron-vue-template)
+[vue @mlmdflr](https://github.com/mlmdflr/xps-electron-vue-template)   
 [react @TaiAiAc](https://github.com/TaiAiAc/electron-react-template)
