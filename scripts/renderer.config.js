@@ -4,24 +4,24 @@ const root = resolve('src/renderer');
 const outDir = resolve('dist/renderer');
 
 // https://vitejs.dev/config/
-module.exports = (env) => {
-  return defineConfig({
-    root,
-    base: './',
-    esbuild: {
-      jsxInject: `import {h,f} from '@/renderer/common/h'`,
-      jsxFactory: 'h',
-      jsxFragment: 'f'
-    },
-    build: {
-      outDir,
-      emptyOutDir: false
-    },
-    resolve: {
-      alias: {
-        '@': resolve('src')
-      }
-    },
-    plugins: []
-  });
-};
+module.exports = defineConfig({
+  mode: process.env['rendererMode'] || 'production',
+  root,
+  base: './',
+  esbuild: {
+    jsxInject: `import {h,f} from '@/renderer/common/h'`,
+    jsxFactory: 'h',
+    jsxFragment: 'f'
+  },
+  build: {
+    outDir,
+    emptyOutDir: true,
+    target: 'esnext',
+    minify: 'esbuild'
+  },
+  resolve: {
+    alias: {
+      '@': resolve('src')
+    }
+  }
+});

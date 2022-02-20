@@ -5,6 +5,9 @@ const { resolve } = require('path');
 const { spawn } = require('child_process');
 const electron = require('electron');
 
+process.env['mainMode'] = 'development';
+process.env['rendererMode'] = 'development';
+
 let electronProcess = null;
 let manualRestart = false;
 
@@ -27,7 +30,7 @@ async function startRenderer() {
 
 async function startMain() {
   return new Promise((resolve, reject) => {
-    const watcher = rollup.watch(require('./main.config')('development'));
+    const watcher = rollup.watch(require('./main.config'));
     watcher.on('event', (event) => {
       if (event.code === 'END') {
         if (electronProcess && electronProcess.kill) {

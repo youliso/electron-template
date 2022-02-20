@@ -8,6 +8,9 @@ const buildConfig = require('../resources/build/cfg/build.json');
 const mainOptions = require('./main.config');
 const rendererOptions = require('./renderer.config');
 
+process.env['mainMode'] = 'production';
+process.env['rendererMode'] = 'production';
+
 let [, , arch] = process.argv;
 
 const optional = ['win', 'win32', 'win64', 'winp', 'winp32', 'winp64', 'darwin', 'mac', 'linux'];
@@ -52,8 +55,7 @@ function checkInput(str) {
 }
 
 async function mainBuild() {
-  const opts = mainOptions();
-  for (const opt of opts) {
+  for (const opt of mainOptions) {
     await rollup
       .rollup(opt)
       .then(async (build) => await build.write(opt.output))
@@ -66,7 +68,7 @@ async function mainBuild() {
 }
 
 async function rendererBuild() {
-  await vite.build(rendererOptions()).catch((error) => {
+  await vite.build(rendererOptions).catch((error) => {
     console.log(`failed to build renderer process`);
     console.error(error);
     process.exit(1);
