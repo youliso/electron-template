@@ -54,14 +54,14 @@ function startElectron() {
   electronProcess = spawn(electron, args);
   electronProcess.stdout.on('data', (data) => {
     const msg = data.toString().trim();
-    if (msg)
+    msg &&
       console.log(
         `\x1b[34m[main stdout ${new Date().toLocaleTimeString()}]\x1b[0m: \x1b[1m${msg}\x1b[0m`
       );
   });
   electronProcess.stderr.on('data', (data) => {
     const msg = data.toString().trim();
-    if (msg)
+    msg &&
       console.log(
         `\x1b[31m[main stderr ${new Date().toLocaleTimeString()}]\x1b[0m: \x1b[1;31m${msg}\x1b[0m`
       );
@@ -75,9 +75,11 @@ function startElectron() {
 }
 
 async function init() {
+  console.time('dev');
   await startRenderer();
   await startMain();
   startElectron();
+  console.timeEnd('dev');
 }
 
 init().then();

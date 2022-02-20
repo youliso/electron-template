@@ -76,6 +76,7 @@ async function rendererBuild() {
 }
 
 async function core(arch) {
+  console.time('build');
   arch = arch.trim();
   let archTag = '';
   let archPath = '';
@@ -130,7 +131,9 @@ async function core(arch) {
   fs.writeFileSync('./resources/build/cfg/build.json', JSON.stringify(buildConfig, null, 2)); //写入配置
   deleteFolderRecursive(path.resolve('dist')); //清除dist
   await mainBuild();
+  console.log('[main success]');
   await rendererBuild();
+  console.log('[renderer success]');
   builder
     .build({
       targets: archTag,
@@ -138,6 +141,7 @@ async function core(arch) {
     })
     .then(() => {
       console.log('[build success]');
+      console.timeEnd('build');
     })
     .catch((error) => {
       console.error(error);

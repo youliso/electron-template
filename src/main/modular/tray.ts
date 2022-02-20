@@ -1,7 +1,7 @@
 import { app, Menu, Tray, nativeImage } from 'electron';
 import { join } from 'path';
 import Window from '@/main/modular/window';
-import logo from '@/assets/icon/test.png';
+import logo from '@/assets/icon/logo.png';
 
 class Trays {
   private static instance: Trays;
@@ -29,7 +29,7 @@ class Trays {
         click: () => app.quit()
       }
     ]);
-    this.main = new Tray(nativeImage.createFromPath(join(__dirname, `../${logo}`)));
+    this.main = new Tray(nativeImage.createFromDataURL(logo));
     this.main.setContextMenu(contextMenu);
     this.main.setToolTip(app.name);
     this.main.on('click', () => Window.func('show'));
