@@ -18,14 +18,8 @@ async function startRenderer() {
   } catch (e) {
     throw 'not found .port';
   }
-  const server = await createServer({
-    // 任何合法的用户配置选项，加上 `mode` 和 `configFile`
-    configFile: resolve('scripts/renderer.config.js'),
-    server: {
-      port
-    }
-  });
-  await server.listen();
+  const server = await createServer(require('./renderer.config'));
+  await server.listen(port);
 }
 
 async function startMain() {
