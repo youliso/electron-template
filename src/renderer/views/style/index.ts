@@ -20,6 +20,11 @@ injectGlobal`
   --ghostWhite: #f1f1f1;
   --white: #ffffff;
 }
+*,
+*:after,
+*:before {
+  box-sizing: border-box;
+}
 html,
 body {
   width: 100%;
