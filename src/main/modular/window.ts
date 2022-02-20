@@ -166,7 +166,7 @@ export class Window {
       }
       return;
     }
-    if (!win.customize.url) win.customize.url = join(__dirname, '../index.html');
+    if (!win.customize.url) win.customize.url = join(__dirname, '../renderer/index.html');
     load(win);
   }
 

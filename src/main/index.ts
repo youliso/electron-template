@@ -13,18 +13,19 @@ import { pathOn } from './modular/path';
 import { fileOn } from './modular/file';
 import { customize, opt } from '@/cfg/window.json';
 
-await App.start();
-// 主要模块
-Shortcut.on();
-Global.on();
-Window.on();
-Tray.on();
-logOn();
-// 可选模块
-fileOn();
-pathOn();
-await App.use([Session, Dialog, Menu, Update, Socket]);
-// 窗口
-Window.create(customize, opt);
-// 托盘
-Tray.create();
+App.start().then(async () => {
+  // 主要模块
+  Shortcut.on();
+  Global.on();
+  Window.on();
+  Tray.on();
+  logOn();
+  // 可选模块
+  fileOn();
+  pathOn();
+  await App.use([Session, Dialog, Menu, Update, Socket]);
+  // 窗口
+  Window.create(customize, opt);
+  // 托盘
+  Tray.create();
+});

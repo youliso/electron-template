@@ -1,4 +1,3 @@
-import { h, f } from '@/renderer/common/h';
 import { ref, revokeProxy } from '@/renderer/common/store';
 import { getCustomize } from '@/renderer/store';
 import Router from '@/renderer/router';
@@ -11,11 +10,11 @@ import {
 import { dateFormat } from '@/utils';
 import { shortcutGetAll } from '@/renderer/common/shortcut';
 import { menuShow } from '@/renderer/common/menu';
+import style from './style';
 
 const args = getCustomize();
 
 export default class Home implements View {
-  styles = [import('./style/index.l.scss')];
   private testData: RefValue<string> | undefined;
   private testInterval: NodeJS.Timer | undefined;
 
@@ -85,7 +84,7 @@ export default class Home implements View {
     }
 
     return (
-      <div class="info" onMouseDown={(e) => e.button === 2 && menuShow()}>
+      <div class={style} onMouseDown={(e) => e.button === 2 && menuShow()}>
         {this.testRender()}
         <button class="but" onClick={() => baidu()}>
           百度
@@ -102,11 +101,6 @@ export default class Home implements View {
         <button class="but" onClick={() => Router.push('/music')}>
           music
         </button>
-        <>
-          <button class="but" onClick={() => Router.push('/game')}>
-            game
-          </button>
-        </>
       </div>
     );
   }

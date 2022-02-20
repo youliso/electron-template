@@ -1,8 +1,9 @@
 import { h } from '@/renderer/common/h';
 import audio from '@/renderer/common/audio';
 import Router from '@/renderer/router';
+import style from './style';
 
-const info = h('div', { class: 'info' });
+const info = h('div', { class: style });
 const bgmBut = h('div', { class: 'bgm-but' }, '播放');
 const back = h('div', { class: 'back-but', onclick: () => Router.back() }, '返回');
 const c1 = h('canvas', { class: 'c1' }) as HTMLCanvasElement;

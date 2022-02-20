@@ -13,11 +13,6 @@ const Router: Route[] = [
     path: '/music',
     instance: true,
     component: () => import('@/renderer/views/pages/music/index')
-  },
-  {
-    path: '/game',
-    instance: true,
-    component: () => import('@/renderer/views/pages/game/index')
   }
 ];
 

@@ -10,7 +10,6 @@ interface Route {
 interface VSource {
   $path?: string;
   $el?: HTMLElement;
-  styles?: any[];
   onLoad?: (params?: any) => void;
   onReady?: () => void;
   onUnmounted?: () => void;
@@ -31,15 +30,6 @@ interface View extends VSource {
   components?: { [key: string]: Component };
 }
 
-declare module '*.l.scss' {
-  // 加载
-  function use(): void;
-
-  // 移除
-  function unuse(): void;
-}
-declare module '*.css';
-declare module '*.scss';
 declare module '*.svg';
 declare module '*.png';
 declare module '*.ico';

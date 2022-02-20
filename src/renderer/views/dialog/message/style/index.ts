@@ -1,14 +1,11 @@
-[headnative='true'] {
-  .info {
-    padding: 10px;
-  }
-}
+import { css } from '@emotion/css';
+import { getCustomize } from '@/renderer/store';
 
-.info {
+const args = getCustomize();
+
+export default css`
   position: relative;
-  width: 100%;
-  height: 100%;
-  padding: 32px 10px 10px;
+  padding: ${args.headNative ? '10px' : '32px'} 10px 10px;
 
   > .text {
     word-break: break-all;
@@ -26,4 +23,4 @@
     right: 5px;
     bottom: 5px;
   }
-}
+`;

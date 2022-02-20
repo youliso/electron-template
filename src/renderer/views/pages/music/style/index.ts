@@ -1,12 +1,11 @@
-[headnative='true'] {
-  .info {
-    top: 0;
-  }
-}
+import { css } from '@emotion/css';
+import { getCustomize } from '@/renderer/store';
 
-.info {
+const args = getCustomize();
+
+export default css`
   position: absolute;
-  top: 32px;
+  top: ${args.headNative ? '0' : '32px'};
   left: 0;
   right: 0;
   bottom: 0;
@@ -33,7 +32,9 @@
     z-index: 1;
   }
 
-  > .c1, .c2, .c3 {
+  > .c1,
+  .c2,
+  .c3 {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -54,4 +55,4 @@
   > .c3 {
     background-color: transparent;
   }
-}
+`;

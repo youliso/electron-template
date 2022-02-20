@@ -1,11 +1,13 @@
 const fs = require('fs');
 const readline = require('readline');
 const path = require('path');
-const webpack = require('webpack');
+const rollup = require('rollup');
+const vite = require('vite');
 const builder = require('electron-builder');
 const buildConfig = require('../resources/build/cfg/build.json');
-const main = require('./webpack.main.config'); //主进程
-const renderer = require('./webpack.renderer.config'); //子进程
+const mainOptions = require('./main.config');
+const rendererOptions = require('./renderer.config');
+
 let [, , arch] = process.argv;
 
 const optional = ['win', 'win32', 'win64', 'winp', 'winp32', 'winp64', 'darwin', 'mac', 'linux'];
@@ -49,7 +51,29 @@ function checkInput(str) {
   return true;
 }
 
-function core(arch) {
+async function mainBuild() {
+  const opts = mainOptions();
+  for (const opt of opts) {
+    await rollup
+      .rollup(opt)
+      .then(async (build) => await build.write(opt.output))
+      .catch((error) => {
+        console.log(`failed to build main process`);
+        console.error(error);
+        process.exit(1);
+      });
+  }
+}
+
+async function rendererBuild() {
+  await vite.build(rendererOptions()).catch((error) => {
+    console.log(`failed to build renderer process`);
+    console.error(error);
+    process.exit(1);
+  });
+}
+
+async function core(arch) {
   arch = arch.trim();
   let archTag = '';
   let archPath = '';
@@ -103,21 +127,20 @@ function core(arch) {
   } catch (err) {}
   fs.writeFileSync('./resources/build/cfg/build.json', JSON.stringify(buildConfig, null, 2)); //写入配置
   deleteFolderRecursive(path.resolve('dist')); //清除dist
-  webpack([{ ...main('production') }, { ...renderer('production') }], (err, stats) => {
-    if (err || stats.hasErrors()) throw err;
-    builder
-      .build({
-        targets: archTag,
-        config: buildConfig
-      })
-      .then((result) => {
-        console.log('[build success]');
-      })
-      .catch((error) => {
-        console.error(error);
-      })
-      .finally(() => r.close());
-  });
+  await mainBuild();
+  await rendererBuild();
+  builder
+    .build({
+      targets: archTag,
+      config: buildConfig
+    })
+    .then(() => {
+      console.log('[build success]');
+    })
+    .catch((error) => {
+      console.error(error);
+    })
+    .finally(() => r.close());
 }
 
 if (!arch) {

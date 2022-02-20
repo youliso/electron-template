@@ -1,10 +1,9 @@
-import { h } from '@/renderer/common/h';
 import { getCustomize } from '@/renderer/store';
 import { windowClose, windowMaxMin, windowMin } from '@/renderer/common/window';
+import style from './style';
 
 const args = getCustomize();
 export default class Head implements Component {
-  styles = [import('./style/index.l.scss')];
   isHead: boolean;
 
   constructor(isHead: boolean = true) {
@@ -31,6 +30,6 @@ export default class Head implements Component {
       content.appendChild(title);
       if (this.isHead) content.appendChild(this.events());
     }
-    return <div class="head-info drag">{content}</div>;
+    return <div class={style}>{content}</div>;
   }
 }

@@ -33,14 +33,6 @@ export default class Router {
     else this.routes.push(route);
   }
 
-  renderMod(styles: any, dom: HTMLElement) {
-    if (!this.current) return;
-    styles.use();
-    !this.current?.styles && (this.current.styles = []);
-    this.current.styles.push(styles);
-    return dom;
-  }
-
   unInstance(name: string) {
     delete this.instances[name];
   }

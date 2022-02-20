@@ -102,16 +102,6 @@ export async function renderComponent(
     key: string;
   }
 ) {
-  if (component.styles && Array.isArray(component.styles) && component.styles.length > 0) {
-    if (component.styles[0] instanceof Promise) {
-      await Promise.all(component.styles).then((styles) => {
-        component.styles = styles.map((e) => {
-          e.default.use();
-          return e.default;
-        });
-      });
-    } else component.styles.forEach((e) => e.use());
-  }
   if (cache) component.onActivated && component.onActivated();
   else component.onLoad && component.onLoad();
   if (opt) {
@@ -132,20 +122,9 @@ export function unComponent(cache: boolean, component: Component) {
     component.onUnmounted && component.onUnmounted();
     component.$el && component.$el.parentNode?.removeChild(component.$el);
   }
-  if (component.styles) for (const css of component.styles) css.unuse();
 }
 
 export async function renderView(cache: boolean, view: View, params?: any) {
-  if (view.styles && Array.isArray(view.styles) && view.styles.length > 0) {
-    if (view.styles[0] instanceof Promise) {
-      await Promise.all(view.styles).then((styles) => {
-        view.styles = styles.map((e) => {
-          e.default.use();
-          return e.default;
-        });
-      });
-    } else view.styles.forEach((e) => e.use());
-  }
   if (!cache && view.onLoad) view.onLoad(params);
   else if (cache && view.onActivated) view.onActivated(params);
   if (view.$el) {
@@ -196,7 +175,6 @@ export function unView(cache: boolean, view: View) {
   if (cache) view.onDeactivated && view.onDeactivated();
   else view.onUnmounted && view.onUnmounted();
   if (view.$el) view.$el.parentNode?.removeChild(view.$el as HTMLElement);
-  if (view.styles) for (const css of view.styles) css.unuse();
 }
 
 declare global {
