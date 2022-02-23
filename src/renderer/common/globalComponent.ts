@@ -2,7 +2,7 @@ import { h, renderComponent, unComponent } from '@/renderer/common/h';
 
 class GlobalComponent {
   private static instance: GlobalComponent;
-  private el: HTMLElement;
+  private el: JSX.Element;
 
   public components: { [key: string]: Component } = {};
 

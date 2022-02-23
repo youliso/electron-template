@@ -9,20 +9,20 @@ interface Route {
 
 interface VSource {
   $path?: string;
-  $el?: HTMLElement;
+  $el?: JSX.Element;
   onLoad?: (params?: any) => void;
   onReady?: () => void;
   onUnmounted?: () => void;
   onActivated?: (params?: any) => void;
   onDeactivated?: () => void;
-  render?: () => HTMLElement | HTMLElement[];
+  render?: () => JSX.Element | JSX.Element[];
 }
 
 interface Component extends VSource {
   $currentPath?: string;
   onLoad?: () => void;
   onActivated?: () => void;
-  render?: () => HTMLElement;
+  render?: () => JSX.Element;
 }
 
 interface View extends VSource {

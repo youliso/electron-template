@@ -1,11 +1,23 @@
-function applyChild(element: HTMLElement, child: ComponentChild) {
-  if (child instanceof HTMLElement || child instanceof DocumentFragment) element.appendChild(child);
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/**
+ * License: MIT
+ * @author Santo Pfingsten
+ * @see https://github.com/Lusito/tsx-dom
+ */
+
+function applyChild(element: JSX.Element, child: ComponentChild) {
+  if (
+    child instanceof HTMLElement ||
+    child instanceof SVGElement ||
+    child instanceof DocumentFragment
+  )
+    element.appendChild(child);
   else if (typeof child === 'string' || typeof child === 'number')
     element.appendChild(document.createTextNode(child.toString()));
   else console.warn('Unknown type to append: ', child);
 }
 
-function applyChildren(element: HTMLElement, children: ComponentChild[]) {
+function applyChildren(element: JSX.Element, children: ComponentChild[]) {
   for (const child of children) {
     if (!child && child !== 0) continue;
 
@@ -27,7 +39,10 @@ export function h(
 ): JSX.Element {
   if (typeof tag === 'function') return tag({ ...attrs, children });
 
-  const element = document.createElement(tag);
+  let element: JSX.Element;
+  if (attrs?.xmlns) {
+    element = document.createElementNS(attrs.xmlns as string, tag) as SVGElement;
+  } else element = document.createElement(tag);
 
   if (attrs) {
     // Special handler for style with a value of type JSX.StyleAttributes
@@ -38,7 +53,9 @@ export function h(
 
     for (const name of Object.keys(attrs)) {
       const value = attrs[name];
-      if (name.startsWith('on')) {
+      if (name === 'dangerouslySetInnerHTML' && typeof value === 'string') {
+        element.innerHTML = value;
+      } else if (name.startsWith('on')) {
         const finalName = name.replace(/Capture$/, '');
         const useCapture = name !== finalName;
         const eventName = finalName.toLowerCase().substring(2);
@@ -67,7 +84,7 @@ export async function renderComponent(
   component: Component,
   opt?: {
     currentPath: string;
-    currentEl: HTMLElement;
+    currentEl: JSX.Element;
     key: string;
   }
 ) {
