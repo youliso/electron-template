@@ -1,11 +1,14 @@
 # electron-template
 
-一个基于 `electron` 多窗口模式的模板,交流`qq`群 `12354891`
+## Credits
+[tsx-dom](https://github.com/Lusito/tsx-dom)
 
-## 文档地址
+## Doc
+[https://mlmdflr.cc/doc](https://mlmdflr.cc/doc)
 
-[文档地址](https://mlmdflr.cc/doc)
-
-## 主流框架模板
+## Framework template
 [vue @mlmdflr](https://github.com/mlmdflr/xps-electron-vue-template)   
 [react @TaiAiAc](https://github.com/TaiAiAc/electron-react-template)
+
+## Channels
+qq: `12354891`
