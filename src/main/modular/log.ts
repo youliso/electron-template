@@ -12,7 +12,7 @@ const logFile: string = app.getPath('logs');
 export function logInfo(...val: any): void {
   const date = new Date();
   const path =
-    logFile + `${sep}info-${date.getFullYear()}${date.getMonth() + 1}${date.getDate()}.log`;
+    logFile + `${sep}${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}.info.log`;
   let data = '';
   val.forEach((e: any) => {
     try {
@@ -35,7 +35,7 @@ export function logInfo(...val: any): void {
 export function logError(...val: any): void {
   const date = new Date();
   const path =
-    logFile + `${sep}error-${date.getFullYear()}${date.getMonth() + 1}${date.getDate()}.log`;
+    logFile + `${sep}${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}.error.log`;
   let data = '';
   val.forEach((e: any) => {
     try {
