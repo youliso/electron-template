@@ -24,7 +24,7 @@ type ComponentAttributes = {
 
 declare namespace JSX {
   // Return type of jsx syntax
-  type Element = HTMLElement | SVGElement;
+  type Element = HTMLElement | SVGElement | DocumentFragment;
 
   // specify the property/children name to use
   interface ElementAttributesProperty {

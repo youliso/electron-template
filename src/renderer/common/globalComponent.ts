@@ -2,7 +2,7 @@ import { h, renderComponent, unComponent } from '@/renderer/common/h';
 
 class GlobalComponent {
   private static instance: GlobalComponent;
-  private el: JSX.Element;
+  private el: JSX.Element = h('div', { class: 'global components' });
 
   public components: { [key: string]: Component } = {};
 
@@ -12,7 +12,6 @@ class GlobalComponent {
   }
 
   constructor() {
-    this.el = h('div', { class: 'global components' });
     document.body.appendChild(this.el);
   }
 
