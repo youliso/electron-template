@@ -44,7 +44,7 @@ body {
 .user-select-text {
   user-select: text;
 }
-.container {
+#root {
   width: 100%;
   height: 100%;
   background-color: transparent;

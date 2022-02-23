@@ -3,6 +3,8 @@ import { renderView, unView } from '@/renderer/common/h';
 export default class Router {
   private instances: { [key: string]: View } = {};
 
+  // 当前路由挂载dom
+  public element: HTMLElement | null;
   public routes: Route[] = [];
   // 当前路由
   public current: View | undefined;
@@ -12,7 +14,9 @@ export default class Router {
   public onBeforeRoute: (route: Route, params?: any) => Promise<boolean> | boolean = () => true;
   public onAfterRoute: (route: Route, params?: any) => Promise<void> | void = () => {};
 
-  constructor(routes: Route[]) {
+  constructor(routes: Route[], elementId: string = 'root') {
+    this.element = document.getElementById(elementId);
+    if (!this.element) throw new Error(`element ${elementId} null`);
     this.routes.push(...routes);
   }
 
@@ -95,7 +99,7 @@ export default class Router {
       !view.$path && (view.$path = route.path);
     }
     this.current && this.unCurrent();
-    renderView(isLoad, view as View, params);
+    renderView(isLoad, this.element as HTMLElement, view as View, params);
     route.title && (document.title = route.title);
     this.current = view;
     isHistory && this.setHistory(route.path, params);

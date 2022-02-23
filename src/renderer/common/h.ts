@@ -110,7 +110,7 @@ export function unComponent(cache: boolean, component: Component) {
   }
 }
 
-export async function renderView(cache: boolean, view: View, params?: any) {
+export async function renderView(cache: boolean, parentEl: HTMLElement, view: View, params?: any) {
   if (!cache && view.onLoad) view.onLoad(params);
   else if (cache && view.onActivated) view.onActivated(params);
   if (view.$el) {
@@ -124,7 +124,7 @@ export async function renderView(cache: boolean, view: View, params?: any) {
       const component = view.components[componentKey];
       renderComponent(true, component);
     }
-    document.body.appendChild(view.$el);
+    parentEl.appendChild(view.$el);
     return;
   }
   const viewEl = h('div', { class: 'container' });
@@ -149,7 +149,7 @@ export async function renderView(cache: boolean, view: View, params?: any) {
     viewEl.appendChild(componentsEl);
   }
   view.$el = viewEl;
-  document.body.appendChild(viewEl);
+  parentEl.appendChild(viewEl);
   if (!cache && view.onReady) view.onReady();
 }
 

@@ -12,7 +12,9 @@ class GlobalComponent {
   }
 
   constructor() {
-    document.body.appendChild(this.el);
+    const element = document.getElementById('root');
+    if (!element) throw new Error(`element root null`);
+    element.appendChild(this.el);
   }
 
   async use(mod: Promise<any>, key?: string) {
