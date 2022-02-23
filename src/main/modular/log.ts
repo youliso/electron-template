@@ -1,7 +1,6 @@
 import { statSync, writeFileSync, appendFileSync } from 'fs';
 import { sep } from 'path';
 import { app, ipcMain } from 'electron';
-import { dateFormat } from '@/utils';
 import { EOL } from 'os';
 
 const logFile: string = app.getPath('logs');
@@ -11,7 +10,9 @@ const logFile: string = app.getPath('logs');
  * @param val
  */
 export function logInfo(...val: any): void {
-  const path = logFile + `${sep}info-${dateFormat('yyyy-MM-dd')}.log`;
+  const date = new Date();
+  const path =
+    logFile + `${sep}info-${date.getFullYear()}${date.getMonth() + 1}${date.getDate()}.log`;
   let data = '';
   val.forEach((e: any) => {
     try {
@@ -21,7 +22,10 @@ export function logInfo(...val: any): void {
       data += e;
     }
   });
-  write(path, `[${dateFormat('yy-MM-dd hh:mm:ss')}] [info] ${data}${EOL}`);
+  write(
+    path,
+    `[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] [info] ${data}${EOL}`
+  );
 }
 
 /**
@@ -29,7 +33,9 @@ export function logInfo(...val: any): void {
  * @param val
  */
 export function logError(...val: any): void {
-  const path = logFile + `${sep}error-${dateFormat('yyyy-MM-dd')}.log`;
+  const date = new Date();
+  const path =
+    logFile + `${sep}error-${date.getFullYear()}${date.getMonth() + 1}${date.getDate()}.log`;
   let data = '';
   val.forEach((e: any) => {
     try {
@@ -39,7 +45,10 @@ export function logError(...val: any): void {
       data += e;
     }
   });
-  write(path, `[${dateFormat('yy-MM-dd hh:mm:ss')}] [error] ${data}${EOL}`);
+  write(
+    path,
+    `[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] [error] ${data}${EOL}`
+  );
 }
 
 function write(path: string, data: string) {

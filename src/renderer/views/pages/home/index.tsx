@@ -7,7 +7,6 @@ import {
   windowMessageRemove,
   windowShow
 } from '@/renderer/common/window';
-import { dateFormat } from '@/utils';
 import { shortcutGetAll } from '@/renderer/common/shortcut';
 import { menuShow } from '@/renderer/common/menu';
 import style from './style';
@@ -43,10 +42,10 @@ export default class Home implements View {
   }
 
   testRender() {
-    this.testData = ref('test', dateFormat(), (value) => (test.textContent = value));
+    this.testData = ref('test', Date(), (value) => (test.textContent = value));
     const test = <div class="text">{this.testData.value}</div>;
     this.testInterval = setInterval(() => {
-      (this.testData as RefValue<string>).value = dateFormat();
+      (this.testData as RefValue<string>).value = Date();
     }, 1000);
     return test;
   }
