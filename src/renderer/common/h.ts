@@ -79,51 +79,10 @@ export function f({ children }: { children: Node[] | null }) {
   return element;
 }
 
-export async function renderComponent(
-  cache: boolean,
-  component: Component,
-  opt?: {
-    currentPath: string;
-    currentEl: JSX.Element;
-    key: string;
-  }
-) {
-  if (cache) component.onActivated && component.onActivated();
-  else component.onLoad && component.onLoad();
-  if (opt) {
-    const el = component.render ? component.render() : null;
-    component.$currentPath = opt.currentPath;
-    component.$path = opt.key;
-    if (el) {
-      component.$el = el;
-      opt.currentEl.appendChild(el);
-    }
-    component.onReady && component.onReady();
-  }
-}
-
-export function unComponent(cache: boolean, component: Component) {
-  if (cache) component.onDeactivated && component.onDeactivated();
-  else {
-    component.onUnmounted && component.onUnmounted();
-    component.$el && component.$el.parentNode?.removeChild(component.$el);
-  }
-}
-
-export async function renderView(cache: boolean, parentEl: HTMLElement, view: View, params?: any) {
+export function renderView(cache: boolean, parentEl: HTMLElement, view: View, params?: any) {
   if (!cache && view.onLoad) view.onLoad(params);
   else if (cache && view.onActivated) view.onActivated(params);
   if (view.$el) {
-    view.components &&
-      (await Promise.all(
-        Object.keys(view.components).map((key) =>
-          renderComponent(true, (view.components as { [key: string]: Component })[key])
-        )
-      ));
-    for (const componentKey in view.components) {
-      const component = view.components[componentKey];
-      renderComponent(true, component);
-    }
     parentEl.appendChild(view.$el);
     return;
   }
@@ -135,29 +94,12 @@ export async function renderView(cache: boolean, parentEl: HTMLElement, view: Vi
       else viewEl.appendChild(cl);
     }
   }
-  if (view.components) {
-    const componentsEl = h('div', { class: 'view components' });
-    await Promise.all(
-      Object.keys(view.components).map((key) =>
-        renderComponent(true, (view.components as { [key: string]: Component })[key], {
-          currentPath: view.$path as string,
-          currentEl: componentsEl,
-          key
-        })
-      )
-    );
-    viewEl.appendChild(componentsEl);
-  }
   view.$el = viewEl;
   parentEl.appendChild(viewEl);
   if (!cache && view.onReady) view.onReady();
 }
 
 export function unView(cache: boolean, view: View) {
-  if (view.components)
-    for (const componentKey in view.components) {
-      unComponent(cache, view.components[componentKey]);
-    }
   if (cache) view.onDeactivated && view.onDeactivated();
   else view.onUnmounted && view.onUnmounted();
   if (view.$el) view.$el.parentNode?.removeChild(view.$el as HTMLElement);

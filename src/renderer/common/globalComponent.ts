@@ -1,4 +1,4 @@
-import { h, renderComponent, unComponent } from '@/renderer/common/h';
+import { h } from '@/renderer/common/h';
 
 class GlobalComponent {
   private static instance: GlobalComponent;
@@ -17,15 +17,28 @@ class GlobalComponent {
     element.appendChild(this.el);
   }
 
+  private render(component: Component, key: string) {
+    component.onLoad && component.onLoad();
+    const el = component.render ? component.render() : null;
+    component.$currentPath = 'global';
+    component.$path = key;
+    if (el) {
+      component.$el = el;
+      this.el.appendChild(el);
+    }
+    component.onReady && component.onReady();
+  }
+
+  private un(component: Component) {
+    component.onUnmounted && component.onUnmounted();
+    component.$el && this.el.removeChild(component.$el);
+  }
+
   async use(mod: Promise<any>, key?: string) {
     await mod.then((node: any) => {
       key = key || (node.default.name as string);
       const component = new node.default() as Component;
-      renderComponent(false, component, {
-        currentPath: 'global',
-        currentEl: this.el,
-        key
-      });
+      this.render(component, key);
       this.components[key] = component;
     });
   }
@@ -33,12 +46,12 @@ class GlobalComponent {
   unuse(key?: string) {
     if (key) {
       const component = this.components[key];
-      unComponent(false, component);
+      this.un(component);
       return;
     }
     for (const componentKey in this.components) {
       const component = this.components[componentKey];
-      unComponent(false, component);
+      this.un(component);
     }
   }
 

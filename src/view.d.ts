@@ -27,7 +27,6 @@ interface Component extends VSource {
 
 interface View extends VSource {
   $instance?: boolean;
-  components?: { [key: string]: Component };
 }
 
 declare module '*.svg';
