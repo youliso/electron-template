@@ -96,11 +96,11 @@ export function renderView(cache: boolean, parentEl: HTMLElement, view: View, pa
   }
   view.$el = viewEl;
   parentEl.appendChild(viewEl);
-  if (!cache && view.onReady) view.onReady();
+  !cache && view.onReady && view.onReady();
 }
 
 export function unView(cache: boolean, view: View) {
   if (cache) view.onDeactivated && view.onDeactivated();
   else view.onUnmounted && view.onUnmounted();
-  if (view.$el) view.$el.parentNode?.removeChild(view.$el as HTMLElement);
+  view.$el && view.$el.parentNode?.removeChild(view.$el as HTMLElement);
 }
