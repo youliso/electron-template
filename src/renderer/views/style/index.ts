@@ -1,4 +1,4 @@
-import { injectGlobal } from '@emotion/css';
+import { injectGlobal } from '@emotion/css/macro';
 
 injectGlobal`
 :root {

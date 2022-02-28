@@ -32,7 +32,8 @@
     "rollup-plugin-esbuild": "^4.8.2",
     "rollup-plugin-obfuscator": "^0.2.1",
     "typescript": "^4.5.5",
-    "vite": "^2.8.4"
+    "vite": "^2.8.4",
+    "vite-plugin-babel-macros": "^1.0.5"
   },
   "dependencies": {
     "electron-updater": "^4.6.5",

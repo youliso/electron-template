@@ -1,4 +1,4 @@
-import { css } from '@emotion/css';
+import { css } from '@emotion/css/macro';
 import { getCustomize } from '@/renderer/store';
 
 const args = getCustomize();
