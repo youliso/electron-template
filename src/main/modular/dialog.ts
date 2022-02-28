@@ -14,7 +14,7 @@ export default class Dialog {
         logError(`not found win -> ${args.winId}`);
         return;
       }
-      dialog.showOpenDialog(win, args.params);
+     return dialog.showOpenDialog(win, args.params);
     });
   }
 }
