@@ -13,7 +13,7 @@ import style from './style';
 
 const args = getCustomize();
 
-export default class Home implements View {
+export default class Home {
   private testData: RefValue<string> | undefined;
   private testInterval: NodeJS.Timer | undefined;
 

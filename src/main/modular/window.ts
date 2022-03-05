@@ -72,6 +72,12 @@ export function browserWindowInit(
   if (!customize.argv) customize.argv = process.argv;
   customize.id = win.id;
   win.customize = customize;
+
+  // 窗口内创建
+  // win.webContents.setWindowOpenHandler((_) => ({
+  //   action: 'allow',
+  //   overrideBrowserWindowOptions: opt
+  // }));
   return win;
 }
 

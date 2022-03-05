@@ -1,7 +1,7 @@
 import Router from '@/renderer/router';
 import style from './style';
 
-export default class About implements View {
+export default class About {
   render() {
     return (
       <div class={style}>

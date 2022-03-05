@@ -4,7 +4,7 @@ import style from './style';
 
 const args = getCustomize();
 
-export default class Message implements View {
+export default class Message {
   onReady() {
     windowShow();
   }
