@@ -1,4 +1,4 @@
-import { app, ipcMain, shell } from 'electron';
+import { app, ipcMain, shell, nativeTheme } from 'electron';
 import { resolve } from 'path';
 import { logError } from '@/main/modular/log';
 import Shortcut from '@/main/modular/shortcut';
@@ -96,6 +96,13 @@ export class App {
     // 关闭所有窗口退出
     app.on('window-all-closed', () => {
       if (process.platform !== 'darwin') app.quit();
+    });
+    nativeTheme.addListener('updated', () => {
+      Window.send('socket-back', {
+        shouldUseDarkColors: nativeTheme.shouldUseDarkColors,
+        shouldUseHighContrastColors: nativeTheme.shouldUseHighContrastColors,
+        shouldUseInvertedColorScheme: nativeTheme.shouldUseInvertedColorScheme
+      });
     });
   }
 

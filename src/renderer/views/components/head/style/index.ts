@@ -10,8 +10,6 @@ export default css`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: var(--white);
-  background-color: var(--black);
 
   > .content {
     width: 100%;

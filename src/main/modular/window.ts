@@ -36,8 +36,6 @@ export function browserWindowInit(
       webSecurity: false
     }
   });
-  if (!opt.backgroundColor && windowCfg.opt.backgroundColor)
-    opt.backgroundColor = windowCfg.opt.backgroundColor;
   const isParentId =
     customize.parentId !== null &&
     customize.parentId !== undefined &&
@@ -281,7 +279,7 @@ export class Window {
       console.error('Invalid id, the id can not be a empty');
       return;
     }
-    win.setBackgroundColor(args.color || windowCfg.opt.backgroundColor);
+    win.setBackgroundColor(args.color);
   }
 
   /**

@@ -25,6 +25,12 @@ injectGlobal`
 *:before {
   box-sizing: border-box;
 }
+@media (prefers-color-scheme: dark) { 
+  body,input,select,button{background:var(--black);color:var(--white);}
+}
+@media (prefers-color-scheme: light) {
+  body,input,select,button{background:var(--white);color:var(--black);}
+}
 html,
 body,
 #root {
@@ -32,7 +38,6 @@ body,
   height: 100%;
   padding: 0;
   margin: 0;
-  background-color: transparent;
   position: relative;
   user-select: none;
 }
