@@ -11,9 +11,10 @@ const rendererOptions = require('./renderer.config');
 process.env['mainMode'] = 'production';
 process.env['rendererMode'] = 'production';
 
-let [, , arch] = process.argv;
+let [, , arch, _notP] = process.argv;
 
 const optional = ['win', 'win32', 'win64', 'winp', 'winp32', 'winp64', 'darwin', 'mac', 'linux'];
+const notP_optional = '-notp'
 
 const r = readline.createInterface({
   input: process.stdin,
@@ -37,6 +38,8 @@ function deleteFolderRecursive(url) {
   }
 }
 
+buildConfig.afterPack = 'scripts/buildAfterPack.js';
+
 buildConfig.extraResources = [
   {
     from: 'resources/extern',
@@ -47,7 +50,7 @@ buildConfig.extraResources = [
 
 function checkInput(str) {
   if (optional.indexOf(str) === -1) {
-    console.log('illegal input');
+    console.log(`\x1B[31mIllegal input , Please check input \x1B[0m`);
     r.close();
     return false;
   }
@@ -60,7 +63,7 @@ async function mainBuild() {
       .rollup(opt)
       .then(async (build) => await build.write(opt.output))
       .catch((error) => {
-        console.log(`failed to build main process`);
+        console.log(`\x1B[31mFailed to build main process !\x1B[0m`);
         console.error(error);
         process.exit(1);
       });
@@ -69,14 +72,13 @@ async function mainBuild() {
 
 async function rendererBuild() {
   await vite.build(rendererOptions).catch((error) => {
-    console.log(`failed to build renderer process`);
+    console.log(`\x1B[31mFailed to build renderer process !\x1B[0m`);
     console.error(error);
     process.exit(1);
   });
 }
 
 async function core(arch) {
-  console.time('build');
   arch = arch.trim();
   let archTag = '';
   let archPath = '';
@@ -127,41 +129,41 @@ async function core(arch) {
       to: archPath,
       filter: ['**/*']
     });
-  } catch (err) {}
+  } catch (err) { }
   fs.writeFileSync('./resources/build/cfg/build.json', JSON.stringify(buildConfig, null, 2)); //写入配置
   deleteFolderRecursive(path.resolve('dist')); //清除dist
+  console.log('\x1B[34m[build start]\x1B[0m');
   await mainBuild();
-  console.log('[main success]');
   await rendererBuild();
-  console.log('[renderer success]');
   builder
     .build({
       targets: archTag,
       config: buildConfig
     })
     .then(() => {
-      console.log('[build success]');
-      console.timeEnd('build');
+      console.log('\x1B[32m[build success] \x1B[0m');
     })
     .catch((error) => {
       console.error(error);
     })
-    .finally(() => r.close());
 }
 
 if (!arch) {
-  console.log('Which platform is you want to build?');
-  console.log(`optional：${optional}    q exit`);
+  console.log('\x1B[36mWhich platform is you want to build?\x1B[0m');
+  console.log(`optional：\x1B[33m${optional}\x1B[0m  \x1B[1mor\x1B[0m  \x1B[33mq\x1B[0m \x1B[1m(exit)\x1B[0m  \x1B[2m|\x1B[0m  [\x1B[36m${notP_optional}\x1B[0m]  `);
   r.on('line', (str) => {
-    if (str === 'q') {
-      console.log('exit success');
+    let strs = str.split(" ").filter(s => s !== '')
+    if (strs[0] === 'q') {
+      console.log(`\x1B[32mExit success\x1B[0m`);
       r.close();
       return;
     }
-    if (!checkInput(str)) return;
-    r.pause();
-    core(str);
+    if (strs[1] && strs[1] === notP_optional) delete buildConfig.afterPack
+    if (!checkInput(strs[0])) return;
+    r.close();
+    core(strs[0]);
   });
 } else {
+  if (_notP) delete buildConfig.afterPack
   if (checkInput(arch)) core(arch);
 }
