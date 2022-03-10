@@ -4,8 +4,8 @@ import Router from '@/renderer/router';
 import style from './style';
 
 const info = h('div', { class: style });
-const bgmBut = h('div', { class: 'bgm-but' }, '播放');
-const back = h('div', { class: 'back-but', onclick: () => Router.back() }, '返回');
+const bgmBut = h('button', { class: 'bgm-but' }, '播放');
+const back = h('button', { class: 'back-but', onclick: () => Router.back() }, '返回');
 const c1 = h('canvas', { class: 'c1' }) as HTMLCanvasElement;
 const c2 = h('canvas', { class: 'c2' }) as HTMLCanvasElement;
 const c3 = h('canvas', { class: 'c3' }) as HTMLCanvasElement;

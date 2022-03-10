@@ -43,7 +43,7 @@ export default class Home {
 
   testRender() {
     this.testData = ref('test', Date(), (value) => (test.textContent = value));
-    const test = <div class="text">{this.testData.value}</div>;
+    const test = <div class="test">{this.testData.value}</div>;
     this.testInterval = setInterval(() => {
       (this.testData as RefValue<string>).value = Date();
     }, 1000);
@@ -60,8 +60,8 @@ export default class Home {
           data: { text: '123' }
         },
         {
-          width: 400,
-          height: 200,
+          width: 440,
+          height: 220,
           modal: true,
           resizable: true
         }

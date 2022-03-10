@@ -12,13 +12,19 @@ export default class Message {
   render() {
     return (
       <div class={style}>
-        <div class="text">
-          <div>创建传参: {JSON.stringify(args.data as any)}</div>
-          <div>app启动参数: {JSON.stringify(args.argv as any)}</div>
+        <div class="list">
+          <div class="text">
+            <div class="name">窗口参数</div>
+            <div class="value">{JSON.stringify(args.data as any)}</div>
+          </div>
+          <div class="text">
+            <div class="name">进程参数</div>
+            <div class="value">{JSON.stringify(args.argv as any)}</div>
+          </div>
         </div>
-        <button class="text" onClick={() => windowMessageSend('test', Date.now())}>
-          发送消息
-        </button>
+        <div class="buts">
+          <button onClick={() => windowMessageSend('test', Date.now())}>发送消息</button>
+        </div>
       </div>
     );
   }

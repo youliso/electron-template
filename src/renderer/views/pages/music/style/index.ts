@@ -16,8 +16,6 @@ export default css`
     right: 5px;
     padding: 2px 20px;
     font: bolder 14px/26px normal;
-    color: var(--white);
-    background-color: var(--cyan);
     z-index: 1;
   }
 
@@ -27,8 +25,6 @@ export default css`
     right: 80px;
     padding: 2px 20px;
     font: bolder 14px/26px normal;
-    color: var(--white);
-    background-color: var(--cyan);
     z-index: 1;
   }
 

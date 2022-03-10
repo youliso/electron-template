@@ -5,22 +5,31 @@ const args = getCustomize();
 
 export default css`
   position: relative;
+  width: 100%;
+  height: 100%;
   padding: ${args.headNative ? '10px' : '32px'} 10px 10px;
 
-  > .text {
-    word-break: break-all;
-    font: normal 16px sans-serif;
+  > .list {
+    width: 100%;
+    > .text {
+      padding: 5px 0;
+      display: flex;
+      justify-content: center;
+      --nameWidth: 100px;
+      > .name {
+        width: var(--nameWidth);
+      }
+      > .value {
+        width: calc(100% - var(--nameWidth));
+        word-break: break-all;
+        font: normal 16px sans-serif;
+      }
+    }
   }
 
-  > .test {
+  > .buts {
     position: absolute;
-    right: 50px;
-    bottom: 5px;
-  }
-
-  > .close {
-    position: absolute;
-    right: 5px;
-    bottom: 5px;
+    right: 10px;
+    bottom: 10px;
   }
 `;

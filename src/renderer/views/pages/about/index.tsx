@@ -5,10 +5,8 @@ export default class About {
   render() {
     return (
       <div class={style}>
-        <div class="text">关于</div>
-        <button class="but" onClick={() => Router.back()}>
-          首页
-        </button>
+        <div class="test">关于</div>
+        <button onClick={() => Router.back()}>首页</button>
       </div>
     );
   }
