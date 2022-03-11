@@ -9,8 +9,6 @@ import {
 } from '@/renderer/common/window';
 import { shortcutGetAll } from '@/renderer/common/shortcut';
 import { menuShow } from '@/renderer/common/menu';
-import { getResourcesPath } from '@/renderer/common/app';
-import { readFile } from '@/renderer/common/file';
 import style from './style';
 
 const args = getCustomize();
@@ -56,17 +54,6 @@ export default class Home {
     return test;
   }
 
-  testfile() {
-    this.fileData = ref('file', Date(), (value) => (test.textContent = value));
-    const test = <div class="test">{this.fileData.value}</div>;
-    getResourcesPath('inside', 't.txt').then((e) => {
-      readFile(e, { encoding: 'utf8' }).then((req) => {
-        this.fileData!.value = req;
-      });
-    });
-    return test;
-  }
-
   render() {
     function tk() {
       windowCreate(
@@ -98,12 +85,9 @@ export default class Home {
       );
     }
 
-    getResourcesPath('inside', 't.txt').then((e) => console.log(e));
-
     return (
       <div class={style} onMouseDown={(e) => e.button === 2 && menuShow()}>
         {this.testRender()}
-        {this.testfile()}
         <button class="but" onClick={() => baidu()}>
           百度
         </button>
