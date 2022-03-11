@@ -28,7 +28,7 @@ export class Global {
     return Global.instance;
   }
 
-  constructor() {}
+  constructor() { }
 
   /**
    * 挂载配置
@@ -138,6 +138,7 @@ export class Global {
   /**
    * 获取资源文件路径
    * 不传path返回此根目录
+   * 断言通过返回绝对路径 (inside 存在虚拟路径不做断言)
    * */
   getResourcesPath(type: 'platform' | 'inside' | 'extern' | 'root', path: string = './'): string {
     try {
@@ -150,12 +151,11 @@ export class Global {
           );
           break;
         case 'inside':
-          path = normalize(
+          return path = normalize(
             app.isPackaged
               ? resolve(join(__dirname, '..', '..', 'inside', path))
               : resolve(join('resources', 'inside', path))
           );
-          break;
         case 'extern':
           path = normalize(
             app.isPackaged
