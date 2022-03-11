@@ -14,7 +14,7 @@ process.env['rendererMode'] = 'production';
 let [, , arch, _notP] = process.argv;
 
 const optional = ['win', 'win32', 'win64', 'winp', 'winp32', 'winp64', 'darwin', 'mac', 'linux'];
-const notP_optional = '-notp'
+const notP_optional = '-notp';
 
 const r = readline.createInterface({
   input: process.stdin,
@@ -129,7 +129,7 @@ async function core(arch) {
       to: archPath,
       filter: ['**/*']
     });
-  } catch (err) { }
+  } catch (err) {}
   fs.writeFileSync('./resources/build/cfg/build.json', JSON.stringify(buildConfig, null, 2)); //写入配置
   deleteFolderRecursive(path.resolve('dist')); //清除dist
   console.log('\x1B[34m[build start]\x1B[0m');
@@ -146,24 +146,29 @@ async function core(arch) {
     .catch((error) => {
       console.error(error);
     })
+    .finally(() => {
+      process.exit();
+    });
 }
 
 if (!arch) {
   console.log('\x1B[36mWhich platform is you want to build?\x1B[0m');
-  console.log(`optional：\x1B[33m${optional}\x1B[0m  \x1B[1mor\x1B[0m  \x1B[33mq\x1B[0m \x1B[1m(exit)\x1B[0m  \x1B[2m|\x1B[0m  [\x1B[36m${notP_optional}\x1B[0m]  `);
+  console.log(
+    `optional：\x1B[33m${optional}\x1B[0m  \x1B[1mor\x1B[0m  \x1B[33mq\x1B[0m \x1B[1m(exit)\x1B[0m  \x1B[2m|\x1B[0m  [\x1B[36m${notP_optional}\x1B[0m]  `
+  );
   r.on('line', (str) => {
-    let strs = str.split(" ").filter(s => s !== '')
+    let strs = str.split(' ').filter((s) => s !== '');
     if (strs[0] === 'q') {
       console.log(`\x1B[32mExit success\x1B[0m`);
       r.close();
       return;
     }
-    if (strs[1] && strs[1] === notP_optional) delete buildConfig.afterPack
+    if (strs[1] && strs[1] === notP_optional) delete buildConfig.afterPack;
     if (!checkInput(strs[0])) return;
     r.close();
     core(strs[0]);
   });
 } else {
-  if (_notP) delete buildConfig.afterPack
+  if (_notP) delete buildConfig.afterPack;
   if (checkInput(arch)) core(arch);
 }
