@@ -1,4 +1,4 @@
-import { proxy } from '@/renderer/common/proxy';
+import { useState } from '@/renderer/common/model';
 import { getCustomize } from '@/renderer/store';
 import Router from '@/renderer/router';
 import {
@@ -12,12 +12,6 @@ import { menuShow } from '@/renderer/common/menu';
 import style from './style';
 
 const args = getCustomize();
-
-function useProxy(str: string): [ProxyValue<string>, JSX.Element] {
-  const dom = <span>{str}</span>;
-  const data = proxy(str, (value) => (dom.textContent = value));
-  return [data, dom];
-}
 
 export default class Home {
   private fileInterval: NodeJS.Timer | undefined;
@@ -48,11 +42,11 @@ export default class Home {
   }
 
   testRender() {
-    const [data, dom] = useProxy(Date());
+    const [data, view] = useState(Date(), 'div', 'text');
     this.testInterval = setInterval(() => {
       data.value = Date();
     }, 1000);
-    return <div class="text">{dom}</div>;
+    return view;
   }
 
   render() {

@@ -15,7 +15,7 @@ function newProxy(data: any, callback: Function) {
 
 export function proxy<T>(
   value: T,
-  callback?: (value: any, p: string, target: any) => void
+  callback: (value: any, p: string, target: any) => void
 ): ProxyValue<T>;
 export function proxy(value: any, callback?: Function) {
   return newProxy(
@@ -24,7 +24,7 @@ export function proxy(value: any, callback?: Function) {
   );
 }
 
-export function proxys<T>(value: T, callback?: (value: any, p: string, target: any) => void): T;
+export function proxys<T>(value: T, callback: (value: any, p: string, target: any) => void): T;
 export function proxys(value: any, callback?: Function) {
   return newProxy(
     value,
