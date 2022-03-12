@@ -41,19 +41,11 @@ export default class Home {
     windowMessageRemove('test');
   }
 
-  testRender() {
-    const [data, view] = useState(Date(), 'div', 'text');
-    this.testInterval = setInterval(() => {
-      data.value = Date();
-    }, 1000);
-    return view;
-  }
-
   beforeRoute(to: string, from: string, next: () => void) {
     console.log(to, from);
     next();
   }
-  
+
   render() {
     function tk() {
       windowCreate(
@@ -85,9 +77,14 @@ export default class Home {
       );
     }
 
+    const [data, view] = useState(Date(), 'div', 'text');
+    this.testInterval = setInterval(() => {
+      data.value = Date();
+    }, 1000);
+    
     return (
       <div class={style} onMouseDown={(e) => e.button === 2 && menuShow()}>
-        {this.testRender()}
+        {view}
         <button class="but" onClick={() => baidu()}>
           百度
         </button>
