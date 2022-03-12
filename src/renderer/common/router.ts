@@ -98,12 +98,17 @@ export default class Router {
       view.$instance = route.instance || false;
       !view.$path && (view.$path = route.path);
     }
-    this.current && this.unCurrent();
-    renderView(isLoad, this.element as HTMLElement, view as View, params);
-    route.title && (document.title = route.title);
-    this.current = view;
-    isHistory && this.setHistory(route.path, params);
-    await this.onAfterRoute(route, params);
+    const next = async () => {
+      this.unCurrent();
+      renderView(isLoad, this.element as HTMLElement, view as View, params);
+      route.title && (document.title = route.title);
+      this.current = view;
+      isHistory && this.setHistory(route.path, params);
+      await this.onAfterRoute(route, params);
+    };
+    if (this.current && this.current.beforeRoute)
+      this.current.beforeRoute(this.current.$path as string, route.path, next) && next();
+    else next();
   }
 
   private unCurrent() {

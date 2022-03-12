@@ -49,6 +49,11 @@ export default class Home {
     return view;
   }
 
+  beforeRoute(to: string, from: string, next: () => void) {
+    console.log(to, from);
+    next();
+  }
+  
   render() {
     function tk() {
       windowCreate(
