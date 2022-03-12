@@ -13,6 +13,12 @@ import style from './style';
 
 const args = getCustomize();
 
+function useProxy(str: string): [ProxyValue<string>, JSX.Element] {
+  const dom = <span>{str}</span>;
+  const data = proxy(str, (value) => (dom.textContent = value));
+  return [data, dom];
+}
+
 export default class Home {
   private fileInterval: NodeJS.Timer | undefined;
   private testInterval: NodeJS.Timer | undefined;
@@ -42,12 +48,11 @@ export default class Home {
   }
 
   testRender() {
-    const el = <div class="text">{Date()}</div>;
-    const testData = proxy(Date(), (value) => (el.textContent = value));
+    const [data, dom] = useProxy(Date());
     this.testInterval = setInterval(() => {
-      testData.value = Date();
+      data.value = Date();
     }, 1000);
-    return el;
+    return <div class="text">{dom}</div>;
   }
 
   render() {
