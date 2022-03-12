@@ -1,4 +1,4 @@
-type RefValue<T> = { value: T };
+type ProxyValue<T> = { value: T };
 
 interface Route {
   path: string;

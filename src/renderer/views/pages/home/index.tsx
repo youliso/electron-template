@@ -1,4 +1,4 @@
-import { ref, revokeProxy } from '@/renderer/common/store';
+import { proxy } from '@/renderer/common/proxy';
 import { getCustomize } from '@/renderer/store';
 import Router from '@/renderer/router';
 import {
@@ -14,9 +14,7 @@ import style from './style';
 const args = getCustomize();
 
 export default class Home {
-  private fileData: RefValue<string> | undefined;
   private fileInterval: NodeJS.Timer | undefined;
-  private testData: RefValue<string> | undefined;
   private testInterval: NodeJS.Timer | undefined;
 
   onLoad() {
@@ -28,9 +26,7 @@ export default class Home {
   }
 
   onUnmounted() {
-    if (this.testData) revokeProxy('test');
     if (this.testInterval) clearInterval(this.testInterval);
-    if (this.fileData) revokeProxy('file');
     if (this.fileInterval) clearInterval(this.fileInterval);
     this.unTest();
   }
@@ -46,12 +42,12 @@ export default class Home {
   }
 
   testRender() {
-    this.testData = ref('test', Date(), (value) => (test.textContent = value));
-    const test = <div class="test">{this.testData.value}</div>;
+    const el = <div class="text">{Date()}</div>;
+    const testData = proxy(Date(), (value) => (el.textContent = value));
     this.testInterval = setInterval(() => {
-      (this.testData as RefValue<string>).value = Date();
+      testData.value = Date();
     }, 1000);
-    return test;
+    return el;
   }
 
   render() {

@@ -5,9 +5,7 @@ type Obj<Value> = {} & {
 class Stores {
   private static instance: Stores;
 
-  public indexData: { [key: string]: any } = {};
-
-  public proxyData: { [key: string]: { proxy: any; revoke: () => void } } = {};
+  public data: { [key: string]: any } = {};
 
   static getInstance() {
     if (!Stores.instance) Stores.instance = new Stores();
@@ -22,12 +20,12 @@ class Stores {
       return;
     }
 
-    if (!key.includes('.') && Object.prototype.hasOwnProperty.call(this.indexData, key)) {
-      return this.indexData[key] as Value;
+    if (!key.includes('.') && Object.prototype.hasOwnProperty.call(this.data, key)) {
+      return this.data[key] as Value;
     }
 
     const levels = key.split('.');
-    let cur = this.indexData;
+    let cur = this.data;
     for (const level of levels) {
       if (Object.prototype.hasOwnProperty.call(cur, level)) {
         cur = cur[level] as unknown as Obj<Value>;
@@ -45,16 +43,16 @@ class Stores {
     }
 
     if (!key.includes('.')) {
-      if (Object.prototype.hasOwnProperty.call(this.indexData, key) && exists) {
+      if (Object.prototype.hasOwnProperty.call(this.data, key) && exists) {
         console.log(`The key ${key} looks like already exists on obj.`);
       }
-      this.indexData[key] = value;
+      this.data[key] = value;
     }
 
     const levels = key.split('.');
     const lastKey = levels.pop()!;
 
-    let cur = this.indexData;
+    let cur = this.data;
     for (const level of levels) {
       if (Object.prototype.hasOwnProperty.call(cur, level)) {
         cur = cur[level];
@@ -74,69 +72,4 @@ class Stores {
     cur[lastKey] = value;
   }
 }
-const Store = Stores.getInstance();
-
-function revocable(data: any, callback: Function) {
-  return Proxy.revocable(data, {
-    get: (target, p) => {
-      return target[p];
-    },
-    set: (target, p, value) => {
-      if (target[p] !== value) {
-        target[p] = value;
-        callback(value, p as string, target);
-      }
-      return true;
-    }
-  });
-}
-
-export default Store;
-
-export function ref<T>(
-  key: string,
-  value?: T,
-  callback?: (value: any, p: string, target: any) => void
-): RefValue<T>;
-export function ref(key: string, value?: any, callback?: Function) {
-  if (typeof key === 'string' && !value && !callback) return Store.proxyData[key]?.proxy;
-  if (Store.proxyData[key]) {
-    console.warn(`[ref] ${key} exists`);
-    return;
-  }
-  if (!value || !callback) {
-    console.warn(`[ref] ${key} not value|callback`);
-    return;
-  }
-  const ob = revocable({ value }, callback);
-  Store.proxyData[key] = ob;
-  return ob.proxy;
-}
-
-export function reactive<T>(
-  key: string,
-  value?: T,
-  callback?: (value: any, p: string, target: any) => void
-): T;
-export function reactive(key: string, value?: any, callback?: Function) {
-  if (typeof key === 'string' && !value && !callback) return Store.proxyData[key]?.proxy;
-  if (Store.proxyData[key]) {
-    console.warn(`[reactive] ${key} exists`);
-    return;
-  }
-  if (!value || !callback) {
-    console.warn(`[reactive] ${key} not value|callback`);
-    return;
-  }
-  const ob = revocable(value, callback);
-  Store.proxyData[key] = ob;
-  return ob.proxy;
-}
-
-export function revokeProxy(key: string) {
-  const proxyData = Store.proxyData[key];
-  if (proxyData) {
-    proxyData.revoke();
-    delete Store.proxyData[key];
-  }
-}
+export default Stores.getInstance();
