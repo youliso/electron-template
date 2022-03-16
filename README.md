@@ -1,7 +1,8 @@
 # electron-template
 
 ## Credits
-[tsx-dom](https://github.com/Lusito/tsx-dom)
+[tsx-dom@Lusito](https://github.com/Lusito/tsx-dom)  
+[staten@johnsylvain](https://github.com/johnsylvain/staten)  
 
 ## Doc
 [https://mlmdflr.cc/doc](https://mlmdflr.cc/doc)
