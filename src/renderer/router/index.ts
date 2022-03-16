@@ -1,12 +1,12 @@
 import pageRoute from '@/renderer/router/modular/page';
 import dialogRoute from '@/renderer/router/modular/dialog';
 import Router from '@/renderer/common/router';
-import { updateCustomizeRoute } from '@/renderer/store';
+import { windowUpdate } from '@/renderer/common/window';
 
 const router = new Router([...pageRoute, ...dialogRoute]);
 
 router.onBeforeRoute = (route) => {
-  updateCustomizeRoute(route.path);
+  windowUpdate(route.path);
   return true;
 };
 

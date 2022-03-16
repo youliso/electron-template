@@ -1,5 +1,4 @@
-import { useState } from '@/renderer/common/model';
-import { getCustomize } from '@/renderer/store';
+import { useDV } from '@/renderer/common/proxy';
 import Router from '@/renderer/router';
 import {
   windowCreate,
@@ -10,8 +9,6 @@ import {
 import { shortcutGetAll } from '@/renderer/common/shortcut';
 import { menuShow } from '@/renderer/common/menu';
 import style from './style';
-
-const args = getCustomize();
 
 export default class Home {
   private fileInterval: NodeJS.Timer | undefined;
@@ -52,7 +49,7 @@ export default class Home {
         {
           title: '弹框测试',
           route: '/message',
-          parentId: args.id,
+          parentId: window.customize.id,
           data: { text: '123' }
         },
         {
@@ -68,7 +65,7 @@ export default class Home {
       windowCreate(
         {
           url: 'https://baidu.com/',
-          parentId: args.id
+          parentId: window.customize.id
         },
         {
           width: 1280,
@@ -77,11 +74,11 @@ export default class Home {
       );
     }
 
-    const [data, view] = useState(Date(), 'div', 'text');
+    const [data, view] = useDV(Date(), 'div', 'text');
     this.testInterval = setInterval(() => {
       data.value = Date();
     }, 1000);
-    
+
     return (
       <div class={style} onMouseDown={(e) => e.button === 2 && menuShow()}>
         {view}

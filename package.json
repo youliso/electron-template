@@ -27,7 +27,7 @@
     "electron": "^17.1.2",
     "electron-builder": "^22.14.13",
     "electron-rebuild": "^3.2.7",
-    "esbuild": "^0.14.25",
+    "esbuild": "^0.14.26",
     "javascript-obfuscator": "^4.0.0",
     "prettier": "^2.5.1",
     "rollup-plugin-esbuild": "^4.8.2",

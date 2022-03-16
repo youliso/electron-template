@@ -1,8 +1,6 @@
-import { getCustomize } from '@/renderer/store';
 import { windowClose, windowMaxMin, windowMin } from '@/renderer/common/window';
 import style from './style';
 
-const args = getCustomize();
 export default class Head {
   isHead: boolean;
 
@@ -22,7 +20,7 @@ export default class Head {
 
   render() {
     const content = <div class="content"></div>;
-    const title = <div class="title">{args.title}</div>;
+    const title = <div class="title">{window.customize.title}</div>;
     if (window.environment.platform === 'darwin') {
       content.appendChild(<div></div>);
       content.appendChild(title);

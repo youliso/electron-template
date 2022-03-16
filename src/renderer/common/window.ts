@@ -1,5 +1,4 @@
 import type { IpcRendererEvent, BrowserWindowConstructorOptions } from 'electron';
-import { getCustomize } from '@/renderer/store';
 
 /**
  * 窗口初始化 (i)
@@ -11,8 +10,9 @@ export function windowLoad(listener: (event: IpcRendererEvent, args: Customize) 
 /**
  * 窗口数据更新
  */
-export function windowUpdate(customize?: Customize) {
-  window.ipc.send('window-update', customize || getCustomize());
+export function windowUpdate(route: string) {
+  window.customize.route = route;
+  window.ipc.send('window-update', window.customize);
 }
 
 /**
@@ -73,15 +73,15 @@ export function windowMessageSend(
   isback: boolean = false, //是否给自身反馈
   acceptIds: number[] = [] //指定窗口id发送
 ) {
-  const customize = getCustomize();
-  if (acceptIds.length === 0 && typeof customize.parentId === 'number')
-    acceptIds = [customize.parentId];
+  if (acceptIds.length === 0 && typeof window.customize.parentId === 'number') {
+    acceptIds = [window.customize.parentId];
+  }
   window.ipc.send('window-message-send', {
     channel,
     value,
     isback,
     acceptIds,
-    id: customize.id
+    id: window.customize.id
   });
 }
 
@@ -97,7 +97,7 @@ export function windowCreate(customize: Customize, opt?: BrowserWindowConstructo
  */
 export async function windowStatus(
   type: WindowStatusOpt,
-  id: number = getCustomize().id as number
+  id: number = window.customize.id as number
 ): Promise<boolean> {
   return await window.ipc.invoke('window-status', { type, id });
 }
@@ -108,7 +108,7 @@ export async function windowStatus(
 export function windowAlwaysOnTop(
   is: boolean,
   type?: WindowAlwaysOnTopOpt,
-  id: number = getCustomize().id as number
+  id: number = window.customize.id as number
 ) {
   window.ipc.send('window-always-top-set', { id, is, type });
 }
@@ -120,7 +120,7 @@ export function windowSetSize(
   size: number[],
   resizable: boolean = true,
   center: boolean = false,
-  id: number = getCustomize().id as number
+  id: number = window.customize.id as number
 ) {
   window.ipc.send('window-size-set', { id, size, resizable, center });
 }
@@ -131,7 +131,7 @@ export function windowSetSize(
 export function windowSetMaxMinSize(
   type: 'max' | 'min',
   size: number | undefined[],
-  id: number = getCustomize().id as number
+  id: number = window.customize.id as number
 ) {
   window.ipc.send(`window-${type}-size-set`, { id, size });
 }
@@ -139,21 +139,24 @@ export function windowSetMaxMinSize(
 /**
  * 设置窗口背景颜色
  */
-export function windowSetBackgroundColor(color: string, id: number = getCustomize().id as number) {
+export function windowSetBackgroundColor(
+  color: string,
+  id: number = window.customize.id as number
+) {
   window.ipc.send('window-bg-color-set', { id, color });
 }
 
 /**
  * 最大化&最小化当前窗口
  */
-export function windowMaxMin(id: number = getCustomize().id as number) {
+export function windowMaxMin(id: number = window.customize.id as number) {
   window.ipc.send('window-max-min-size', id);
 }
 
 /**
  * 关闭窗口 (传id则对应窗口否则全部窗口)
  */
-export function windowClose(id: number = getCustomize().id as number) {
+export function windowClose(id: number = window.customize.id as number) {
   window.ipc.send('window-func', { type: 'close', id });
 }
 
@@ -162,28 +165,28 @@ export function windowClose(id: number = getCustomize().id as number) {
  * @param id 窗口id
  * @param time 延迟显示时间
  */
-export function windowShow(time: number = 0, id: number = getCustomize().id as number) {
+export function windowShow(time: number = 0, id: number = window.customize.id as number) {
   setTimeout(() => window.ipc.send('window-func', { type: 'show', id }), time);
 }
 
 /**
  * 窗口隐藏
  */
-export function windowHide(id: number = getCustomize().id as number) {
+export function windowHide(id: number = window.customize.id as number) {
   window.ipc.send('window-func', { type: 'hide', id });
 }
 
 /**
  * 最小化窗口 (传id则对应窗口否则全部窗口)
  */
-export function windowMin(id: number = getCustomize().id as number) {
+export function windowMin(id: number = window.customize.id as number) {
   window.ipc.send('window-func', { type: 'minimize', id });
 }
 
 /**
  * 最大化窗口 (传id则对应窗口否则全部窗口)
  */
-export function windowMax(id: number = getCustomize().id as number) {
+export function windowMax(id: number = window.customize.id as number) {
   window.ipc.send('window-func', { type: 'maximize', id });
 }
 
@@ -193,7 +196,7 @@ export function windowMax(id: number = getCustomize().id as number) {
 export function windowFunc(
   type: WindowFuncOpt,
   data?: any[],
-  id: number = getCustomize().id as number
+  id: number = window.customize.id as number
 ) {
   window.ipc.send('window-func', { type, data, id });
 }

@@ -1,11 +1,8 @@
 import { css } from '@emotion/css/macro';
-import { getCustomize } from '@/renderer/store';
-
-const args = getCustomize();
 
 export default css`
   position: absolute;
-  top: ${args.headNative ? '0' : '32px'};
+  top: ${window.customize.headNative ? '0' : '32px'};
   left: 0;
   right: 0;
   bottom: 0;

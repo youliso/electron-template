@@ -29,6 +29,10 @@ interface Customize {
   data?: any;
 }
 
+interface Window {
+  customize: Customize;
+}
+
 interface AppInfo {
   name: string;
   version: string;
