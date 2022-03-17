@@ -62,11 +62,8 @@ export function browserWindowInit(
   }
   const win = new BrowserWindow(opt);
   //子窗体关闭父窗体获焦 https://github.com/electron/electron/issues/10616
-  if (isParentId && parenWin) {
-    win.once('closed', () => {
-      parenWin?.focus();
-    });
-  }
+  if (isParentId) win.once('close', () => parenWin?.focus())
+
   if (!customize.argv) customize.argv = process.argv;
   customize.id = win.id;
   win.customize = customize;
