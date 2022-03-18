@@ -1,23 +1,46 @@
 import { renderView, unView } from '@/renderer/common/h';
+import { queryParams, toParams } from '@/utils';
 
 export default class Router {
   private instances: { [key: string]: View } = {};
 
+  public type: 'history' | 'hash';
   // 当前路由挂载dom
   public element: HTMLElement | null;
   public routes: Route[] = [];
   // 当前路由
   public current: View | undefined;
   // 路由历史
-  public history: { path: string; params?: any }[] = [];
+  public history: { path: string; query?: any }[] = [];
   // 路由监听
-  public onBeforeRoute: (route: Route, params?: any) => Promise<boolean> | boolean = () => true;
-  public onAfterRoute: (route: Route, params?: any) => Promise<void> | void = () => {};
+  public onBeforeRoute: (route: Route, query?: any) => Promise<boolean> | boolean = () => true;
+  public onAfterRoute: (route: Route, query?: any) => Promise<void> | void = () => {};
 
-  constructor(routes: Route[], elementId: string = 'root') {
+  constructor(type: 'history' | 'hash', routes: Route[], elementId: string = 'root') {
+    this.type = type;
+    this.type === 'history' && this.historyR();
     this.element = document.getElementById(elementId);
     if (!this.element) throw new Error(`element ${elementId} null`);
     this.routes.push(...routes);
+  }
+
+  private historyR() {
+    window.onpopstate = (e) => {
+      this.replace(document.location.pathname + document.location.search, e.state).catch(
+        console.error
+      );
+    };
+  }
+
+  private hashR(path: string, url: string, query?: any) {
+    this.history.unshift({ path, query });
+    location.hash = url;
+  }
+
+  init(path?: string) {
+    if (this.type === 'hash') path = path || location.hash.substring(1);
+    else path = path || document.location.pathname + document.location.search;
+    this.replace(path || '/').catch(console.error);
   }
 
   getRoute(path: string) {
@@ -26,10 +49,6 @@ export default class Router {
       if (route.path === path) return route;
     }
     return null;
-  }
-
-  setHistory(path: string, params?: any) {
-    this.history.unshift({ path, params });
   }
 
   setRoute(route: Route | Route[]) {
@@ -42,49 +61,77 @@ export default class Router {
   }
 
   async replace(path: string, params?: any, instance: boolean = false) {
-    const route = this.getRoute(path);
+    const paths = path.split('?');
+    const query = toParams(paths[1]);
+    const route = this.getRoute(paths[0]);
     if (!route) {
       console.warn(`beyond the history of ${path}`);
       return;
     }
     instance && (route.instance = instance);
-    await this.rIng(route, params, false);
+    await this.rIng('replace', route, query, params);
   }
 
   /**
    * 跳转路由
    */
   async push(path: string, params?: any, instance: boolean = false) {
-    const route = this.getRoute(path);
+    const paths = path.split('?');
+    const query = toParams(paths[1]);
+    const route = this.getRoute(paths[0]);
     if (!route) {
       console.warn(`beyond the history of ${path}`);
       return;
     }
     instance && (route.instance = instance);
-    await this.rIng(route, params, true);
+    await this.rIng('push', route, query, params);
   }
 
   /**
    * 回退路由
    */
-  async back(num: number = 1, params?: any) {
-    let p = this.history[num];
-    if (!p) {
-      console.error(`beyond the history of back(${num})`);
+  async back() {
+    if (this.type === 'history') {
+      history.back();
       return;
     }
-    p.params = params;
-    this.history.splice(0, num);
+    let p = this.history[1];
+    if (!p) {
+      this.replace('/');
+      return;
+    }
     const route = this.getRoute(p.path);
     if (!route) {
       console.error(`beyond the history of ${p}`);
       return;
     }
-    await this.rIng(route, p.params, false);
+    await this.rIng('back', route, p.query, false);
   }
 
-  private async rIng(route: Route, params?: any, isHistory: boolean = true) {
-    const isR = await this.onBeforeRoute(route, params);
+  /**
+   * 跳路由
+   */
+  async go(num: number = 1) {
+    if (this.type === 'history') {
+      history.go(num);
+      return;
+    }
+    num < 0 && (num = -num);
+    let p = this.history[num];
+    if (!p) {
+      console.error(`beyond the history of back(${num})`);
+      return;
+    }
+    const route = this.getRoute(p.path);
+    if (!route) {
+      console.error(`beyond the history of ${p}`);
+      return;
+    }
+    await this.rIng(`go${num}`, route, p.query);
+  }
+
+  private async rIng(type: string, route: Route, query?: any, params?: any) {
+    const isR = await this.onBeforeRoute(route, query);
     if (!isR) return;
     const component = route.component.prototype
       ? route.component
@@ -100,11 +147,26 @@ export default class Router {
     }
     const next = async () => {
       this.unCurrent();
-      renderView(isLoad, this.element as HTMLElement, view as View, params);
-      route.title && (document.title = route.title);
+      renderView(isLoad, this.element as HTMLElement, view as View, query, params);
+      route.name && (document.title = route.name);
       this.current = view;
-      isHistory && this.setHistory(route.path, params);
-      await this.onAfterRoute(route, params);
+      const p = queryParams(query);
+      const url = `${route.path}${p ? '?' + p : ''}`;
+      if (this.type === 'history') {
+        switch (type) {
+          case 'replace':
+            history.replaceState(params, route.name || route.path, url);
+            break;
+          case 'push':
+            history.pushState(params, route.name || route.path, url);
+            break;
+        }
+      } else {
+        type.startsWith('go') && this.history.splice(0, Number(this.type.slice(2)));
+        type === 'back' && this.history.splice(0, 1);
+        this.hashR(route.path, url, query);
+      }
+      await this.onAfterRoute(route, query);
     };
     if (this.current && this.current.beforeRoute)
       this.current.beforeRoute(this.current.$path as string, route.path, next) && next();

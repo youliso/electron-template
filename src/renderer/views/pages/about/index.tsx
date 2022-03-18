@@ -6,7 +6,7 @@ export default class About {
     return (
       <div class={style}>
         <div class="test">关于</div>
-        <button onClick={() => Router.back()}>首页</button>
+        <button onClick={() => Router.replace('/home')}>首页</button>
       </div>
     );
   }

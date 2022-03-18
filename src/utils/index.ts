@@ -46,6 +46,23 @@ export function queryParams(data: any): string {
 }
 
 /**
+ * 参数转对象
+ * @param str
+ */
+export function toParams(str: string) {
+  if (!str) return null;
+  let obj: any = {},
+    index = str.indexOf('?') || 0,
+    params = str.substring(index + 1);
+  let parr = params.split('&');
+  for (let i of parr) {
+    let arr = i.split('=');
+    obj[arr[0]] = decodeURIComponent(arr[1]);
+  }
+  return obj;
+}
+
+/**
  * 深拷贝
  * @param obj
  */

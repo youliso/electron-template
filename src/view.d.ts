@@ -2,7 +2,7 @@ type ProxyValue<T> = { value: T };
 
 interface Route {
   path: string;
-  title?: string;
+  name?: string;
   instance?: boolean;
   component: any;
 }
@@ -10,10 +10,10 @@ interface Route {
 interface VSource {
   $path?: string;
   $el?: JSX.Element;
-  onLoad?: (params?: any) => void;
+  onLoad?: (query?: any, params?: any) => void;
   onReady?: () => void;
   onUnmounted?: () => void;
-  onActivated?: (params?: any) => void;
+  onActivated?: (query?: any, params?: any) => void;
   onDeactivated?: () => void;
   render?: () => JSX.Element | JSX.Element[];
 }

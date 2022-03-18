@@ -79,9 +79,15 @@ export function f({ children }: { children: Node[] | null }) {
   return element;
 }
 
-export function renderView(cache: boolean, parentEl: HTMLElement, view: View, params?: any) {
-  if (!cache && view.onLoad) view.onLoad(params);
-  else if (cache && view.onActivated) view.onActivated(params);
+export function renderView(
+  cache: boolean,
+  parentEl: HTMLElement,
+  view: View,
+  query?: any,
+  params?: any
+) {
+  if (!cache && view.onLoad) view.onLoad(query, params);
+  else if (cache && view.onActivated) view.onActivated(query, params);
   if (view.$el) {
     parentEl.appendChild(view.$el);
     return;
