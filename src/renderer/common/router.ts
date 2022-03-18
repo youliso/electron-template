@@ -4,7 +4,7 @@ import { queryParams, toParams } from '@/utils';
 export default class Router {
   private instances: { [key: string]: View } = {};
 
-  public type: 'history' | 'hash';
+  public type: 'history' | 'hash' | 'inner';
   // 当前路由挂载dom
   public element: HTMLElement | null;
   public routes: Route[] = [];
@@ -16,7 +16,7 @@ export default class Router {
   public onBeforeRoute: (route: Route, query?: any) => Promise<boolean> | boolean = () => true;
   public onAfterRoute: (route: Route, query?: any) => Promise<void> | void = () => {};
 
-  constructor(type: 'history' | 'hash', routes: Route[], elementId: string = 'root') {
+  constructor(type: 'history' | 'hash' | 'inner', routes: Route[], elementId: string = 'root') {
     this.type = type;
     this.type === 'history' && this.historyR();
     this.element = document.getElementById(elementId);
@@ -37,9 +37,14 @@ export default class Router {
     location.hash = url;
   }
 
+  private innerR(path: string, query?: any) {
+    this.history.unshift({ path, query });
+  }
+
   init(path?: string) {
     if (this.type === 'hash') path = path || location.hash.substring(1);
-    else path = path || document.location.pathname + document.location.search;
+    else if (this.type === 'history')
+      path = path || document.location.pathname + document.location.search;
     this.replace(path || '/').catch(console.error);
   }
 
@@ -164,7 +169,8 @@ export default class Router {
       } else {
         type.startsWith('go') && this.history.splice(0, Number(this.type.slice(2)));
         type === 'back' && this.history.splice(0, 1);
-        this.hashR(route.path, url, query);
+        this.type === 'hash' && this.hashR(route.path, url, query);
+        this.type === 'inner' && this.innerR(route.path, query);
       }
       await this.onAfterRoute(route, query);
     };
