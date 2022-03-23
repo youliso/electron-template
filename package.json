@@ -30,6 +30,7 @@
     "esbuild": "^0.14.27",
     "javascript-obfuscator": "^4.0.0",
     "prettier": "^2.6.0",
+    "rollup": "^2.70.1",
     "rollup-plugin-esbuild": "^4.8.2",
     "rollup-plugin-obfuscator": "^0.2.1",
     "typescript": "^4.6.2",
