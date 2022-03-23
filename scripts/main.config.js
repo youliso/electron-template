@@ -31,7 +31,7 @@ let plugins = [
     include: /\.[jt]s?$/,
     exclude: /node_modules/,
     sourceMap: false,
-    minify: process.env['mainMode'] === 'production',
+    minify: process.env['mainMode'] !== 'development',
     target: 'esnext',
     define: {
       __VERSION__: '"x.y.z"'
@@ -43,7 +43,7 @@ let plugins = [
   })
 ];
 
-process.env['mainMode'] === 'production' && plugins.push(obfuscator({}));
+process.env['mainMode'] !== 'development' && plugins.push(obfuscator({}));
 
 module.exports = [
   {

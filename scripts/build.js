@@ -8,9 +8,6 @@ const buildConfig = require('../resources/build/cfg/build.json');
 const mainOptions = require('./main.config');
 const rendererOptions = require('./renderer.config');
 
-process.env['mainMode'] = 'production';
-process.env['rendererMode'] = 'production';
-
 let [, , arch, _notP] = process.argv;
 
 const optional = ['win', 'win32', 'win64', 'winp', 'winp32', 'winp64', 'darwin', 'mac', 'linux'];
