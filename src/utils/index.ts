@@ -131,3 +131,17 @@ export function throttle(func: Function, delay: number): any {
 export function random(start: number = 0, end: number = 1): number {
   return (Math.random() * (end - start + 1) + start) | 0;
 }
+
+
+const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB', 'BB', 'NB', 'DB'] as const
+type unit = typeof units[number];
+
+export type treatedBytes = { bytes: number, unit: unit }
+
+export function bytesToSize(bytes: number): treatedBytes {
+  if (bytes === 0) return { bytes: 0, unit: units[0] };
+  let
+    k: number = 1024,
+    i = Math.floor(Math.log(bytes) / Math.log(k));
+  return { bytes: Math.round((bytes / Math.pow(k, i)) * Math.pow(10, 1)) / Math.pow(10, 1), unit: units[i] }
+}
