@@ -1,3 +1,4 @@
+import { bytesToSize } from '@/utils';
 import type { CookiesGetFilter, CookiesSetDetails } from 'electron';
 import { ipcMain, session } from 'electron';
 
@@ -11,7 +12,7 @@ export default class Session {
    */
   public urlHeaders: { [key: string]: { [key: string]: string } } = {};
 
-  constructor() {}
+  constructor() { }
 
   /**
    * 拦截指定http/https请求并更换、增加headers
@@ -22,13 +23,8 @@ export default class Session {
         urls: ['http://*/*', 'https://*/*']
       },
       (details, callback) => {
-        const urls = Object.keys(this.urlHeaders);
-        const keys = urls.filter((key: string) => details.url.indexOf(key) === 0);
-        for (const key of keys) {
-          for (const v in this.urlHeaders[key]) {
-            details.requestHeaders[v] = this.urlHeaders[key][v];
-          }
-        }
+        const keys = Object.keys(this.urlHeaders).filter((key: string) => [0, 7, 8].includes(details.url.indexOf(key)));
+        for (const key of keys) for (const v in this.urlHeaders[key]) details.requestHeaders[v] = this.urlHeaders[key][v];
         callback({ requestHeaders: details.requestHeaders });
       }
     );
@@ -67,6 +63,21 @@ export default class Session {
    */
   async removeCookies(url: string, name: string) {
     await session.defaultSession.cookies.remove(url, name);
+  }
+
+  /**
+   * 获取缓存大小
+   * @returns treatedBytes {bytes, unit}
+   */
+  async getCacheSize() {
+    return bytesToSize(await session.defaultSession.getCacheSize())
+  }
+
+  /**
+   * 清除缓存
+   */
+  async clearCache() {
+    session.defaultSession.clearCache()
   }
 
   /**
