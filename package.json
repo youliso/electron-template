@@ -38,7 +38,6 @@
     "vite-plugin-babel-macros": "^1.0.6"
   },
   "dependencies": {
-    "electron-updater": "^4.6.5",
-    "socket.io-client": "^4.4.1"
+    "electron-updater": "^4.6.5"
   }
 }

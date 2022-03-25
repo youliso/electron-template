@@ -7,7 +7,6 @@ import Session from './modular/session';
 import Dialog from './modular/dialog';
 import Menu from './modular/menu';
 import Update from './modular/update';
-import Socket from './modular/socket';
 import { logOn } from './modular/log';
 import { pathOn } from './modular/path';
 import { fileOn } from './modular/file';
@@ -23,7 +22,7 @@ App.start().then(async () => {
   // 可选模块
   fileOn();
   pathOn();
-  await App.use([Session, Dialog, Menu, Update, Socket]);
+  await App.use([Session, Dialog, Menu, Update]);
   // 窗口
   Window.create(customize, opt);
   // 托盘
