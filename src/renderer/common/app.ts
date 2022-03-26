@@ -63,13 +63,13 @@ export async function getAppInfo(): Promise<AppInfo> {
 /**
  * app常用获取路径
  */
-export async function getAppPath(key: string): Promise<string> {
-  return await window.ipc.invoke('app-path-get', { key });
+export async function getAppPath(key: AppPathKey): Promise<string> {
+  return await window.ipc.invoke('app-path-get', key);
 }
 
 /**
  * app打开url
  */
 export async function openUrl(url: string): Promise<void> {
-  return await window.ipc.invoke('app-open-url', { url });
+  return await window.ipc.invoke('app-open-url', url);
 }
