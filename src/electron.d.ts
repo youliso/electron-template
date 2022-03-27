@@ -38,6 +38,8 @@ interface AppInfo {
   version: string;
 }
 
+type AppPathKey = 'home' | 'appData' | 'userData' | 'cache' | 'temp' | 'exe' | 'module' | 'desktop' | 'documents' | 'downloads' | 'music' | 'pictures' | 'videos' | 'recent' | 'logs' | 'crashDumps'
+
 declare namespace Electron {
   interface BrowserWindow {
     customize: Customize;
