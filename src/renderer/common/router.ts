@@ -201,6 +201,7 @@ export class ChildRoute {
     this.routes = routes;
     this.el = el;
     this.routeKey = routeKey;
+    this.rIng();
   }
 
   private rIng() {
@@ -220,7 +221,6 @@ export class ChildRoute {
   }
 
   render() {
-    this.rIng();
     return this.el;
   }
 }
