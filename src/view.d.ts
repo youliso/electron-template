@@ -8,7 +8,6 @@ interface Route {
 }
 
 interface VSource {
-  $path?: string;
   $el?: JSX.Element;
   onLoad?: (query?: any, params?: any) => void;
   onReady?: () => void;

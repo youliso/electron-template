@@ -9,7 +9,9 @@ export default class Router {
   public element: HTMLElement | null;
   public routes: Route[] = [];
   // 当前路由
-  public current: View | undefined;
+  public currentView: View | undefined;
+  // 路由历史
+  public currentPath: string = '';
   // 路由历史
   public history: { path: string; query?: any }[] = [];
   // 路由监听
@@ -148,13 +150,13 @@ export default class Router {
     if (!isLoad) {
       view = new component() as View;
       view.$instance = route.instance || false;
-      !view.$path && (view.$path = route.path);
     }
     const next = async () => {
       this.unCurrent();
       renderView(isLoad, this.element as HTMLElement, view as View, query, params);
       route.name && (document.title = route.name);
-      this.current = view;
+      this.currentPath = route.path;
+      this.currentView = view;
       const p = queryParams(query);
       const url = `${route.path}${p ? '?' + p : ''}`;
       if (this.type === 'history') {
@@ -174,21 +176,21 @@ export default class Router {
       }
       await this.onAfterRoute(route, query);
     };
-    if (this.current && this.current.beforeRoute)
-      this.current.beforeRoute(this.current.$path as string, route.path, next) && next();
+    if (this.currentView && this.currentView.beforeRoute)
+      this.currentView.beforeRoute(this.currentPath as string, route.path, next) && next();
     else next();
   }
 
   private unCurrent() {
-    if (!this.current) return;
-    if (this.current.$instance) {
-      this.instances[this.current.$path as string] = this.current;
-      unView(true, this.current);
+    if (!this.currentView) return;
+    if (this.currentView.$instance) {
+      this.instances[this.currentPath as string] = this.currentView;
+      unView(true, this.currentView);
     } else {
-      delete this.instances[this.current.$path as string];
-      unView(false, this.current);
+      delete this.instances[this.currentPath as string];
+      unView(false, this.currentView);
     }
-    delete this.current;
+    delete this.currentView;
   }
 }
 
