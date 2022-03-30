@@ -191,3 +191,36 @@ export default class Router {
     delete this.current;
   }
 }
+
+export class ChildRoute {
+  public routeKey: string;
+  public routes: { [key: string]: any } = {};
+  public el: JSX.Element;
+
+  constructor(routes: { [key: string]: any }, routeKey: string, el: JSX.Element) {
+    this.routes = routes;
+    this.el = el;
+    this.routeKey = routeKey;
+  }
+
+  private rIng() {
+    this.routes[this.routeKey].onLoad && this.routes[this.routeKey].onLoad();
+    while (this.el.firstChild) {
+      this.el.removeChild(this.el.firstChild);
+    }
+    this.el.appendChild(this.routes[this.routeKey].render());
+    this.routes[this.routeKey].onReady && this.routes[this.routeKey].onReady();
+  }
+
+  to(path: string) {
+    if (this.routeKey === path || !this.routes[this.routeKey]) return;
+    this.routes[this.routeKey].onUnmounted();
+    this.routeKey = path;
+    this.rIng();
+  }
+
+  render() {
+    this.rIng();
+    return this.el;
+  }
+}
