@@ -83,11 +83,10 @@ export function renderView(
   cache: boolean,
   parentEl: HTMLElement,
   view: View,
-  query?: any,
-  params?: any
+  parame: ViewParameters
 ) {
-  if (!cache && view.onLoad) view.onLoad(query, params);
-  else if (cache && view.onActivated) view.onActivated(query, params);
+  if (!cache && view.onLoad) view.onLoad(parame);
+  else if (cache && view.onActivated) view.onActivated(parame);
   if (view.$el) {
     parentEl.appendChild(view.$el);
     return;
@@ -102,7 +101,7 @@ export function renderView(
   }
   view.$el = viewEl;
   parentEl.appendChild(viewEl);
-  !cache && view.onReady && view.onReady();
+  if (!cache && view.onReady) view.onReady();
 }
 
 export function unView(cache: boolean, view: View) {

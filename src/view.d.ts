@@ -1,4 +1,5 @@
 type ProxyValue<T> = { value: T };
+type ViewParameters = { query?: any; params?: any };
 
 interface Route {
   path: string;
@@ -9,15 +10,16 @@ interface Route {
 
 interface VSource {
   $el?: JSX.Element;
-  onLoad?: (query?: any, params?: any) => void;
+  onLoad?: (parame: ViewParameters) => void;
   onReady?: () => void;
   onUnmounted?: () => void;
-  onActivated?: (query?: any, params?: any) => void;
+  onActivated?: (parame: ViewParameters) => void;
   onDeactivated?: () => void;
   render?: () => JSX.Element | JSX.Element[];
 }
 
 interface Component extends VSource {
+  $key?: string;
   $currentPath?: string;
   onLoad?: () => void;
   onActivated?: () => void;

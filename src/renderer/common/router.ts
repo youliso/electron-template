@@ -8,15 +8,16 @@ export default class Router {
   // 当前路由挂载dom
   public element: HTMLElement | null;
   public routes: Route[] = [];
-  // 当前路由
+  // 当前
   public currentView: View | undefined;
-  // 路由历史
   public currentPath: string = '';
+  public currentParame: ViewParameters = {};
   // 路由历史
-  public history: { path: string; query?: any }[] = [];
+  public history: { path: string; parame: ViewParameters }[] = [];
   // 路由监听
-  public onBeforeRoute: (route: Route, query?: any) => Promise<boolean> | boolean = () => true;
-  public onAfterRoute: (route: Route, query?: any) => Promise<void> | void = () => {};
+  public onBeforeRoute: (route: Route, parame?: ViewParameters) => Promise<boolean> | boolean =
+    () => true;
+  public onAfterRoute: (route: Route, parame?: ViewParameters) => Promise<void> | void = () => {};
 
   constructor(type: 'history' | 'hash' | 'inner', routes: Route[], elementId: string = 'root') {
     this.type = type;
@@ -34,13 +35,28 @@ export default class Router {
     };
   }
 
-  private hashR(path: string, url: string, query?: any) {
-    this.history.unshift({ path, query });
+  private hashR(path: string, url: string, parame?: ViewParameters) {
+    this.history.unshift({ path, parame: parame || this.currentParame });
     location.hash = url;
   }
 
-  private innerR(path: string, query?: any) {
-    this.history.unshift({ path, query });
+  private innerR(path: string, parame?: ViewParameters) {
+    this.history.unshift({ path, parame: parame || this.currentParame });
+  }
+
+  routerState(args: { key: string; path: string } | null) {
+    if (!args) return;
+    this.currentParame?.query
+      ? (this.currentParame.query[args.key] = args.path)
+      : (this.currentParame.query = { [args.key]: args.path });
+    const p = queryParams(this.currentParame.query);
+    const url = `${this.currentPath}${p ? '?' + p : ''}`;
+    if (this.type === 'history') {
+      history.pushState(this.currentParame.params, document.title || this.currentPath, url);
+    } else {
+      this.type === 'hash' && this.hashR(this.currentPath, url);
+      this.type === 'inner' && this.innerR(this.currentPath);
+    }
   }
 
   init(path?: string) {
@@ -67,31 +83,31 @@ export default class Router {
     delete this.instances[name];
   }
 
-  async replace(path: string, params?: any, instance: boolean = false) {
-    const paths = path.split('?');
-    const query = toParams(paths[1]);
-    const route = this.getRoute(paths[0]);
+  async replace(args: string, params?: any, instance: boolean = false) {
+    const arg = args.split('?');
+    const query = toParams(arg[1]);
+    const route = this.getRoute(arg[0]);
     if (!route) {
-      console.warn(`beyond the history of ${path}`);
+      console.error(`beyond the history of ${arg[0]}`);
       return;
     }
     instance && (route.instance = instance);
-    await this.rIng('replace', route, query, params);
+    await this.rIng('replace', route, { params, query });
   }
 
   /**
    * 跳转路由
    */
-  async push(path: string, params?: any, instance: boolean = false) {
-    const paths = path.split('?');
-    const query = toParams(paths[1]);
-    const route = this.getRoute(paths[0]);
+  async push(args: string, params?: any, instance: boolean = false) {
+    const arg = args.split('?');
+    const query = toParams(arg[1]);
+    const route = this.getRoute(arg[0]);
     if (!route) {
-      console.warn(`beyond the history of ${path}`);
+      console.error(`beyond the history of ${arg[0]}`);
       return;
     }
     instance && (route.instance = instance);
-    await this.rIng('push', route, query, params);
+    await this.rIng('push', route, { params, query });
   }
 
   /**
@@ -112,7 +128,7 @@ export default class Router {
       console.error(`beyond the history of ${p}`);
       return;
     }
-    await this.rIng('back', route, p.query, false);
+    await this.rIng('back', route, p.parame);
   }
 
   /**
@@ -134,11 +150,11 @@ export default class Router {
       console.error(`beyond the history of ${p}`);
       return;
     }
-    await this.rIng(`go${num}`, route, p.query);
+    await this.rIng(`go${num}`, route, p.parame);
   }
 
-  private async rIng(type: string, route: Route, query?: any, params?: any) {
-    const isR = await this.onBeforeRoute(route, query);
+  private async rIng(type: string, route: Route, parame: ViewParameters = {}) {
+    const isR = await this.onBeforeRoute(route, parame);
     if (!isR) return;
     const component = route.component.prototype
       ? route.component
@@ -153,28 +169,29 @@ export default class Router {
     }
     const next = async () => {
       this.unCurrent();
-      renderView(isLoad, this.element as HTMLElement, view as View, query, params);
+      renderView(isLoad, this.element as HTMLElement, view as View, parame);
       route.name && (document.title = route.name);
       this.currentPath = route.path;
       this.currentView = view;
-      const p = queryParams(query);
+      this.currentParame = parame;
+      const p = queryParams(parame.query);
       const url = `${route.path}${p ? '?' + p : ''}`;
       if (this.type === 'history') {
         switch (type) {
           case 'replace':
-            history.replaceState(params, route.name || route.path, url);
+            history.replaceState(parame.params, route.name || route.path, url);
             break;
           case 'push':
-            history.pushState(params, route.name || route.path, url);
+            history.pushState(parame.params, route.name || route.path, url);
             break;
         }
       } else {
         type.startsWith('go') && this.history.splice(0, Number(this.type.slice(2)));
         type === 'back' && this.history.splice(0, 1);
-        this.type === 'hash' && this.hashR(route.path, url, query);
-        this.type === 'inner' && this.innerR(route.path, query);
+        this.type === 'hash' && this.hashR(route.path, url, parame);
+        this.type === 'inner' && this.innerR(route.path, parame);
       }
-      await this.onAfterRoute(route, query);
+      await this.onAfterRoute(route, parame);
     };
     if (this.currentView && this.currentView.beforeRoute)
       this.currentView.beforeRoute(this.currentPath as string, route.path, next) && next();
@@ -196,18 +213,25 @@ export default class Router {
 
 export class ChildRoute {
   public routeKey: string;
+  public urlKey: string;
   public routes: { [key: string]: any } = {};
   public el: JSX.Element;
 
-  constructor(routes: { [key: string]: any }, routeKey: string, el: JSX.Element) {
+  constructor(
+    routes: { [key: string]: any },
+    routeKey: string,
+    el: JSX.Element,
+    urlKey: string = 'childRoutePath'
+  ) {
     this.routes = routes;
     this.el = el;
     this.routeKey = routeKey;
+    this.urlKey = urlKey;
     this.rIng();
   }
 
-  private rIng() {
-    this.routes[this.routeKey].onLoad && this.routes[this.routeKey].onLoad();
+  private rIng(parame?: ViewParameters) {
+    this.routes[this.routeKey].onLoad && this.routes[this.routeKey].onLoad(parame);
     while (this.el.firstChild) {
       this.el.removeChild(this.el.firstChild);
     }
@@ -215,11 +239,17 @@ export class ChildRoute {
     this.routes[this.routeKey].onReady && this.routes[this.routeKey].onReady();
   }
 
-  to(path: string) {
-    if (this.routeKey === path || !this.routes[this.routeKey]) return;
-    this.routes[this.routeKey].onUnmounted();
-    this.routeKey = path;
-    this.rIng();
+  load(parame: ViewParameters) {
+    if (!parame?.query || !parame?.query[this.urlKey]) return null;
+    return this.to(parame.query[this.urlKey]);
+  }
+
+  to(childRoutePath: string, parame?: ViewParameters) {
+    if (this.routeKey === childRoutePath || !this.routes[childRoutePath]) return null;
+    this.routes[this.routeKey].onUnmounted && this.routes[this.routeKey].onUnmounted();
+    this.routeKey = childRoutePath;
+    this.rIng(parame);
+    return { key: this.urlKey, path: childRoutePath };
   }
 
   render() {

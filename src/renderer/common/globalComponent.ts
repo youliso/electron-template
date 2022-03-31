@@ -21,7 +21,7 @@ class GlobalComponent {
     component.onLoad && component.onLoad();
     const el = component.render ? component.render() : null;
     component.$currentPath = 'global';
-    component.$path = key;
+    component.$key = key;
     if (el) {
       component.$el = el;
       this.el.appendChild(el);
