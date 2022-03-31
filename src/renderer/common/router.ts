@@ -52,7 +52,7 @@ export default class Router {
     const p = queryParams(this.currentParame.query);
     const url = `${this.currentPath}${p ? '?' + p : ''}`;
     if (this.type === 'history') {
-      history.pushState(this.currentParame.params, document.title || this.currentPath, url);
+      history.replaceState(this.currentParame.params, document.title || this.currentPath, url);
     } else {
       this.type === 'hash' && this.hashR(this.currentPath, url);
       this.type === 'inner' && this.innerR(this.currentPath);
