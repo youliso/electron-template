@@ -133,7 +133,7 @@ export function random(start: number = 0, end: number = 1): number {
 }
 
 // 静态资源路径
-export function metaUrl(url: string) {
+export function assetsUrl(url: string) {
   return new URL(`../assets/${url}`, import.meta.url).href;
 }
 

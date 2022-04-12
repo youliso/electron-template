@@ -1,6 +1,7 @@
 import { windowLoad } from '@/renderer/common/window';
 import GlobalComponent from '@/renderer/common/globalComponent';
 import '@/renderer/views/style';
+
 windowLoad((_, args) => {
   window.customize = args;
   document.title = window.customize.title || '';
