@@ -64,6 +64,7 @@ export default class Home {
     function baidu() {
       windowCreate(
         {
+          title: 'baidu',
           url: 'https://baidu.com/',
           parentId: window.customize.id
         },

@@ -1,6 +1,11 @@
+import webview from '@/renderer/views/components/webview/index';
 import home from '@/renderer/views/pages/home/index';
 
 const Router: Route[] = [
+  {
+    path: '/Webview',
+    component: webview
+  },
   {
     path: '/home',
     component: home

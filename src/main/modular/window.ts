@@ -17,10 +17,7 @@ export function browserWindowInit(
   args.height = args.height || windowCfg.opt.height;
   // darwin下modal会造成整个窗口关闭(?)
   if (process.platform === 'darwin') delete args.modal;
-  customize.headNative =
-    customize.headNative !== null && customize.headNative !== undefined
-      ? customize.headNative
-      : !customize.route;
+  customize.headNative = customize.headNative || false;
   let opt: BrowserWindowConstructorOptions = Object.assign(args, {
     autoHideMenuBar: true,
     titleBarStyle: customize.headNative ? 'default' : 'hidden',
@@ -33,7 +30,8 @@ export function browserWindowInit(
       contextIsolation: true,
       nodeIntegration: false,
       devTools: !app.isPackaged,
-      webSecurity: false
+      webSecurity: false,
+      webviewTag: !customize.headNative && customize.url
     }
   });
   const isParentId =
@@ -61,17 +59,18 @@ export function browserWindowInit(
     }
   }
   const win = new BrowserWindow(opt);
-  
-  //win32 取消原生窗口右键事件
-  process.platform === 'win32' && win.hookWindowMessage(278, () => {
-    win.setEnabled(false)
-    win.setEnabled(true)
-  })
-  
-  //子窗体关闭父窗体获焦 https://github.com/electron/electron/issues/10616
-  if (isParentId) win.once('close', () => parenWin?.focus())
 
-  if (!customize.argv) customize.argv = process.argv;
+  //win32 取消原生窗口右键事件
+  process.platform === 'win32' &&
+    win.hookWindowMessage(278, () => {
+      win.setEnabled(false);
+      win.setEnabled(true);
+    });
+
+  //子窗体关闭父窗体获焦 https://github.com/electron/electron/issues/10616
+  isParentId && win.once('close', () => parenWin?.focus());
+  
+  !customize.argv && (customize.argv = process.argv);
   customize.id = win.id;
   win.customize = customize;
 
@@ -86,7 +85,7 @@ export function browserWindowInit(
 /**
  * 窗口加载
  */
-function load(win: BrowserWindow) {
+function load(url: string, win: BrowserWindow) {
   win.webContents.on('did-finish-load', () => win.webContents.send('window-load', win.customize));
   // 窗口最大最小监听
   win.on('maximize', () => win.webContents.send('window-maximize-status', 'maximize'));
@@ -94,13 +93,12 @@ function load(win: BrowserWindow) {
   // 聚焦失焦监听
   win.on('blur', () => win.webContents.send('window-blur-focus', 'blur'));
   win.on('focus', () => win.webContents.send('window-blur-focus', 'focus'));
-  if (win.customize.url) {
-    if (win.customize.url.startsWith('https://') || win.customize.url.startsWith('http://')) {
-      win.loadURL(win.customize.url, win.customize.loadOptions as LoadURLOptions);
-      return;
-    }
-    win.loadFile(win.customize.url, win.customize.loadOptions as LoadFileOptions);
+
+  if (url.startsWith('https://') || url.startsWith('http://')) {
+    win.loadURL(url, win.customize.loadOptions as LoadURLOptions);
+    return;
   }
+  win.loadFile(url, win.customize.loadOptions as LoadFileOptions);
 }
 
 export class Window {
@@ -164,18 +162,25 @@ export class Window {
       //调试模式
       try {
         import('fs').then(({ readFileSync }) => {
-          const appPort = readFileSync(join('.port'), 'utf8');
           win.webContents.openDevTools({ mode: 'detach' });
-          if (!win.customize.url) win.customize.url = `http://localhost:${appPort}`;
-          load(win);
+          let url = `http://localhost:${readFileSync(join('.port'), 'utf8')}`;
+          if (win.customize.url) {
+            win.customize.headNative && (url = win.customize.url);
+            !win.customize.headNative && (win.customize.route = '/Webview');
+          }
+          load(url, win);
         });
       } catch (e) {
         throw 'not found .port';
       }
       return;
     }
-    if (!win.customize.url) win.customize.url = join(__dirname, '../renderer/index.html');
-    load(win);
+    let url = join(__dirname, '../renderer/index.html');
+    if (win.customize.url) {
+      win.customize.headNative && (url = win.customize.url);
+      !win.customize.headNative && (win.customize.route = '/Webview');
+    }
+    load(url, win);
   }
 
   /**
