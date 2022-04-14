@@ -24,7 +24,7 @@ export function browserWindowInit(
     minimizable: true,
     maximizable: true,
     frame: customize.headNative,
-    show: !customize.route,
+    show: customize.headNative,
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       contextIsolation: true,
@@ -69,7 +69,7 @@ export function browserWindowInit(
 
   //子窗体关闭父窗体获焦 https://github.com/electron/electron/issues/10616
   isParentId && win.once('close', () => parenWin?.focus());
-  
+
   !customize.argv && (customize.argv = process.argv);
   customize.id = win.id;
   win.customize = customize;
