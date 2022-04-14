@@ -29,7 +29,7 @@ export function browserWindowInit(
     frame: customize.headNative,
     show: !customize.route,
     webPreferences: {
-      preload: join(__dirname, './preload.js'),
+      preload: join(__dirname, '../preload/index.js'),
       contextIsolation: true,
       nodeIntegration: false,
       devTools: !app.isPackaged,

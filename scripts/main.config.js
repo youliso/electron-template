@@ -59,7 +59,7 @@ module.exports = [
   {
     input: resolve('src/preload/index.ts'),
     output: {
-      file: resolve('dist/main/preload.js'),
+      file: resolve('dist/preload/index.js'),
       format: 'cjs',
       sourcemap: false
     },
