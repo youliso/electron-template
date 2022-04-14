@@ -61,6 +61,13 @@ export function browserWindowInit(
     }
   }
   const win = new BrowserWindow(opt);
+  
+  //win32 取消原生窗口右键事件
+  process.platform === 'win32' && win.hookWindowMessage(278, () => {
+    win.setEnabled(false)
+    win.setEnabled(true)
+  })
+  
   //子窗体关闭父窗体获焦 https://github.com/electron/electron/issues/10616
   if (isParentId) win.once('close', () => parenWin?.focus())
 
