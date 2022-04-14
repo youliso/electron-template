@@ -1,4 +1,5 @@
 import { windowClose, windowMaxMin, windowMin } from '@/renderer/common/window';
+import { titleStore } from '@/renderer/store';
 import style from './style';
 
 export default class Head {
@@ -20,12 +21,13 @@ export default class Head {
 
   render() {
     const content = <div class="content"></div>;
-    const title = <div class="title">{window.customize.title}</div>;
+    const titleEl = <div class="title">{titleStore.getState().title}</div>;
+    titleStore.subscribe(({ title }) => title && (titleEl.textContent = title));
     if (window.environment.platform === 'darwin') {
       content.appendChild(<div></div>);
-      content.appendChild(title);
+      content.appendChild(titleEl);
     } else {
-      content.appendChild(title);
+      content.appendChild(titleEl);
       if (this.isHead) content.appendChild(this.events());
     }
     return <div class={style + ' drag'}>{content}</div>;
