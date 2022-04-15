@@ -1672,10 +1672,10 @@ electron-updater@^5.0.1:
     lodash.isequal "^4.5.0"
     semver "^7.3.5"
 
-electron@^18.0.3:
-  version "18.0.3"
-  resolved "https://registry.npmmirror.com/electron/-/electron-18.0.3.tgz#58713c92b44e439881540d18910d193defb0c2b4"
-  integrity sha512-QRUZkGL8O/8CyDmTLSjBeRsZmGTPlPVeWnnpkdNqgHYYaOc/A881FKMiNzvQ9Cj0a+rUavDdwBUfUL82U3Ay7w==
+electron@^18.0.4:
+  version "18.0.4"
+  resolved "https://registry.npmmirror.com/electron/-/electron-18.0.4.tgz#7b9b094db32805d4a7826d9f7a1b376d9d7b9f86"
+  integrity sha512-xfsozNpFr3WzeM1EFlw2qqiqXbCrgQNBJJMlcC4/DUYVpkF8364SZenX7FFFA42NmwXiOEahkvvho/u7UrAcGg==
   dependencies:
     "@electron/get" "^1.13.0"
     "@types/node" "^16.11.26"
@@ -3674,10 +3674,17 @@ rollup-plugin-obfuscator@^0.2.1:
   dependencies:
     "@rollup/pluginutils" "^4.1.1"
 
-rollup@^2.59.0, rollup@^2.70.1:
+rollup@^2.59.0:
   version "2.70.1"
   resolved "https://registry.npmmirror.com/rollup/-/rollup-2.70.1.tgz#824b1f1f879ea396db30b0fc3ae8d2fead93523e"
   integrity sha512-CRYsI5EuzLbXdxC6RnYhOuRdtz4bhejPMSWjsFLfVM/7w/85n2szZv6yExqUXsBdz5KT8eoubeyDUDjhLHEslA==
+  optionalDependencies:
+    fsevents "~2.3.2"
+
+rollup@^2.70.2:
+  version "2.70.2"
+  resolved "https://registry.npmmirror.com/rollup/-/rollup-2.70.2.tgz#808d206a8851628a065097b7ba2053bd83ba0c0d"
+  integrity sha512-EitogNZnfku65I1DD5Mxe8JYRUCy0hkK5X84IlDtUs+O6JRMpRciXTzyCUuX11b5L5pvjH+OmFXiQ3XjabcXgg==
   optionalDependencies:
     fsevents "~2.3.2"
 

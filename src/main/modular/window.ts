@@ -1,24 +1,32 @@
-import type { BrowserWindowConstructorOptions, LoadFileOptions, LoadURLOptions } from 'electron';
+import type {
+  BrowserWindowConstructorOptions,
+  LoadFileOptions,
+  LoadURLOptions,
+  WebContents
+} from 'electron';
 import { join } from 'path';
 import { app, screen, ipcMain, BrowserWindow } from 'electron';
 import windowCfg from '@/cfg/window.json';
 
 /**
  * 窗口配置
+ * @param customize
+ * @param bwOptions
+ * @returns
  */
-export function browserWindowInit(
+function browserWindowAssembly(
   customize: Customize,
-  args: BrowserWindowConstructorOptions = {}
-): BrowserWindow {
+  bwOptions: BrowserWindowConstructorOptions = {}
+) {
   if (!customize) throw new Error('not customize');
-  args.minWidth = args.minWidth || args.width || windowCfg.opt.width;
-  args.minHeight = args.minHeight || args.height || windowCfg.opt.height;
-  args.width = args.width || windowCfg.opt.width;
-  args.height = args.height || windowCfg.opt.height;
+  bwOptions.minWidth = bwOptions.minWidth || bwOptions.width || windowCfg.opt.width;
+  bwOptions.minHeight = bwOptions.minHeight || bwOptions.height || windowCfg.opt.height;
+  bwOptions.width = bwOptions.width || windowCfg.opt.width;
+  bwOptions.height = bwOptions.height || windowCfg.opt.height;
   // darwin下modal会造成整个窗口关闭(?)
-  if (process.platform === 'darwin') delete args.modal;
+  if (process.platform === 'darwin') delete bwOptions.modal;
   customize.headNative = customize.headNative || false;
-  let opt: BrowserWindowConstructorOptions = Object.assign(args, {
+  let bwOpt: BrowserWindowConstructorOptions = Object.assign(bwOptions, {
     autoHideMenuBar: true,
     titleBarStyle: customize.headNative ? 'default' : 'hidden',
     minimizable: true,
@@ -41,51 +49,50 @@ export function browserWindowInit(
   let parenWin: BrowserWindow | null = null;
   isParentId && (parenWin = Window.getInstance().get(customize.parentId as number));
   if (parenWin) {
-    opt.parent = parenWin;
-    const currentWH = opt.parent.getBounds();
+    bwOpt.parent = parenWin;
+    const currentWH = bwOpt.parent.getBounds();
     customize.currentWidth = currentWH.width;
     customize.currentHeight = currentWH.height;
-    customize.currentMaximized = opt.parent.isMaximized();
+    customize.currentMaximized = bwOpt.parent.isMaximized();
     if (customize.currentMaximized) {
       const displayWorkAreaSize = screen.getPrimaryDisplay().workAreaSize;
-      opt.x = ((displayWorkAreaSize.width - (opt.width || 0)) / 2) | 0;
-      opt.y = ((displayWorkAreaSize.height - (opt.height || 0)) / 2) | 0;
+      bwOpt.x = ((displayWorkAreaSize.width - (bwOpt.width || 0)) / 2) | 0;
+      bwOpt.y = ((displayWorkAreaSize.height - (bwOpt.height || 0)) / 2) | 0;
     } else {
-      const currentPosition = opt.parent.getPosition();
-      opt.x =
-        (currentPosition[0] + (currentWH.width - (opt.width || customize.currentWidth)) / 2) | 0;
-      opt.y =
-        (currentPosition[1] + (currentWH.height - (opt.height || customize.currentHeight)) / 2) | 0;
+      const currentPosition = bwOpt.parent.getPosition();
+      bwOpt.x =
+        (currentPosition[0] + (currentWH.width - (bwOpt.width || customize.currentWidth)) / 2) | 0;
+      bwOpt.y =
+        (currentPosition[1] + (currentWH.height - (bwOpt.height || customize.currentHeight)) / 2) |
+        0;
     }
   }
-  const win = new BrowserWindow(opt);
 
-  //win32 取消原生窗口右键事件
-  process.platform === 'win32' &&
-    win.hookWindowMessage(278, () => {
-      win.setEnabled(false);
-      win.setEnabled(true);
+  return { bwOpt, isParentId, parenWin };
+}
+
+/**
+ * 窗口打开预处理
+ */
+function windowOpenHandler(webContents: WebContents, parentId?: number) {
+  webContents.setWindowOpenHandler(({ url }) => {
+    Window.getInstance().create({
+      url,
+      parentId
     });
-
-  //子窗体关闭父窗体获焦 https://github.com/electron/electron/issues/10616
-  isParentId && win.once('close', () => parenWin?.focus());
-
-  !customize.argv && (customize.argv = process.argv);
-  customize.id = win.id;
-  win.customize = customize;
-
-  // 窗口内创建
-  // win.webContents.setWindowOpenHandler((_) => ({
-  //   action: 'allow',
-  //   overrideBrowserWindowOptions: opt
-  // }));
-  return win;
+    return { action: 'deny' };
+  });
 }
 
 /**
  * 窗口加载
  */
 function load(url: string, win: BrowserWindow) {
+  // 窗口内创建拦截
+  windowOpenHandler(win.webContents);
+  win.webContents.on('did-attach-webview', (_, webContents) =>
+    windowOpenHandler(webContents, win.id)
+  );
   win.webContents.on('did-finish-load', () => win.webContents.send('window-load', win.customize));
   // 窗口最大最小监听
   win.on('maximize', () => win.webContents.send('window-maximize-status', 'maximize'));
@@ -147,7 +154,7 @@ export class Window {
   /**
    * 创建窗口
    * */
-  create(customize: Customize, opt: BrowserWindowConstructorOptions) {
+  create(customize: Customize, bwOptions: BrowserWindowConstructorOptions = {}) {
     if (customize.isOneWindow && !customize.url) {
       for (const i of this.getAll()) {
         if (customize?.route && customize.route === i.customize?.route) {
@@ -156,7 +163,21 @@ export class Window {
         }
       }
     }
-    const win = browserWindowInit(customize, opt);
+    const { bwOpt, isParentId, parenWin } = browserWindowAssembly(customize, bwOptions);
+    const win = new BrowserWindow(bwOpt);
+    //win32 取消原生窗口右键事件
+    process.platform === 'win32' &&
+      win.hookWindowMessage(278, () => {
+        win.setEnabled(false);
+        win.setEnabled(true);
+      });
+    //子窗体关闭父窗体获焦 https://github.com/electron/electron/issues/10616
+    isParentId && win.once('close', () => parenWin?.focus());
+
+    !customize.argv && (customize.argv = process.argv);
+    customize.id = win.id;
+    win.customize = customize;
+
     // 路由 > url
     if (!app.isPackaged) {
       //调试模式
