@@ -24,7 +24,7 @@ async function startRenderer() {
 
 async function startMain() {
   return new Promise((resolve, reject) => {
-    const watcher = rollup.watch(require('./config/main'));
+    const watcher = rollup.watch([require('./config/main'), require('./config/preload')]);
     watcher.on('event', (event) => {
       if (event.code === 'END') {
         if (electronProcess && electronProcess.kill) {
