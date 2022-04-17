@@ -18,13 +18,13 @@ async function startRenderer() {
   } catch (e) {
     throw 'not found .port';
   }
-  const server = await createServer(require('./renderer.config'));
+  const server = await createServer(require('./config/renderer'));
   await server.listen(port);
 }
 
 async function startMain() {
   return new Promise((resolve, reject) => {
-    const watcher = rollup.watch(require('./main.config'));
+    const watcher = rollup.watch(require('./config/main'));
     watcher.on('event', (event) => {
       if (event.code === 'END') {
         if (electronProcess && electronProcess.kill) {

@@ -7,7 +7,7 @@ const json = require('@rollup/plugin-json');
 const image = require('@rollup/plugin-image');
 const obfuscator = require('rollup-plugin-obfuscator').default;
 const esbuild = require('rollup-plugin-esbuild').default;
-const { dependencies } = require('../package.json');
+const { dependencies } = require('../../package.json');
 
 let external = [...builtinModules, 'electron'];
 
@@ -45,25 +45,4 @@ let plugins = [
 
 process.env['mainMode'] !== 'development' && plugins.push(obfuscator({}));
 
-module.exports = [
-  {
-    input: resolve('src/main/index.ts'),
-    output: {
-      file: resolve('dist/main/index.js'),
-      format: 'cjs',
-      sourcemap: false
-    },
-    external,
-    plugins
-  },
-  {
-    input: resolve('src/preload/index.ts'),
-    output: {
-      file: resolve('dist/preload/index.js'),
-      format: 'cjs',
-      sourcemap: false
-    },
-    external,
-    plugins
-  }
-];
+module.exports = { external, plugins };

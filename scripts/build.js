@@ -5,8 +5,9 @@ const rollup = require('rollup');
 const vite = require('vite');
 const builder = require('electron-builder');
 const buildConfig = require('../resources/build/cfg/build.json');
-const mainOptions = require('./main.config');
-const rendererOptions = require('./renderer.config');
+const mainOptions = require('./config/main');
+const preloadOptions = require('./config/preload');
+const rendererOptions = require('./config/renderer');
 
 let [, , arch, _notP] = process.argv;
 
@@ -55,16 +56,25 @@ function checkInput(str) {
 }
 
 async function mainBuild() {
-  for (const opt of mainOptions) {
-    await rollup
-      .rollup(opt)
-      .then(async (build) => await build.write(opt.output))
-      .catch((error) => {
-        console.log(`\x1B[31mFailed to build main process !\x1B[0m`);
-        console.error(error);
-        process.exit(1);
-      });
-  }
+  await rollup
+    .rollup(mainOptions)
+    .then(async (build) => await build.write(mainOptions.output))
+    .catch((error) => {
+      console.log(`\x1B[31mFailed to build main process !\x1B[0m`);
+      console.error(error);
+      process.exit(1);
+    });
+}
+
+async function preloadBuild() {
+  await rollup
+    .rollup(preloadOptions)
+    .then(async (build) => await build.write(preloadOptions.output))
+    .catch((error) => {
+      console.log(`\x1B[31mFailed to build preload process !\x1B[0m`);
+      console.error(error);
+      process.exit(1);
+    });
 }
 
 async function rendererBuild() {
@@ -131,6 +141,7 @@ async function core(arch) {
   deleteFolderRecursive(path.resolve('dist')); //清除dist
   console.log('\x1B[34m[build start]\x1B[0m');
   await mainBuild();
+  await preloadBuild();
   await rendererBuild();
   builder
     .build({
