@@ -11,6 +11,8 @@ interface Customize {
   route?: string;
   // 参数数据
   loadOptions?: Electron.LoadURLOptions | Electron.LoadFileOptions;
+  // 父窗口id
+  parentId?: number;
   // 父类窗口宽度
   currentWidth?: number;
   // 父类窗口高度
@@ -21,8 +23,8 @@ interface Customize {
   isOneWindow?: boolean;
   // 是否主窗口
   isMainWin?: boolean;
-  // 父窗口id
-  parentId?: number;
+  // 是否已打包环境
+  isPackaged?: boolean;
   // 进程参数
   argv?: any;
   // 自定义参数
@@ -38,7 +40,23 @@ interface AppInfo {
   version: string;
 }
 
-type AppPathKey = 'home' | 'appData' | 'userData' | 'cache' | 'temp' | 'exe' | 'module' | 'desktop' | 'documents' | 'downloads' | 'music' | 'pictures' | 'videos' | 'recent' | 'logs' | 'crashDumps'
+type AppPathKey =
+  | 'home'
+  | 'appData'
+  | 'userData'
+  | 'cache'
+  | 'temp'
+  | 'exe'
+  | 'module'
+  | 'desktop'
+  | 'documents'
+  | 'downloads'
+  | 'music'
+  | 'pictures'
+  | 'videos'
+  | 'recent'
+  | 'logs'
+  | 'crashDumps';
 
 declare namespace Electron {
   interface BrowserWindow {

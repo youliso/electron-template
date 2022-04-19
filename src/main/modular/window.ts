@@ -26,6 +26,7 @@ function browserWindowAssembly(
   // darwin下modal会造成整个窗口关闭(?)
   if (process.platform === 'darwin') delete bwOptions.modal;
   customize.headNative = customize.headNative || false;
+  customize.isPackaged = app.isPackaged;
   let bwOpt: BrowserWindowConstructorOptions = Object.assign(bwOptions, {
     autoHideMenuBar: true,
     titleBarStyle: customize.headNative ? 'default' : 'hidden',
