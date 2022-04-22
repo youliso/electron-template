@@ -4,7 +4,8 @@ import {
   windowCreate,
   windowMessageOn,
   windowMessageRemove,
-  windowShow
+  windowShow,
+  windowMessageSend
 } from '@/renderer/common/window';
 import { shortcutGetAll } from '@/renderer/common/shortcut';
 import { menuShow } from '@/renderer/common/menu';
@@ -29,9 +30,9 @@ export default class Home {
   }
 
   onTest() {
-    windowMessageOn('test', (_, args) => {
+    windowMessageOn((_, args) => {
       console.log(args);
-    });
+    }, 'test');
   }
 
   unTest() {
@@ -61,8 +62,8 @@ export default class Home {
       );
     }
 
-    function baidu() {
-      windowCreate(
+    async function baidu() {
+      const winId = await windowCreate(
         {
           title: 'baidu',
           url: 'https://baidu.com/',
@@ -73,6 +74,10 @@ export default class Home {
           height: 720
         }
       );
+      console.log('winId', winId);
+      setTimeout(() => {
+        windowMessageSend('测试数据', [winId as number]);
+      }, 3000);
     }
 
     const [data, view] = useDV(Date(), 'div', 'text');

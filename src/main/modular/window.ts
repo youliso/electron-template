@@ -88,7 +88,7 @@ function windowOpenHandler(webContents: WebContents, parentId?: number) {
 /**
  * 窗口加载
  */
-function load(url: string, win: BrowserWindow) {
+async function load(url: string, win: BrowserWindow) {
   // 窗口内创建拦截
   windowOpenHandler(win.webContents);
   win.webContents.on('did-attach-webview', (_, webContents) =>
@@ -102,11 +102,10 @@ function load(url: string, win: BrowserWindow) {
   win.on('blur', () => win.webContents.send('window-blur-focus', 'blur'));
   win.on('focus', () => win.webContents.send('window-blur-focus', 'focus'));
 
-  if (url.startsWith('https://') || url.startsWith('http://')) {
-    win.loadURL(url, win.customize.loadOptions as LoadURLOptions);
-    return;
-  }
-  win.loadFile(url, win.customize.loadOptions as LoadFileOptions);
+  if (url.startsWith('https://') || url.startsWith('http://'))
+    await win.loadURL(url, win.customize.loadOptions as LoadURLOptions);
+  else await win.loadFile(url, win.customize.loadOptions as LoadFileOptions);
+  return win.id;
 }
 
 export class Window {
@@ -155,7 +154,7 @@ export class Window {
   /**
    * 创建窗口
    * */
-  create(customize: Customize, bwOptions: BrowserWindowConstructorOptions = {}) {
+  async create(customize: Customize, bwOptions: BrowserWindowConstructorOptions = {}) {
     if (customize.isOneWindow && !customize.url) {
       for (const i of this.getAll()) {
         if (customize?.route && customize.route === i.customize?.route) {
@@ -183,26 +182,25 @@ export class Window {
     if (!app.isPackaged) {
       //调试模式
       try {
-        import('fs').then(({ readFileSync }) => {
+        return import('fs').then(({ readFileSync }) => {
           win.webContents.openDevTools({ mode: 'detach' });
           let url = `http://localhost:${readFileSync(join('.port'), 'utf8')}`;
           if (win.customize.url) {
             win.customize.headNative && (url = win.customize.url);
             !win.customize.headNative && (win.customize.route = '/Webview');
           }
-          load(url, win);
+          return load(url, win);
         });
       } catch (e) {
         throw 'not found .port';
       }
-      return;
     }
     let url = join(__dirname, '../renderer/index.html');
     if (win.customize.url) {
       win.customize.headNative && (url = win.customize.url);
       !win.customize.headNative && (win.customize.route = '/Webview');
     }
-    load(url, win);
+    return load(url, win);
   }
 
   /**
@@ -357,7 +355,7 @@ export class Window {
     // 窗口状态
     ipcMain.handle('window-status', async (event, args) => this.getStatus(args.type, args.id));
     // 创建窗口
-    ipcMain.on('window-new', (event, args) => this.create(args.customize, args.opt));
+    ipcMain.handle('window-new', (event, args) => this.create(args.customize, args.opt));
     // 设置窗口是否置顶
     ipcMain.on('window-always-top-set', (event, args) => this.setAlwaysOnTop(args));
     // 设置窗口大小

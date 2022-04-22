@@ -51,8 +51,8 @@ export function windowMaximizeRemove() {
  * 窗口消息监听
  */
 export function windowMessageOn(
-  channel: string,
-  listener: (event: IpcRendererEvent, args: any) => void
+  listener: (event: IpcRendererEvent, args: any) => void,
+  channel: string = 'default'
 ) {
   window.ipc.on(`window-message-${channel}-back`, listener);
 }
@@ -60,7 +60,7 @@ export function windowMessageOn(
 /**
  * 关闭窗口消息监听
  */
-export function windowMessageRemove(channel: string) {
+export function windowMessageRemove(channel: string = 'default') {
   window.ipc.removeAllListeners(`window-message-${channel}-back`);
 }
 
@@ -68,10 +68,10 @@ export function windowMessageRemove(channel: string) {
  * 消息发送
  */
 export function windowMessageSend(
-  channel: string, //监听key（保证唯一）
   value: any, //需要发送的内容
-  isback: boolean = false, //是否给自身反馈
-  acceptIds: number[] = [] //指定窗口id发送
+  acceptIds: number[] = [], //指定窗口id发送
+  channel: string = 'default', //监听key（保证唯一）
+  isback: boolean = false //是否给自身反馈
 ) {
   if (acceptIds.length === 0 && typeof window.customize.parentId === 'number') {
     acceptIds = [window.customize.parentId];
@@ -88,8 +88,11 @@ export function windowMessageSend(
 /**
  * 创建窗口
  */
-export function windowCreate(customize: Customize, opt?: BrowserWindowConstructorOptions) {
-  window.ipc.send('window-new', { customize, opt });
+export function windowCreate(
+  customize: Customize,
+  opt?: BrowserWindowConstructorOptions
+): Promise<number | undefined> {
+  return window.ipc.invoke('window-new', { customize, opt });
 }
 
 /**

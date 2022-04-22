@@ -1,8 +1,13 @@
-import { windowShow } from '@/renderer/common/window';
+import { windowShow, windowMessageOn } from '@/renderer/common/window';
 import { titleStore } from '@/renderer/store';
 import style from './style';
 
 export default class {
+  onLoad() {
+    windowMessageOn((_, args) => {
+      console.log('msg', args);
+    });
+  }
   onReady() {
     windowShow();
   }
