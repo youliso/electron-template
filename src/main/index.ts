@@ -1,30 +1,20 @@
-import App from './modular/app';
-import Shortcut from './modular/shortcut';
-import Global from './modular/global';
-import Window from './modular/window';
-import Tray from './modular/tray';
-import Session from './modular/session';
-import Dialog from './modular/dialog';
-import Menu from './modular/menu';
-import Update from './modular/update';
-import { logOn } from './modular/log';
-import { pathOn } from './modular/path';
-import { fileOn } from './modular/file';
+import { appInstance, windowInstance, Tray, Session, Update } from 'ym-electron/main';
 import { customize, opt } from '@/cfg/window.json';
+import updateCfg from '@/cfg/update.json';
+import logo from '@/assets/icon/logo.png';
 
-App.start().then(async () => {
-  // 主要模块
-  Shortcut.on();
-  Global.on();
-  Window.on();
-  Tray.on();
-  logOn();
-  // 可选模块
-  fileOn();
-  pathOn();
-  await App.use([Session, Dialog, Menu, Update]);
-  // 窗口
-  Window.create(customize, opt);
-  // 托盘
-  Tray.create();
+appInstance.start().then(async () => {
+  const tary = new Tray();
+  const update = new Update(
+    { provider: updateCfg.provider as any, url: updateCfg.url },
+    updateCfg.dirname
+  );
+  const session = new Session();
+
+  tary.on();
+  update.on();
+  session.on();
+
+  windowInstance.create(customize, opt);
+  tary.create(logo);
 });

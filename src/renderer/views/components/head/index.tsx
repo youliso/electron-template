@@ -1,4 +1,4 @@
-import { windowClose, windowMaxMin, windowMin } from '@/renderer/common/window';
+import { windowClose, windowMaxMin, windowMin } from 'ym-electron/renderer';
 import { titleStore } from '@/renderer/store';
 import style from './style';
 

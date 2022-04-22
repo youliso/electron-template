@@ -1,4 +1,4 @@
-import { windowShow, windowMessageOn } from '@/renderer/common/window';
+import { windowShow, windowMessageOn } from 'ym-electron/renderer';
 import { titleStore } from '@/renderer/store';
 import style from './style';
 

@@ -34,7 +34,8 @@
     "rollup-plugin-obfuscator": "^0.2.1",
     "typescript": "^4.6.3",
     "vite": "^2.9.5",
-    "vite-plugin-babel-macros": "^1.0.6"
+    "vite-plugin-babel-macros": "^1.0.6",
+    "ym-electron": "0.0.9"
   },
   "dependencies": {
     "electron-updater": "^5.0.1"

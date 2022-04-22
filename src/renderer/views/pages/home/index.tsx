@@ -5,10 +5,9 @@ import {
   windowMessageOn,
   windowMessageRemove,
   windowShow,
-  windowMessageSend
-} from '@/renderer/common/window';
-import { shortcutGetAll } from '@/renderer/common/shortcut';
-import { menuShow } from '@/renderer/common/menu';
+  windowMessageSend,
+  shortcutGetAll
+} from 'ym-electron/renderer';
 import style from './style';
 
 export default class Home {
@@ -32,11 +31,11 @@ export default class Home {
   onTest() {
     windowMessageOn((_, args) => {
       console.log(args);
-    }, 'test');
+    });
   }
 
   unTest() {
-    windowMessageRemove('test');
+    windowMessageRemove();
   }
 
   beforeRoute(to: string, from: string, next: () => void) {
@@ -86,7 +85,7 @@ export default class Home {
     }, 1000);
 
     return (
-      <div class={style} onMouseDown={(e) => e.button === 2 && menuShow()}>
+      <div class={style}>
         {view}
         <button class="but" onClick={() => baidu()}>
           百度

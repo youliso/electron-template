@@ -4316,3 +4316,8 @@ yauzl@^2.10.0:
   dependencies:
     buffer-crc32 "~0.2.3"
     fd-slicer "~1.1.0"
+
+ym-electron@0.0.9:
+  version "0.0.9"
+  resolved "https://registry.npmjs.org/ym-electron/-/ym-electron-0.0.9.tgz#3f4552a9993017a839069c4029569751dc4259a3"
+  integrity sha512-kxJRvOjOSp2feRNt2YD8z0HwULZ2TWGzbqVsSvzs2XjpOvztUYxqUfvcI0iRcWWfrdPjZ7wnVtUebNKYq1bXIQ==

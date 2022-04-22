@@ -1,4 +1,4 @@
-import { windowMessageSend, windowShow } from '@/renderer/common/window';
+import { windowMessageSend, windowShow } from 'ym-electron/renderer';
 import style from './style';
 
 export default class Message {
@@ -20,7 +20,7 @@ export default class Message {
           </div>
         </div>
         <div class="buts">
-          <button onClick={() => windowMessageSend('test', Date.now())}>发送消息</button>
+          <button onClick={() => windowMessageSend(Date.now())}>发送消息</button>
         </div>
       </div>
     );
