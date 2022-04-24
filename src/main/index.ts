@@ -9,6 +9,7 @@ appInstance
     const tary = new Tray();
     const update = new Update(
       { provider: updateCfg.provider as any, url: updateCfg.url },
+      'resources/build/cfg/app-update.yml',
       updateCfg.dirname
     );
     const session = new Session();
