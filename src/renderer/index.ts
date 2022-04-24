@@ -1,10 +1,10 @@
 import { windowLoad } from 'ym-electron/renderer';
-import GlobalComponent from '@/renderer/common/globalComponent';
+import { globalComponent } from 'ym-web';
 import '@/renderer/views/style';
 
 windowLoad((_, args) => {
   window.customize = args;
-  !window.customize.headNative && GlobalComponent.use(import('./views/components/head'), 'head');
+  !window.customize.headNative && globalComponent.use(import('./views/components/head'), 'head');
   import('@/renderer/router').then((router) =>
     router.default.push(window.customize.route as string)
   );

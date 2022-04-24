@@ -1,4 +1,4 @@
-import { createStore } from '@/renderer/common/store';
+import { createStore } from 'ym-web';
 
 export const titleStore = createStore(
   {

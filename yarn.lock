@@ -4321,3 +4321,8 @@ ym-electron@^1.0.8:
   version "1.0.8"
   resolved "https://registry.npmjs.org/ym-electron/-/ym-electron-1.0.8.tgz#dc80c22009d19690de711c664a68a6b04d57f469"
   integrity sha512-qQN1rdiYumwaUugSYzt4BTjCe6Q5HLGUnJt7Dfr7YR+n9V8X7M9E2oye6V4e0ZptZDOO6NYr3f/ZdSFv2jiluQ==
+
+ym-web@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.npmjs.org/ym-web/-/ym-web-0.0.2.tgz#e5125d8c49f711af96819755f2863eca2e57d08b"
+  integrity sha512-W1yEYciKW6w7+O11M9lh0jFG/xGtNpgNFfH5d2I6/nQq8We2if7VjQTkfMRV/afrtA+ydACQjaskbWtQtn/7ew==
