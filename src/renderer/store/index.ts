@@ -1,8 +1,9 @@
 import { createStore } from 'ym-web';
 
-export const titleStore = createStore(
+export const headStore = createStore(
   {
-    set: (title: string) => ({ title })
+    setTitle: (title: string) => ({ title }),
+    setShow: (show: boolean) => ({ show })
   },
-  { title: window.customize.title }
+  { title: window.customize.title, show: true }
 );

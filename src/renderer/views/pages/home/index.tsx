@@ -1,5 +1,6 @@
 import { useDV } from 'ym-web';
 import Router from '@/renderer/router';
+import { headStore } from '@/renderer/store';
 import {
   windowCreate,
   windowMessageOn,
