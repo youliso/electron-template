@@ -439,10 +439,10 @@
   dependencies:
     slash "^3.0.0"
 
-"@rollup/plugin-commonjs@^21.1.0":
-  version "21.1.0"
-  resolved "https://registry.npmmirror.com/@rollup/plugin-commonjs/-/plugin-commonjs-21.1.0.tgz#45576d7b47609af2db87f55a6d4b46e44fc3a553"
-  integrity sha512-6ZtHx3VHIp2ReNNDxHjuUml6ur+WcQ28N1yHgCQwsbNkQg2suhxGMDQGJOn/KuDxKtd1xuZP5xSTwBA4GQ8hbA==
+"@rollup/plugin-commonjs@^22.0.0":
+  version "22.0.0"
+  resolved "https://registry.npmjs.org/@rollup/plugin-commonjs/-/plugin-commonjs-22.0.0.tgz#f4d87016e2fbf187a593ab9f46626fe05b59e8bd"
+  integrity sha512-Ktvf2j+bAO+30awhbYoCaXpBcyPmJbaEUYClQns/+6SNCYFURbvBiNbWgHITEsIgDDWCDUclWRKEuf8cwZCFoQ==
   dependencies:
     "@rollup/pluginutils" "^3.1.0"
     commondir "^1.0.1"
@@ -4169,10 +4169,10 @@ vite-plugin-babel-macros@^1.0.6:
     "@types/babel__core" "^7.1.18"
     babel-plugin-macros "^3.1.0"
 
-vite@^2.9.5:
-  version "2.9.5"
-  resolved "https://registry.npmmirror.com/vite/-/vite-2.9.5.tgz#08ef37ac7a6d879c96f328b791732c9a00ea25ea"
-  integrity sha512-dvMN64X2YEQgSXF1lYabKXw3BbN6e+BL67+P3Vy4MacnY+UzT1AfkHiioFSi9+uiDUiaDy7Ax/LQqivk6orilg==
+vite@^2.9.6:
+  version "2.9.6"
+  resolved "https://registry.npmjs.org/vite/-/vite-2.9.6.tgz#29f1b33193b0de9e155d67ba0dd097501c3c3281"
+  integrity sha512-3IffdrByHW95Yjv0a13TQOQfJs7L5dVlSPuTt432XLbRMriWbThqJN2k/IS6kXn5WY4xBLhK9XoaWay1B8VzUw==
   dependencies:
     esbuild "^0.14.27"
     postcss "^8.4.12"
@@ -4317,10 +4317,10 @@ yauzl@^2.10.0:
     buffer-crc32 "~0.2.3"
     fd-slicer "~1.1.0"
 
-ym-electron@^1.0.8:
-  version "1.0.8"
-  resolved "https://registry.npmjs.org/ym-electron/-/ym-electron-1.0.8.tgz#dc80c22009d19690de711c664a68a6b04d57f469"
-  integrity sha512-qQN1rdiYumwaUugSYzt4BTjCe6Q5HLGUnJt7Dfr7YR+n9V8X7M9E2oye6V4e0ZptZDOO6NYr3f/ZdSFv2jiluQ==
+ym-electron@^1.0.9:
+  version "1.0.9"
+  resolved "https://registry.npmjs.org/ym-electron/-/ym-electron-1.0.9.tgz#54d240f30e56fad6d4d49d20eb3bd2bf98ab1c50"
+  integrity sha512-zwFm2x4QqGkxLo+UXUd74o8cLGlBnpDBtkSf14/WiBLPm06zYTWdnumvIvMr4aduSYWwomsZtNmSV/SGyJMYqQ==
 
 ym-web@^0.0.2:
   version "0.0.2"
