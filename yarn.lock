@@ -4324,10 +4324,10 @@ yauzl@^2.10.0:
     buffer-crc32 "~0.2.3"
     fd-slicer "~1.1.0"
 
-ym-electron@^1.0.19:
-  version "1.0.19"
-  resolved "https://registry.npmjs.org/ym-electron/-/ym-electron-1.0.19.tgz#52dac70b88882d817c6e993bf1bf084dce648ecd"
-  integrity sha512-OqrfiXhoLBqJQFubnpf8Pyhoxv96gIJPBA8mySwVKg3oAy/2DeSODLo+yDDd93DOKZJpyFpDLC6Gz70fVgF9Hg==
+ym-electron@^1.0.21:
+  version "1.0.21"
+  resolved "https://registry.npmjs.org/ym-electron/-/ym-electron-1.0.21.tgz#7c5c68d39e668da71dc61473a275d197d07eb768"
+  integrity sha512-BgZZq2TgN06NYC6uqXQ91g6JF8zRU9bRHgUxKYnUf4Woo/nP02Rvo4YKw4sE5ZuInEaDY8U0/kcz7nlnYfLSyA==
 
 ym-web@^1.0.0:
   version "1.0.0"
