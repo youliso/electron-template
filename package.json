@@ -35,7 +35,7 @@
     "typescript": "^4.6.4",
     "vite": "^2.9.7",
     "vite-plugin-babel-macros": "^1.0.6",
-    "ym-electron": "^1.0.10",
+    "ym-electron": "^1.0.19",
     "ym-web": "^1.0.0"
   },
   "dependencies": {
