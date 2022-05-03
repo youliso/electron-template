@@ -1,4 +1,5 @@
 import { appInstance, windowInstance, Tray, Session, Update, logError } from 'ym-electron/main';
+import { app } from 'electron';
 import { customize, opt } from '@/cfg/window.json';
 import updateCfg from '@/cfg/update.json';
 import logo from '@/assets/icon/logo.png';
@@ -18,7 +19,20 @@ appInstance
     update.on();
     session.on();
 
-    windowInstance.create(customize, opt);
+    // 调试模式
+    if (!app.isPackaged) {
+      try {
+        import('fs').then(({ readFileSync }) => {
+          import('path').then(({ join }) => {
+            windowInstance.loadUrl = `http://localhost:${readFileSync(join('.port'), 'utf8')}`;
+            windowInstance.create(customize, opt);
+          });
+        });
+      } catch (e) {
+        throw 'not found .port';
+      }
+    } else windowInstance.create(customize, opt);
+
     tary.create(logo);
   })
   .catch(logError);
