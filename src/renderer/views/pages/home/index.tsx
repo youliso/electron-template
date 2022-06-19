@@ -1,14 +1,13 @@
 import { useDV } from 'ym-web';
 import Router from '@/renderer/router';
-
 import {
   windowCreate,
   windowMessageOn,
   windowMessageRemove,
   windowShow,
-  windowMessageSend,
-  shortcutGetAll
-} from 'ym-electron/renderer';
+  windowMessageSend
+} from 'ym-electron/renderer/window';
+import { shortcutGetAll } from 'ym-electron/renderer/shortcut';
 import style from './style';
 
 export default class Home {

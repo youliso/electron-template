@@ -1,4 +1,9 @@
-import { appInstance, windowInstance, Tray, Session, Update, logError } from 'ym-electron/main';
+import { appInstance } from 'ym-electron/main/app';
+import { windowInstance } from 'ym-electron/main/window';
+import { Session } from 'ym-electron/main/session';
+import { Tray } from 'ym-electron/main/tray';
+import { Update } from 'ym-electron/main/update';
+import { logError } from 'ym-electron/main/log';
 import { app } from 'electron';
 import { customize, opt } from '@/cfg/window.json';
 import updateCfg from '@/cfg/update.json';

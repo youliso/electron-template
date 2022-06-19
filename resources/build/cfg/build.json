@@ -73,7 +73,7 @@
   },
   "linux": {
     "icon": "resources/build/icons",
-    "target": "AppImage",
+    "target": "deb",
     "executableName": "electron-template"
   },
   "npmRebuild": true,

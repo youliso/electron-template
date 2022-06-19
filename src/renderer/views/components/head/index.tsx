@@ -1,4 +1,4 @@
-import { windowClose, windowMaxMin, windowMin } from 'ym-electron/renderer';
+import { windowClose, windowMaxMin, windowMin } from 'ym-electron/renderer/window';
 import { headStore } from '@/renderer/store';
 import style from './style';
 

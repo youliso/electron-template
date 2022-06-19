@@ -1,4 +1,4 @@
-import { windowLoad } from 'ym-electron/renderer';
+import { windowLoad } from 'ym-electron/renderer/window';
 import { globalComponent } from 'ym-web';
 import '@/renderer/views/style';
 
