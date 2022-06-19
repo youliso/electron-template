@@ -36,7 +36,7 @@
     "vite": "^2.9.12",
     "vite-plugin-babel-macros": "^1.0.6",
     "ym-electron": "^2.0.1",
-    "ym-web": "^1.0.0"
+    "ym-web": "^2.0.3"
   },
   "dependencies": {
     "electron-updater": "^5.0.1"

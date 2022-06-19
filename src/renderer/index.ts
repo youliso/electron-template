@@ -1,5 +1,5 @@
 import { windowLoad } from 'ym-electron/renderer/window';
-import { globalComponent } from 'ym-web';
+import { globalComponent } from 'ym-web/globalcomponent';
 import '@/renderer/views/style';
 
 windowLoad((_, args) => {

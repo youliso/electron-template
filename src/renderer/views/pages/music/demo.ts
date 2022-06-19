@@ -1,4 +1,4 @@
-import { h } from 'ym-web';
+import { h } from 'ym-web/h';
 import audio from '@/renderer/common/audio';
 import Router from '@/renderer/router';
 import style from './style';

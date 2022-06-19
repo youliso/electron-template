@@ -1,4 +1,4 @@
-import { useDV } from 'ym-web';
+import { useDV } from 'ym-web/proxy';
 import Router from '@/renderer/router';
 import {
   windowCreate,
