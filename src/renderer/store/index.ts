@@ -1,4 +1,4 @@
-import { createStore } from 'ym-web/store';
+import { createStore } from 'ym-web';
 
 export const headStore = createStore(
   {
