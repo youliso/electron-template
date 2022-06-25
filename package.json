@@ -18,15 +18,15 @@
   "devDependencies": {
     "@emotion/css": "^11.9.0",
     "@rollup/plugin-alias": "^3.1.9",
-    "@rollup/plugin-commonjs": "^22.0.0",
+    "@rollup/plugin-commonjs": "^22.0.1",
     "@rollup/plugin-image": "^2.1.1",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.3.0",
     "asarmor": "^2.0.0",
-    "electron": "^19.0.4",
-    "electron-builder": "^23.0.3",
+    "electron": "^19.0.6",
+    "electron-builder": "^23.1.0",
     "electron-rebuild": "^3.2.7",
-    "esbuild": "^0.14.46",
+    "esbuild": "^0.14.47",
     "javascript-obfuscator": "^4.0.0",
     "prettier": "^2.7.1",
     "rollup": "^2.75.7",
@@ -39,6 +39,6 @@
     "ym-web": "^2.0.5"
   },
   "dependencies": {
-    "electron-updater": "^5.0.1"
+    "electron-updater": "^5.0.5"
   }
 }
