@@ -30,7 +30,7 @@ config.nsis.allowToChangeInstallationDirectory = true; //是否允许用户修�
 config.win.requestedExecutionLevel = ['asInvoker', 'highestAvailable'][0]; //应用权限
 
 /** linux配置 **/
-config.linux.target = ['AppImage', 'snap', 'deb', 'rpm', 'pacman'][2];
+config.linux.target = 'AppImage'; //默认为AppImage
 config.linux.executableName = name;
 
 //更新配置

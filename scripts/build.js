@@ -1,5 +1,6 @@
 const fs = require('fs');
 const readline = require('readline');
+const util = require('util');
 const path = require('path');
 const rollup = require('rollup');
 const vite = require('vite');
@@ -12,12 +13,14 @@ const rendererOptions = require('./config/renderer');
 let [, , arch, _notP] = process.argv;
 
 const optional = ['win', 'win32', 'win64', 'winp', 'winp32', 'winp64', 'darwin', 'mac', 'linux'];
+const linuxOptional = ['AppImage', 'snap', 'deb', 'rpm', 'pacman'];
 const notP_optional = '-notp';
 
 const r = readline.createInterface({
   input: process.stdin,
   output: process.stdout
 });
+const question = util.promisify(r.question).bind(r);
 
 function deleteFolderRecursive(url) {
   let files = [];
@@ -127,6 +130,20 @@ async function core(arch) {
     case 'linux':
       archTag = builder.Platform.LINUX.createTarget();
       archPath = 'platform/linux';
+      r.resume()
+      let line = await question('\x1B[36mPlease input linux package type:\x1B[0m \n optional：\x1B[33m' + linuxOptional + '\x1B[0m  \x1B[1mor\x1B[0m  \x1B[33mq\x1B[0m \x1B[1m(exit)\x1B[0m\n')
+      line = line.trim();
+      if (line === 'q') {
+        r.close();
+        process.exit(0);
+      }
+      if (linuxOptional.indexOf(line) > -1) {
+        buildConfig.linux.target = line;
+        r.close();
+      } else {
+        console.log(`\x1B[31mIllegal input , Please check input \x1B[0m`);
+        process.exit(0);
+      }
       break;
   }
   try {
@@ -162,7 +179,7 @@ async function core(arch) {
 if (!arch) {
   console.log('\x1B[36mWhich platform is you want to build?\x1B[0m');
   console.log(
-    `optional：\x1B[33m${optional}\x1B[0m  \x1B[1mor\x1B[0m  \x1B[33mq\x1B[0m \x1B[1m(exit)\x1B[0m  \x1B[2m|\x1B[0m  [\x1B[36m${notP_optional}\x1B[0m]  `
+    ` optional：\x1B[33m${optional}\x1B[0m  \x1B[1mor\x1B[0m  \x1B[33mq\x1B[0m \x1B[1m(exit)\x1B[0m  \x1B[2m|\x1B[0m  [\x1B[36m${notP_optional}\x1B[0m]  `
   );
   r.on('line', (str) => {
     let strs = str.split(' ').filter((s) => s !== '');
@@ -173,7 +190,7 @@ if (!arch) {
     }
     if (strs[1] && strs[1] === notP_optional) delete buildConfig.afterPack;
     if (!checkInput(strs[0])) return;
-    r.close();
+    r.pause();
     core(strs[0]);
   });
 } else {
