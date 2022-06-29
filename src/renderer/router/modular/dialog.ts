@@ -1,4 +1,4 @@
-import type { Route } from 'ym-web/types';
+import type { Route } from '@youliso/web-modules/types';
 
 const Router: Route[] = [
   {

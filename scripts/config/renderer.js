@@ -10,7 +10,7 @@ module.exports = defineConfig({
   root,
   base: './',
   esbuild: {
-    jsxInject: `import {h,f} from 'ym-web'`,
+    jsxInject: `import {h,f} from '@youliso/web-modules'`,
     jsxFactory: 'h',
     jsxFragment: 'f'
   },

@@ -1,3 +1,3 @@
-import { preloadDefaultInit } from 'ym-electron/preload';
+import { preloadDefaultInit } from '@youliso/electron-modules/preload';
 
 preloadDefaultInit();

@@ -1,4 +1,4 @@
-import { windowShow, windowMessageOn } from 'ym-electron/renderer/window';
+import { windowShow, windowMessageOn } from '@youliso/electron-modules/renderer/window';
 import { headStore } from '@/renderer/store';
 import style from './style';
 

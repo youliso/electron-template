@@ -1,5 +1,5 @@
-import { windowLoad } from 'ym-electron/renderer/window';
-import { globalComponent } from 'ym-web';
+import { windowLoad } from '@youliso/electron-modules/renderer/window';
+import { globalComponent } from '@youliso/web-modules';
 import '@/renderer/views/style';
 
 windowLoad((_, args) => {

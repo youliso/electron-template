@@ -1,4 +1,4 @@
-import { useDV } from 'ym-web';
+import { useDV } from '@youliso/web-modules';
 import Router from '@/renderer/router';
 import {
   windowCreate,
@@ -6,8 +6,8 @@ import {
   windowMessageRemove,
   windowShow,
   windowMessageSend
-} from 'ym-electron/renderer/window';
-import { shortcutGetAll } from 'ym-electron/renderer/shortcut';
+} from '@youliso/electron-modules/renderer/window';
+import { shortcutGetAll } from '@youliso/electron-modules/renderer/shortcut';
 import style from './style';
 
 export default class Home {

@@ -1,4 +1,4 @@
-import type { Route } from 'ym-web/types';
+import type { Route } from '@youliso/web-modules/types';
 import webview from '@/renderer/views/components/webview/index';
 import home from '@/renderer/views/pages/home/index';
 

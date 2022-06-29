@@ -22,6 +22,8 @@
     "@rollup/plugin-image": "^2.1.1",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.3.0",
+    "@youliso/electron-modules": "^1.0.0",
+    "@youliso/web-modules": "^1.0.0",
     "asarmor": "^2.0.0",
     "electron": "^19.0.6",
     "electron-builder": "^23.1.0",
@@ -33,10 +35,8 @@
     "rollup-plugin-esbuild": "^4.9.1",
     "rollup-plugin-obfuscator": "^0.2.2",
     "typescript": "^4.7.4",
-    "vite": "^2.9.12",
-    "vite-plugin-babel-macros": "^1.0.6",
-    "ym-electron": "^2.0.1",
-    "ym-web": "^2.0.5"
+    "vite": "^2.9.13",
+    "vite-plugin-babel-macros": "^1.0.6"
   },
   "dependencies": {
     "electron-updater": "^5.0.5"

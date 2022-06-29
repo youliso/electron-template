@@ -1,4 +1,4 @@
-import { createStore } from 'ym-web';
+import { createStore } from '@youliso/web-modules';
 
 export const headStore = createStore(
   {
