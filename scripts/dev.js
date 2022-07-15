@@ -4,6 +4,7 @@ const { readFileSync } = require('fs');
 const { resolve } = require('path');
 const { spawn } = require('child_process');
 const electron = require('electron');
+let [, , type] = process.argv;
 
 process.env['mainMode'] = 'development';
 process.env['rendererMode'] = 'development';
@@ -75,11 +76,18 @@ function startElectron() {
 }
 
 async function init() {
-  console.time('dev');
-  await startRenderer();
-  await startMain();
-  startElectron();
-  console.timeEnd('dev');
+  console.time(`dev ${type || ''}`);
+  switch (type) {
+    case 'web':
+      await startRenderer();
+      break;
+    default:
+      await startRenderer();
+      await startMain();
+      startElectron();
+      break;
+  }
+  console.timeEnd(`dev ${type || ''}`);
 }
 
 init().then();

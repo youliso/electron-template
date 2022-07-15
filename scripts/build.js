@@ -12,7 +12,18 @@ const rendererOptions = require('./config/renderer');
 
 let [, , arch, _notP] = process.argv;
 
-const optional = ['win', 'win32', 'win64', 'winp', 'winp32', 'winp64', 'darwin', 'mac', 'linux'];
+const optional = [
+  'web',
+  'win',
+  'win32',
+  'win64',
+  'winp',
+  'winp32',
+  'winp64',
+  'darwin',
+  'mac',
+  'linux'
+];
 const linuxOptional = ['AppImage', 'snap', 'deb', 'rpm', 'pacman'];
 const notP_optional = '-notp';
 let pushLinuxOptional = false;
@@ -22,7 +33,7 @@ const r = readline.createInterface({
   output: process.stdout,
   completer: (line) => {
     let cmds = platformOptional();
-    !pushLinuxOptional && !cmds.includes(notP_optional) && cmds.push(notP_optional)
+    !pushLinuxOptional && !cmds.includes(notP_optional) && cmds.push(notP_optional);
     pushLinuxOptional && (cmds = linuxOptional);
     !cmds.includes('q') && cmds.push('q');
     const hits = cmds.filter((c) => c.toLocaleLowerCase().startsWith(line.toLocaleLowerCase()));
@@ -71,9 +82,9 @@ function checkInput(str) {
 function platformOptional() {
   switch (process.platform) {
     case 'win32':
-      return optional.filter(item => item.startsWith('win'));
+      return optional.filter((item) => item.startsWith('win'));
     case 'linux':
-      return optional.filter((item) => !(item === 'mac' || item === 'darwin'))
+      return optional.filter((item) => !(item === 'mac' || item === 'darwin'));
     default:
       return optional;
   }
@@ -114,6 +125,9 @@ async function core(arch) {
   let archTag = '';
   let archPath = '';
   switch (arch) {
+    case 'web':
+      await rendererBuild();
+      process.exit(1);
     case 'win':
     case 'win32':
     case 'win64':
@@ -152,7 +166,11 @@ async function core(arch) {
       archTag = builder.Platform.LINUX.createTarget();
       archPath = 'platform/linux';
       pushLinuxOptional = true;
-      let line = await question('\x1B[36mPlease input linux package type:\x1B[0m \n optional：\x1B[33m' + linuxOptional + '\x1B[0m  \x1B[1mor\x1B[0m  \x1B[33mq\x1B[0m \x1B[1m(exit)\x1B[0m\n')
+      let line = await question(
+        '\x1B[36mPlease input linux package type:\x1B[0m \n optional：\x1B[33m' +
+          linuxOptional +
+          '\x1B[0m  \x1B[1mor\x1B[0m  \x1B[33mq\x1B[0m \x1B[1m(exit)\x1B[0m\n'
+      );
       line = line.trim();
       if (line === 'q') {
         r.close();
@@ -202,14 +220,14 @@ if (!arch) {
     ` optional：\x1B[33m${platformOptional()}\x1B[0m  \x1B[1mor\x1B[0m  \x1B[33mq\x1B[0m \x1B[1m(exit)\x1B[0m  \x1B[2m|\x1B[0m  [\x1B[36m${notP_optional}\x1B[0m]  `
   );
   r.on('line', (str) => {
-    let strs = str.split(" ").filter(s => s !== '')
+    let strs = str.split(' ').filter((s) => s !== '');
     if (strs.includes('q')) {
       console.log(`\x1B[32mExit success\x1B[0m`);
       r.close();
       return;
     }
-    if (strs.includes(notP_optional)) delete buildConfig.afterPack
-    strs = strs.filter(x => platformOptional().includes(x))
+    if (strs.includes(notP_optional)) delete buildConfig.afterPack;
+    strs = strs.filter((x) => platformOptional().includes(x));
     if (!checkInput(strs[0])) return;
     core(strs[0]);
   });

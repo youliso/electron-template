@@ -29,7 +29,7 @@ appInstance
       try {
         import('fs').then(({ readFileSync }) => {
           import('path').then(({ join }) => {
-            windowInstance.loadUrl = `http://localhost:${readFileSync(join('.port'), 'utf8')}`;
+            windowInstance.defaultUrl = `http://localhost:${readFileSync(join('.port'), 'utf8')}`;
             windowInstance.create(customize, opt);
           });
         });
