@@ -82,11 +82,11 @@ function checkInput(str) {
 function platformOptional() {
   switch (process.platform) {
     case 'win32':
-      return optional.filter((item) => item.startsWith('win'));
+      return ['web',...optional.filter((item) => item.startsWith('win'))];
     case 'linux':
-      return optional.filter((item) => !(item === 'mac' || item === 'darwin'));
+      return ['web',...optional.filter((item) => !(item === 'mac' || item === 'darwin'))];
     default:
-      return optional;
+      return ['web',...optional];
   }
 }
 
@@ -127,7 +127,7 @@ async function core(arch) {
   switch (arch) {
     case 'web':
       await rendererBuild();
-      process.exit(1);
+      process.exit(0);
     case 'win':
     case 'win32':
     case 'win64':
