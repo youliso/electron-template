@@ -1,12 +1,6 @@
 import { useDV } from '@youliso/web-modules';
 import Router from '@/renderer/router';
-import {
-  windowCreate,
-  windowMessageOn,
-  windowMessageRemove,
-  windowShow,
-  windowMessageSend
-} from '@youliso/electron-modules/renderer/window';
+import { windowCreate, windowShow } from '@youliso/electron-modules/renderer/window';
 import { shortcutGetAll } from '@youliso/electron-modules/renderer/shortcut';
 import style from './style';
 
@@ -14,9 +8,7 @@ export default class Home {
   private fileInterval: NodeJS.Timer | undefined;
   private testInterval: NodeJS.Timer | undefined;
 
-  onLoad() {
-    this.onTest();
-  }
+  onLoad() {}
 
   onReady() {
     windowShow();
@@ -25,17 +17,6 @@ export default class Home {
   onUnmounted() {
     if (this.testInterval) clearInterval(this.testInterval);
     if (this.fileInterval) clearInterval(this.fileInterval);
-    this.unTest();
-  }
-
-  onTest() {
-    windowMessageOn((_, args) => {
-      console.log(args);
-    });
-  }
-
-  unTest() {
-    windowMessageRemove();
   }
 
   beforeRoute(to: string, from: string, next: () => void) {
@@ -61,24 +42,6 @@ export default class Home {
       );
     }
 
-    async function baidu() {
-      const winId = await windowCreate(
-        {
-          title: 'baidu',
-          url: 'https://baidu.com/',
-          parentId: window.customize.id
-        },
-        {
-          width: 1280,
-          height: 720
-        }
-      );
-      console.log('winId', winId);
-      setTimeout(() => {
-        windowMessageSend('测试数据', [winId as number]);
-      }, 3000);
-    }
-
     const [data, view] = useDV(Date(), 'div', 'text');
     this.testInterval = setInterval(() => {
       data.value = Date();
@@ -87,9 +50,6 @@ export default class Home {
     return (
       <div class={style}>
         {view}
-        <button class="but" onClick={() => baidu()}>
-          百度
-        </button>
         <button class="but" onClick={() => tk()}>
           弹框
         </button>
