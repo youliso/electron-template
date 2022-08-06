@@ -30,7 +30,7 @@ export default class Home {
         {
           title: '弹框测试',
           route: '/message',
-          parentId: window.customize.id,
+          parentId: window.customize.winId,
           data: { text: '123' }
         },
         {

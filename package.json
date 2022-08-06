@@ -16,30 +16,30 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "devDependencies": {
-    "@emotion/css": "^11.9.0",
+    "@emotion/css": "^11.10.0",
     "@rollup/plugin-alias": "^3.1.9",
-    "@rollup/plugin-commonjs": "^22.0.1",
+    "@rollup/plugin-commonjs": "^22.0.2",
     "@rollup/plugin-image": "^2.1.1",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.3.0",
-    "@youliso/electron-modules": "^1.2.15",
+    "@youliso/electron-modules": "^1.2.19",
     "@youliso/web-modules": "^1.0.0",
     "asarmor": "^2.0.0",
-    "electron": "^19.0.9",
-    "electron-builder": "^23.1.0",
-    "electron-rebuild": "^3.2.8",
-    "esbuild": "^0.14.49",
+    "electron": "^20.0.1",
+    "electron-builder": "^23.3.3",
+    "electron-rebuild": "^3.2.9",
+    "esbuild": "^0.14.53",
     "javascript-obfuscator": "^4.0.0",
     "prettier": "^2.7.1",
-    "rollup": "^2.77.0",
+    "rollup": "^2.77.2",
     "rollup-plugin-esbuild": "^4.9.1",
     "rollup-plugin-obfuscator": "^0.2.2",
     "typescript": "^4.7.4",
-    "vite": "^3.0.2",
+    "vite": "^3.0.4",
     "vite-plugin-babel-macros": "^1.0.6"
   },
   "dependencies": {
-    "electron-updater": "^5.0.5",
+    "electron-updater": "^5.2.1",
     "serialport": "^10.4.0"
   }
 }
