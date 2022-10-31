@@ -10,6 +10,11 @@ module.exports = defineConfig({
   root,
   base: './',
   esbuild: {
+    tsconfigRaw: {
+      compilerOptions: {
+        jsx: 'react'
+      }
+    },
     jsxInject: `import {h,f} from '@youliso/web-modules'`,
     jsxFactory: 'h',
     jsxFragment: 'f'
