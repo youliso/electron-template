@@ -5,7 +5,7 @@
 [staten@johnsylvain](https://github.com/johnsylvain/staten)  
 
 ## Doc
-[https://mlmdflr.cc/doc](https://mlmdflr.cc/doc)
+[electron-modules](https://youliso.github.io/electron-modules/)
 
 ## Framework template
 [vue @mlmdflr](https://github.com/mlmdflr/xps-electron-vue-template)   
