@@ -5,7 +5,7 @@ import { windowUpdate } from '@youliso/electron-modules/renderer/window';
 
 const router = new Router('hash', {
   '/': {
-    component: () => import('@/renderer/views'),
+    component: () => import('@/renderer/views/app'),
     children: Object.assign(pageRoute, dialogRoute)
   }
 });
