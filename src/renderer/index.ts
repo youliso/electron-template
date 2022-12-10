@@ -1,4 +1,4 @@
-import { windowLoad } from '@youliso/electron-modules/renderer/window';
+import { windowLoad } from '@youliso/electronic/renderer/window';
 import '@/renderer/views/style';
 windowLoad((_, args) => {
   window.customize = args;

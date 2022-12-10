@@ -1,9 +1,9 @@
-import { appInstance } from '@youliso/electron-modules/main/app';
-import { windowInstance } from '@youliso/electron-modules/main/window';
-import { Session } from '@youliso/electron-modules/main/session';
-import { Tray } from '@youliso/electron-modules/main/tray';
-import { Update } from '@youliso/electron-modules/main/update';
-import { logError } from '@youliso/electron-modules/main/log';
+import { appInstance } from '@youliso/electronic/main/app';
+import { windowInstance } from '@youliso/electronic/main/window';
+import { Session } from '@youliso/electronic/main/session';
+import { Tray } from '@youliso/electronic/main/tray';
+import { Update } from '@youliso/electronic/main/update';
+import { logError } from '@youliso/electronic/main/log';
 import { app } from 'electron';
 import { customize, opt } from '@/cfg/window.json';
 import updateCfg from '@/cfg/update.json';

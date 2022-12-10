@@ -1,4 +1,4 @@
-import { windowClose, windowMaxMin, windowMin } from '@youliso/electron-modules/renderer/window';
+import { windowClose, windowMaxMin, windowMin } from '@youliso/electronic/renderer/window';
 import { headStore } from '@/renderer/store';
 import style from './style';
 

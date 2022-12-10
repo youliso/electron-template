@@ -1,6 +1,6 @@
 import type { WebContentsPrintOptions } from 'electron';
 import { ipcMain, BrowserWindow } from 'electron';
-import { windowInstance } from '@youliso/electron-modules/main/window';
+import { windowInstance } from '@youliso/electronic/main/window';
 import { resourcesPathGet } from '@/main/modular/resources';
 
 export class Printer {
