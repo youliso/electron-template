@@ -1,4 +1,4 @@
-import { h } from '@youliso/web-modules';
+import { h } from '@youliso/granule';
 import audio from '@/renderer/common/audio';
 import Router from '@/renderer/router';
 import style from './style';
@@ -18,7 +18,7 @@ info.appendChild(c1);
 info.appendChild(c2);
 info.appendChild(c3);
 
-bgmBut.addEventListener('click', (event) => {
+bgmBut.addEventListener('click', (event: Event) => {
   event.stopPropagation();
   if (audio.type) {
     bgmBut.textContent = '播放';
@@ -173,17 +173,6 @@ function loop() {
   }
 }
 
-export function init() {
-  resize();
-  create();
-  loop();
-  window.addEventListener('resize', resize);
-  info.addEventListener('click', click);
-  bgm();
-  bc();
-  return info;
-}
-
 function resize() {
   cw = c1.width = c2.width = c3.width = window.innerWidth;
   ch = c1.height = c2.height = c3.height = window.innerHeight;
@@ -193,4 +182,15 @@ function resize() {
 function click() {
   resize();
   create();
+}
+
+export function render() {
+  resize();
+  create();
+  loop();
+  window.addEventListener('resize', resize);
+  info.addEventListener('click', click);
+  bgm();
+  bc();
+  return info;
 }

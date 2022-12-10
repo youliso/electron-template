@@ -1,4 +1,4 @@
-import { createStore } from '@youliso/web-modules';
+import { createStore } from '@youliso/granule';
 
 export const headStore = createStore(
   {

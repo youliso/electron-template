@@ -21,10 +21,8 @@
     "isolatedModules": true,
     "allowJs": true,
     "importHelpers": true,
-    "jsx": "preserve",
-    "jsxFactory": "h",
-    "jsxFragmentFactory": "f",
     "allowSyntheticDefaultImports": true,
+    "jsx": "preserve",
     "paths": {
       "@/*": ["src/*"]
     }

@@ -1,25 +1,18 @@
-import { windowShow, windowMessageOn } from '@youliso/electron-modules/renderer/window';
+import { windowShow } from '@youliso/electron-modules/renderer/window';
 import { headStore } from '@/renderer/store';
 import style from './style';
 
-export default class {
-  onLoad() {
-    windowMessageOn((_, args) => {
-      console.log('msg', args);
-    });
-  }
-  onReady() {
-    windowShow();
-  }
+export const onReady = () => {
+  windowShow();
+};
 
-  render() {
-    const webview = document.createElement('webview');
-    webview.allowpopups = true;
-    webview.addEventListener('page-title-updated', () =>
-      headStore.actions.setTitle(webview.getTitle())
-    );
-    webview.innerText = 'loading..';
-    webview.src = window.customize.url as string;
-    return <div class={style}>{webview}</div>;
-  }
-}
+export const render = () => {
+  const webview = document.createElement('webview');
+  webview.allowpopups = true;
+  webview.addEventListener('page-title-updated', () =>
+    headStore.actions.setTitle(webview.getTitle())
+  );
+  webview.innerText = 'loading..';
+  webview.src = window.customize.url as string;
+  return <div class={style}>{webview}</div>;
+};

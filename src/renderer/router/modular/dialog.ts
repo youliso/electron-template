@@ -1,10 +1,9 @@
-import type { Route } from '@youliso/web-modules/types';
+import type { Routes } from '@youliso/granule/types/Router';
 
-const Router: Route[] = [
-  {
-    path: '/message',
+const routes: Routes = {
+  message: {
     component: () => import('@/renderer/views/dialog/message/index')
   }
-];
+};
 
-export default Router;
+export default routes;

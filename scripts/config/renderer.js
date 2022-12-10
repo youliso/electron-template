@@ -10,15 +10,17 @@ module.exports = defineConfig({
   root,
   base: './',
   esbuild: {
-    jsxInject: `import {h,f} from '@youliso/web-modules'`,
+    tsconfigRaw: {
+      compilerOptions: {
+        jsx: 'react'
+      }
+    },
+    jsxInject: `import {h,f} from '@youliso/granule'`,
     jsxFactory: 'h',
     jsxFragment: 'f'
   },
   build: {
-    outDir,
-    emptyOutDir: true,
-    target: 'esnext',
-    minify: 'esbuild'
+    outDir
   },
   resolve: {
     alias: {

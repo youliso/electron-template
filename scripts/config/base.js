@@ -5,7 +5,6 @@ const commonjs = require('@rollup/plugin-commonjs');
 const alias = require('@rollup/plugin-alias');
 const json = require('@rollup/plugin-json');
 const image = require('@rollup/plugin-image');
-const obfuscator = require('rollup-plugin-obfuscator').default;
 const esbuild = require('rollup-plugin-esbuild').default;
 const { dependencies } = require('../../package.json');
 
@@ -42,7 +41,5 @@ let plugins = [
     }
   })
 ];
-
-process.env['mainMode'] !== 'development' && plugins.push(obfuscator({}));
 
 module.exports = { external, plugins };

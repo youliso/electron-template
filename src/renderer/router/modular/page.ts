@@ -1,25 +1,18 @@
-import type { Route } from '@youliso/web-modules/types';
-import webview from '@/renderer/views/components/webview/index';
-import home from '@/renderer/views/pages/home/index';
+import type { Routes } from '@youliso/granule/types/Router';
 
-const Router: Route[] = [
-  {
-    path: '/Webview',
-    component: webview
+const routes: Routes = {
+  webview: {
+    component: () => import('@/renderer/views/components/webview')
   },
-  {
-    path: '/home',
-    component: home
+  home: {
+    component: () => import('@/renderer/views/pages/home')
   },
-  {
-    path: '/about',
-    component: () => import('@/renderer/views/pages/about/index')
+  about: {
+    component: () => import('@/renderer/views/pages/about')
   },
-  {
-    path: '/music',
-    instance: true,
-    component: () => import('@/renderer/views/pages/music/index')
+  music: {
+    component: () => import('@/renderer/views/pages/music')
   }
-];
+};
 
-export default Router;
+export default routes;
