@@ -14,9 +14,9 @@ export const onReady = () => {
   windowShow();
 };
 
-export const beforeRoute = (to: string, from: string, next: () => void) => {
+export const beforeRoute = async (to: string, from: string) => {
   console.log(to, from);
-  next();
+  return true;
 };
 
 const tk = () => {
@@ -24,7 +24,6 @@ const tk = () => {
     {
       title: '弹框测试',
       route: '/message',
-      parentId: window.customize.winId,
       data: { text: '123' }
     },
     {
@@ -45,16 +44,16 @@ export const render = () => {
   return (
     <div class={style}>
       <div>{dateElement}</div>
-      <button class="but" onClick={() => tk()}>
+      <button class='but' onClick={() => tk()}>
         弹框
       </button>
-      <button class="but" onClick={() => shortcutGetAll().then(console.log)}>
+      <button class='but' onClick={() => shortcutGetAll().then(console.log)}>
         获取已注册shortcut
       </button>
-      <button class="but" onClick={() => Router.push('/about')}>
+      <button class='but' onClick={() => Router.push('/about')}>
         关于
       </button>
-      <button class="but" onClick={() => Router.push('/music')}>
+      <button class='but' onClick={() => Router.push('/music')}>
         music
       </button>
     </div>

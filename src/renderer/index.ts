@@ -1,5 +1,6 @@
 import { windowLoad } from '@youliso/electronic/renderer/window';
 import '@/renderer/views/style';
+
 windowLoad((_, args) => {
   window.customize = args;
   import('@/renderer/router').then((router) => {
