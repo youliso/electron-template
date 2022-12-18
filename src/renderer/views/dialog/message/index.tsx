@@ -1,4 +1,4 @@
-import { windowShow } from '@youliso/electronic/renderer/window';
+import { windowShow } from '@youliso/electronic-ipc/window';
 import style from './style';
 
 export const onReady = () => {
