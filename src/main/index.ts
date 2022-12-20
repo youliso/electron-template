@@ -1,9 +1,4 @@
-import { appInstance } from '@youliso/electronic/app';
-import { windowInstance } from '@youliso/electronic/window';
-import { Session } from '@youliso/electronic/session';
-import { Tray } from '@youliso/electronic/tray';
-import { Update } from '@youliso/electronic/update';
-import { logError } from '@youliso/electronic/log';
+import { appInstance, windowInstance, Session, Tray, Update, logError } from '@youliso/electronic';
 import { app } from 'electron';
 import { customize, opt } from '@/cfg/window.json';
 import updateCfg from '@/cfg/update.json';
