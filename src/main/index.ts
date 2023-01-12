@@ -18,6 +18,7 @@ appInstance
     );
     const session = new Session();
 
+    tray.on('click', () => windowInstance.func('show'));
     update.on();
     session.on();
 
@@ -34,5 +35,6 @@ appInstance
         throw 'not found .port';
       }
     } else windowInstance.create(customize, opt).catch(logError);
+
   })
   .catch(logError);
