@@ -24,7 +24,8 @@ const tk = () => {
     {
       title: '弹框测试',
       route: '/message',
-      data: { text: '123' }
+      data: { text: '123' },
+      parentId: window.customize.winId
     },
     {
       width: 440,
@@ -44,16 +45,16 @@ export const render = () => {
   return (
     <div class={style}>
       <div>{dateElement}</div>
-      <button class='but' onClick={() => tk()}>
+      <button class="but" onClick={() => tk()}>
         弹框
       </button>
-      <button class='but' onClick={() => shortcutGetAll().then(console.log)}>
+      <button class="but" onClick={() => shortcutGetAll().then(console.log)}>
         获取已注册shortcut
       </button>
-      <button class='but' onClick={() => Router.push('/about')}>
+      <button class="but" onClick={() => Router.push('/about')}>
         关于
       </button>
-      <button class='but' onClick={() => Router.push('/music')}>
+      <button class="but" onClick={() => Router.push('/music')}>
         music
       </button>
     </div>
