@@ -25,7 +25,7 @@ const tk = () => {
       title: '弹框测试',
       route: '/message',
       data: { text: '123' },
-      parentId: window.customize.winId
+      center: true
     },
     {
       width: 440,
