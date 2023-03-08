@@ -1,4 +1,11 @@
-import { appInstance, windowInstance, Session, createTray, Update, logError } from '@youliso/electronic';
+import {
+  appInstance,
+  windowInstance,
+  Session,
+  createTray,
+  Update,
+  logError
+} from '@youliso/electronic';
 import { app } from 'electron';
 import { customize, opt } from '@/cfg/window.json';
 import updateCfg from '@/cfg/update.json';
@@ -27,14 +34,20 @@ appInstance
       try {
         import('fs').then(({ readFileSync }) => {
           import('path').then(({ join }) => {
-            windowInstance.defaultUrl = `http://localhost:${readFileSync(join('.port'), 'utf8')}`;
-            windowInstance.create(customize, opt).catch(console.error);
+            windowInstance.setDefaultCfg({
+              defaultLoadType: 'url',
+              defaultUrl: `http://localhost:${readFileSync(join('.port'), 'utf8')}`
+            });
+            const win = windowInstance.create(customize, opt);
+            win && windowInstance.load(win).catch(console.error);
           });
         });
       } catch (e) {
         throw 'not found .port';
       }
-    } else windowInstance.create(customize, opt).catch(logError);
-
+    } else {
+      const win = windowInstance.create(customize, opt);
+      win && windowInstance.load(win).catch(logError);
+    }
   })
   .catch(logError);
