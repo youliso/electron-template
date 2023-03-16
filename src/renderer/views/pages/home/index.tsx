@@ -22,13 +22,31 @@ const tk = () => {
   windowCreate(
     {
       title: '弹框测试',
-      url: '/message',
+      route: '/message',
       data: { text: '123' },
       center: true
     },
     {
       width: 440,
       height: 220,
+      frame: false,
+      show: false,
+      modal: true,
+      resizable: true
+    }
+  );
+};
+
+const toBilibili = () => {
+  windowCreate(
+    {
+      loadType: 'url',
+      url: 'https://www.bilibili.com/',
+      center: true
+    },
+    {
+      width: 800,
+      height: 600,
       modal: true,
       resizable: true
     }
@@ -46,6 +64,9 @@ export const render = () => {
       <div>{dateElement}</div>
       <button class="but" onClick={() => tk()}>
         弹框
+      </button>
+      <button class="but" onClick={() => toBilibili()}>
+        bilibili
       </button>
       <button class="but" onClick={() => shortcutGetAll().then(console.log)}>
         获取已注册shortcut

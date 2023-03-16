@@ -1,4 +1,4 @@
-import { windowLoad } from '@youliso/electronic';
+import { windowLoad } from '@youliso/electronic/ipc';
 import '@/renderer/views/style';
 
 windowLoad((_, args) => {
