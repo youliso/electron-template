@@ -1,7 +1,6 @@
 import { useElement } from '@youliso/granule';
 import Router from '@/renderer/router';
-import { windowCreate, windowShow } from '@youliso/electronic-ipc/window';
-import { shortcutGetAll } from '@youliso/electronic-ipc/shortcut';
+import { windowCreate, windowShow, shortcutGetAll } from '@youliso/electronic/ipc';
 import style from './style';
 
 let testInterval: NodeJS.Timer | undefined;
@@ -23,15 +22,13 @@ const tk = () => {
   windowCreate(
     {
       title: '弹框测试',
-      route: '/message',
+      url: '/message',
       data: { text: '123' },
       center: true
     },
     {
       width: 440,
       height: 220,
-      frame: false,
-      show: false,
       modal: true,
       resizable: true
     }

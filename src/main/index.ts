@@ -5,7 +5,7 @@ import {
   createTray,
   Update,
   logError
-} from '@youliso/electronic';
+} from '@youliso/electronic/main';
 import { app } from 'electron';
 import { customize, opt } from '@/cfg/window.json';
 import updateCfg from '@/cfg/update.json';

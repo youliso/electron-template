@@ -1,7 +1,7 @@
 import pageRoute from '@/renderer/router/modular/page';
 import dialogRoute from '@/renderer/router/modular/dialog';
 import { Router } from '@youliso/granule';
-import { windowUpdate } from '@youliso/electronic-ipc/window';
+import { windowUpdate } from '@youliso/electronic/ipc';
 
 const router = new Router('hash', {
   '/': {

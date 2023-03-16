@@ -1,4 +1,4 @@
-import { windowClose, windowMaxMin, windowMin } from '@youliso/electronic-ipc/window';
+import { windowClose, windowMaxMin, windowMin } from '@youliso/electronic/ipc';
 import { headStore } from '@/renderer/store';
 import style from './style';
 

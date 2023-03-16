@@ -1,4 +1,4 @@
-import { windowShow } from '@youliso/electronic-ipc/window';
+import { windowShow } from '@youliso/electronic/ipc';
 import { headStore } from '@/renderer/store';
 import style from './style';
 

@@ -1,6 +1,6 @@
 import { SerialPort } from 'serialport';
 import { ipcMain } from 'electron';
-import { windowInstance } from '@youliso/electronic/window';
+import { windowInstance } from '@youliso/electronic/main/window';
 import Byt, { BytPort, BytTcp } from './byt';
 import Str, { StrPort, StrTcp } from './str';
 

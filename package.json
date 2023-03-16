@@ -22,8 +22,7 @@
     "@rollup/plugin-image": "^3.0.2",
     "@rollup/plugin-json": "^6.0.0",
     "@rollup/plugin-node-resolve": "^15.0.1",
-    "@youliso/electronic": "^0.2.5",
-    "@youliso/electronic-ipc": "^0.2.5",
+    "@youliso/electronic": "^1.0.3",
     "@youliso/granule": "^0.0.10",
     "asarmor": "^2.0.0",
     "electron": "^23.1.4",
@@ -34,7 +33,7 @@
     "rollup": "^3.19.1",
     "rollup-plugin-esbuild": "^5.0.0",
     "typescript": "^4.9.5",
-    "vite": "^4.1.4",
+    "vite": "^4.2.0",
     "vite-plugin-babel-macros": "^1.0.6"
   },
   "dependencies": {
