@@ -132,8 +132,9 @@ function create() {
   }
 }
 
+let loopNum = 0;
 function loop() {
-  requestAnimationFrame(loop);
+  loopNum = requestAnimationFrame(loop);
 
   ctx2.clearRect(0, 0, cw, ch);
   ctx2.globalCompositeOperation = 'source-over';
@@ -182,6 +183,12 @@ function resize() {
 function click() {
   resize();
   create();
+}
+
+export function onUnmounted() {
+  window.removeEventListener('resize', resize);
+  info.removeEventListener('click', click);
+  loopNum && cancelAnimationFrame(loopNum);
 }
 
 export function render() {
