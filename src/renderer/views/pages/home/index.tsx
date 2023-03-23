@@ -24,7 +24,7 @@ const tk = () => {
       title: '弹框测试',
       route: '/message',
       data: { text: '123' },
-      center: true
+      position: 'center'
     },
     {
       width: 440,
@@ -42,7 +42,7 @@ const toBilibili = () => {
     {
       loadType: 'url',
       url: 'https://www.bilibili.com/',
-      center: true
+      position: 'center'
     },
     {
       width: 800,
