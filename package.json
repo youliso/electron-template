@@ -26,7 +26,7 @@
     "@youliso/granule": "^0.0.10",
     "asarmor": "^2.0.0",
     "electron": "^23.2.0",
-    "electron-builder": "^23.6.0",
+    "electron-builder": "^24.1.0",
     "electron-rebuild": "^3.2.9",
     "esbuild": "^0.17.12",
     "prettier": "^2.8.6",
