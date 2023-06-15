@@ -38,8 +38,13 @@ appInstance
               defaultLoadType: 'url',
               defaultUrl: `http://localhost:${readFileSync(join('.port'), 'utf8')}`
             });
-            const win = windowInstance.create(customize, opt);
-            win && windowInstance.load(win).catch(console.error);
+            const win = windowInstance.create(customize, {
+              ...opt,
+              webPreferences: {
+                devTools: true
+              }
+            });
+            win && windowInstance.load(win, { openDevTools: true }).catch(console.error);
           });
         });
       } catch (e) {
