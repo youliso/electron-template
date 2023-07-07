@@ -1,6 +1,7 @@
 import { useElement } from '@youliso/granule';
 import Router from '@/renderer/router';
-import { windowCreate, windowShow, shortcutGetAll } from '@youliso/electronic/ipc';
+import { shortcutGetAll } from '@youliso/electronic/ipc/shortcut';
+import { windowCreate, windowShow } from '@youliso/electronic/ipc/window';
 import style from './style';
 
 let testInterval: NodeJS.Timer | undefined;
