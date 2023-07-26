@@ -14,7 +14,6 @@ export interface RequestOpt extends RequestInit {
 
 export interface RequestUploadOpt extends RequestInit {
   filePath: string;
-  fileName: string;
   onUploadProgress?: (status: 'open' | 'ing' | 'end', size?: number, fullSize?: number) => void;
 }
 
@@ -90,7 +89,6 @@ export function upload(url: string, params: RequestUploadOpt) {
       },
       params.headers
     );
-    if (!params.fileName) params.fileName = basename(params.filePath, extname(params.filePath));
     let chunks: Buffer[] = [];
     let size: number = 0;
     function ing(response: IncomingMessage) {
@@ -111,7 +109,10 @@ export function upload(url: string, params: RequestUploadOpt) {
       }
     }
     request.write(
-      `--${boundary}\r\nContent-Disposition: form-data; name="file"; filename="${params.fileName}"\r\n\r\n`
+      `--${boundary}\r\nContent-Disposition: form-data; name="${basename(
+        params.filePath,
+        extname(params.filePath)
+      )}"; filename="${basename(params.filePath)}"\r\n\r\n`
     );
     request.on('destroyed', () => {
       reject(new Error('destroy'));
@@ -120,7 +121,7 @@ export function upload(url: string, params: RequestUploadOpt) {
       reject(err);
     });
     const fileSize = statSync(params.filePath).size;
-    const readStream = createReadStream(params.fileName, {
+    const readStream = createReadStream(params.filePath, {
       highWaterMark: 15 * 1024,
       autoClose: true,
       start: 0,
