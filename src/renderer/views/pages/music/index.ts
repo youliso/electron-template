@@ -4,6 +4,7 @@ import Router from '@/renderer/router';
 import style from './style';
 
 const info = h('div', { class: style });
+const bgmUrlValue = h('input', { class: 'bgm-url', placeholder: '歌曲链接' }) as HTMLInputElement;
 const bgmBut = h('button', { class: 'bgm-but' }, '播放');
 const back = h('button', { class: 'back-but', onclick: () => Router.back() }, '返回');
 const c1 = h('canvas', { class: 'c1' }) as HTMLCanvasElement;
@@ -12,11 +13,19 @@ const c3 = h('canvas', { class: 'c3' }) as HTMLCanvasElement;
 const ctx1 = c1.getContext('2d') as CanvasRenderingContext2D;
 const ctx2 = c2.getContext('2d') as CanvasRenderingContext2D;
 const ctx3 = c3.getContext('2d') as CanvasRenderingContext2D;
+bgmUrlValue.value =
+  'https://m701.music.126.net/20230909211221/c72755c3ec97dfd99c6e9b7c1f2e4bad/jdymusic/obj/wo3DlMOGwrbDjj7DisKw/28481699839/e196/780a/91fa/7abffc836ab752e8fb034930dc5cf56f.mp3';
+info.appendChild(bgmUrlValue);
 info.appendChild(bgmBut);
 info.appendChild(back);
 info.appendChild(c1);
 info.appendChild(c2);
 info.appendChild(c3);
+
+bgmUrlValue.addEventListener('blur', () => {
+  console.log(bgmUrlValue.value);
+  audio.setSrc(bgmUrlValue.value);
+});
 
 bgmBut.addEventListener('click', (event: Event) => {
   event.stopPropagation();
@@ -30,7 +39,7 @@ bgmBut.addEventListener('click', (event: Event) => {
 });
 
 function bgm() {
-  audio.setSrc('https://img-qn.51miz.com/preview/sound/00/23/00/51miz-S230038-F96C71EB-thumb.mp3');
+  audio.setSrc(bgmUrlValue.value);
   audio.loop(true);
 }
 

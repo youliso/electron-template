@@ -7,6 +7,16 @@ export default css`
   right: 0;
   bottom: 0;
 
+  > .bgm-url {
+    position: absolute;
+    top: 5px;
+    left: 10px;
+    right: 155px;
+    padding: 2px 6px;
+    font: bolder 14px/26px normal;
+    z-index: 1;
+  }
+
   > .bgm-but {
     position: absolute;
     top: 5px;
