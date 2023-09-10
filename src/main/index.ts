@@ -57,6 +57,7 @@ if (!app.isPackaged) {
   });
 }
 
+// 应用初始化之前监听和多窗口处理
 appBeforeOn({
   additionalData: { type: 'new' },
   isFocusMainWin: true
@@ -79,6 +80,7 @@ app
       'resources/build/cfg/app-update.yml',
       updateCfg.dirname
     );
+    // 创建session
     const session = new Session();
     // 模块监听
     logOn();
@@ -91,7 +93,6 @@ app
     tray.on('click', () => windowInstance.func('show'));
     update.on();
     session.on();
-
     // 创建窗口
     const win = windowInstance.create(customize, browserWindowOptions);
     win && windowInstance.load(win, { openDevTools: !app.isPackaged }).catch(logError);
