@@ -30,6 +30,7 @@ const tk = () => {
     {
       width: 440,
       height: 220,
+      titleBarStyle: 'hidden',
       frame: false,
       show: false,
       modal: true,

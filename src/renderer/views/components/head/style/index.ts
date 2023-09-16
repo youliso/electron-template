@@ -23,39 +23,5 @@ export default css`
     > .title {
       font: normal 13px /13px ping-fang;
     }
-
-    > .events {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-right: 10px;
-
-      > .event {
-        clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-        width: 15px;
-        height: 15px;
-        margin-left: 5px;
-
-        &:hover {
-          opacity: 0.9;
-        }
-
-        &:active {
-          opacity: 0.7;
-        }
-
-        &.close {
-          background-color: var(--red);
-        }
-
-        &.min {
-          background-color: var(--grey);
-        }
-
-        &.max-min {
-          background-color: var(--cyan);
-        }
-      }
-    }
   }
 `;
