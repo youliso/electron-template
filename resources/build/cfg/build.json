@@ -72,7 +72,7 @@
   },
   "linux": {
     "icon": "resources/build/icons",
-    "target": "flatpak",
+    "target": "AppImage",
     "executableName": "electron-template",
     "category": "Utility"
   },

@@ -215,7 +215,7 @@ async function core(arch) {
 if (!arch) {
   console.log('\x1B[36mWhich platform is you want to build?\x1B[0m');
   console.log(
-    ` optional：\x1B[33m${platformOptional()}\x1B[0m  \x1B[1mor\x1B[0m  \x1B[33mq\x1B[0m \x1B[1m(exit)\x1B[0m  \x1B[2m|\x1B[0m  [\x1B[36m${notP_optional}\x1B[0m]  `
+    ` optional：\x1B[33m${platformOptional()}\x1B[0m  \x1B[1mor\x1B[0m  \x1B[33mq\x1B[0m \x1B[1m(exit)\x1B[0m  \x1B[2m|\x1B[0m  `
   );
   r.on('line', (str) => {
     let strs = str.split(' ').filter((s) => s !== '');
