@@ -5,7 +5,7 @@ const head = new Head();
 export const render = async () => {
   return (
     <div class="container">
-      {head.render()}
+      {window.environment.platform === 'win32' && head.render()}
       <div router></div>
     </div>
   );

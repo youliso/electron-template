@@ -2,7 +2,7 @@ import { css } from '@emotion/css/macro';
 
 export default css`
   position: absolute;
-  top: 32px;
+  top: ${window.environment.platform === 'win32' ? '32px' : '0'};
   left: 0;
   right: 0;
   bottom: 0;

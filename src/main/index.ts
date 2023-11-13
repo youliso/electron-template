@@ -25,6 +25,13 @@ let browserWindowOptions: BrowserWindowConstructorOptions = opt;
 
 // 设置窗口管理默认参数
 if (!app.isPackaged) {
+  // 平台
+  switch (process.platform) {
+    case 'linux':
+    case 'darwin':
+      browserWindowOptions.frame = true;
+      break;
+  }
   // 调试模式
   if (browserWindowOptions.webPreferences) {
     browserWindowOptions.webPreferences.devTools = true;
@@ -96,7 +103,7 @@ app
     session.on();
 
     windowInstance.interceptor = (browserWindowOptions) => {
-      if (browserWindowOptions.titleBarStyle === 'hidden') {
+      if (process.platform === 'win32' && browserWindowOptions.titleBarStyle === 'hidden') {
         browserWindowOptions.titleBarOverlay = {
           color: nativeTheme.shouldUseDarkColors ? '#1e1e1e' : '#ffffff',
           symbolColor: nativeTheme.shouldUseDarkColors ? '#ffffff' : '#000000',
@@ -111,10 +118,12 @@ app
     // 监听系统主题变化
     nativeTheme.on('updated', () => {
       windowInstance.getAll().forEach((win) => {
-        win.setTitleBarOverlay({
-          color: nativeTheme.shouldUseDarkColors ? '#1e1e1e' : '#ffffff',
-          symbolColor: nativeTheme.shouldUseDarkColors ? '#ffffff' : '#000000'
-        });
+        if (process.platform === 'win32') {
+          win.setTitleBarOverlay({
+            color: nativeTheme.shouldUseDarkColors ? '#1e1e1e' : '#ffffff',
+            symbolColor: nativeTheme.shouldUseDarkColors ? '#ffffff' : '#000000'
+          });
+        }
       });
     });
 
