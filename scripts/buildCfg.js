@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { name, productName } = require('../package.json');
+const { name, author, productName } = require('../package.json');
 const config = require('../resources/build/cfg/build.json');
 const windowConfig = require('../src/cfg/window.json');
 const updateConfig = require('../src/cfg/update.json');
@@ -15,7 +15,7 @@ config.publish = [
   }
 ];
 config.productName = name;
-config.appId = `org.${name}`;
+config.appId = `org.${author.name}.${name}`;
 config.npmRebuild = true; //是否Rebuild编译
 config.asar = true; //是否asar打包
 

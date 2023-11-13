@@ -1,10 +1,9 @@
 {
   "compression": "maximum",
   "productName": "electron-template",
-  "appId": "org.electron-template",
+  "appId": "org.youliso.electron-template",
   "copyright": "MIT",
   "asar": true,
-  "afterPack": "scripts/buildAfterPack.js",
   "directories": {
     "output": "out"
   },
@@ -73,8 +72,9 @@
   },
   "linux": {
     "icon": "resources/build/icons",
-    "target": "AppImage",
-    "executableName": "electron-template"
+    "target": "flatpak",
+    "executableName": "electron-template",
+    "category": "Utility"
   },
   "npmRebuild": true,
   "publish": [
@@ -91,5 +91,6 @@
         "**/*"
       ]
     }
-  ]
+  ],
+  "afterPack": "scripts/buildAfterPack.js"
 }

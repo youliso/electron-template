@@ -10,7 +10,7 @@ const mainOptions = require('./config/main');
 const preloadOptions = require('./config/preload');
 const rendererOptions = require('./config/renderer');
 
-let [, , arch, _notP] = process.argv;
+let [, , arch] = process.argv;
 
 const optional = [
   'web',
@@ -24,8 +24,7 @@ const optional = [
   'mac',
   'linux'
 ];
-const linuxOptional = ['AppImage', 'snap', 'deb', 'rpm', 'pacman'];
-const notP_optional = '-notp';
+const linuxOptional = ['AppImage', 'flatpak', 'snap', 'deb', 'rpm', 'pacman'];
 let pushLinuxOptional = false;
 
 const r = readline.createInterface({
@@ -33,7 +32,6 @@ const r = readline.createInterface({
   output: process.stdout,
   completer: (line) => {
     let cmds = platformOptional();
-    !pushLinuxOptional && !cmds.includes(notP_optional) && cmds.push(notP_optional);
     pushLinuxOptional && (cmds = linuxOptional);
     !cmds.includes('q') && cmds.push('q');
     const hits = cmds.filter((c) => c.toLocaleLowerCase().startsWith(line.toLocaleLowerCase()));
@@ -82,11 +80,11 @@ function checkInput(str) {
 function platformOptional() {
   switch (process.platform) {
     case 'win32':
-      return ['web',...optional.filter((item) => item.startsWith('win'))];
+      return ['web', ...optional.filter((item) => item.startsWith('win'))];
     case 'linux':
-      return ['web',...optional.filter((item) => !(item === 'mac' || item === 'darwin'))];
+      return ['web', ...optional.filter((item) => !(item === 'mac' || item === 'darwin'))];
     default:
-      return ['web',...optional];
+      return ['web', ...optional];
   }
 }
 
@@ -226,12 +224,12 @@ if (!arch) {
       r.close();
       return;
     }
-    if (strs.includes(notP_optional)) delete buildConfig.afterPack;
+    if (!buildConfig.asar) delete buildConfig.afterPack;
     strs = strs.filter((x) => platformOptional().includes(x));
     if (!checkInput(strs[0])) return;
     core(strs[0]);
   });
 } else {
-  if (_notP) delete buildConfig.afterPack;
+  if (!buildConfig.asar) delete buildConfig.afterPack;
   if (checkInput(arch)) core(arch);
 }
