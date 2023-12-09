@@ -1,4 +1,3 @@
-const { createServer } = require('vite');
 const rollup = require('rollup');
 const { readFileSync } = require('fs');
 const { resolve } = require('path');
@@ -19,7 +18,11 @@ async function startRenderer() {
   } catch (e) {
     throw 'not found .port';
   }
-  const server = await createServer(require('./config/renderer'));
+  const server = await (
+    await import('vite')
+  ).createServer({
+    configFile: resolve('scripts/config/renderer.mjs')
+  });
   await server.listen(port);
 }
 

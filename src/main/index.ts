@@ -11,9 +11,9 @@ import {
   windowInstance,
   Session,
   createTray,
-  Update,
   logError
 } from '@youliso/electronic/main';
+import { Update } from '@youliso/electronic/main/update';
 import { join } from 'path';
 import { app, nativeTheme } from 'electron';
 import { customize, opt } from '@/cfg/window.json';

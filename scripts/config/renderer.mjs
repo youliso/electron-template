@@ -1,11 +1,11 @@
-const { defineConfig } = require('vite');
-const macrosPlugin = require('vite-plugin-babel-macros').default;
-const { resolve } = require('path');
+import { defineConfig } from 'vite';
+import macrosPlugin from 'vite-plugin-babel-macros';
+import { resolve } from 'path';
 const root = resolve('src/renderer');
 const outDir = resolve('dist/renderer');
 
 // https://vitejs.dev/config/
-module.exports = defineConfig({
+export default defineConfig({
   mode: process.env['rendererMode'] || 'production',
   root,
   base: './',

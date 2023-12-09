@@ -3,12 +3,10 @@ const readline = require('readline');
 const util = require('util');
 const path = require('path');
 const rollup = require('rollup');
-const vite = require('vite');
 const builder = require('electron-builder');
 const buildConfig = require('../resources/build/cfg/build.json');
 const mainOptions = require('./config/main');
 const preloadOptions = require('./config/preload');
-const rendererOptions = require('./config/renderer');
 
 let [, , arch] = process.argv;
 
@@ -111,11 +109,15 @@ async function preloadBuild() {
 }
 
 async function rendererBuild() {
-  await vite.build(rendererOptions).catch((error) => {
-    console.log(`\x1B[31mFailed to build renderer process !\x1B[0m`);
-    console.error(error);
-    process.exit(1);
-  });
+  (await import('vite'))
+    .build({
+      configFile: path.resolve('scripts/config/renderer.mjs')
+    })
+    .catch((error) => {
+      console.log(`\x1B[31mFailed to build renderer process !\x1B[0m`);
+      console.error(error);
+      process.exit(1);
+    });
 }
 
 async function core(arch) {
