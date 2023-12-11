@@ -1,7 +1,7 @@
 import pageRoute from '@/renderer/router/modular/page';
 import dialogRoute from '@/renderer/router/modular/dialog';
 import { Router } from '@youliso/granule';
-import { windowUpdate } from '@youliso/electronic/ipc/window';
+import { windowUpdateCustomize } from '@youliso/electronic/ipc/window';
 
 const router = new Router('hash', {
   '/': {
@@ -11,7 +11,7 @@ const router = new Router('hash', {
 });
 
 router.onAfterRoute = (path) => {
-  windowUpdate(path);
+  windowUpdateCustomize({ ...window.customize, route: path });
 };
 
 export default router;

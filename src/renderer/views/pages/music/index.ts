@@ -2,6 +2,7 @@ import { h } from '@youliso/granule';
 import audio from '@/renderer/common/audio';
 import Router from '@/renderer/router';
 import style from './style';
+import { windowCreate } from '@youliso/electronic/ipc/window';
 
 const info = h('div', { class: style });
 const bgmUrlValue = h('input', { class: 'bgm-url', placeholder: '歌曲链接' }) as HTMLInputElement;
@@ -13,8 +14,7 @@ const c3 = h('canvas', { class: 'c3' }) as HTMLCanvasElement;
 const ctx1 = c1.getContext('2d') as CanvasRenderingContext2D;
 const ctx2 = c2.getContext('2d') as CanvasRenderingContext2D;
 const ctx3 = c3.getContext('2d') as CanvasRenderingContext2D;
-bgmUrlValue.value =
-  'https://m701.music.126.net/20230909211221/c72755c3ec97dfd99c6e9b7c1f2e4bad/jdymusic/obj/wo3DlMOGwrbDjj7DisKw/28481699839/e196/780a/91fa/7abffc836ab752e8fb034930dc5cf56f.mp3';
+bgmUrlValue.value = '';
 info.appendChild(bgmUrlValue);
 info.appendChild(bgmBut);
 info.appendChild(back);
@@ -33,6 +33,27 @@ bgmBut.addEventListener('click', (event: Event) => {
     bgmBut.textContent = '播放';
     audio.pause();
   } else {
+    if (!bgmUrlValue.value) {
+      windowCreate(
+        {
+          title: '提示',
+          route: '/message',
+          data: { text: '请填写音频链接' },
+          position: 'center',
+          parentId: window.customize.winId
+        },
+        {
+          width: 440,
+          height: 220,
+          titleBarStyle: 'hidden',
+          frame: false,
+          show: false,
+          modal: true,
+          resizable: true
+        }
+      );
+      return;
+    }
     bgmBut.textContent = '暂停';
     audio.play();
   }
@@ -195,6 +216,7 @@ function click() {
 }
 
 export function onUnmounted() {
+  console.log('onUnmounted');
   window.removeEventListener('resize', resize);
   info.removeEventListener('click', click);
   loopNum && cancelAnimationFrame(loopNum);

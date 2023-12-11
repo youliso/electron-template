@@ -5,9 +5,21 @@ import { windowCreate, windowShow } from '@youliso/electronic/ipc/window';
 import style from './style';
 
 let testInterval: NodeJS.Timer | undefined;
+const [date, dateElement] = useElement(Date());
+const timeViewRs = () => {
+  date.value = Date();
+  testInterval = setInterval(() => {
+    date.value = Date();
+  }, 1000);
+};
 
 export const onUnmounted = () => {
   if (testInterval) clearInterval(testInterval);
+};
+
+export const onLoad = () => {
+  console.log('onLoad');
+  timeViewRs();
 };
 
 export const onReady = () => {
@@ -54,11 +66,6 @@ const toBilibili = () => {
     }
   );
 };
-
-const [date, dateElement] = useElement(Date());
-testInterval = setInterval(() => {
-  date.value = Date();
-}, 1000);
 
 export const render = () => {
   return (
