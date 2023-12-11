@@ -193,7 +193,7 @@ async function core(arch) {
       filter: ['**/*']
     });
   } catch (err) {}
-  fs.writeFileSync('./build.json', JSON.stringify(buildConfig, null, 2)); //写入配置
+  fs.writeFileSync('scripts/build.json', JSON.stringify(buildConfig, null, 2)); //写入配置
   deleteFolderRecursive(path.resolve('dist')); //清除dist
   console.log(`\x1B[34m[${arch} build start]\x1B[0m`);
   await mainBuild();

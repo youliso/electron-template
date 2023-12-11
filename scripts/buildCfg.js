@@ -17,7 +17,7 @@ config.publish = [
 config.productName = name;
 config.appId = `org.${author.name}.${name}`;
 config.npmRebuild = true; //是否Rebuild编译
-config.asar = true; //是否asar打包
+config.asar = false; //是否asar打包
 
 /** 窗口配置 **/
 windowConfig.customize.title = productName;
@@ -96,8 +96,8 @@ if (config.nsis.allowToChangeInstallationDirectory) {
     '!macroend';
 }
 
-fs.writeFileSync('./app-update.yml', update);
-fs.writeFileSync('./build.json', JSON.stringify(config, null, 2));
-fs.writeFileSync('./installer.nsh', nsh);
-fs.writeFileSync('./src/cfg/window.json', JSON.stringify(windowConfig, null, 2));
-fs.writeFileSync('./src/cfg/update.json', JSON.stringify(updateConfig, null, 2));
+fs.writeFileSync('scripts/app-update.yml', update);
+fs.writeFileSync('scripts/build.json', JSON.stringify(config, null, 2));
+fs.writeFileSync('scripts/installer.nsh', nsh);
+fs.writeFileSync('src/cfg/window.json', JSON.stringify(windowConfig, null, 2));
+fs.writeFileSync('src/cfg/update.json', JSON.stringify(updateConfig, null, 2));

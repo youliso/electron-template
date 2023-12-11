@@ -3,7 +3,7 @@
   "productName": "electron-template",
   "appId": "org.youliso.electron-template",
   "copyright": "MIT",
-  "asar": true,
+  "asar": false,
   "directories": {
     "output": "out"
   },
@@ -91,6 +91,5 @@
         "**/*"
       ]
     }
-  ],
-  "afterPack": "scripts/buildAfterPack.js"
+  ]
 }
