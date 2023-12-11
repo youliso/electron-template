@@ -28,15 +28,15 @@
     "perMachine": true,
     "allowElevation": true,
     "allowToChangeInstallationDirectory": true,
-    "installerIcon": "resources/build/icons/icon.ico",
-    "uninstallerIcon": "resources/build/icons/unicon.ico",
-    "installerHeaderIcon": "resources/build/icons/icon.ico",
-    "installerSidebar": "resources/build/icons/modern-wizard.bmp",
-    "uninstallerSidebar": "resources/build/icons/modern-wizard.bmp",
+    "installerIcon": "scripts/icons/icon.ico",
+    "uninstallerIcon": "scripts/icons/unicon.ico",
+    "installerHeaderIcon": "scripts/icons/icon.ico",
+    "installerSidebar": "scripts/icons/modern-wizard.bmp",
+    "uninstallerSidebar": "scripts/icons/modern-wizard.bmp",
     "createDesktopShortcut": true,
     "createStartMenuShortcut": true,
     "shortcutName": "electron-template",
-    "include": "resources/build/cfg/installer.nsh",
+    "include": "scripts/installer.nsh",
     "menuCategory": false,
     "displayLanguageSelector": false
   },
@@ -56,10 +56,10 @@
     ]
   },
   "mac": {
-    "icon": "resources/build/icons/icon.icns"
+    "icon": "scripts/icons/icon.icns"
   },
   "win": {
-    "icon": "resources/build/icons/icon.ico",
+    "icon": "scripts/icons/icon.ico",
     "requestedExecutionLevel": "asInvoker",
     "target": [
       {
@@ -71,7 +71,7 @@
     ]
   },
   "linux": {
-    "icon": "resources/build/icons",
+    "icon": "scripts/icons",
     "target": "AppImage",
     "executableName": "electron-template",
     "category": "Utility"

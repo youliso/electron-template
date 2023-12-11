@@ -6,7 +6,6 @@ const outDir = resolve('dist/renderer');
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  mode: process.env['rendererMode'] || 'production',
   root,
   base: './',
   esbuild: {

@@ -3,10 +3,8 @@ const { readFileSync } = require('fs');
 const { resolve } = require('path');
 const { spawn } = require('child_process');
 const electron = require('electron');
+const { mainOptions, preloadOptions } = require('./electronCfg');
 let [, , type] = process.argv;
-
-process.env['mainMode'] = 'development';
-process.env['rendererMode'] = 'development';
 
 let electronProcess = null;
 let manualRestart = false;
@@ -21,14 +19,14 @@ async function startRenderer() {
   const server = await (
     await import('vite')
   ).createServer({
-    configFile: resolve('scripts/config/renderer.mjs')
+    configFile: resolve('scripts/vite.config.mjs')
   });
   await server.listen(port);
 }
 
 async function startMain() {
   return new Promise((resolve, reject) => {
-    const watcher = rollup.watch([require('./config/main'), require('./config/preload')]);
+    const watcher = rollup.watch([mainOptions('development'), preloadOptions('development')]);
     watcher.on('event', (event) => {
       if (event.code === 'END') {
         if (electronProcess && electronProcess.kill) {
