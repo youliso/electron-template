@@ -5,7 +5,7 @@ const path = require('path');
 const rollup = require('rollup');
 const builder = require('electron-builder');
 const buildConfig = require('./build.json');
-const { mainOptions, preloadOptions } = require('./electronCfg');
+const { mainOptions, preloadOptions } = require('./main.config');
 
 let [, , arch] = process.argv;
 
