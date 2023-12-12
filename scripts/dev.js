@@ -3,7 +3,7 @@ const { readFileSync } = require('fs');
 const { resolve } = require('path');
 const { spawn } = require('child_process');
 const electron = require('electron');
-const { mainOptions, preloadOptions } = require('./main.config');
+const { mainOptions, preloadOptions } = require('./rollup.config');
 
 let electronProcess = null;
 let manualRestart = false;
