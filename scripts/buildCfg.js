@@ -92,7 +92,7 @@ if (config.nsis.allowToChangeInstallationDirectory) {
     '!macroend';
 }
 
-fs.writeFileSync('scripts/app-update.yml', update);
+fs.writeFileSync('scripts/dev-update.yml', update);
 fs.writeFileSync('scripts/build.json', JSON.stringify(config, null, 2));
 fs.writeFileSync('scripts/installer.nsh', nsh);
 fs.writeFileSync('src/cfg/update.json', JSON.stringify(updateConfig, null, 2));
