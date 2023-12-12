@@ -1,4 +1,5 @@
 import type { BrowserWindowConstructorOptions } from 'electron';
+import type { Customize } from '@youliso/electronic/types';
 import {
   logOn,
   fileOn,
@@ -16,12 +17,23 @@ import {
 import { Update } from '@youliso/electronic/main/update';
 import { join } from 'path';
 import { app, nativeTheme } from 'electron';
-import { customize, opt } from '@/cfg/window.json';
 import updateCfg from '@/cfg/update.json';
 import logo from '@/assets/icon/logo.png';
 
-// @ts-ignore
-let browserWindowOptions: BrowserWindowConstructorOptions = opt;
+// 初始渲染进程参数
+let customize: Customize = {
+  title: 'electron-template',
+  route: '/home'
+};
+
+// 初始窗口参数
+let browserWindowOptions: BrowserWindowConstructorOptions = {
+  width: 800,
+  height: 600,
+  titleBarStyle: 'hidden',
+  frame: false,
+  show: false
+};
 
 // 设置窗口管理默认参数
 if (!app.isPackaged) {
@@ -79,7 +91,7 @@ app
   .then(async () => {
     // 创建托盘
     const tray = createTray({
-      name: customize.title,
+      name: app.getName(),
       iconPath: logo as string
     });
     // 创建更新
