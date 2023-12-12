@@ -4,7 +4,6 @@ const { resolve } = require('path');
 const { spawn } = require('child_process');
 const electron = require('electron');
 const { mainOptions, preloadOptions } = require('./electronCfg');
-let [, , type] = process.argv;
 
 let electronProcess = null;
 let manualRestart = false;
@@ -76,19 +75,10 @@ function startElectron() {
   });
 }
 
-async function init() {
-  console.time(`dev ${type || ''}`);
-  switch (type) {
-    case 'web':
-      await startRenderer();
-      break;
-    default:
-      await startRenderer();
-      await startMain();
-      startElectron();
-      break;
-  }
-  console.timeEnd(`dev ${type || ''}`);
-}
-
-init().then();
+startRenderer().then(() => {
+  console.time('dev');
+  startMain().then(() => {
+    startElectron();
+    console.timeEnd('dev');
+  });
+});

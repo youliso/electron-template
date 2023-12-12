@@ -9,18 +9,7 @@ const { mainOptions, preloadOptions } = require('./electronCfg');
 
 let [, , arch] = process.argv;
 
-const optional = [
-  'web',
-  'win',
-  'win32',
-  'win64',
-  'winp',
-  'winp32',
-  'winp64',
-  'darwin',
-  'mac',
-  'linux'
-];
+const optional = ['win', 'win32', 'win64', 'winp', 'winp32', 'winp64', 'darwin', 'mac', 'linux'];
 const linuxOptional = ['AppImage', 'flatpak', 'snap', 'deb', 'rpm', 'pacman'];
 let pushLinuxOptional = false;
 
@@ -77,11 +66,11 @@ function checkInput(str) {
 function platformOptional() {
   switch (process.platform) {
     case 'win32':
-      return ['web', ...optional.filter((item) => item.startsWith('win'))];
+      return [...optional.filter((item) => item.startsWith('win'))];
     case 'linux':
-      return ['web', ...optional.filter((item) => !(item === 'mac' || item === 'darwin'))];
+      return [...optional.filter((item) => !(item === 'mac' || item === 'darwin'))];
     default:
-      return ['web', ...optional];
+      return [...optional];
   }
 }
 
@@ -126,9 +115,6 @@ async function core(arch) {
   let archTag = '';
   let archPath = '';
   switch (arch) {
-    case 'web':
-      await rendererBuild();
-      process.exit(0);
     case 'win':
     case 'win32':
     case 'win64':
