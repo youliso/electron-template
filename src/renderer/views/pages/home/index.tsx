@@ -1,6 +1,6 @@
 import { useElement } from '@youliso/granule';
 import Router from '@/renderer/router';
-import { shortcutGetAll } from '@youliso/electronic/ipc/shortcut';
+import { shortcutGet } from '@youliso/electronic/ipc/shortcut';
 import { windowCreate, windowShow } from '@youliso/electronic/ipc/window';
 import style from './style';
 
@@ -77,7 +77,7 @@ export const render = () => {
       <button class="but" onClick={() => toBilibili()}>
         bilibili
       </button>
-      <button class="but" onClick={() => shortcutGetAll().then(console.log)}>
+      <button class="but" onClick={() => shortcutGet().then(console.log)}>
         获取已注册shortcut
       </button>
       <button class="but" onClick={() => Router.push('/about')}>

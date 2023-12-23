@@ -7,7 +7,7 @@ import {
   machineOn,
   appBeforeOn,
   appProtocolRegister,
-  globalInstance,
+  storeInstance,
   shortcutInstance,
   windowInstance,
   Session,
@@ -107,7 +107,7 @@ app
     fileOn();
     pathOn();
     machineOn();
-    globalInstance.on();
+    storeInstance.on();
     shortcutInstance.on();
     windowInstance.on();
     tray.on('click', () => windowInstance.func('show'));
