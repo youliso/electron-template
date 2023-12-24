@@ -6,6 +6,7 @@ import {
   pathOn,
   machineOn,
   appBeforeOn,
+  appOn,
   appProtocolRegister,
   storeInstance,
   shortcutInstance,
@@ -89,6 +90,12 @@ appProtocolRegister();
 app
   .whenReady()
   .then(async () => {
+    // 模块监听
+    appOn();
+    logOn();
+    fileOn();
+    pathOn();
+    machineOn();
     // 创建托盘
     const tray = createTray({
       name: app.getName(),
@@ -102,14 +109,9 @@ app
     );
     // 创建session
     const session = new Session();
-    // 模块监听
-    logOn();
-    fileOn();
-    pathOn();
-    machineOn();
     storeInstance.on();
-    shortcutInstance.on();
     windowInstance.on();
+    shortcutInstance.on();
     tray.on('click', () => windowInstance.func('show'));
     update.on();
     session.on();
