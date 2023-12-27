@@ -1,9 +1,14 @@
 import { windowLoad } from '@youliso/electronic/ipc/window';
-import '@/renderer/views/style';
+import { createApp } from 'vue';
+import head from './views/components/head.vue';
+import app from './views/app.vue';
+import router from './router';
 
 windowLoad((_, args) => {
   window.customize = args;
-  import('@/renderer/router').then((router) => {
-    router.default.mount('root', window.customize.route as string);
+  router.addRoute({
+    path: '/',
+    redirect: args.route as string
   });
+  createApp(app).use(router).component('Head', head).mount('#root');
 });

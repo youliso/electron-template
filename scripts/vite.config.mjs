@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite';
-import macrosPlugin from 'vite-plugin-babel-macros';
+import vuePlugin from '@vitejs/plugin-vue';
 import { resolve } from 'path';
 const root = resolve('src/renderer');
 const outDir = resolve('dist/renderer');
@@ -8,16 +8,6 @@ const outDir = resolve('dist/renderer');
 export default defineConfig({
   root,
   base: './',
-  esbuild: {
-    tsconfigRaw: {
-      compilerOptions: {
-        jsx: 'react'
-      }
-    },
-    jsxInject: `import {h,f} from '@youliso/granule'`,
-    jsxFactory: 'h',
-    jsxFragment: 'f'
-  },
   build: {
     outDir
   },
@@ -26,5 +16,5 @@ export default defineConfig({
       '@': resolve('src')
     }
   },
-  plugins: [macrosPlugin()]
+  plugins: [vuePlugin()]
 });

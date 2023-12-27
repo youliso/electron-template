@@ -1,17 +1,26 @@
-import pageRoute from '@/renderer/router/modular/page';
-import dialogRoute from '@/renderer/router/modular/dialog';
-import { Router } from '@youliso/granule';
+import { createRouter, createWebHashHistory } from 'vue-router';
 import { windowUpdateCustomize } from '@youliso/electronic/ipc/window';
 
-const router = new Router('hash', {
-  '/': {
-    component: () => import('@/renderer/views/app'),
-    children: Object.assign(pageRoute, dialogRoute)
-  }
+const router = createRouter({
+  history: createWebHashHistory(),
+  routes: [
+    {
+      path: '/message',
+      component: () => import('@/renderer/views/dialog/message.vue')
+    },
+    {
+      path: '/home',
+      component: () => import('@/renderer/views/pages/home.vue')
+    }
+  ]
 });
 
-router.onAfterRoute = (path) => {
-  windowUpdateCustomize({ ...window.customize, route: path });
-};
+router.beforeEach((to, from) => {
+  if (to.path !== window.customize.route) {
+    //更新窗口路由
+    window.customize.route = to.path;
+    windowUpdateCustomize(window.customize);
+  }
+});
 
 export default router;
