@@ -19,7 +19,7 @@ export default defineComponent({
     let cons = 0;
 
     const test = () => {
-      //测试发送窗口发送消息
+      //测试发送窗口消息
       windowMessageSend('test', {
         value: cons++
       });
