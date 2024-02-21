@@ -4,7 +4,7 @@ import head from './views/components/head.vue';
 import app from './views/app.vue';
 import router from './router';
 
-windowLoad((_, args) => {
+windowLoad((args) => {
   window.customize = args;
   router.addRoute({
     path: '/',

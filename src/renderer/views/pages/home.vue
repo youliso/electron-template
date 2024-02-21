@@ -15,7 +15,7 @@ import { windowCreate, windowMessageOn, windowShow } from '@youliso/electronic/i
 export default defineComponent({
   setup() {
     //监听弹框消息
-    windowMessageOn('test', (_, args: any) => {
+    windowMessageOn('test', (args: any) => {
       console.log(args);
     });
 
