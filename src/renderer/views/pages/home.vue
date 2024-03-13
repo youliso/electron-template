@@ -1,5 +1,4 @@
 <template>
-  <Head />
   <div class="container">
     <div class="info">hello</div>
     <div class="btns">
@@ -31,7 +30,7 @@ export default defineComponent({
           width: 440,
           height: 220,
           titleBarStyle: 'hidden',
-          frame: false,
+          frame: true,
           show: false,
           modal: true,
           resizable: true
@@ -66,6 +65,6 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .container {
-  padding: 32px 10px 10px;
+  padding: 10px;
 }
 </style>

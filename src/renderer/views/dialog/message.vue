@@ -48,6 +48,6 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .container {
-  padding: 32px 10px 10px;
+  padding: 10px;
 }
 </style>
