@@ -29,7 +29,6 @@ export default defineComponent({
         {
           width: 440,
           height: 220,
-          titleBarStyle: 'hidden',
           frame: true,
           show: false,
           modal: true,

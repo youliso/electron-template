@@ -1,5 +1,4 @@
 <template>
-  <Head />
   <div class="container">
     <div class="text">
       <div>创建传参: {{ data.text }}</div>

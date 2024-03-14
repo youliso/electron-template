@@ -5,8 +5,9 @@ import {
   fileOn,
   pathOn,
   machineOn,
-  appBeforeOn,
-  appOn,
+  appAfterOn,
+  appErrorOn,
+  appSingleInstanceLock,
   appProtocolRegister,
   storeInstance,
   shortcutInstance,
@@ -31,7 +32,6 @@ let customize: Customize = {
 let browserWindowOptions: BrowserWindowConstructorOptions = {
   width: 800,
   height: 600,
-  titleBarStyle: 'hidden',
   frame: true,
   show: false
 };
@@ -52,9 +52,7 @@ if (!app.isPackaged) {
         windowInstance.setDefaultCfg({
           defaultLoadType: 'url',
           defaultUrl: `http://localhost:${readFileSync(join('.port'), 'utf8')}`,
-          defaultPreload: join(__dirname, '../preload/index.js'),
-          defaultCustomize: customize,
-          defaultBrowserWindowOptions: browserWindowOptions
+          defaultPreload: join(__dirname, '../preload/index.js')
         });
       });
     });
@@ -65,30 +63,49 @@ if (!app.isPackaged) {
   windowInstance.setDefaultCfg({
     defaultLoadType: 'file',
     defaultUrl: join(__dirname, '../renderer/index.html'),
-    defaultPreload: join(__dirname, '../preload/index.js'),
-    defaultCustomize: customize,
-    defaultBrowserWindowOptions: browserWindowOptions
+    defaultPreload: join(__dirname, '../preload/index.js')
   });
 }
 
-// 应用初始化之前监听和多窗口处理
-appBeforeOn({
+// 错误监听
+appErrorOn();
+
+// 单例
+appSingleInstanceLock({
   additionalData: { type: 'new' },
-  isFocusMainWin: true
+  isFocusMainWin: true,
+  customize,
+  browserWindowOptions
 });
 
 // 注册协议
 appProtocolRegister();
 
+// 关闭所有窗口退出
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') app.quit();
+});
+
 app
   .whenReady()
   .then(async () => {
+    app.on('activate', () => {
+      if (windowInstance.getAll().length === 0) {
+        const win = windowInstance.create(customize, browserWindowOptions);
+        win && windowInstance.load(win).catch(logError);
+      }
+    });
+    // 应用基础监听
+    appAfterOn();
+
     // 模块监听
-    appOn();
     logOn();
     fileOn();
     pathOn();
     machineOn();
+    storeInstance.on();
+    windowInstance.on();
+    shortcutInstance.on();
     // 创建托盘
     const tray = createTray({
       name: app.getName(),
@@ -102,9 +119,6 @@ app
     );
     // 创建session
     const session = new Session();
-    storeInstance.on();
-    windowInstance.on();
-    shortcutInstance.on();
     tray.on('click', () => windowInstance.func('show'));
     update.on();
     session.on();
