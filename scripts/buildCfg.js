@@ -16,7 +16,7 @@ config.publish = [
 config.productName = name;
 config.appId = `org.${author.name}.${name}`;
 config.npmRebuild = true; //是否Rebuild编译
-config.asar = false; //是否asar打包
+config.asar = true; //是否asar打包
 
 /** win配置 **/
 config.nsis.displayLanguageSelector = false; //安装包语言提示

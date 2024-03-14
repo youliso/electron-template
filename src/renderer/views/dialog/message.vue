@@ -1,9 +1,6 @@
 <template>
   <div class="container">
-    <div class="text">
-      <div>创建传参: {{ data.text }}</div>
-      <div>app启动参数: {{ argv }}</div>
-    </div>
+    <div>创建传参: {{ data.text }}</div>
     <button @click="test">测试通讯</button>
     <button @click="test1">测试获取路由id {{ winId }}</button>
   </div>
@@ -35,7 +32,6 @@ export default defineComponent({
     });
 
     return {
-      argv: window.customize.argv,
       data: window.customize.data,
       winId,
       test,

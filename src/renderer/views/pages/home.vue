@@ -32,8 +32,12 @@ export default defineComponent({
           frame: true,
           show: false,
           modal: true,
-          resizable: true
-        }
+          resizable: true,
+          webPreferences: {
+            devTools: true
+          }
+        },
+        { openDevTools: true }
       );
     };
 
