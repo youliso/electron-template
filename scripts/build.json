@@ -91,5 +91,6 @@
         "**/*"
       ]
     }
-  ]
+  ],
+  "afterPack": "scripts/buildAfterPack.js"
 }

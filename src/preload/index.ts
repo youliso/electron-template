@@ -6,7 +6,8 @@ preloadDefaultInit();
 declare global {
   interface Window {
     win32: {
-      messageBox: Function;
+      messageBox: () => Promise<number>;
+      dwmSetWindowAttribute: (id?: number) => Promise<number>;
     };
   }
 }
@@ -14,7 +15,10 @@ declare global {
 if (process.platform === 'win32') {
   contextBridge.exposeInMainWorld('win32', {
     messageBox: () => {
-      return ipcRenderer.send('win32-messageBox');
+      return ipcRenderer.invoke('win32-messageBox');
+    },
+    dwmSetWindowAttribute: () => {
+      return ipcRenderer.invoke('win32-dwmSetWindowAttribute');
     }
   });
 }

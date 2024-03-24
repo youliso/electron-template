@@ -4,7 +4,10 @@
     <div class="btns">
       <button @click="tk">弹框</button>
       <button @click="toBilibili">bilibili</button>
-      <button v-if="platform === 'win32'" @click="toWin32">win32Box</button>
+      <template v-if="platform === 'win32'">
+        <button @click="toWin32">win32Box</button>
+        <button @click="toWin32Set">set</button>
+      </template>
     </div>
   </div>
 </template>
@@ -59,7 +62,11 @@ export default defineComponent({
     };
 
     const toWin32 = () => {
-      window.win32.messageBox();
+      window.win32.messageBox().then(console.log);
+    };
+
+    const toWin32Set = () => {
+      window.win32.dwmSetWindowAttribute(window.customize.winId).then(console.log);
     };
 
     onMounted(() => {
@@ -70,7 +77,8 @@ export default defineComponent({
       platform: window.environment.platform,
       tk,
       toBilibili,
-      toWin32
+      toWin32,
+      toWin32Set
     };
   }
 });
