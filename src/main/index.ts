@@ -21,6 +21,7 @@ import { join } from 'path';
 import { app } from 'electron';
 import updateCfg from '@/cfg/update.json';
 import logo from '@/assets/icon/logo.png';
+import { FFiInit } from './modular/ffi';
 
 // 初始渲染进程参数
 let customize: Customize = {
@@ -106,6 +107,9 @@ app
     storeInstance.on();
     windowInstance.on();
     shortcutInstance.on();
+    const naApi = await FFiInit();
+    naApi?.On();
+
     // 创建托盘
     const tray = createTray({
       name: app.getName(),

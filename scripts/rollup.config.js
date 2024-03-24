@@ -48,7 +48,8 @@ module.exports = {
     output: {
       file: resolve('dist/main/index.js'),
       format: 'cjs',
-      sourcemap: false
+      sourcemap: false,
+      inlineDynamicImports: true
     },
     external,
     plugins: plugins(env)

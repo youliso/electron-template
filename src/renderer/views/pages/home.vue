@@ -4,6 +4,7 @@
     <div class="btns">
       <button @click="tk">弹框</button>
       <button @click="toBilibili">bilibili</button>
+      <button v-if="platform === 'win32'" @click="toWin32">win32Box</button>
     </div>
   </div>
 </template>
@@ -57,11 +58,20 @@ export default defineComponent({
       );
     };
 
+    const toWin32 = () => {
+      window.win32.messageBox();
+    };
+
     onMounted(() => {
       windowShow();
     });
 
-    return { tk, toBilibili };
+    return {
+      platform: window.environment.platform,
+      tk,
+      toBilibili,
+      toWin32
+    };
   }
 });
 </script>
