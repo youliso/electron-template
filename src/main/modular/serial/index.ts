@@ -104,8 +104,8 @@ export class Serial {
    * 开启监听
    */
   on() {
-    ipcMain.handle('serialport-list', async (event) => SerialPort.list());
-    ipcMain.handle('serial-close', (event, args) => this.close(args.key));
+    ipcMain.handle('serial-list', async (event) => SerialPort.list());
+    ipcMain.handle('serial-close', (event, key) => this.close(key));
     ipcMain.handle('serial-open', (event, args) => this.open(args.arg, args.single, args.winId));
     ipcMain.handle('serial-send', (event, args) => this.send(args.key, args.value));
   }

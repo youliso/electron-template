@@ -75,9 +75,9 @@ export class Printer {
       if (this.win) this.win.close();
     });
     //获得打印机列表
-    ipcMain.on('printer-all', (event) => {
-      if (!this.win) return;
-      this.win.webContents.getPrintersAsync().then((p) => (event.returnValue = p));
+    ipcMain.handle('printer-list', (event) => {
+      if (!this.win) return null;
+      return this.win.webContents.getPrintersAsync();
     });
     //打印传参
     ipcMain.on('printer-do', (event, args) => {

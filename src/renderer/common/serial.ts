@@ -5,7 +5,7 @@ import type { IpcRendererEvent } from 'electron';
  * 获取串口列表
  */
 export async function serialportList(): Promise<PortInfo[]> {
-  return await window.ipc.invoke('serialport-list');
+  return await window.serial.list();
 }
 
 /**
@@ -13,14 +13,14 @@ export async function serialportList(): Promise<PortInfo[]> {
  * @param key
  */
 export async function serialClose(key: string) {
-  await window.ipc.invoke('serial-close', { key });
+  await window.serial.close(key);
 }
 
 /**
  * 发送消息
  */
 export async function serialSend(args: { key: string; value: any }) {
-  await window.ipc.invoke('serial-send', args);
+  await window.serial.send(args);
 }
 
 /**
@@ -38,7 +38,7 @@ export async function serialOpen(
   winId?: number
 ): Promise<number> {
   arg.argument = arg.argument || {};
-  return await window.ipc.invoke('serial-open', { arg, single, winId });
+  return await window.serial.open({ arg, single, winId });
 }
 
 /**

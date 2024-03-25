@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -54,7 +54,7 @@
         parseInt(unitConversion.mmConversionPx(args.wh[0] / 1000)),
         parseInt(unitConversion.mmConversionPx(args.wh[1] / 1000))
       ];
-      window.ipc.send('printer-dos', { args, size });
+      window.printer.dos({ args, size });
     }
     window.ipc.on('printer-setting', (event, args) => {
       make(args);

@@ -2,14 +2,14 @@
  * 关闭打印进程
  */
 export function printerQuit() {
-  window.ipc.send('printer-quit');
+  window.printer.quit();
 }
 
 /**
  * 获取当前打印机列表
  */
-export async function printerAll() {
-  return window.ipc.sendSync('printer-all');
+export async function printerList() {
+  return window.printer.list();
 }
 
 /**
@@ -22,5 +22,5 @@ export async function printerDo(args: {
   html: string;
 }) {
   args.landscape = false;
-  window.ipc.send('printer-do', args);
+  window.printer.do(args);
 }
