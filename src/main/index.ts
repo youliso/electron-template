@@ -17,6 +17,7 @@ import {
   logError
 } from '@youliso/electronic/main';
 import { Update } from '@youliso/electronic/main/update';
+import { readFileSync } from 'fs';
 import { join } from 'path';
 import { app } from 'electron';
 import updateCfg from '@/cfg/update.json';
@@ -48,14 +49,10 @@ if (!app.isPackaged) {
     };
   }
   try {
-    import('fs').then(({ readFileSync }) => {
-      import('path').then(({ join }) => {
-        windowInstance.setDefaultCfg({
-          defaultLoadType: 'url',
-          defaultUrl: `http://localhost:${readFileSync(join('.port'), 'utf8')}`,
-          defaultPreload: join(__dirname, '../preload/index.js')
-        });
-      });
+    windowInstance.setDefaultCfg({
+      defaultLoadType: 'url',
+      defaultUrl: `http://localhost:${readFileSync(join('.port'), 'utf8')}`,
+      defaultPreload: join(__dirname, '../preload/index.js')
     });
   } catch (e) {
     throw 'not found .port';

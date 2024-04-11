@@ -44,8 +44,6 @@ function deleteFolderRecursive(url) {
   }
 }
 
-buildConfig.afterPack = 'scripts/buildAfterPack.js';
-
 buildConfig.extraResources = [
   {
     from: 'resources/extern',
@@ -76,30 +74,26 @@ function platformOptional() {
 
 async function mainBuild() {
   const opt = mainOptions();
-  await rollup
-    .rollup(opt)
-    .then(async (build) => await build.write(opt.output))
-    .catch((error) => {
-      console.log(`\x1B[31mFailed to build main process !\x1B[0m`);
-      console.error(error);
-      process.exit(1);
-    });
+  const build = await rollup.rollup(opt).catch((error) => {
+    console.log(`\x1B[31mFailed to build main process !\x1B[0m`);
+    console.error(error);
+    process.exit(1);
+  });
+  await build.write(opt.output);
 }
 
 async function preloadBuild() {
   const opt = preloadOptions();
-  await rollup
-    .rollup(opt)
-    .then(async (build) => await build.write(opt.output))
-    .catch((error) => {
-      console.log(`\x1B[31mFailed to build preload process !\x1B[0m`);
-      console.error(error);
-      process.exit(1);
-    });
+  const build = await rollup.rollup(opt).catch((error) => {
+    console.log(`\x1B[31mFailed to build preload process !\x1B[0m`);
+    console.error(error);
+    process.exit(1);
+  });
+  await build.write(opt.output);
 }
 
 async function rendererBuild() {
-  (await import('vite'))
+  await (await import('vite'))
     .build({
       configFile: path.resolve('scripts/vite.config.mjs')
     })
@@ -155,8 +149,8 @@ async function core(arch) {
       pushLinuxOptional = true;
       let line = await question(
         '\x1B[36mPlease input linux package type:\x1B[0m \n optional：\x1B[33m' +
-          linuxOptional +
-          '\x1B[0m  \x1B[1mor\x1B[0m  \x1B[33mq\x1B[0m \x1B[1m(exit)\x1B[0m\n'
+        linuxOptional +
+        '\x1B[0m  \x1B[1mor\x1B[0m  \x1B[33mq\x1B[0m \x1B[1m(exit)\x1B[0m\n'
       );
       line = line.trim();
       if (line === 'q') {
@@ -178,7 +172,7 @@ async function core(arch) {
       to: archPath,
       filter: ['**/*']
     });
-  } catch (err) {}
+  } catch (err) { }
   fs.writeFileSync('scripts/build.json', JSON.stringify(buildConfig, null, 2)); //写入配置
   deleteFolderRecursive(path.resolve('dist')); //清除dist
   console.log(`\x1B[34m[${arch} build start]\x1B[0m`);
