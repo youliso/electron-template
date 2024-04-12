@@ -6,3 +6,6 @@
 /.swc/
 electron-template.kdev4
 package-lock.json
+scripts/bytecode/load/Cargo.lock
+scripts/bytecode/load/target/
+scripts/bytecode/load/node_modules/

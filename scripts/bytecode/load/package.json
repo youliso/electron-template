@@ -1,0 +1,31 @@
+{
+  "name": "load",
+  "version": "1.0.0",
+  "description": "rust bytecode load",
+  "license": "MIT",
+  "scripts": {
+    "artifacts": "napi artifacts",
+    "build": "napi build --release"
+  },
+  "devDependencies": {
+    "@napi-rs/cli": "^2.11.4"
+  },
+  "napi": {
+    "name": "index",
+    "triples": {
+      "defaults": true,
+      "additional": [
+        "x86_64-unknown-linux-musl",
+        "aarch64-unknown-linux-gnu",
+        "i686-pc-windows-msvc",
+        "armv7-unknown-linux-gnueabihf",
+        "aarch64-apple-darwin",
+        "aarch64-linux-android",
+        "x86_64-unknown-freebsd",
+        "aarch64-unknown-linux-musl",
+        "aarch64-pc-windows-msvc",
+        "armv7-linux-androideabi"
+      ]
+    }
+  }
+}

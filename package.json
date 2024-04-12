@@ -12,7 +12,8 @@
   "scripts": {
     "dev": "node scripts/buildCfg.js && node scripts/dev.js",
     "build": "node scripts/buildCfg.js && node scripts/build.js",
-    "postinstall": "electron-builder install-app-deps"
+    "postinstall": "electron-builder install-app-deps",
+    "install-napi-load": "cd scripts/bytecode/load && npm i"
   },
   "devDependencies": {
     "@rollup/plugin-alias": "^5.1.0",
