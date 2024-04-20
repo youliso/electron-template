@@ -92,5 +92,6 @@
       ]
     }
   ],
+  "beforePack": "scripts/buildBeforePack.js",
   "afterPack": "scripts/buildAfterPack.js"
 }

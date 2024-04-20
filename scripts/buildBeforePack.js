@@ -1,6 +1,9 @@
 const bytecode = require('./bytecode');
+const { asar } = require('./build.json');
 
 exports.default = async (context) => {
-  //v8字节码
-  await bytecode();
+  if (!asar) {
+    //v8字节码
+    await bytecode();
+  }
 };

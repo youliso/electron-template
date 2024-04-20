@@ -24,7 +24,7 @@
     "@vitejs/plugin-vue": "^5.0.4",
     "@youliso/electronic": "^2.1.1",
     "asarmor": "^2.0.0",
-    "electron": "^29.1.5",
+    "electron": "^30.0.1",
     "electron-builder": "^24.13.3",
     "esbuild": "^0.20.2",
     "prettier": "^3.2.5",

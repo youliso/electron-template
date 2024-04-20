@@ -2,15 +2,11 @@ import { contextBridge, ipcRenderer } from 'electron';
 
 declare global {
   interface Window {
-    printer: {
-      quit: () => Promise<any>;
-      list: () => Promise<any>;
-      do: (args: any) => Promise<any>;
-    };
+    printer: typeof func;
   }
 }
 
-contextBridge.exposeInMainWorld('printer', {
+const func = {
   quit: () => {
     return ipcRenderer.send('printer-quit');
   },
@@ -23,4 +19,6 @@ contextBridge.exposeInMainWorld('printer', {
   dos: (args: any) => {
     return ipcRenderer.send('printer-dos', args);
   }
-});
+};
+
+contextBridge.exposeInMainWorld('printer', func);

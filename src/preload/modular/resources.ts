@@ -2,14 +2,14 @@ import { contextBridge, ipcRenderer } from 'electron';
 
 declare global {
   interface Window {
-    resources: {
-      pathGet: (args: any) => Promise<any>;
-    };
+    resources: typeof func;
   }
 }
 
-contextBridge.exposeInMainWorld('resources', {
+const func = {
   pathGet: (args: any) => {
     return ipcRenderer.invoke('resources-path-get', args);
   }
-});
+};
+
+contextBridge.exposeInMainWorld('resources', func);
