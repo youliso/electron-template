@@ -1,18 +1,18 @@
 <template>
   <div class="container">
     <div class="info">hello</div>
+    <div class="info">extern:{{ path['extern'] }}</div>
+    <div class="info">inside:{{ path['inside'] }}</div>
+    <div class="info">platform:{{ path['platform'] }}</div>
+    <div class="info">root:{{ path['root'] }}</div>
     <div class="btns">
       <button @click="tk">弹框</button>
       <button @click="toBilibili">bilibili</button>
-      <template v-if="platform === 'win32'">
-        <button @click="toWin32">win32Box</button>
-        <button @click="toWin32Set">set</button>
-      </template>
     </div>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, onMounted } from 'vue';
+import { defineComponent, onMounted, ref } from 'vue';
 import { windowCreate, windowMessageOn, windowShow } from '@youliso/electronic/ipc';
 
 export default defineComponent({
@@ -61,24 +61,23 @@ export default defineComponent({
       );
     };
 
-    const toWin32 = () => {
-      window.win32.messageBox().then(console.log);
-    };
-
-    const toWin32Set = () => {
-      window.win32.dwmSetWindowAttribute(window.customize.winId).then(console.log);
+    const path = ref<{ [key: string]: string }>({});
+    const pathGet = async () => {
+      ['platform', 'inside', 'extern', 'root'].forEach(async (e) => {
+        path.value[e] = await window.resources.pathGet(e as any);
+      });
     };
 
     onMounted(() => {
       windowShow();
+      pathGet();
     });
 
     return {
+      path,
       platform: window.environment.platform,
       tk,
-      toBilibili,
-      toWin32,
-      toWin32Set
+      toBilibili
     };
   }
 });

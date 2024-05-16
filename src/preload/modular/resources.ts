@@ -7,8 +7,8 @@ declare global {
 }
 
 const func = {
-  pathGet: (args: any) => {
-    return ipcRenderer.invoke('resources-path-get', args);
+  pathGet: (type: 'platform' | 'inside' | 'extern' | 'root', path?: string): Promise<string> => {
+    return ipcRenderer.invoke('resources-path-get', { type, path });
   }
 };
 

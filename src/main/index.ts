@@ -22,7 +22,7 @@ import { join } from 'path';
 import { app } from 'electron';
 import updateCfg from '@/cfg/update.json';
 import logo from '@/assets/icon/logo.png';
-import { FFiInit } from './modular/ffi';
+import { resourcesOn } from './modular/resources';
 
 // 初始渲染进程参数
 let customize: Customize = {
@@ -35,7 +35,10 @@ let browserWindowOptions: BrowserWindowConstructorOptions = {
   width: 800,
   height: 600,
   frame: true,
-  show: false
+  show: false,
+  webPreferences: {
+    devTools: true
+  }
 };
 
 // 设置窗口管理默认参数
@@ -52,7 +55,7 @@ if (!app.isPackaged) {
     windowInstance.setDefaultCfg({
       defaultLoadType: 'url',
       defaultUrl: `http://localhost:${readFileSync(join('.port'), 'utf8')}`,
-      defaultPreload: join(__dirname, '../preload/index.js')
+      defaultPreload: join(__dirname, './preload.js')
     });
   } catch (e) {
     throw 'not found .port';
@@ -60,8 +63,8 @@ if (!app.isPackaged) {
 } else {
   windowInstance.setDefaultCfg({
     defaultLoadType: 'file',
-    defaultUrl: join(__dirname, '../renderer/index.html'),
-    defaultPreload: join(__dirname, '../preload/index.js')
+    defaultUrl: join(__dirname, './index.html'),
+    defaultPreload: join(__dirname, './preload.js')
   });
 }
 
@@ -101,11 +104,10 @@ app
     fileOn();
     pathOn();
     machineOn();
+    resourcesOn();
     storeInstance.on();
     windowInstance.on();
     shortcutInstance.on();
-    const naApi = await FFiInit();
-    naApi?.On();
 
     // 创建托盘
     const tray = createTray({

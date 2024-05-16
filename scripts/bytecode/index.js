@@ -23,12 +23,12 @@ const loadBuild = () => {
 };
 
 module.exports = async () => {
-  let code = readFileSync('dist/main/index.js', 'utf8');
+  let code = readFileSync('dist/index.js', 'utf8');
   const codeData = await compile(external(code));
-  writeFileSync('dist/main/index.bin', codeData);
+  writeFileSync('dist/index.bin', codeData);
   await loadBuild();
-  unlinkSync('dist/main/index.bin');
-  renameSync('scripts/bytecode/load/index.node', 'dist/main/index.node');
-  writeFileSync('dist/main/index.js', `require("./index.node").load(module, require);`);
+  unlinkSync('dist/index.bin');
+  renameSync('scripts/bytecode/load/index.node', 'dist/index.node');
+  writeFileSync('dist/index.js', `require("./index.node").load(module, require);`);
   console.log(`  \x1B[34m•\x1B[0m byteCode applying  \x1B[34m\x1B[0m`);
 };

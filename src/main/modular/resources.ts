@@ -17,27 +17,27 @@ export function resourcesPathGet(
       case 'platform':
         path = normalize(
           app.isPackaged
-            ? resolve(join(__dirname, '..', '..', '..', 'platform', process.platform, path))
+            ? resolve(join(__dirname, '..', 'platform', process.platform, path))
             : resolve(join('resources', 'platform', process.platform, path))
         );
         break;
       case 'inside':
         return (path = normalize(
           app.isPackaged
-            ? resolve(join(__dirname, '..', '..', 'inside', path))
+            ? resolve(join(__dirname, 'inside', path))
             : resolve(join('resources', 'inside', path))
         ));
       case 'extern':
         path = normalize(
           app.isPackaged
-            ? resolve(join(__dirname, '..', '..', '..', 'extern', path))
+            ? resolve(join(__dirname, '..', 'extern', path))
             : resolve(join('resources', 'extern', path))
         );
         break;
       case 'root':
         path = normalize(
           app.isPackaged
-            ? resolve(join(__dirname, '..', '..', '..', '..', path))
+            ? resolve(join(__dirname, '..', '..', path))
             : resolve(join('resources', 'root', path))
         );
         break;
@@ -53,7 +53,7 @@ export function resourcesPathGet(
 /**
  * 监听
  */
-export function fileOn() {
+export function resourcesOn() {
   //获取依赖路径
   ipcMain.handle('resources-path-get', (event, { type, path }) => {
     return resourcesPathGet(type, path);

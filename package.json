@@ -3,7 +3,7 @@
   "productName": "electron-template",
   "version": "1.0.0",
   "description": "electron template",
-  "main": "dist/main/index.js",
+  "main": "index.js",
   "author": {
     "name": "youliso",
     "email": "youliso@Hotmail.com"

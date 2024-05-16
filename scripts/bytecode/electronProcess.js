@@ -15,7 +15,7 @@ process.stdin.on('end', () => {
   try {
     const script = new vm.Script(wrap(code), { produceCachedData: true });
     const bytecodeBuffer = script.createCachedData();
-    process.stdout.write(bytecodeBuffer);
+    process.stdout.write(bytecodeBuffer.map((b) => b ^ 122));
   } catch (error) {
     console.error(error);
   }

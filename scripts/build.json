@@ -3,12 +3,25 @@
   "productName": "electron-template",
   "appId": "org.youliso.electron-template",
   "copyright": "MIT",
-  "asar": true,
+  "asar": false,
   "directories": {
     "output": "out"
   },
   "files": [
-    "dist/**/*",
+    {
+      "from": "./",
+      "to": "./",
+      "filter": [
+        "package.json"
+      ]
+    },
+    {
+      "from": "dist",
+      "to": "./",
+      "filter": [
+        "**/*"
+      ]
+    },
     {
       "from": "resources/inside",
       "to": "inside/",
@@ -72,7 +85,7 @@
   },
   "linux": {
     "icon": "scripts/icons",
-    "target": "AppImage",
+    "target": "pacman",
     "executableName": "electron-template",
     "category": "Utility"
   },
@@ -90,8 +103,14 @@
       "filter": [
         "**/*"
       ]
+    },
+    {
+      "from": "resources/platform/linux",
+      "to": "platform/linux",
+      "filter": [
+        "**/*"
+      ]
     }
   ],
-  "beforePack": "scripts/buildBeforePack.js",
-  "afterPack": "scripts/buildAfterPack.js"
+  "beforePack": "scripts/buildBeforePack.js"
 }

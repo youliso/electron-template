@@ -46,7 +46,7 @@ module.exports = {
   mainOptions: (env) => ({
     input: resolve('src/main/index.ts'),
     output: {
-      file: resolve('dist/main/index.js'),
+      file: resolve('dist/index.js'),
       format: 'cjs',
       sourcemap: false,
       inlineDynamicImports: true
@@ -57,7 +57,7 @@ module.exports = {
   preloadOptions: (env) => ({
     input: resolve('src/preload/index.ts'),
     output: {
-      file: resolve('dist/preload/index.js'),
+      file: resolve('dist/preload.js'),
       format: 'cjs',
       sourcemap: false
     },
