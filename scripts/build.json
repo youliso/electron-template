@@ -85,7 +85,7 @@
   },
   "linux": {
     "icon": "scripts/icons",
-    "target": "pacman",
+    "target": "AppImage",
     "executableName": "electron-template",
     "category": "Utility"
   },
@@ -112,5 +112,6 @@
       ]
     }
   ],
-  "beforePack": "scripts/buildBeforePack.js"
+  "beforePack": "scripts/buildBeforePack.js",
+  "afterPack": "scripts/buildAfterPack.js"
 }

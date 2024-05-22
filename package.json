@@ -22,7 +22,7 @@
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@vitejs/plugin-vue": "^5.0.4",
-    "@youliso/electronic": "^2.1.1",
+    "@youliso/electronic": "^2.2.2",
     "asarmor": "^2.0.0",
     "electron": "^30.0.1",
     "electron-builder": "^24.13.3",
