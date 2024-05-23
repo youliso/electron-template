@@ -127,7 +127,6 @@ app
     session.on();
 
     // 创建窗口
-    const win = windowInstance.create(customize, browserWindowOptions);
-    win && windowInstance.load(win, { openDevTools: !app.isPackaged }).catch(logError);
+    windowInstance.new(customize, browserWindowOptions, { openDevTools: !app.isPackaged });
   })
   .catch(logError);
