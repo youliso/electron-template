@@ -8,6 +8,5 @@
 </template>
 
 <style lang="scss">
-@import './style/color';
 @import './style/index';
 </style>
