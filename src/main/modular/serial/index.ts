@@ -1,5 +1,3 @@
-import { SerialPort } from 'serialport';
-import { ipcMain } from 'electron';
 import { windowInstance } from '@youliso/electronic/main/window';
 import Byt, { BytPort, BytTcp } from './byt';
 import Str, { StrPort, StrTcp } from './str';
@@ -98,15 +96,5 @@ export class Serial {
   send(key: string, value: string | Buffer) {
     if (Object.keys(this.serialsEquipment).indexOf(key) === -1) return;
     this.serialsEquipment[key].send(value);
-  }
-
-  /**
-   * 开启监听
-   */
-  on() {
-    ipcMain.handle('serial-list', async (event) => SerialPort.list());
-    ipcMain.handle('serial-close', (event, key) => this.close(key));
-    ipcMain.handle('serial-open', (event, args) => this.open(args.arg, args.single, args.winId));
-    ipcMain.handle('serial-send', (event, args) => this.send(args.key, args.value));
   }
 }

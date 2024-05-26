@@ -3,11 +3,10 @@ import { createApp } from 'vue';
 import app from './views/app.vue';
 import router from './router';
 
-windowLoad((args) => {
-  window.customize = args;
+windowLoad(() => {
   router.addRoute({
     path: '/',
-    redirect: args.route as string
+    redirect: window.customize.route as string
   });
   createApp(app).use(router).mount('#root');
 });
