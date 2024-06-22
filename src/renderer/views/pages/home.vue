@@ -9,6 +9,7 @@
       <button @click="tk">弹框</button>
       <button @click="toBilibili">bilibili</button>
     </div>
+    <div v-if="testMsg">测试消息：{{ testMsg }}</div>
   </div>
 </template>
 <script lang="ts">
@@ -17,9 +18,10 @@ import { windowCreate, windowMessageOn, windowShow } from '@youliso/electronic/i
 
 export default defineComponent({
   setup() {
+    const testMsg = ref();
     //监听弹框消息
     windowMessageOn('test', (args: any) => {
-      console.log(args);
+      testMsg.value = args;
     });
 
     const tk = () => {
@@ -28,7 +30,8 @@ export default defineComponent({
           title: '弹框测试',
           route: '/message',
           data: { text: '123' },
-          position: 'center'
+          position: 'center',
+          isOneWindow: true
         },
         {
           width: 440,
@@ -74,6 +77,7 @@ export default defineComponent({
     });
 
     return {
+      testMsg,
       path,
       platform: window.environment.platform,
       tk,

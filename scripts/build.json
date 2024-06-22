@@ -3,7 +3,7 @@
   "productName": "electron-template",
   "appId": "org.youliso.electron-template",
   "copyright": "MIT",
-  "asar": false,
+  "asar": true,
   "directories": {
     "output": "out"
   },
@@ -105,8 +105,8 @@
       ]
     },
     {
-      "from": "resources/platform/linux",
-      "to": "platform/linux",
+      "from": "resources/platform/win32",
+      "to": "platform/win32",
       "filter": [
         "**/*"
       ]

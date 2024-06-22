@@ -12,33 +12,33 @@
   "scripts": {
     "dev": "node scripts/buildCfg.js && node scripts/dev.js",
     "build": "node scripts/buildCfg.js && node scripts/build.js",
-    "postinstall": "electron-builder install-app-deps",
+    "postinstall": "electron-builder install-app-deps && npm run install-napi-load",
     "install-napi-load": "cd scripts/bytecode/load && npm i"
   },
   "devDependencies": {
     "@rollup/plugin-alias": "^5.1.0",
-    "@rollup/plugin-commonjs": "^25.0.8",
+    "@rollup/plugin-commonjs": "^26.0.1",
     "@rollup/plugin-image": "^3.0.3",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^15.2.3",
-    "@vitejs/plugin-vue": "^5.0.4",
+    "@vitejs/plugin-vue": "^5.0.5",
     "@youliso/electronic": "^2.4.2",
-    "asarmor": "^3.0.0",
-    "electron": "^30.0.8",
+    "asarmor": "^3.0.1",
+    "electron": "^31.0.2",
     "electron-builder": "^24.13.3",
-    "esbuild": "^0.21.4",
-    "prettier": "^3.2.5",
+    "esbuild": "^0.21.5",
+    "prettier": "^3.3.2",
     "rollup": "^4.18.0",
     "rollup-plugin-esbuild": "^6.1.1",
-    "sass": "^1.77.2",
-    "typescript": "^5.4.5",
-    "vite": "^5.2.11",
-    "vue": "^3.4.27",
-    "vue-router": "^4.3.2"
+    "sass": "^1.77.6",
+    "typescript": "^5.5.2",
+    "vite": "^5.3.1",
+    "vue": "^3.4.29",
+    "vue-router": "^4.4.0"
   },
   "dependencies": {
-    "electron-updater": "^6.1.8",
-    "koffi": "^2.8.9",
+    "electron-updater": "^6.2.1",
+    "koffi": "^2.8.11",
     "serialport": "^12.0.0"
   }
 }
