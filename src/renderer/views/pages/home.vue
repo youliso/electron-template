@@ -79,7 +79,6 @@ export default defineComponent({
     return {
       testMsg,
       path,
-      platform: window.environment.platform,
       tk,
       toBilibili
     };

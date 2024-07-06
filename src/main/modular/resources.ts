@@ -1,7 +1,6 @@
 import { app, ipcMain } from 'electron';
 import { accessSync, constants } from 'fs';
 import { resolve, join, normalize } from 'path';
-import { logError } from '@youliso/electronic/main/log';
 
 /**
  * 获取资源文件路径
@@ -44,9 +43,8 @@ export function resourcesPathGet(
     }
     accessSync(path, constants.R_OK);
     return path;
-  } catch (e) {
-    logError(`[path ${path}]`, e);
-    throw e;
+  } catch (err) {
+    throw err;
   }
 }
 

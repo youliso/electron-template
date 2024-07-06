@@ -1,25 +1,19 @@
 import type { BrowserWindowConstructorOptions } from 'electron';
 import type { Customize } from '@youliso/electronic/types';
 import {
-  logOn,
-  fileOn,
-  pathOn,
   machineOn,
   appAfterOn,
-  appErrorOn,
   appSingleInstanceLock,
   appProtocolRegister,
   storeInstance,
   shortcutInstance,
   windowInstance,
-  Session,
-  createTray,
-  logError
+  Session
 } from '@youliso/electronic/main';
 import { Update } from '@youliso/electronic/main/update';
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { app } from 'electron';
+import { app, Menu, nativeImage, Tray } from 'electron';
 import updateCfg from '@/cfg/update.json';
 import logo from '@/assets/icon/logo.png';
 import { resourcesOn } from './modular/resources';
@@ -68,9 +62,6 @@ if (!app.isPackaged) {
   });
 }
 
-// 错误监听
-appErrorOn();
-
 // 单例
 appSingleInstanceLock({
   additionalData: { type: 'new' },
@@ -87,46 +78,49 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 });
 
-app
-  .whenReady()
-  .then(async () => {
-    app.on('activate', () => {
-      if (windowInstance.getAll().length === 0) {
-        const win = windowInstance.create(customize, browserWindowOptions);
-        win && windowInstance.load(win).catch(logError);
+app.whenReady().then(async () => {
+  app.on('activate', () => {
+    if (windowInstance.getAll().length === 0) {
+      const win = windowInstance.create(customize, browserWindowOptions);
+      win && windowInstance.load(win);
+    }
+  });
+  // 应用基础监听
+  appAfterOn();
+
+  // 模块监听
+  machineOn();
+  resourcesOn();
+  storeInstance.on();
+  windowInstance.on();
+  shortcutInstance.on();
+
+  // 创建托盘
+  const tray = new Tray(nativeImage.createFromPath(logo as string));
+  tray.setToolTip(app.getName());
+  tray.setContextMenu(
+    Menu.buildFromTemplate([
+      {
+        label: 'Exit',
+        click: () => {
+          app.quit();
+        }
       }
-    });
-    // 应用基础监听
-    appAfterOn();
+    ])
+  );
+  tray.on('click', () => windowInstance.func('show'));
 
-    // 模块监听
-    logOn();
-    fileOn();
-    pathOn();
-    machineOn();
-    resourcesOn();
-    storeInstance.on();
-    windowInstance.on();
-    shortcutInstance.on();
+  // 创建更新
+  const update = new Update(
+    { provider: updateCfg.provider as any, url: updateCfg.url },
+    'scripts/dev-update.yml',
+    updateCfg.dirname
+  );
+  // 创建session
+  const session = new Session();
+  update.on();
+  session.on();
 
-    // 创建托盘
-    const tray = createTray({
-      name: app.getName(),
-      iconPath: logo as string
-    });
-    // 创建更新
-    const update = new Update(
-      { provider: updateCfg.provider as any, url: updateCfg.url },
-      'scripts/dev-update.yml',
-      updateCfg.dirname
-    );
-    // 创建session
-    const session = new Session();
-    tray.on('click', () => windowInstance.func('show'));
-    update.on();
-    session.on();
-
-    // 创建窗口
-    windowInstance.new(customize, browserWindowOptions, { openDevTools: !app.isPackaged });
-  })
-  .catch(logError);
+  // 创建窗口
+  windowInstance.new(customize, browserWindowOptions, { openDevTools: !app.isPackaged });
+});
