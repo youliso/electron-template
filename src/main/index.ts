@@ -7,8 +7,7 @@ import {
   appProtocolRegister,
   storeInstance,
   shortcutInstance,
-  windowInstance,
-  Session
+  windowInstance
 } from '@youliso/electronic/main';
 import { Update } from '@youliso/electronic/main/update';
 import { readFileSync } from 'fs';
@@ -116,11 +115,7 @@ app.whenReady().then(async () => {
     'scripts/dev-update.yml',
     updateCfg.dirname
   );
-  // 创建session
-  const session = new Session();
-  update.on();
-  session.on();
-
+  
   // 创建窗口
   windowInstance.new(customize, browserWindowOptions, { openDevTools: !app.isPackaged });
 });
