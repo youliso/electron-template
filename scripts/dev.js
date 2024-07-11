@@ -52,25 +52,25 @@ function startElectron() {
     args = args.concat(process.argv.slice(2));
   }
   electronProcess = spawn(electron, args);
-  electronProcess.stdout.on('data', (data) => {
-    const msg = data.toString().trim();
-    msg &&
-      console.log(
-        `\x1b[34m[main stdout ${new Date().toLocaleTimeString()}]\x1b[0m: \x1b[1m${msg}\x1b[0m`
-      );
-  });
-  electronProcess.stderr.on('data', (data) => {
-    const msg = data.toString().trim();
-    msg &&
-      console.log(
-        `\x1b[31m[main stderr ${new Date().toLocaleTimeString()}]\x1b[0m: \x1b[1;31m${msg}\x1b[0m`
-      );
-  });
+  electronProcess.stdout.on('data', (data) => onLog('info', data));
+  electronProcess.stderr.on('data', (data) => onLog('err', data));
   electronProcess.on('exit', (e) => {
     console.log('[main exit]');
   });
   electronProcess.on('close', () => {
     if (!manualRestart) process.exit();
+  });
+}
+
+function onLog(type, data) {
+  let color = type === 'err' ? '31m' : '34m';
+  const dataStr = data.toString(); // 将Buffer转换为字符串
+  dataStr.split(/\r?\n/).forEach((line) => {
+    if (line) {
+      console.log(
+        `\x1b[${color}[main ${new Date().toLocaleTimeString()}]\x1b[0m: \x1b[1;${type === 'err' ? color : '1m'}${line}\x1b[0m`
+      );
+    }
   });
 }
 
