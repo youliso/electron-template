@@ -1,5 +1,5 @@
 {
   "provider": "generic",
   "url": "http://127.0.0.1:3000/public",
-  "dirname": "electron-template-updater"
+  "dirname": "chap-aws-updater"
 }

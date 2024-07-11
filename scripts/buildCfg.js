@@ -1,29 +1,27 @@
-const fs = require('fs');
-const { name, author } = require('../package.json');
-const config = require('./build.json');
-const updateConfig = require('../src/cfg/update.json');
+const fs = require('node:fs');
+const { name, productName, author } = require('../package.json');
+const envConfig = require('./cfg/env.json');
+const config = require('./cfg/build.json');
+const updateConfig = require('./cfg/update.json');
 
 /** 渲染进程不需要打包到file的包 */
 // config.files.push('!**/node_modules/包名');
 
+/** env配置 **/
+envConfig['process.env.PORT'] = JSON.stringify(4660);
+
 /**  config配置  **/
-config.publish = [
-  {
-    provider: updateConfig.provider,
-    url: updateConfig.url
-  }
-];
-config.productName = name;
 config.appId = `org.${author.name}.${name}`;
+config.copyright = `Copyright © 2024 ${name}`; //版权
+config.productName = name; // 名称
 config.npmRebuild = true; //是否Rebuild编译
-config.asar = true; //asar开关
-config.afterPack = 'scripts/buildAfterPack.js'; //asar混淆
+config.asar = false; //asar开关
 config.beforePack = 'scripts/buildBeforePack.js';
 
 /** win配置 **/
+config.nsis.shortcutName = productName; // 快捷方式名称
 config.nsis.displayLanguageSelector = false; //安装包语言提示
-config.nsis.menuCategory = false; //是否创建开始菜单目录
-config.nsis.shortcutName = name; //快捷方式名称(可中文)
+config.nsis.menuCategory = true; //是否创建开始菜单目录
 config.nsis.allowToChangeInstallationDirectory = true; //是否允许用户修改安装为位置
 config.win.requestedExecutionLevel = ['asInvoker', 'highestAvailable'][0]; //应用权限
 
@@ -33,6 +31,15 @@ config.linux.executableName = name;
 
 //更新配置
 updateConfig.dirname = `${name.toLowerCase()}-updater`;
+config.publish = [
+  {
+    provider: updateConfig.provider,
+    url: updateConfig.url
+  }
+];
+envConfig['process.env.UPDATEPROVIDER'] = JSON.stringify(updateConfig.provider);
+envConfig['process.env.UPDATEURL'] = JSON.stringify(updateConfig.url);
+envConfig['process.env.UPDATEDIRNAME'] = JSON.stringify(updateConfig.dirname);
 let update =
   'provider: ' +
   updateConfig.provider +
@@ -44,6 +51,6 @@ let update =
   updateConfig.dirname +
   '';
 
-fs.writeFileSync('scripts/dev-update.yml', update);
-fs.writeFileSync('scripts/build.json', JSON.stringify(config, null, 2));
-fs.writeFileSync('src/cfg/update.json', JSON.stringify(updateConfig, null, 2));
+fs.writeFileSync('scripts/.update.yml', update);
+fs.writeFileSync('scripts/.build.json', JSON.stringify(config, null, 2));
+fs.writeFileSync('scripts/.env.json', JSON.stringify(envConfig, null, 2));

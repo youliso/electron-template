@@ -1,5 +1,4 @@
 const rollup = require('rollup');
-const { readFileSync } = require('fs');
 const { resolve } = require('path');
 const { spawn } = require('child_process');
 const electron = require('electron');
@@ -11,9 +10,9 @@ let manualRestart = false;
 async function startRenderer() {
   let port = 0;
   try {
-    port = readFileSync(resolve('.port'), 'utf8');
+    port = require('./.env.json')['process.env.PORT'];
   } catch (e) {
-    throw 'not found .port';
+    throw 'not found process.env.PORT';
   }
   const server = await (
     await import('vite')

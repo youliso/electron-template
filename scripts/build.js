@@ -4,7 +4,7 @@ const util = require('util');
 const path = require('path');
 const rollup = require('rollup');
 const builder = require('electron-builder');
-const buildConfig = require('./build.json');
+const buildConfig = require('./.build.json');
 const { mainOptions, preloadOptions } = require('./rollup.config');
 
 let [, , arch] = process.argv;
@@ -93,7 +93,9 @@ async function preloadBuild() {
 }
 
 async function rendererBuild() {
-  await (await import('vite'))
+  await (
+    await import('vite')
+  )
     .build({
       configFile: path.resolve('scripts/vite.config.mjs')
     })
@@ -149,8 +151,8 @@ async function core(arch) {
       pushLinuxOptional = true;
       let line = await question(
         '\x1B[36mPlease input linux package type:\x1B[0m \n optional：\x1B[33m' +
-        linuxOptional +
-        '\x1B[0m  \x1B[1mor\x1B[0m  \x1B[33mq\x1B[0m \x1B[1m(exit)\x1B[0m\n'
+          linuxOptional +
+          '\x1B[0m  \x1B[1mor\x1B[0m  \x1B[33mq\x1B[0m \x1B[1m(exit)\x1B[0m\n'
       );
       line = line.trim();
       if (line === 'q') {
@@ -172,8 +174,8 @@ async function core(arch) {
       to: archPath,
       filter: ['**/*']
     });
-  } catch (err) { }
-  fs.writeFileSync('scripts/build.json', JSON.stringify(buildConfig, null, 2)); //写入配置
+  } catch (err) {}
+  fs.writeFileSync('scripts/.build.json', JSON.stringify(buildConfig, null, 2)); //写入配置
   deleteFolderRecursive(path.resolve('dist')); //清除dist
   console.log(`\x1B[34m[${arch} build start]\x1B[0m`);
   await mainBuild();

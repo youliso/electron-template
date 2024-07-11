@@ -9,11 +9,8 @@ import {
   shortcutInstance,
   windowInstance
 } from '@youliso/electronic/main';
-import { Update } from '@youliso/electronic/main/update';
-import { readFileSync } from 'fs';
 import { join } from 'path';
 import { app, Menu, nativeImage, Tray } from 'electron';
-import updateCfg from '@/cfg/update.json';
 import logo from '@/assets/icon/logo.png';
 import { resourcesOn } from './modular/resources';
 
@@ -44,15 +41,11 @@ if (!app.isPackaged) {
       devTools: true
     };
   }
-  try {
-    windowInstance.setDefaultCfg({
-      defaultLoadType: 'url',
-      defaultUrl: `http://localhost:${readFileSync(join('.port'), 'utf8')}`,
-      defaultPreload: join(__dirname, './preload.js')
-    });
-  } catch (e) {
-    throw 'not found .port';
-  }
+  windowInstance.setDefaultCfg({
+    defaultLoadType: 'url',
+    defaultUrl: `http://localhost:${process.env.PORT}`,
+    defaultPreload: join(__dirname, './preload.js')
+  });
 } else {
   windowInstance.setDefaultCfg({
     defaultLoadType: 'file',
@@ -108,14 +101,6 @@ app.whenReady().then(async () => {
     ])
   );
   tray.on('click', () => windowInstance.func('show'));
-
-  // 创建更新
-  const update = new Update(
-    { provider: updateCfg.provider as any, url: updateCfg.url },
-    'scripts/dev-update.yml',
-    updateCfg.dirname
-  );
-  
   // 创建窗口
   windowInstance.new(customize, browserWindowOptions, { openDevTools: !app.isPackaged });
 });

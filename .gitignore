@@ -9,3 +9,6 @@ package-lock.json
 scripts/bytecode/load/Cargo.lock
 scripts/bytecode/load/target/
 scripts/bytecode/load/node_modules/
+scripts/.build.json
+scripts/.env.json
+scripts/.update.yml

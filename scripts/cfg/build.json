@@ -1,9 +1,5 @@
 {
   "compression": "maximum",
-  "productName": "electron-template",
-  "appId": "org.youliso.electron-template",
-  "copyright": "MIT",
-  "asar": true,
   "directories": {
     "output": "out"
   },
@@ -11,23 +7,17 @@
     {
       "from": "./",
       "to": "./",
-      "filter": [
-        "package.json"
-      ]
+      "filter": ["package.json"]
     },
     {
       "from": "dist",
       "to": "./",
-      "filter": [
-        "**/*"
-      ]
+      "filter": ["**/*"]
     },
     {
       "from": "resources/inside",
       "to": "inside/",
-      "filter": [
-        "**/*"
-      ]
+      "filter": ["**/*"]
     }
   ],
   "extraFiles": [
@@ -40,18 +30,11 @@
     "oneClick": false,
     "perMachine": true,
     "allowElevation": true,
-    "allowToChangeInstallationDirectory": true,
     "installerIcon": "scripts/icons/icon.ico",
-    "uninstallerIcon": "scripts/icons/unicon.ico",
     "installerHeaderIcon": "scripts/icons/icon.ico",
-    "installerSidebar": "scripts/icons/modern-wizard.bmp",
-    "uninstallerSidebar": "scripts/icons/modern-wizard.bmp",
     "createDesktopShortcut": true,
     "createStartMenuShortcut": true,
-    "shortcutName": "electron-template",
-    "include": "scripts/installer.nsh",
-    "menuCategory": false,
-    "displayLanguageSelector": false
+    "include": "scripts/cfg/installer.nsh"
   },
   "dmg": {
     "contents": [
@@ -69,6 +52,7 @@
     ]
   },
   "mac": {
+    "category": "public.app-category.utilities",
     "icon": "scripts/icons/icon.icns"
   },
   "win": {
@@ -77,41 +61,24 @@
     "target": [
       {
         "target": "nsis",
-        "arch": [
-          "x64"
-        ]
+        "arch": ["x64"]
       }
     ]
   },
   "linux": {
     "icon": "scripts/icons",
-    "target": "AppImage",
-    "executableName": "electron-template",
     "category": "Utility"
   },
-  "npmRebuild": true,
-  "publish": [
-    {
-      "provider": "generic",
-      "url": "http://127.0.0.1:3000/public"
-    }
-  ],
   "extraResources": [
     {
       "from": "resources/extern",
       "to": "extern/",
-      "filter": [
-        "**/*"
-      ]
+      "filter": ["**/*"]
     },
     {
       "from": "resources/platform/win32",
       "to": "platform/win32",
-      "filter": [
-        "**/*"
-      ]
+      "filter": ["**/*"]
     }
-  ],
-  "beforePack": "scripts/buildBeforePack.js",
-  "afterPack": "scripts/buildAfterPack.js"
+  ]
 }

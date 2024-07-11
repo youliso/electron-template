@@ -5,6 +5,7 @@ const commonjs = require('@rollup/plugin-commonjs');
 const alias = require('@rollup/plugin-alias');
 const json = require('@rollup/plugin-json');
 const image = require('@rollup/plugin-image');
+const replace = require('@rollup/plugin-replace').default;
 const esbuild = require('rollup-plugin-esbuild').default;
 const { dependencies } = require('../package.json');
 
@@ -39,6 +40,10 @@ const plugins = (env) => [
       '.json': 'json',
       '.ts': 'ts'
     }
+  }),
+  replace({
+    preventAssignment: true,
+    values: require('./.env.json')
   })
 ];
 
