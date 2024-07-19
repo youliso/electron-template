@@ -8,7 +8,7 @@ const updateConfig = require('./cfg/update.json');
 // config.files.push('!**/node_modules/包名');
 
 /** env配置 **/
-envConfig['process.env.PORT'] = JSON.stringify(4660);
+envConfig['process.env.PORT'] = JSON.stringify(4890);
 
 /**  config配置  **/
 config.appId = `org.${author.name}.${name}`;
