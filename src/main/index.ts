@@ -1,6 +1,7 @@
 import type { BrowserWindowConstructorOptions } from 'electron';
 import type { Customize } from '@youliso/electronic/types';
 import {
+  type WindowDefaultCfg,
   machineOn,
   appAfterOn,
   appSingleInstanceLock,
@@ -15,9 +16,10 @@ import logo from '@/assets/icon/logo.png';
 import { resourcesOn } from './modular/resources';
 
 // 初始渲染进程参数
+let route = '/home';
 let customize: Customize = {
-  title: 'electron-template',
-  route: '/home'
+  title: app.name,
+  route
 };
 
 // 初始窗口参数
@@ -31,9 +33,15 @@ let browserWindowOptions: BrowserWindowConstructorOptions = {
   }
 };
 
-// 设置窗口管理默认参数
+// 初始窗口组参数
+let windowDefaultCfg: WindowDefaultCfg = {
+  defaultLoadType: 'file',
+  defaultUrl: join(__dirname, 'index.html'),
+  defaultPreload: join(__dirname, 'preload.js')
+};
+
+// 调试模式
 if (!app.isPackaged) {
-  // 调试模式
   if (browserWindowOptions.webPreferences) {
     browserWindowOptions.webPreferences.devTools = true;
   } else {
@@ -41,18 +49,11 @@ if (!app.isPackaged) {
       devTools: true
     };
   }
-  windowInstance.setDefaultCfg({
-    defaultLoadType: 'url',
-    defaultUrl: `http://localhost:${process.env.PORT}`,
-    defaultPreload: join(__dirname, './preload.js')
-  });
-} else {
-  windowInstance.setDefaultCfg({
-    defaultLoadType: 'file',
-    defaultUrl: join(__dirname, './index.html'),
-    defaultPreload: join(__dirname, './preload.js')
-  });
+  windowDefaultCfg.defaultLoadType = 'url';
+  windowDefaultCfg.defaultUrl = `http://localhost:${process.env.PORT}`;
 }
+
+windowInstance.setDefaultCfg(windowDefaultCfg);
 
 // 单例
 appSingleInstanceLock({
@@ -72,9 +73,11 @@ app.on('window-all-closed', () => {
 
 app.whenReady().then(async () => {
   app.on('activate', () => {
-    if (windowInstance.getAll().length === 0) {
-      const win = windowInstance.create(customize, browserWindowOptions);
-      win && windowInstance.load(win);
+    const mainWin = windowInstance.getMain();
+    if (mainWin && mainWin.customize.route === route) {
+      mainWin.show();
+    } else {
+      windowInstance.new(customize, browserWindowOptions, { openDevTools: !app.isPackaged });
     }
   });
   // 应用基础监听

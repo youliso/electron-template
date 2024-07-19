@@ -1,14 +1,15 @@
 <template>
   <div class="container">
     <div>创建传参: {{ data.text }}</div>
+    <div>窗口组ids: {{ winId }}</div>
     <button @click="test">测试通讯</button>
-    <button @click="test1">测试获取路由id {{ winId }}</button>
+    <button @click="test1">测试获取窗口组ids</button>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue';
-import { windowShow, windowIdGet, windowMessageSend } from '@youliso/electronic/ipc';
+import { windowShow, windowIdGet, windowMessageSend, windowSingleCustomizeOn, windowFunc } from '@youliso/electronic/ipc';
 
 export default defineComponent({
   setup() {
@@ -26,6 +27,10 @@ export default defineComponent({
     const test1 = async () => {
       winId.value = await windowIdGet();
     };
+
+    windowSingleCustomizeOn(() => {
+      windowFunc('focus');
+    })
 
     onMounted(() => {
       windowShow();
