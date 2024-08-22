@@ -81,6 +81,22 @@ app.whenReady().then(async () => {
       windowInstance.new(customize, browserWindowOptions, { openDevTools: !app.isPackaged });
     }
   });
+  // 获得焦点时发出
+  app.on('browser-window-focus', () => {
+    // 关闭刷新
+    shortcutInstance.register({
+      name: '关闭刷新',
+      key: 'CommandOrControl+R'
+    });
+  });
+  // 失去焦点时发出
+  app.on('browser-window-blur', () => {
+    // 注销关闭刷新
+    shortcutInstance.unregister('CommandOrControl+R');
+  });
+
+  defaultSessionInit();
+
   // 应用基础监听
   appAfterOn();
 

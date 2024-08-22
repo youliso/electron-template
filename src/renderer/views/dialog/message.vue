@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue';
-import { windowShow, windowIdGet, windowMessageSend, windowSingleCustomizeOn, windowFunc } from '@youliso/electronic/ipc';
+import { windowShow, windowIdGet, windowMessageSend, windowSingleDataOn, windowFunc } from '@youliso/electronic/ipc';
 
 export default defineComponent({
   setup() {
@@ -28,7 +28,7 @@ export default defineComponent({
       winId.value = await windowIdGet();
     };
 
-    windowSingleCustomizeOn(() => {
+    windowSingleDataOn(() => {
       windowFunc('focus');
     })
 

@@ -22,24 +22,24 @@
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-replace": "^5.0.7",
-    "@vitejs/plugin-vue": "^5.0.5",
-    "@youliso/electronic": "^3.0.2",
+    "@vitejs/plugin-vue": "^5.1.2",
+    "@youliso/electronic": "^3.0.5",
     "asarmor": "^3.0.1",
-    "electron": "^31.1.0",
+    "electron": "^32.0.1",
     "electron-builder": "^24.13.3",
-    "esbuild": "^0.23.0",
-    "prettier": "^3.3.2",
-    "rollup": "^4.18.0",
+    "esbuild": "^0.23.1",
+    "prettier": "^3.3.3",
+    "rollup": "^4.21.0",
     "rollup-plugin-esbuild": "^6.1.1",
-    "sass": "^1.77.6",
-    "typescript": "^5.5.3",
-    "vite": "^5.3.3",
-    "vue": "^3.4.31",
-    "vue-router": "^4.4.0"
+    "sass": "^1.77.8",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.2",
+    "vue": "^3.4.38",
+    "vue-router": "^4.4.3"
   },
   "dependencies": {
     "electron-updater": "^6.2.1",
-    "koffi": "^2.8.11",
+    "koffi": "^2.9.0",
     "serialport": "^12.0.0"
   }
 }
