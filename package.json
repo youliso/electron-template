@@ -22,23 +22,20 @@
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-replace": "^5.0.7",
-    "@vitejs/plugin-vue": "^5.1.2",
     "@youliso/electronic": "^3.0.5",
     "asarmor": "^3.0.1",
-    "electron": "^32.0.1",
-    "electron-builder": "^24.13.3",
+    "electron": "^32.0.2",
+    "electron-builder": "^25.0.5",
     "esbuild": "^0.23.1",
     "prettier": "^3.3.3",
-    "rollup": "^4.21.0",
+    "rollup": "^4.21.2",
     "rollup-plugin-esbuild": "^6.1.1",
-    "sass": "^1.77.8",
-    "typescript": "^5.5.4",
-    "vite": "^5.4.2",
-    "vue": "^3.4.38",
-    "vue-router": "^4.4.3"
+    "sass": "^1.78.0",
+    "typescript": "^5.6.2",
+    "vite": "^5.4.3"
   },
   "dependencies": {
-    "electron-updater": "^6.2.1",
+    "electron-updater": "^6.3.4",
     "koffi": "^2.9.0",
     "serialport": "^12.0.0"
   }

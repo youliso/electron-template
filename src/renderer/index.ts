@@ -1,12 +1,6 @@
-import { windowLoad } from '@youliso/electronic/ipc/window';
-import { createApp } from 'vue';
-import app from './views/app.vue';
-import router from './router';
+import { windowLoad, windowShow } from '@youliso/electronic/ipc/window';
 
 windowLoad(() => {
-  router.addRoute({
-    path: '/',
-    redirect: window.customize.route as string
-  });
-  createApp(app).use(router).mount('#root');
+  document.getElementById('root')!.innerHTML = 'hello word';
+  windowShow();
 });

@@ -1,5 +1,4 @@
 import { defineConfig } from 'vite';
-import vuePlugin from '@vitejs/plugin-vue';
 import { resolve } from 'path';
 const root = resolve('src/renderer');
 const outDir = resolve('dist');
@@ -17,5 +16,5 @@ export default defineConfig({
       '@': resolve('src')
     }
   },
-  plugins: [vuePlugin()]
+  plugins: []
 });
