@@ -35,8 +35,6 @@
     "vite": "^5.4.3"
   },
   "dependencies": {
-    "electron-updater": "^6.3.4",
-    "koffi": "^2.9.0",
-    "serialport": "^12.0.0"
+    "electron-updater": "^6.3.4"
   }
 }
