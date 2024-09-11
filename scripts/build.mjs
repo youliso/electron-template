@@ -73,51 +73,32 @@ function platformOptional() {
   }
 }
 
-function mainBuild() {
+function rsPackBuild() {
   return new Promise((resolve) => {
-    rspack(rspackConfig.mainConfig(false), (err, stats) => {
-      if (err || stats.hasErrors()) {
-        console.error(err.stack || err);
-        if (err.details) {
-          console.error(err.details);
+    rspack(
+      [
+        rspackConfig.mainConfig(false),
+        rspackConfig.preloadConfig(false),
+        rspackConfig.rendererConfig(false)
+      ],
+      (err, stats) => {
+        if (err || stats.hasErrors()) {
+          console.error(err.stack || err);
+          if (err.details) {
+            console.error(err.details);
+          }
+          console.log(`\x1B[31mFailed to build main process !\x1B[0m`);
+          process.exit(1);
         }
-        console.log(`\x1B[31mFailed to build main process !\x1B[0m`);
-        process.exit(1);
+        console.log(
+          stats.toString({
+            chunks: false, // 使构建过程更静默无输出
+            colors: true // 在控制台展示颜色
+          })
+        );
+        resolve(0);
       }
-      resolve(0);
-    });
-  });
-}
-
-function preloadBuild() {
-  return new Promise((resolve) => {
-    rspack(rspackConfig.preloadConfig(false), (err, stats) => {
-      if (err || stats.hasErrors()) {
-        console.error(err.stack || err);
-        if (err.details) {
-          console.error(err.details);
-        }
-        console.log(`\x1B[31mFailed to build preload process !\x1B[0m`);
-        process.exit(1);
-      }
-      resolve(0);
-    });
-  });
-}
-
-function rendererBuild() {
-  return new Promise((resolve) => {
-    rspack(rspackConfig.rendererConfig(false), (err, stats) => {
-      if (err || stats.hasErrors()) {
-        console.error(err.stack || err);
-        if (err.details) {
-          console.error(err.details);
-        }
-        console.log(`\x1B[31mFailed to build renderer process !\x1B[0m`);
-        process.exit(1);
-      }
-      resolve(0);
-    });
+    );
   });
 }
 
@@ -193,9 +174,7 @@ async function core(arch) {
   fs.writeFileSync('scripts/.build.json', JSON.stringify(buildConfig, null, 2)); //写入配置
   deleteFolderRecursive(path.resolve('dist')); //清除dist
   console.log(`\x1B[34m[${arch} build start]\x1B[0m`);
-  await mainBuild();
-  await preloadBuild();
-  await rendererBuild();
+  await rsPackBuild();
   builder
     .build({
       targets: archTag,

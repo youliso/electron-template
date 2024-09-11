@@ -10,8 +10,8 @@
   },
   "license": "MIT",
   "scripts": {
-    "dev": "node scripts/buildCfg.js && node scripts/dev.mjs",
-    "build": "node scripts/buildCfg.js && node scripts/build.mjs",
+    "dev": "node scripts/buildCfg.mjs && node scripts/dev.mjs",
+    "build": "node scripts/buildCfg.mjs && node scripts/build.mjs",
     "postinstall": "electron-builder install-app-deps && npm run install-napi-load",
     "install-napi-load": "cd scripts/bytecode/load && npm i"
   },
