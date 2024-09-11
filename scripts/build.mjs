@@ -1,11 +1,12 @@
-const fs = require('fs');
-const readline = require('readline');
-const util = require('util');
-const path = require('path');
-const rollup = require('rollup');
-const builder = require('electron-builder');
-const buildConfig = require('./.build.json');
-const { mainOptions, preloadOptions } = require('./rollup.config');
+import fs from 'node:fs';
+import readline from 'node:readline';
+import util from 'node:util';
+import path from 'node:path';
+import builder from 'electron-builder';
+import { rspack } from '@rspack/core';
+
+import * as rspackConfig from './rspack.config.mjs';
+import buildConfig from './.build.json' assert { type: 'json' };
 
 let [, , arch] = process.argv;
 
@@ -72,38 +73,52 @@ function platformOptional() {
   }
 }
 
-async function mainBuild() {
-  const opt = mainOptions();
-  const build = await rollup.rollup(opt).catch((error) => {
-    console.log(`\x1B[31mFailed to build main process !\x1B[0m`);
-    console.error(error);
-    process.exit(1);
-  });
-  await build.write(opt.output);
-}
-
-async function preloadBuild() {
-  const opt = preloadOptions();
-  const build = await rollup.rollup(opt).catch((error) => {
-    console.log(`\x1B[31mFailed to build preload process !\x1B[0m`);
-    console.error(error);
-    process.exit(1);
-  });
-  await build.write(opt.output);
-}
-
-async function rendererBuild() {
-  await (
-    await import('vite')
-  )
-    .build({
-      configFile: path.resolve('scripts/vite.config.ts')
-    })
-    .catch((error) => {
-      console.log(`\x1B[31mFailed to build renderer process !\x1B[0m`);
-      console.error(error);
-      process.exit(1);
+function mainBuild() {
+  return new Promise((resolve) => {
+    rspack(rspackConfig.mainConfig(false), (err, stats) => {
+      if (err || stats.hasErrors()) {
+        console.error(err.stack || err);
+        if (err.details) {
+          console.error(err.details);
+        }
+        console.log(`\x1B[31mFailed to build main process !\x1B[0m`);
+        process.exit(1);
+      }
+      resolve(0);
     });
+  });
+}
+
+function preloadBuild() {
+  return new Promise((resolve) => {
+    rspack(rspackConfig.preloadConfig(false), (err, stats) => {
+      if (err || stats.hasErrors()) {
+        console.error(err.stack || err);
+        if (err.details) {
+          console.error(err.details);
+        }
+        console.log(`\x1B[31mFailed to build preload process !\x1B[0m`);
+        process.exit(1);
+      }
+      resolve(0);
+    });
+  });
+}
+
+function rendererBuild() {
+  return new Promise((resolve) => {
+    rspack(rspackConfig.rendererConfig(false), (err, stats) => {
+      if (err || stats.hasErrors()) {
+        console.error(err.stack || err);
+        if (err.details) {
+          console.error(err.details);
+        }
+        console.log(`\x1B[31mFailed to build renderer process !\x1B[0m`);
+        process.exit(1);
+      }
+      resolve(0);
+    });
+  });
 }
 
 async function core(arch) {
