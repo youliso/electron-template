@@ -45,7 +45,7 @@ async function startMain() {
 }
 
 function startElectron() {
-  let args = ['--inspect', 'dist/index.js'];
+  let args = ['dist/index.js'];
   if (process.env.npm_execpath.endsWith('yarn.js')) {
     args = args.concat(process.argv.slice(3));
   } else if (process.env.npm_execpath.endsWith('npm-cli.js')) {

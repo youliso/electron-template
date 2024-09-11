@@ -37,8 +37,6 @@ config.publish = [
     url: updateConfig.url
   }
 ];
-envConfig['process.env.UPDATEPROVIDER'] = JSON.stringify(updateConfig.provider);
-envConfig['process.env.UPDATEURL'] = JSON.stringify(updateConfig.url);
 envConfig['process.env.UPDATEDIRNAME'] = JSON.stringify(updateConfig.dirname);
 let update =
   'provider: ' +
