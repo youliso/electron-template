@@ -16,7 +16,7 @@
     "install-napi-load": "cd scripts/bytecode/load && npm i"
   },
   "devDependencies": {
-    "@rsbuild/core": "^1.0.2",
+    "@rspack/core": "^1.0.4",
     "@rspack/dev-server": "^1.0.4",
     "@youliso/electronic": "^3.0.5",
     "asarmor": "^3.0.1",
