@@ -8,7 +8,7 @@ import updateConfig from './cfg/update.json' assert { type: 'json' };
 // config.files.push('!**/node_modules/包名');
 
 /** env配置 **/
-envConfig['process.env.PORT'] = JSON.stringify(4890);
+envConfig['process.env.PORT'] = JSON.stringify(4891);
 
 /**  config配置  **/
 config.appId = `org.${packageCfg.author.name}.${packageCfg.name}`;

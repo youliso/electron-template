@@ -10,6 +10,7 @@ const tsConfig = resolve('tsconfig.json');
 let alias = {
   '@': resolve('src')
 };
+
 let plugins = [
   new rspack.DefinePlugin({
     ...ENV
@@ -96,7 +97,6 @@ export const rendererConfig = (isDevelopment) => ({
   entry: 'src/renderer/index.ts',
   output: {
     path: outputPath,
-    chunkFormat: 'module',
     chunkFilename: '[id].js'
   },
   resolve: {
