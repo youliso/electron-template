@@ -1,8 +1,8 @@
-import type { ClientRequestArgs, IncomingMessage, OutgoingHttpHeaders } from 'http';
+import type { ClientRequest, ClientRequestArgs, IncomingMessage, OutgoingHttpHeaders } from 'http';
 import { request as httpRequest } from 'http';
 import { request as httpsRequest } from 'https';
-import { basename, extname } from 'path';
-import { createReadStream, statSync } from 'fs';
+import { basename, extname } from 'node:path';
+import { type Stats, stat, createReadStream } from 'node:fs';
 
 export type Response = IncomingMessage;
 export type HeadersInit = OutgoingHttpHeaders;
@@ -20,14 +20,15 @@ export interface RequestUploadOpt extends RequestInit {
 export interface RequestDownloadOpt extends RequestInit {
   // 是否stringify参数（非GET请求使用）
   isStringify?: boolean;
-  onDown?: (chunk?: Buffer, allLength?: number) => void;
+  onDown?: (chunk: Buffer, allLength: number) => void;
+  onRes?: (request: ClientRequest) => void;
 }
 
 /**
  * 对象转参数
  * @param data
  */
-export function queryParams(data: any): string {
+export const queryParams = (data: any): string => {
   let _result = [];
   for (let key in data) {
     let value = data[key];
@@ -36,14 +37,16 @@ export function queryParams(data: any): string {
     }
     if (value.constructor === Array) {
       value.forEach((_value) => {
+        // @ts-ignore
         _result.push(encodeURIComponent(key) + '[]=' + encodeURIComponent(_value));
       });
     } else {
+      // @ts-ignore
       _result.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
     }
   }
   return _result.length ? _result.join('&') : '';
-}
+};
 
 interface RequestInit {
   // 是否获取headers
@@ -57,19 +60,31 @@ interface RequestInit {
   args?: ClientRequestArgs;
 }
 
-function dataToFormData(boundary: string, key: string, value: string) {
-  return `--${boundary}\r\nContent-Disposition: form-data; name="${key}"\r\n\r\n${value}\r\n`;
-}
+const dataToFormData = (boundary: string, key: string, value: string) =>
+  `--${boundary}\r\nContent-Disposition: form-data; name="${key}"\r\n\r\n${value}\r\n`;
 
-function requestInit(
+const requestInit = (
   url: string,
   sendData: ClientRequestArgs = {},
   ing: (response: IncomingMessage) => void
-) {
+) => {
   const isHttp = url.startsWith('http://');
   if (isHttp) return httpRequest(url, sendData, ing);
   return httpsRequest(url, sendData, ing);
-}
+};
+
+const stats = (path: string) => {
+  return new Promise<Stats | null>((resolve) => {
+    stat(path, (err, stats) => {
+      if (err) {
+        console.error(err);
+        resolve(null);
+        return;
+      }
+      resolve(stats);
+    });
+  });
+};
 
 /**
  * 上传
@@ -77,8 +92,8 @@ function requestInit(
  * @param sendData
  * @param params
  */
-export function upload(url: string, params: RequestUploadOpt) {
-  return new Promise((resolve, reject) => {
+export const upload = (url: string, params: RequestUploadOpt) => {
+  return new Promise(async (resolve, reject) => {
     params.method = params.method || 'GET';
     params.args = params.args || { method: params.method };
     if (!params.args.method) params.args.method = params.method;
@@ -120,18 +135,23 @@ export function upload(url: string, params: RequestUploadOpt) {
     request.on('error', (err) => {
       reject(err);
     });
-    const fileSize = statSync(params.filePath).size;
+    const fileInfo = await stats(params.filePath);
+    if (!fileInfo) {
+      reject(new Error('file not exists'));
+      return;
+    }
     const readStream = createReadStream(params.filePath, {
       highWaterMark: 15 * 1024,
       autoClose: true,
       start: 0,
-      end: fileSize
+      end: fileInfo.size
     });
     readStream.on('open', () => {
       if (params.onUploadProgress) params.onUploadProgress('open');
     });
     readStream.on('data', () => {
-      if (params.onUploadProgress) params.onUploadProgress('ing', readStream.bytesRead, fileSize);
+      if (params.onUploadProgress)
+        params.onUploadProgress('ing', readStream.bytesRead, fileInfo.size);
     });
     readStream.on('end', () => {
       if (params.onUploadProgress) params.onUploadProgress('end');
@@ -139,7 +159,7 @@ export function upload(url: string, params: RequestUploadOpt) {
     });
     readStream.pipe(request as unknown as NodeJS.WritableStream, { end: false });
   });
-}
+};
 
 /**
  * 下载
@@ -147,7 +167,7 @@ export function upload(url: string, params: RequestUploadOpt) {
  * @param sendData
  * @param params
  */
-export function download(url: string, params: RequestDownloadOpt = {}) {
+export const download = (url: string, params: RequestDownloadOpt = {}) => {
   return new Promise((resolve, reject) => {
     params.method = params.method || 'GET';
     params.args = params.args || { method: params.method };
@@ -157,7 +177,7 @@ export function download(url: string, params: RequestDownloadOpt = {}) {
     let chunks: Buffer[] = [];
     let size: number = 0;
     function ing(response: IncomingMessage) {
-      if (response.statusCode && response.statusCode === 301) {
+      if (response.statusCode && (response.statusCode === 301 || response.statusCode === 302)) {
         download(response.headers.location as string, params)
           .then(resolve)
           .catch(reject);
@@ -189,6 +209,7 @@ export function download(url: string, params: RequestDownloadOpt = {}) {
       });
     }
     const request = requestInit(url, params.args, ing);
+    params.onRes && params.onRes(request);
     request.on('destroyed', () => reject(new Error('destroy')));
     request.on('error', (err) => reject(err));
     for (const header in headers) request.setHeader(header, headers[header] as string);
@@ -200,14 +221,14 @@ export function download(url: string, params: RequestDownloadOpt = {}) {
     }
     request.end();
   });
-}
+};
 
 /**
  * 请求
  * @param url
  * @param params
  */
-export default function request<T>(url: string, params: RequestOpt = {}): Promise<T> {
+export const request = <T>(url: string, params: RequestOpt = {}): Promise<T> => {
   return new Promise((resolve, reject) => {
     params.method = params.method || 'GET';
     params.args = params.args || { method: params.method };
@@ -231,10 +252,6 @@ export default function request<T>(url: string, params: RequestOpt = {}): Promis
       });
       response.on('end', () => {
         const data = Buffer.concat(chunks, size);
-        if (response.statusCode && response.statusCode >= 400) {
-          reject(new Error(data.toString()));
-          return;
-        }
         let result: unknown;
         switch (params.type) {
           case 'BUFFER':
@@ -261,10 +278,13 @@ export default function request<T>(url: string, params: RequestOpt = {}): Promis
     for (const header in headers) req.setHeader(header, headers[header] as string);
     if (params.data && params.method !== 'GET') {
       if (typeof params.data !== 'string') {
-        const data = params.isStringify ? queryParams(params.data) : JSON.stringify(params.data);
-        req.write(data);
+        if (Object.hasOwn(params, 'isStringify')) {
+          req.write(params.isStringify ? queryParams(params.data) : JSON.stringify(params.data));
+        } else {
+          req.write(params.data);
+        }
       } else req.write(params.data);
     }
     req.end();
   });
-}
+};
