@@ -97,7 +97,7 @@ async function rendererBuild() {
     await import('vite')
   )
     .build({
-      configFile: path.resolve('scripts/vite.config.mjs')
+      configFile: path.resolve('scripts/vite.config.ts')
     })
     .catch((error) => {
       console.log(`\x1B[31mFailed to build renderer process !\x1B[0m`);

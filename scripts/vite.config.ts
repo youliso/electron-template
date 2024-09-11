@@ -20,7 +20,7 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          let chunkAlias = void 0;
+          let chunkAlias: string | undefined = void 0;
           if (id.includes('node_modules')) {
             const name = id.split('node_modules/')[1].split('/');
             chunkAlias = name[0] === '.pnpm' ? name[1] : name[0];

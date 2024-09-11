@@ -17,7 +17,7 @@ async function startRenderer() {
   const server = await (
     await import('vite')
   ).createServer({
-    configFile: resolve('scripts/vite.config.mjs')
+    configFile: resolve('scripts/vite.config.ts')
   });
   await server.listen(port);
 }
