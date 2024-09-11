@@ -48,6 +48,7 @@ let rules = (isDevelopment) => [
 ];
 
 export const mainConfig = (isDevelopment) => ({
+  mode: isDevelopment ? 'development' : 'production',
   target: 'electron-main',
   entry: 'src/main/index.ts',
   output: {
@@ -70,6 +71,7 @@ export const mainConfig = (isDevelopment) => ({
 });
 
 export const preloadConfig = (isDevelopment) => ({
+  mode: isDevelopment ? 'development' : 'production',
   target: 'electron-preload',
   entry: 'src/preload/index.ts',
   output: {
