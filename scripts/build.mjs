@@ -8,7 +8,7 @@ import { rspack } from '@rspack/core';
 import * as rspackConfig from './rspack.config.mjs';
 import buildConfig from './.build.json' assert { type: 'json' };
 
-let [, , arch] = process.argv;
+let [, , arch, arg_opt] = process.argv;
 
 const optional = ['win', 'win32', 'win64', 'winp', 'winp32', 'winp64', 'darwin', 'mac', 'linux'];
 const linuxOptional = ['AppImage', 'flatpak', 'snap', 'deb', 'rpm', 'pacman'];
@@ -144,22 +144,26 @@ async function core(arch) {
     case 'linux':
       archTag = builder.Platform.LINUX.createTarget();
       archPath = 'platform/linux';
-      pushLinuxOptional = true;
-      let line = await question(
-        '\x1B[36mPlease input linux package type:\x1B[0m \n optional：\x1B[33m' +
-          linuxOptional +
-          '\x1B[0m  \x1B[1mor\x1B[0m  \x1B[33mq\x1B[0m \x1B[1m(exit)\x1B[0m\n'
-      );
-      line = line.trim();
-      if (line === 'q') {
-        r.close();
-        process.exit(0);
-      }
-      if (linuxOptional.indexOf(line) > -1) {
-        buildConfig.linux.target = line;
+      if (arg_opt) {
+        buildConfig.linux.target = arg_opt;
       } else {
-        console.log(`\x1B[31mIllegal input , Please check input \x1B[0m`);
-        process.exit(0);
+        pushLinuxOptional = true;
+        let line = await question(
+          '\x1B[36mPlease input linux package type:\x1B[0m \n optional：\x1B[33m' +
+            linuxOptional +
+            '\x1B[0m  \x1B[1mor\x1B[0m  \x1B[33mq\x1B[0m \x1B[1m(exit)\x1B[0m\n'
+        );
+        line = line.trim();
+        if (line === 'q') {
+          r.close();
+          process.exit(0);
+        }
+        if (linuxOptional.indexOf(line) > -1) {
+          buildConfig.linux.target = line;
+        } else {
+          console.log(`\x1B[31mIllegal input , Please check input \x1B[0m`);
+          process.exit(0);
+        }
       }
       break;
   }
