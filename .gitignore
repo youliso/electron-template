@@ -13,3 +13,4 @@ scripts/.build.json
 scripts/.env.json
 scripts/.update.yml
 scripts/bytecode/load/index.d.ts
+scripts/bytecode/load/package-lock.json
