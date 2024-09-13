@@ -31,8 +31,8 @@ async function startMain() {
       },
       (err, stats) => {
         if (err || stats.hasErrors()) {
-          console.error(err.stack || err);
-          if (err.details) {
+          console.error(err?.stack || err);
+          if (err?.details) {
             console.error(err.details);
           }
           reject(1);
@@ -88,5 +88,5 @@ startRenderer().then(() => {
   startMain().then(() => {
     startElectron();
     console.timeEnd('dev');
-  });
+  }).catch(console.error);
 });

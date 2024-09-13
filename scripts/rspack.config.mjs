@@ -19,7 +19,7 @@ let plugins = [
 let extensions = ['.mjs', '.ts', '.js', '.json', '.node'];
 let externals = { electron: 'electron' };
 builtinModules.forEach((e) => (externals[e] = e));
-Object.keys(packageCfg.dependencies).forEach((e) => (externals[e] = e));
+packageCfg.dependencies && Object.keys(packageCfg.dependencies).forEach((e) => (externals[e] = e));
 
 let rules = (isDevelopment) => [
   {
