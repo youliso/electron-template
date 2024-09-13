@@ -17,9 +17,10 @@ let plugins = [
   })
 ];
 let extensions = ['.mjs', '.ts', '.js', '.json', '.node'];
-let externals = [...builtinModules, 'electron'];
-for (const i in packageCfg.dependencies) externals.push(i);
-externals = externals.map((e) => `/^(${e}|\$)$/i`);
+let externals = { electron: 'electron' };
+builtinModules.forEach((e) => (externals[e] = e));
+Object.keys(packageCfg.dependencies).forEach((e) => (externals[e] = e));
+
 let rules = (isDevelopment) => [
   {
     test: /\.(png|jpg|jpeg|gif|svg)$/i,
@@ -47,6 +48,7 @@ let rules = (isDevelopment) => [
   }
 ];
 
+/** @type {import('@rspack/core').Configuration} */
 export const mainConfig = (isDevelopment) => ({
   mode: isDevelopment ? 'development' : 'production',
   target: 'electron-main',
@@ -67,9 +69,11 @@ export const mainConfig = (isDevelopment) => ({
     rules: rules(isDevelopment)
   },
   plugins,
+  externalsType: 'commonjs',
   externals
 });
 
+/** @type {import('@rspack/core').Configuration} */
 export const preloadConfig = (isDevelopment) => ({
   mode: isDevelopment ? 'development' : 'production',
   target: 'electron-preload',
@@ -90,9 +94,11 @@ export const preloadConfig = (isDevelopment) => ({
     rules: rules(isDevelopment)
   },
   plugins,
+  externalsType: 'commonjs',
   externals
 });
 
+/** @type {import('@rspack/core').Configuration} */
 export const rendererConfig = (isDevelopment) => ({
   mode: isDevelopment ? 'development' : 'production',
   target: 'web',
@@ -109,22 +115,32 @@ export const rendererConfig = (isDevelopment) => ({
   optimization: {
     minimize: !isDevelopment
   },
+  experiments: {
+    css: true
+  },
   module: {
-    rules: rules(isDevelopment)
+    rules: [
+      ...rules(isDevelopment),
+      {
+        test: /.css$/,
+        type: 'css/auto'
+      }
+    ]
   },
   plugins: [
     ...plugins,
     new rspack.HtmlRspackPlugin({
       templateContent: `
-       <!DOCTYPE html>
-          <html>
+        <!DOCTYPE html>
+        <html>
             <body>
                <div id="root"></div>
             </body>
-       </html>`,
+        </html>`,
       minify: !isDevelopment
     })
   ],
+  externalsType: 'import',
   externals,
   devtool: isDevelopment ? 'eval-cheap-module-source-map' : false
 });
