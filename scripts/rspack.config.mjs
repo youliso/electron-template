@@ -21,30 +21,23 @@ let externals = { electron: 'electron' };
 builtinModules.forEach((e) => (externals[e] = e));
 packageCfg.dependencies && Object.keys(packageCfg.dependencies).forEach((e) => (externals[e] = e));
 
-let rules = (isDevelopment) => [
+let rules = [
   {
     test: /\.(png|jpg|jpeg|gif|svg)$/i,
     type: 'asset'
   },
   {
-    test: /\.(j|t)s$/,
-    exclude: [/[\\/]node_modules[\\/]/],
+    test: /\.ts$/,
+    exclude: [/node_modules/],
     loader: 'builtin:swc-loader',
     options: {
       jsc: {
         parser: {
           syntax: 'typescript'
-        },
-        externalHelpers: true,
-        transform: {
-          react: {
-            runtime: 'automatic',
-            development: isDevelopment,
-            refresh: isDevelopment
-          }
         }
       }
-    }
+    },
+    type: 'javascript/auto'
   }
 ];
 
@@ -66,7 +59,7 @@ export const mainConfig = (isDevelopment) => ({
     minimize: !isDevelopment
   },
   module: {
-    rules: rules(isDevelopment)
+    rules
   },
   plugins,
   externalsType: 'commonjs',
@@ -91,7 +84,7 @@ export const preloadConfig = (isDevelopment) => ({
     minimize: !isDevelopment
   },
   module: {
-    rules: rules(isDevelopment)
+    rules
   },
   plugins,
   externalsType: 'commonjs',
@@ -120,10 +113,10 @@ export const rendererConfig = (isDevelopment) => ({
   },
   module: {
     rules: [
-      ...rules(isDevelopment),
+      ...rules,
       {
         test: /.css$/,
-        type: 'css/auto'
+        type: 'css'
       }
     ]
   },
