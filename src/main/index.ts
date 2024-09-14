@@ -111,7 +111,7 @@ app.whenReady().then(async () => {
   shortcutInstance.on();
 
   // 创建托盘
-  const tray = new Tray(nativeImage.createFromPath(logo as string));
+  const tray = new Tray(nativeImage.createFromPath(join(__dirname, logo)));
   tray.setToolTip(app.getName());
   tray.setContextMenu(
     Menu.buildFromTemplate([
