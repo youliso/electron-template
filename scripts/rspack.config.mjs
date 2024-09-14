@@ -23,10 +23,6 @@ packageCfg.dependencies && Object.keys(packageCfg.dependencies).forEach((e) => (
 
 let rules = [
   {
-    test: /\.(png|jpg|jpeg|gif|svg)$/i,
-    type: 'asset'
-  },
-  {
     test: /\.ts$/,
     exclude: [/node_modules/],
     loader: 'builtin:swc-loader',
@@ -59,7 +55,13 @@ export const mainConfig = (isDevelopment) => ({
     minimize: !isDevelopment
   },
   module: {
-    rules
+    rules: [
+      ...rules,
+      {
+        test: /\.(png|jpg|jpeg|gif|svg)$/i,
+        type: 'asset/resource'
+      }
+    ]
   },
   plugins,
   externalsType: 'commonjs',
@@ -98,7 +100,7 @@ export const rendererConfig = (isDevelopment) => ({
   entry: 'src/renderer/index.ts',
   output: {
     path: outputPath,
-    chunkFilename: '[id].js'
+    chunkFilename: 'assets/[id].js'
   },
   resolve: {
     alias,
@@ -114,6 +116,10 @@ export const rendererConfig = (isDevelopment) => ({
   module: {
     rules: [
       ...rules,
+      {
+        test: /\.(png|jpg|jpeg|gif|svg)$/i,
+        type: 'asset'
+      },
       {
         test: /.css$/,
         type: 'css'
