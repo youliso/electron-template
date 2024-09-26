@@ -1,4 +1,4 @@
-import { preloadDefaultInit } from '@youliso/electronic/preload';
-import './modular/resources';
+import preload from '@youliso/electronic/preload';
+import { contextBridge, ipcRenderer } from 'electron';
 
-preloadDefaultInit();
+preload.preload(contextBridge, ipcRenderer);

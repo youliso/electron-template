@@ -1,6 +1,7 @@
 import { spawn } from 'node:child_process';
 import { rspack } from '@rspack/core';
 import { RspackDevServer } from '@rspack/dev-server';
+import electron from 'electron';
 
 import * as rspackConfig from './rspack.config.mjs';
 
@@ -61,7 +62,7 @@ async function startElectron() {
   } else if (process.env.npm_execpath.endsWith('npm-cli.js')) {
     args = args.concat(process.argv.slice(2));
   }
-  electronProcess = spawn((await import('electron')).default, args);
+  electronProcess = spawn(electron, args);
   electronProcess.stdout.on('data', (data) => onLog('info', data));
   electronProcess.stderr.on('data', (data) => onLog('err', data));
   electronProcess.on('exit', (e) => {

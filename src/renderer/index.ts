@@ -1,4 +1,4 @@
-import { windowLoad, windowShow, windowSingleInstanceOn } from '@youliso/electronic/ipc';
+import { windowLoad, windowShow, windowSingleInstanceOn } from '@youliso/electronic/render';
 
 windowLoad(() => {
   console.log('customize', window.customize);
