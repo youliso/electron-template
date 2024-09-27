@@ -65,7 +65,8 @@ export const mainConfig = (isDevelopment) => ({
   },
   plugins,
   externalsType: 'commonjs',
-  externals
+  externals,
+  devtool: isDevelopment ? 'eval-cheap-module-source-map' : false
 });
 
 /** @type {import('@rspack/core').Configuration} */
@@ -90,7 +91,8 @@ export const preloadConfig = (isDevelopment) => ({
   },
   plugins,
   externalsType: 'commonjs',
-  externals
+  externals,
+  devtool: isDevelopment ? 'eval-cheap-module-source-map' : false
 });
 
 /** @type {import('@rspack/core').Configuration} */

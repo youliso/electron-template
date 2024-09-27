@@ -11,14 +11,14 @@ import {
   windowInstance
 } from '@youliso/electronic/main';
 import { join } from 'path';
-import { app, BrowserWindow, ipcMain, Menu, nativeImage, Tray } from 'electron';
+import { app, BrowserWindow, webContents, ipcMain, Menu, nativeImage, Tray } from 'electron';
 import logo from '@/assets/icon/logo.png';
 import { resourcesOn } from './modular/resources';
 import { defaultSessionInit, sessionOn } from './modular/session';
 import { updateOn } from './modular/update';
 import preload from '@youliso/electronic/preload';
 
-preload.main(BrowserWindow, ipcMain);
+preload.main(BrowserWindow, ipcMain, webContents);
 
 // 初始渲染进程参数
 let route = '/home';
