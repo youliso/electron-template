@@ -54,7 +54,7 @@ export function resourcesPathGet(
  */
 export function resourcesOn() {
   //获取依赖路径
-  preload.handle('resources-path-get', ({event,args}) => {
+  preload.handle('resources-path-get', (_, args) => {
     return resourcesPathGet(args.type, args.path);
   });
 }
