@@ -1,8 +1,10 @@
 const compile = require('./compile');
 const external = require('./external');
+const napiRsCode = require('./napi_rs_code');
 const { spawn } = require('child_process');
 const { readFileSync, writeFileSync, unlinkSync, renameSync } = require('fs');
 const path = require('path');
+
 
 const loadBuild = () => {
   return new Promise((resolve) => {
@@ -23,8 +25,11 @@ const loadBuild = () => {
 };
 
 module.exports = async () => {
+  const DecodeNumber = Math.floor(Math.random() * 256);
+  const napiCode = napiRsCode(DecodeNumber);
+  writeFileSync('scripts/bytecode/load/src/lib.rs', napiCode);
   let code = readFileSync('dist/index.js', 'utf8');
-  const codeData = await compile(external(code));
+  const codeData = await compile(external(code), DecodeNumber);
   writeFileSync('dist/index.bin', codeData);
   await loadBuild();
   unlinkSync('dist/index.bin');

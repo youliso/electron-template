@@ -3,6 +3,7 @@ const v8 = require('v8');
 const wrap = require('module').wrap;
 v8.setFlagsFromString('--no-lazy');
 v8.setFlagsFromString('--no-flush-bytecode');
+
 let code = '';
 process.stdin.setEncoding('utf-8');
 process.stdin.on('readable', () => {
@@ -15,7 +16,7 @@ process.stdin.on('end', () => {
   try {
     const script = new vm.Script(wrap(code), { produceCachedData: true });
     const bytecodeBuffer = script.createCachedData();
-    process.stdout.write(bytecodeBuffer.map((b) => b ^ 122));
+    process.stdout.write(bytecodeBuffer.map((b) => b ^ process.env['DecodeNumber']));
   } catch (error) {
     console.error(error);
   }
