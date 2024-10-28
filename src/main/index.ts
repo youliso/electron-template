@@ -62,10 +62,13 @@ windowInstance.setDefaultCfg(windowDefaultCfg);
 
 // 单例
 appSingleInstanceLock({
-  additionalData: { type: 'new' },
-  isFocusMainWin: true,
-  customize,
-  browserWindowOptions
+  secondInstanceFunc: (_, argv) => {
+    //多窗口聚焦到第一实例
+    const main = windowInstance.getMain();
+    if (main) {
+      preload.send('window-single-instance', argv, [main.id]);
+    }
+  }
 });
 
 // 注册协议
