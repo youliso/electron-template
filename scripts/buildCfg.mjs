@@ -6,6 +6,8 @@ import updateConfig from './cfg/update.json' assert { type: 'json' };
 
 /** 渲染进程不需要打包到file的包 */
 // config.files.push('!**/node_modules/包名');
+config.afterPack = 'scripts/buildAfterPack.js';
+config.beforePack = 'scripts/buildBeforePack.js';
 
 /** env配置 **/
 envConfig['process.env.PORT'] = JSON.stringify(4891);
@@ -16,7 +18,6 @@ config.copyright = `Copyright © 2024 ${packageCfg.name}`; //版权
 config.productName = packageCfg.name; // 名称
 config.npmRebuild = true; //是否Rebuild编译
 config.asar = false; //asar开关
-config.beforePack = 'scripts/buildBeforePack.js';
 
 /** win配置 **/
 config.nsis.shortcutName = packageCfg.productName; // 快捷方式名称
