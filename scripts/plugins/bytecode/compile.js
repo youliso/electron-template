@@ -4,7 +4,7 @@ const { spawn } = require('child_process');
 module.exports = (code, DecodeNumber) => {
   return new Promise((resolve, reject) => {
     let data = Buffer.from([]);
-    let proc = spawn(electronPath, ['scripts/bytecode/electronProcess.js'], {
+    let proc = spawn(electronPath, ['scripts/plugins/bytecode/electronProcess.js'], {
       env: { ELECTRON_RUN_AS_NODE: '1', DecodeNumber },
       stdio: ['pipe', 'pipe', 'pipe', 'ipc']
     });
