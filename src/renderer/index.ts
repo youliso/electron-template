@@ -1,5 +1,9 @@
-import preload from '@youliso/electronic/preload';
-import { windowLoad, windowShow, windowSingleInstanceOn } from '@youliso/electronic/render';
+import {
+  preload,
+  windowLoad,
+  windowShow,
+  windowSingleInstanceOn
+} from '@youliso/electronic/render';
 
 preload.render();
 

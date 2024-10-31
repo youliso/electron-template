@@ -1,8 +1,8 @@
-import { rspack } from '@rspack/core';
-import { resolve } from 'node:path';
-import { builtinModules } from 'node:module';
-import packageCfg from '../package.json' assert { type: 'json' };
-import ENV from './.env.json' assert { type: 'json' };
+const { rspack } = require('@rspack/core');
+const { resolve } = require('node:path');
+const { builtinModules } = require('node:module');
+const packageCfg = require('../package.json');
+const ENV = require('./.env.json');
 
 const outputPath = resolve('dist');
 const tsConfig = resolve('tsconfig.json');
@@ -38,7 +38,7 @@ let rules = [
 ];
 
 /** @type {import('@rspack/core').Configuration} */
-export const mainConfig = (isDevelopment) => ({
+const mainConfig = (isDevelopment) => ({
   mode: isDevelopment ? 'development' : 'production',
   target: 'electron-main',
   entry: 'src/main/index.ts',
@@ -70,7 +70,7 @@ export const mainConfig = (isDevelopment) => ({
 });
 
 /** @type {import('@rspack/core').Configuration} */
-export const preloadConfig = (isDevelopment) => ({
+const preloadConfig = (isDevelopment) => ({
   mode: isDevelopment ? 'development' : 'production',
   target: 'electron-preload',
   entry: 'src/preload/index.ts',
@@ -96,7 +96,7 @@ export const preloadConfig = (isDevelopment) => ({
 });
 
 /** @type {import('@rspack/core').Configuration} */
-export const rendererConfig = (isDevelopment) => ({
+const rendererConfig = (isDevelopment) => ({
   mode: isDevelopment ? 'development' : 'production',
   target: 'web',
   entry: 'src/renderer/index.ts',
@@ -145,3 +145,9 @@ export const rendererConfig = (isDevelopment) => ({
   externals,
   devtool: isDevelopment ? 'eval-cheap-module-source-map' : false
 });
+
+module.exports = {
+  mainConfig,
+  preloadConfig,
+  rendererConfig
+};

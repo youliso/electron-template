@@ -8,7 +8,8 @@ import {
   appProtocolRegister,
   storeInstance,
   shortcutInstance,
-  windowInstance
+  windowInstance,
+  preload
 } from '@youliso/electronic/main';
 import { join } from 'path';
 import { app, BrowserWindow, webContents, ipcMain, Menu, nativeImage, Tray } from 'electron';
@@ -16,7 +17,6 @@ import logo from '@/assets/icon/logo.png';
 import { resourcesOn } from './modular/resources';
 import { defaultSessionInit, sessionOn } from './modular/session';
 import { updateOn } from './modular/update';
-import preload from '@youliso/electronic/preload';
 
 preload.main(BrowserWindow, ipcMain, webContents);
 

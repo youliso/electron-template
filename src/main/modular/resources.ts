@@ -1,7 +1,7 @@
 import { app } from 'electron';
 import { accessSync, constants } from 'fs';
 import { resolve, join, normalize } from 'path';
-import preload from '@youliso/electronic/preload';
+import { preload } from '@youliso/electronic/main';
 
 /**
  * 获取资源文件路径

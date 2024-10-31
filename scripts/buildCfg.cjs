@@ -1,8 +1,8 @@
-import fs from 'node:fs';
-import packageCfg from '../package.json' assert { type: 'json' };
-import envConfig from './cfg/env.json' assert { type: 'json' };
-import config from './cfg/build.json' assert { type: 'json' };
-import updateConfig from './cfg/update.json' assert { type: 'json' };
+const fs = require('node:fs');
+const packageCfg = require('../package.json');
+const envConfig = require('./cfg/env.json');
+const config = require('./cfg/build.json');
+const updateConfig = require('./cfg/update.json');
 
 /** 渲染进程不需要打包到file的包 */
 // config.files.push('!**/node_modules/包名');

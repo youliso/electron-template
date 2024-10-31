@@ -1,4 +1,4 @@
-import preload from '@youliso/electronic/preload';
+import { preload } from '@youliso/electronic/render';
 
 export const resourcesPathGet = (
   type: 'platform' | 'inside' | 'extern' | 'root',

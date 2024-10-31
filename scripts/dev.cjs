@@ -1,9 +1,9 @@
-import { spawn } from 'node:child_process';
-import { rspack } from '@rspack/core';
-import { RspackDevServer } from '@rspack/dev-server';
-import electron from 'electron';
+const { spawn } = require('node:child_process');
+const { rspack } = require('@rspack/core');
+const { RspackDevServer } = require('@rspack/dev-server');
+const electron = require('electron');
+const rspackConfig = require('./rspack.config.cjs');
 
-import * as rspackConfig from './rspack.config.mjs';
 
 let electronProcess = null;
 let manualRestart = false;
@@ -11,7 +11,7 @@ let manualRestart = false;
 async function startRenderer() {
   let port = 0;
   try {
-    port = (await import('./.env.json', { assert: { type: 'json' } })).default['process.env.PORT'];
+    port = require('./.env.json')['process.env.PORT'];
   } catch (e) {
     throw 'not found process.env.PORT';
   }

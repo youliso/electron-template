@@ -1,12 +1,11 @@
-import fs from 'node:fs';
-import readline from 'node:readline';
-import util from 'node:util';
-import path from 'node:path';
-import builder from 'electron-builder';
-import { rspack } from '@rspack/core';
-
-import * as rspackConfig from './rspack.config.mjs';
-import buildConfig from './.build.json' assert { type: 'json' };
+const fs = require('node:fs');
+const readline = require('node:readline');
+const util = require('node:util');
+const path = require('node:path');
+const builder = require('electron-builder');
+const { rspack } = require('@rspack/core');
+const rspackConfig = require('./rspack.config.cjs');
+const buildConfig = require('./.build.json');
 
 let [, , arch, arg_opt] = process.argv;
 
@@ -150,8 +149,8 @@ async function core(arch) {
         pushLinuxOptional = true;
         let line = await question(
           '\x1B[36mPlease input linux package type:\x1B[0m \n optional：\x1B[33m' +
-            linuxOptional +
-            '\x1B[0m  \x1B[1mor\x1B[0m  \x1B[33mq\x1B[0m \x1B[1m(exit)\x1B[0m\n'
+          linuxOptional +
+          '\x1B[0m  \x1B[1mor\x1B[0m  \x1B[33mq\x1B[0m \x1B[1m(exit)\x1B[0m\n'
         );
         line = line.trim();
         if (line === 'q') {
@@ -174,7 +173,7 @@ async function core(arch) {
       to: archPath,
       filter: ['**/*']
     });
-  } catch (err) {}
+  } catch (err) { }
   fs.writeFileSync('scripts/.build.json', JSON.stringify(buildConfig, null, 2)); //写入配置
   deleteFolderRecursive(path.resolve('dist')); //清除dist
   console.log(`\x1B[34m[${arch} build start]\x1B[0m`);
