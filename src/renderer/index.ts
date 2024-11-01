@@ -5,7 +5,7 @@ import {
   windowSingleInstanceOn
 } from '@youliso/electronic/render';
 
-preload.render();
+preload.initialize();
 
 windowLoad(() => {
   console.log('customize', window.customize);

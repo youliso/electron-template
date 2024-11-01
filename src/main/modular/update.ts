@@ -1,4 +1,4 @@
-import { Update } from '@youliso/electronic/main/update';
+import { Update } from '@youliso/electronic/main';
 import { app } from 'electron';
 import { join } from 'node:path';
 
