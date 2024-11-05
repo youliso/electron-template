@@ -18,7 +18,7 @@
   "devDependencies": {
     "@rspack/core": "^1.0.14",
     "@rspack/dev-server": "^1.0.9",
-    "@youliso/electronic": "^5.2.0",
+    "@youliso/electronic": "^5.2.1",
     "asarmor": "^3.0.1",
     "electron": "^33.0.2",
     "electron-builder": "^25.1.8",
