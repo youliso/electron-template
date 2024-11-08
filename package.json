@@ -16,11 +16,11 @@
     "install-napi-load": "cd scripts/plugins/bytecode/load && npm i"
   },
   "devDependencies": {
-    "@rspack/core": "^1.0.14",
+    "@rspack/core": "^1.1.0",
     "@rspack/dev-server": "^1.0.9",
     "@youliso/electronic": "^5.2.1",
     "asarmor": "^3.0.1",
-    "electron": "^33.0.2",
+    "electron": "^33.2.0",
     "electron-builder": "^25.1.8",
     "prettier": "^3.3.3",
     "typescript": "^5.6.3"
