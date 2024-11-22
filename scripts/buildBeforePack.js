@@ -1,9 +1,8 @@
 const bytecode = require('./plugins/bytecode');
-const { asar } = require('./.build.json');
 
-exports.default = async () => {
+exports.default = async ({ packager }) => {
   try {
-    if (!asar) {
+    if (!packager.info._configuration.asar) {
       //v8字节码 (Windows 默认64位)
       await bytecode();
     }
