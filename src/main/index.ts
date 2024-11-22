@@ -8,7 +8,8 @@ import {
   appProtocolRegister,
   storeInstance,
   shortcutInstance,
-  windowInstance
+  windowInstance,
+  preload
 } from '@youliso/electronic/main';
 import { join } from 'path';
 import { app, Menu, nativeImage, Tray } from 'electron';
@@ -16,6 +17,8 @@ import logo from '@/assets/icon/logo.png';
 import { resourcesOn } from './modular/resources';
 import { defaultSessionInit, sessionOn } from './modular/session';
 import { updateOn } from './modular/update';
+
+preload.initialize();
 
 // 初始渲染进程参数
 let route = '/home';
@@ -59,10 +62,13 @@ windowInstance.setDefaultCfg(windowDefaultCfg);
 
 // 单例
 appSingleInstanceLock({
-  additionalData: { type: 'new' },
-  isFocusMainWin: true,
-  customize,
-  browserWindowOptions
+  secondInstanceFunc: (_, argv) => {
+    //多窗口聚焦到第一实例
+    const main = windowInstance.getMain();
+    if (main) {
+      preload.send('window-single-instance', argv, [main.id]);
+    }
+  }
 });
 
 // 注册协议
@@ -111,7 +117,7 @@ app.whenReady().then(async () => {
   shortcutInstance.on();
 
   // 创建托盘
-  const tray = new Tray(nativeImage.createFromPath(logo as string));
+  const tray = new Tray(nativeImage.createFromPath(join(__dirname, logo)));
   tray.setToolTip(app.getName());
   tray.setContextMenu(
     Menu.buildFromTemplate([
@@ -123,6 +129,7 @@ app.whenReady().then(async () => {
       }
     ])
   );
+
   tray.on('click', () => windowInstance.func('show'));
   // 创建窗口
   windowInstance.new(customize, browserWindowOptions, { openDevTools: !app.isPackaged });

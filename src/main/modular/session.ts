@@ -1,5 +1,5 @@
-import { ipcMain, session } from 'electron';
-
+import { session } from 'electron';
+import { preload } from '@youliso/electronic/main';
 export const defaultSessionInit = () => {
   session.defaultSession.webRequest.onBeforeSendHeaders(
     {
@@ -30,6 +30,6 @@ export const clearCache = () => {
 };
 
 export const sessionOn = () => {
-  ipcMain.handle('session-get-cache', () => getCacheSize());
-  ipcMain.handle('session-clear-cache', () => clearCache());
+  preload.handle('session-get-cache', () => getCacheSize());
+  preload.handle('session-clear-cache', () => clearCache());
 };

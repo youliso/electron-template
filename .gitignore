@@ -6,9 +6,11 @@
 /.swc/
 electron-template.kdev4
 package-lock.json
-scripts/bytecode/load/Cargo.lock
-scripts/bytecode/load/target/
-scripts/bytecode/load/node_modules/
 scripts/.build.json
-scripts/.env.json
 scripts/.update.yml
+scripts/plugins/bytecode/load/Cargo.lock
+scripts/plugins/bytecode/load/target/
+scripts/plugins/bytecode/load/node_modules/
+scripts/plugins/bytecode/load/index.d.ts
+scripts/plugins/bytecode/load/package-lock.json
+scripts/plugins/bytecode/load/src/lib.rs

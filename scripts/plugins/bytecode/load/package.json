@@ -8,7 +8,7 @@
     "build": "napi build --release"
   },
   "devDependencies": {
-    "@napi-rs/cli": "^2.11.4"
+    "@napi-rs/cli": "^2.18.4"
   },
   "napi": {
     "name": "index",

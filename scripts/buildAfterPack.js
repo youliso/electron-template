@@ -1,13 +1,11 @@
-const asarmor = require('asarmor');
-const { join } = require('path');
+const asarmor = require('./plugins/asarmor');
+const { asar } = require('./.build.json');
 
-exports.default = async ({ appOutDir, packager }) => {
+exports.default = async ({ appOutDir }) => {
   try {
-    const asarPath = join(packager.getResourcesDir(appOutDir), 'app.asar');
-    console.log(`  \x1B[34m•\x1B[0m afterPack applying asarmor patches  \x1B[34mfile\x1B[0m=${asarPath}`);
-    const archive = await asarmor.open(asarPath);
-    archive.patch(); // apply default patches
-    await archive.write(asarPath);
+    if (asar) {
+      asarmor(appOutDir);
+    }
   } catch (err) {
     console.error(err);
   }

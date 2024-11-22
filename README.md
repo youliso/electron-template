@@ -1,5 +1,5 @@
 # electron-template
-electron vanilla(vite) template
+electron vanilla template
 
 ## Framework template
 [@mlmdflr vue](https://github.com/mlmdflr/xps-electron-vue-template)  

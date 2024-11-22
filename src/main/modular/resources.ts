@@ -1,6 +1,7 @@
-import { app, ipcMain } from 'electron';
+import { app } from 'electron';
 import { accessSync, constants } from 'fs';
 import { resolve, join, normalize } from 'path';
+import { preload } from '@youliso/electronic/main';
 
 /**
  * 获取资源文件路径
@@ -53,7 +54,7 @@ export function resourcesPathGet(
  */
 export function resourcesOn() {
   //获取依赖路径
-  ipcMain.handle('resources-path-get', (event, { type, path }) => {
-    return resourcesPathGet(type, path);
+  preload.handle('resources-path-get', (_, args) => {
+    return resourcesPathGet(args.type, args.path);
   });
 }

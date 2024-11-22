@@ -1,28 +1,18 @@
-import type { ClientRequest, ClientRequestArgs, IncomingMessage, OutgoingHttpHeaders } from 'http';
-import { request as httpRequest } from 'http';
-import { request as httpsRequest } from 'https';
+import { createReadStream, stat, type Stats } from 'node:fs';
 import { basename, extname } from 'node:path';
-import { type Stats, stat, createReadStream } from 'node:fs';
 
-export type Response = IncomingMessage;
-export type HeadersInit = OutgoingHttpHeaders;
-
-export interface RequestOpt extends RequestInit {
-  // 是否stringify参数（非GET请求使用）
-  isStringify?: boolean;
-}
-
-export interface RequestUploadOpt extends RequestInit {
-  filePath: string;
-  onUploadProgress?: (status: 'open' | 'ing' | 'end', size?: number, fullSize?: number) => void;
-}
-
-export interface RequestDownloadOpt extends RequestInit {
-  // 是否stringify参数（非GET请求使用）
-  isStringify?: boolean;
-  onDown?: (chunk: Buffer, allLength: number) => void;
-  onRes?: (request: ClientRequest) => void;
-}
+const stats = (path: string) => {
+  return new Promise<Stats | null>((resolve) => {
+    stat(path, (err, stats) => {
+      if (err) {
+        console.error(err);
+        resolve(null);
+        return;
+      }
+      resolve(stats);
+    });
+  });
+};
 
 /**
  * 对象转参数
@@ -48,243 +38,202 @@ export const queryParams = (data: any): string => {
   return _result.length ? _result.join('&') : '';
 };
 
-interface RequestInit {
-  // 是否获取headers
-  isHeaders?: boolean;
-  headers?: HeadersInit;
-  method?: string;
-  timeout?: number;
+export interface RequestOpt extends RequestInit {
+  isStringify?: boolean;
+  controller?: AbortController;
   data?: any;
+  timeout?: number;
   type?: 'TEXT' | 'JSON' | 'BUFFER';
-  encoding?: BufferEncoding;
-  args?: ClientRequestArgs;
 }
 
-const dataToFormData = (boundary: string, key: string, value: string) =>
-  `--${boundary}\r\nContent-Disposition: form-data; name="${key}"\r\n\r\n${value}\r\n`;
+export interface RequestDownloadOpt extends RequestOpt {
+  onChunk: (chunk: Buffer, allLength: number) => void;
+}
 
-const requestInit = (
-  url: string,
-  sendData: ClientRequestArgs = {},
-  ing: (response: IncomingMessage) => void
-) => {
-  const isHttp = url.startsWith('http://');
-  if (isHttp) return httpRequest(url, sendData, ing);
-  return httpsRequest(url, sendData, ing);
-};
-
-const stats = (path: string) => {
-  return new Promise<Stats | null>((resolve) => {
-    stat(path, (err, stats) => {
-      if (err) {
-        console.error(err);
-        resolve(null);
-        return;
-      }
-      resolve(stats);
-    });
-  });
-};
+export interface RequestUploadOpt extends RequestOpt {
+  filePath: string;
+  fileName?: string;
+  onUploadProgress?: (status: 'open' | 'ing' | 'end', size?: number, fullSize?: number) => void;
+}
 
 /**
- * 上传
- * @param url
- * @param sendData
- * @param params
+ * 请求
  */
-export const upload = (url: string, params: RequestUploadOpt) => {
-  return new Promise(async (resolve, reject) => {
-    params.method = params.method || 'GET';
-    params.args = params.args || { method: params.method };
-    if (!params.args.method) params.args.method = params.method;
-    const boundary = '--' + Math.random().toString(16);
-    const headers = Object.assign(
-      {
-        'content-type': 'multipart/from-data; boundary=' + boundary
-      },
-      params.headers
-    );
-    let chunks: Buffer[] = [];
-    let size: number = 0;
-    function ing(response: IncomingMessage) {
-      response.on('data', (chunk) => {
-        chunks.push(chunk);
-        size += chunk.length;
-      });
-      response.on('end', () => {
-        const data = Buffer.concat(chunks, size);
-        resolve(data);
-      });
-    }
-    let request = requestInit(url, params.args, ing);
-    for (const header in headers) request.setHeader(header, headers[header] as string);
-    if (params.data) {
-      for (const i in params.data) {
-        request.write(dataToFormData(boundary, i, params.data[i]));
+export const request = <T>(
+  url: string,
+  params: RequestOpt = {}
+): Promise<{
+  headers?: Headers;
+  data?: T;
+  error?: Error;
+}> => {
+  params.method ??= 'GET';
+  params.timeout ??= 1000 * 60;
+  params.type ??= 'JSON';
+  params.headers ??= { 'content-type': 'application/json;charset=utf-8' };
+  if (params.data && params.method === 'GET') url += `?${queryParams(params.data)}`;
+  const controller = params.controller ?? new AbortController();
+  const id = setTimeout(() => controller.abort(), params.timeout);
+  return fetch(url, { ...params, signal: controller.signal })
+    .then(async (response) => {
+      clearTimeout(id);
+      let data;
+      switch (params.type) {
+        case 'BUFFER':
+          data = await response.arrayBuffer().catch((error) => {
+            throw error;
+          });
+          break;
+        case 'JSON':
+          data = await response.json().catch((error) => {
+            throw error;
+          });
+          break;
+        case 'TEXT':
+          data = await response.text().catch((error) => {
+            throw error;
+          });
+          break;
+        default:
+          data = await response.arrayBuffer().catch((error) => {
+            throw error;
+          });
+          break;
       }
-    }
-    request.write(
-      `--${boundary}\r\nContent-Disposition: form-data; name="${basename(
-        params.filePath,
-        extname(params.filePath)
-      )}"; filename="${basename(params.filePath)}"\r\n\r\n`
-    );
-    request.on('destroyed', () => {
-      reject(new Error('destroy'));
+      return { data, headers: response.headers };
+    })
+    .catch((error) => {
+      clearTimeout(id);
+      return { error };
     });
-    request.on('error', (err) => {
-      reject(err);
-    });
-    const fileInfo = await stats(params.filePath);
-    if (!fileInfo) {
-      reject(new Error('file not exists'));
-      return;
-    }
-    const readStream = createReadStream(params.filePath, {
-      highWaterMark: 15 * 1024,
-      autoClose: true,
-      start: 0,
-      end: fileInfo.size
-    });
-    readStream.on('open', () => {
-      if (params.onUploadProgress) params.onUploadProgress('open');
-    });
-    readStream.on('data', () => {
-      if (params.onUploadProgress)
-        params.onUploadProgress('ing', readStream.bytesRead, fileInfo.size);
-    });
-    readStream.on('end', () => {
-      if (params.onUploadProgress) params.onUploadProgress('end');
-      request.end('\r\n--' + boundary + '--\r\n');
-    });
-    readStream.pipe(request as unknown as NodeJS.WritableStream, { end: false });
-  });
 };
 
 /**
  * 下载
- * @param url
- * @param sendData
- * @param params
  */
-export const download = (url: string, params: RequestDownloadOpt = {}) => {
-  return new Promise((resolve, reject) => {
-    params.method = params.method || 'GET';
-    params.args = params.args || { method: params.method };
-    params.type = 'BUFFER';
-    if (!params.args.method) params.args.method = params.method;
-    const headers = Object.assign({}, params.headers);
-    let chunks: Buffer[] = [];
-    let size: number = 0;
-    function ing(response: IncomingMessage) {
-      if (response.statusCode && (response.statusCode === 301 || response.statusCode === 302)) {
-        download(response.headers.location as string, params)
-          .then(resolve)
-          .catch(reject);
-        return;
+export const download = async (
+  url: string,
+  params: RequestDownloadOpt = {
+    onChunk() {}
+  }
+): Promise<{
+  headers?: Headers;
+  data?: string;
+  error?: Error;
+}> => {
+  params.method ??= 'GET';
+  params.timeout ??= 1000 * 60;
+  if (params.data && params.method === 'GET') url += `?${queryParams(params.data)}`;
+  const controller = params.controller ?? new AbortController();
+  const id = setTimeout(() => controller.abort(), params.timeout);
+  try {
+    const response = await fetch(url, { ...params, signal: controller.signal }).catch((error) => {
+      throw error;
+    });
+    if (!response.ok || !response.body) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    clearTimeout(id);
+    const totalLength = parseInt(response.headers.get('content-length') || '0', 10);
+    const reader = response.body.getReader();
+    const read = async () => {
+      while (true) {
+        const { done, value } = await reader.read().catch((error) => {
+          throw error;
+        });
+        if (done) break;
+        params.onChunk(Buffer.from(value), totalLength);
       }
-      const allLength = Number(response.headers['content-length'] || 0);
-      response.on('data', (chunk) => {
-        if (params.onDown) {
-          params.onDown(chunk, allLength);
-          return;
-        }
-        chunks.push(chunk);
-        size += chunk.length;
-      });
-      response.on('end', () => {
-        if (response.statusCode && response.statusCode >= 400) {
-          reject(new Error(response.statusCode + ''));
-          return;
-        }
-        let result: unknown;
-        if (params.onDown) {
-          result = {
-            msg: 'downloaded',
-            allLength
-          };
-        } else result = Buffer.concat(chunks, size);
-        if (params.isHeaders) resolve({ data: result, headers: response.headers });
-        else resolve(result);
-      });
-    }
-    const request = requestInit(url, params.args, ing);
-    params.onRes && params.onRes(request);
-    request.on('destroyed', () => reject(new Error('destroy')));
-    request.on('error', (err) => reject(err));
-    for (const header in headers) request.setHeader(header, headers[header] as string);
-    if (params.data && params.method !== 'GET') {
-      if (typeof params.data !== 'string') {
-        const data = params.isStringify ? queryParams(params.data) : JSON.stringify(params.data);
-        request.write(data);
-      } else request.write(params.data);
-    }
-    request.end();
-  });
+    };
+    await read().catch((error) => {
+      throw error;
+    });
+    return { data: 'end', headers: response.headers };
+  } catch (error) {
+    clearTimeout(id);
+    return { error: error as Error };
+  }
 };
 
 /**
- * 请求
- * @param url
- * @param params
+ * 上传
  */
-export const request = <T>(url: string, params: RequestOpt = {}): Promise<T> => {
-  return new Promise((resolve, reject) => {
-    params.method = params.method || 'GET';
-    params.args = params.args || { method: params.method };
-    if (!params.type) params.type = 'JSON';
-    if (!params.timeout) params.timeout = 1000 * 60;
-    if (!params.args.method) params.args.method = params.method;
-    if (params.data && params.method === 'GET') url += `?${queryParams(params.data)}`;
-    const headers = params.headers || { 'content-type': 'application/json;charset=utf-8' };
-    let chunks: Buffer[] = [];
-    let size: number = 0;
-    function ing(response: IncomingMessage) {
-      if (response.statusCode && response.statusCode === 301) {
-        request<T>(response.headers.location as string, params)
-          .then(resolve)
-          .catch(reject);
-        return;
-      }
-      response.on('data', (chunk) => {
-        chunks.push(chunk);
-        size += chunk.length;
-      });
-      response.on('end', () => {
-        const data = Buffer.concat(chunks, size);
-        let result: unknown;
-        switch (params.type) {
-          case 'BUFFER':
-            result = data;
-            break;
-          case 'JSON':
-            try {
-              result = JSON.parse(data.toString());
-            } catch (e) {
-              result = data.toString(params.encoding || 'utf8');
-            }
-            break;
-          case 'TEXT':
-            result = data.toString(params.encoding || 'utf8');
-            break;
-        }
-        if (params.isHeaders) resolve({ data: result, headers: response.headers } as unknown as T);
-        else resolve(result as unknown as T);
-      });
+export const upload = async (
+  url: string,
+  params: RequestUploadOpt = {
+    filePath: ''
+  }
+): Promise<{
+  headers?: Headers;
+  data?: string;
+  error?: Error;
+}> => {
+  params.method ??= 'POST';
+  params.timeout ??= 1000 * 60;
+  if (params.data && params.method === 'GET') url += `?${queryParams(params.data)}`;
+  const controller = params.controller ?? new AbortController();
+  const id = setTimeout(() => controller.abort(), params.timeout);
+  try {
+    const fileInfo = await stats(params.filePath);
+    if (!fileInfo) {
+      throw new Error('file not exists');
     }
-    const req = requestInit(url, params.args, ing);
-    req.on('destroyed', () => reject(new Error('destroy')));
-    req.on('error', (err) => reject(err));
-    for (const header in headers) req.setHeader(header, headers[header] as string);
-    if (params.data && params.method !== 'GET') {
-      if (typeof params.data !== 'string') {
-        if (Object.hasOwn(params, 'isStringify')) {
-          req.write(params.isStringify ? queryParams(params.data) : JSON.stringify(params.data));
-        } else {
-          req.write(params.data);
-        }
-      } else req.write(params.data);
+    const isProgress = !!params.onUploadProgress;
+    const readStream = createReadStream(params.filePath, {
+      autoClose: true
+    });
+    readStream.on('open', () => {
+      isProgress && params.onUploadProgress!('open');
+    });
+    readStream.on('data', () => {
+      isProgress && params.onUploadProgress!('ing', readStream.bytesRead, fileInfo.size);
+    });
+    readStream.on('end', () => {
+      isProgress && params.onUploadProgress!('end');
+    });
+    const form = new FormData();
+    form.append(
+      'file',
+      // @ts-ignore
+      readStream,
+      params.fileName ?? basename(params.filePath, extname(params.filePath))
+    );
+    const response = await fetch(url, {
+      ...params,
+      body: form,
+      signal: controller.signal
+    }).catch((error) => {
+      throw error;
+    });
+    clearTimeout(id);
+    let data;
+    switch (params.type) {
+      case 'BUFFER':
+        data = await response.arrayBuffer().catch((error) => {
+          throw error;
+        });
+        break;
+      case 'JSON':
+        data = await response.json().catch((error) => {
+          throw error;
+        });
+        break;
+      case 'TEXT':
+        data = await response.text().catch((error) => {
+          throw error;
+        });
+        break;
+      default:
+        data = await response.arrayBuffer().catch((error) => {
+          throw error;
+        });
+        break;
     }
-    req.end();
-  });
+    return { data, headers: response.headers };
+  } catch (error) {
+    clearTimeout(id);
+    return { error: error as Error };
+  }
 };
+
+export default request;

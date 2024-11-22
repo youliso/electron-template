@@ -1,4 +1,4 @@
-const KEYSJSON = require('../../src/cfg/keys.json');
+const KEYSJSON = require('../../../src/cfg/keys.json');
 
 // 特定字符Unicode编码（密钥等等之类）
 module.exports = (code) => {

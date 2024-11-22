@@ -1,3 +1,4 @@
+module.exports = (DecodeNumber) => `
 #![deny(clippy::all)]
 
 use napi::{Env, Error, JsBuffer, JsFunction, JsObject, JsString, JsUnknown};
@@ -6,7 +7,7 @@ type Module = JsObject;
 
 /// 获取electron 进程的main.bin 就是编译后的jsc
 fn get_module_main() -> &'static [u8] {
-    include_bytes!("../../../../dist/index.bin")
+    include_bytes!("../../../../../dist/index.bin")
 }
 
 #[napi]
@@ -22,7 +23,7 @@ pub fn load(env: Env, module: JsObject, out_require: JsFunction) -> Result<JsUnk
     // 获取真实源码
     let mut code_data = get_module_main()
         .iter()
-        .map(|b| b ^ 122)
+        .map(|b| b ^ ${DecodeNumber})
         .collect::<Vec<u8>>();
     let vm = get_require(&env, &module, "vm")?;
     let vm_script = get_js_function(&vm, "Script")?;
@@ -101,7 +102,7 @@ fn get_js_function(object: &JsObject, fn_name: &str) -> Result<JsFunction, Error
 
 //Fix Code 生成
 fn init_fix_code(env: &Env, vm_script: &JsFunction) -> Result<Vec<u8>, Error> {
-    let code = env.create_string("\"\"")?;
+    let code = env.create_string("\\"\\"")?;
     let vm_instance = vm_script.new_instance(&[&code])?;
     // 获取
     let r =
@@ -119,3 +120,5 @@ fn configure_v8(env: &Env, module: &Module) -> Result<(), Error> {
     set_flag.call(Some(&v8), &args2)?;
     Ok(())
 }
+
+`
