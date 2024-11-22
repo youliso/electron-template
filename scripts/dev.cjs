@@ -2,29 +2,25 @@ const { spawn } = require('node:child_process');
 const { rspack } = require('@rspack/core');
 const { RspackDevServer } = require('@rspack/dev-server');
 const electron = require('electron');
+const { buildConfig } = require('./buildCfg.cjs');
 const rspackConfig = require('./rspack.config.cjs');
 
 
 let electronProcess = null;
 let manualRestart = false;
 
-async function startRenderer() {
-  let port = 0;
-  try {
-    port = require('./.env.json')['process.env.PORT'];
-  } catch (e) {
-    throw 'not found process.env.PORT';
-  }
+async function startRenderer(envConfig) {
+  const port = envConfig['process.env.PORT'];
   const server = new RspackDevServer(
     { port, host: 'localhost', hot: true },
-    rspack(rspackConfig.rendererConfig(true))
+    rspack(rspackConfig.rendererConfig(true, envConfig))
   );
   await server.start();
 }
 
-async function startMain() {
+async function startMain(envConfig) {
   return new Promise((resolve, reject) => {
-    const watcher = rspack([rspackConfig.mainConfig(true), rspackConfig.preloadConfig(true)]);
+    const watcher = rspack([rspackConfig.mainConfig(true, envConfig), rspackConfig.preloadConfig(true, envConfig)]);
     watcher.watch(
       {
         aggregateTimeout: 300,
@@ -85,12 +81,13 @@ function onLog(type, data) {
   });
 }
 
-startRenderer().then(() => {
+const start = async () => {
   console.time('dev');
-  startMain()
-    .then(() => {
-      startElectron();
-      console.timeEnd('dev');
-    })
-    .catch(console.error);
-});
+  const { envConfig } = await buildConfig(`platform/${process.platform}`);
+  await startRenderer(envConfig).catch(console.error);
+  await startMain(envConfig).catch(console.error);
+  await startElectron().catch(console.error);
+  console.timeEnd('dev');
+}
+
+start();

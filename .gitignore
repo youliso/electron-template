@@ -7,7 +7,6 @@
 electron-template.kdev4
 package-lock.json
 scripts/.build.json
-scripts/.env.json
 scripts/.update.yml
 scripts/plugins/bytecode/load/Cargo.lock
 scripts/plugins/bytecode/load/target/

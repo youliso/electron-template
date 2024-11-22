@@ -8,6 +8,7 @@ const path = require('path');
 
 const loadBuild = () => {
   return new Promise((resolve) => {
+    // TODO 如果需打包 windwos x32环境 增加 --target i686-pc-windows-gnu
     const loadProcess = spawn('npx', ['napi', 'build', '--release'], {
       shell: true,
       cwd: path.resolve('scripts/plugins/bytecode/load')

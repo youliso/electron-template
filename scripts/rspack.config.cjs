@@ -2,7 +2,6 @@ const { rspack } = require('@rspack/core');
 const { resolve } = require('node:path');
 const { builtinModules } = require('node:module');
 const packageCfg = require('../package.json');
-const ENV = require('./.env.json');
 
 const outputPath = resolve('dist');
 const tsConfig = resolve('tsconfig.json');
@@ -11,11 +10,7 @@ let alias = {
   '@': resolve('src')
 };
 
-let plugins = [
-  new rspack.DefinePlugin({
-    ...ENV
-  })
-];
+
 let extensions = ['.mjs', '.ts', '.js', '.json', '.node'];
 let externals = { electron: 'electron' };
 builtinModules.forEach((e) => (externals[e] = e));
@@ -38,7 +33,7 @@ let rules = [
 ];
 
 /** @type {import('@rspack/core').Configuration} */
-const mainConfig = (isDevelopment) => ({
+const mainConfig = (isDevelopment, envConfig) => ({
   mode: isDevelopment ? 'development' : 'production',
   target: 'electron-main',
   entry: 'src/main/index.ts',
@@ -63,14 +58,16 @@ const mainConfig = (isDevelopment) => ({
       }
     ]
   },
-  plugins,
+  plugins: [new rspack.DefinePlugin({
+    ...envConfig
+  })],
   externalsType: 'commonjs',
   externals,
   devtool: isDevelopment ? 'eval-cheap-module-source-map' : false
 });
 
 /** @type {import('@rspack/core').Configuration} */
-const preloadConfig = (isDevelopment) => ({
+const preloadConfig = (isDevelopment, envConfig) => ({
   mode: isDevelopment ? 'development' : 'production',
   target: 'electron-preload',
   entry: 'src/preload/index.ts',
@@ -89,14 +86,18 @@ const preloadConfig = (isDevelopment) => ({
   module: {
     rules
   },
-  plugins,
+  plugins: [
+    new rspack.DefinePlugin({
+      ...envConfig
+    })
+  ],
   externalsType: 'commonjs',
   externals,
   devtool: isDevelopment ? 'eval-cheap-module-source-map' : false
 });
 
 /** @type {import('@rspack/core').Configuration} */
-const rendererConfig = (isDevelopment) => ({
+const rendererConfig = (isDevelopment, envConfig) => ({
   mode: isDevelopment ? 'development' : 'production',
   target: 'web',
   entry: 'src/renderer/index.ts',
@@ -129,7 +130,9 @@ const rendererConfig = (isDevelopment) => ({
     ]
   },
   plugins: [
-    ...plugins,
+    new rspack.DefinePlugin({
+      ...envConfig
+    }),
     new rspack.HtmlRspackPlugin({
       templateContent: `
         <!DOCTYPE html>
