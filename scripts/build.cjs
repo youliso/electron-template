@@ -1,7 +1,6 @@
 const builder = require('electron-builder');
 const { rspack } = require('@rspack/core');
 const rspackConfig = require('./rspack.config.cjs');
-const buildConfig = require('./.build.json');
 
 const rsPackBuild = (envConfig) => {
   return new Promise((resolve) => {
@@ -33,7 +32,7 @@ const rsPackBuild = (envConfig) => {
 }
 
 
-const build = async (targets, envConfig) => {
+const build = async (targets, envConfig, buildConfig) => {
   console.log(`\x1B[34m[build start]\x1B[0m`);
   await rsPackBuild(envConfig);
   builder

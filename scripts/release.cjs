@@ -122,8 +122,8 @@ const core = async (arch) => {
       break;
   }
 
-  const { envConfig } = await buildConfig(archPath, archTarget);
-  await build(targets, envConfig);
+  const cfg = await buildConfig(archPath, archTarget);
+  await build(targets, cfg.envConfig, cfg.buildConfig);
 }
 
 if (!arch) {

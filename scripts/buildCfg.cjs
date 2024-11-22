@@ -80,10 +80,10 @@ const buildConfig = async (archPath, archTarget) => {
     '';
 
   fs.writeFileSync('scripts/.update.yml', update);
-  fs.writeFileSync('scripts/.build.json', JSON.stringify(config, null, 2));
 
   return {
-    envConfig
+    envConfig,
+    buildConfig: config
   }
 }
 
