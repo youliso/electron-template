@@ -1,7 +1,25 @@
 const builder = require('electron-builder');
+const fs = require('node:fs');
+const path = require('node:path');
 const { rspack } = require('@rspack/core');
 const rspackConfig = require('./rspack.config.cjs');
-const buildConfig = require('./.build.json');
+
+const deleteFolderRecursive = (url) => {
+  let files = [];
+  if (fs.existsSync(url)) {
+    files = fs.readdirSync(url);
+    files.forEach(function (file, index) {
+      let curPath = path.join(url, file);
+      if (fs.statSync(curPath).isDirectory()) {
+        // recurse
+        deleteFolderRecursive(curPath);
+      } else {
+        fs.unlinkSync(curPath);
+      }
+    });
+    fs.rmdirSync(url);
+  }
+}
 
 const rsPackBuild = (envConfig) => {
   return new Promise((resolve) => {
@@ -33,8 +51,9 @@ const rsPackBuild = (envConfig) => {
 }
 
 
-const build = async (targets, envConfig) => {
+const build = async (targets, envConfig, buildConfig) => {
   console.log(`\x1B[34m[build start]\x1B[0m`);
+  deleteFolderRecursive(path.resolve('dist')); //清除dist
   await rsPackBuild(envConfig);
   builder
     .build({

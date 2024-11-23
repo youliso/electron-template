@@ -1,9 +1,8 @@
 const asarmor = require('./plugins/asarmor');
-const { asar } = require('./.build.json');
 
-exports.default = async ({ appOutDir }) => {
+exports.default = async ({ appOutDir, packager }) => {
   try {
-    if (asar) {
+    if (packager.info._configuration.asar) {
       asarmor(appOutDir);
     }
   } catch (err) {

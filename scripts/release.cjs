@@ -63,7 +63,7 @@ const core = async (arch) => {
           target: 'nsis',
           arch: null
         };
-        if (arch.length === 3) bv.arch = ['x64', 'ia32'];
+        if (arch.length === 3) bv.arch = [process.arch];
         else if (arch.indexOf('32') > -1) bv.arch = ['ia32'];
         else if (arch.indexOf('64') > -1) bv.arch = ['x64'];
         archTarget = {
@@ -75,7 +75,7 @@ const core = async (arch) => {
           target: 'portable',
           arch: null
         };
-        if (arch.length === 4) bv.arch = ['x64', 'ia32'];
+        if (arch.length === 4) bv.arch = [process.arch];
         else if (arch.indexOf('32') > -1) bv.arch = ['ia32'];
         else if (arch.indexOf('64') > -1) bv.arch = ['x64'];
         archTarget = {
@@ -122,8 +122,8 @@ const core = async (arch) => {
       break;
   }
 
-  const { envConfig } = await buildConfig(archPath, archTarget);
-  await build(targets, envConfig);
+  const cfg = await buildConfig(archPath, archTarget);
+  await build(targets, cfg.envConfig, cfg.buildConfig);
 }
 
 if (!arch) {
