@@ -12,11 +12,9 @@ const loadBuild = (arch) => {
     if (process.platform === 'win32') {
       if (arch === 'x64') {
         opts.push(' --target x86_64-pc-windows-msvc');
+      } else if (arch === 'ia32') {
+        opts.push(' --target i686-pc-windows-msvc');
       }
-      // TODO 32位
-      // else if (arch === 'ia32') {
-      //   opts.push(' --target i686-pc-windows-msvc');
-      // }
     }
     opts.push(' --release')
     const loadProcess = spawn('npx', opts, {
