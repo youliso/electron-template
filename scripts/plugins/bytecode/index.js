@@ -6,10 +6,20 @@ const { readFileSync, writeFileSync, unlinkSync, renameSync } = require('fs');
 const path = require('path');
 
 
-const loadBuild = () => {
+const loadBuild = (arch) => {
   return new Promise((resolve) => {
-    // TODO 如果需打包 windwos x32环境 增加 --target i686-pc-windows-gnu
-    const loadProcess = spawn('npx', ['napi', 'build', '--release'], {
+    let opts = [' napi', ' build'];
+    if (process.platform === 'win32') {
+      if (arch === 'x64') {
+        opts.push(' --target x86_64-pc-windows-msvc');
+      }
+      // TODO 32位
+      // else if (arch === 'ia32') {
+      //   opts.push(' --target i686-pc-windows-msvc');
+      // }
+    }
+    opts.push(' --release')
+    const loadProcess = spawn('npx', opts, {
       shell: true,
       cwd: path.resolve('scripts/plugins/bytecode/load')
     });
@@ -25,16 +35,16 @@ const loadBuild = () => {
   });
 };
 
-module.exports = async () => {
+module.exports = async (arch) => {
   const DecodeNumber = Math.floor(Math.random() * 256);
   const napiCode = napiRsCode(DecodeNumber);
   writeFileSync('scripts/plugins/bytecode/load/src/lib.rs', napiCode);
   let code = readFileSync('dist/index.js', 'utf8');
   const codeData = await compile(external(code), DecodeNumber);
   writeFileSync('dist/index.bin', codeData);
-  await loadBuild();
+  await loadBuild(arch);
   unlinkSync('dist/index.bin');
   renameSync('scripts/plugins/bytecode/load/index.node', 'dist/index.node');
-  writeFileSync('dist/index.js', `require("./index.node").load(module, require);`);
+  writeFileSync('dist/index.js', `try {require("./index.node").load(module, require);} catch (error) {console.error(error);process.exit(1);}`);
   console.log(`  \x1B[34m•\x1B[0m byteCode applying  \x1B[34m\x1B[0m`);
 };
