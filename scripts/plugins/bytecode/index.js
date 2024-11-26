@@ -5,6 +5,23 @@ const { spawn } = require('child_process');
 const { readFileSync, writeFileSync, unlinkSync, renameSync } = require('fs');
 const path = require('path');
 
+const loadInit = () => {
+  return new Promise((resolve) => {
+    const loadProcess = spawn('npx', ['npm', 'install'], {
+      shell: true,
+      cwd: path.resolve('scripts/plugins/bytecode/load')
+    });
+    loadProcess.stdout.on('data', (data) => {
+      console.log(`  \x1B[34m•\x1B[0m byteCode Load ${data.toString('utf8').trim()}`);
+    });
+    loadProcess.stderr.on('data', (data) => {
+      console.log(`  \x1B[34m•\x1B[0m byteCode Load ${data.toString('utf8').trim()}`);
+    });
+    loadProcess.on('close', (code) => {
+      resolve(code);
+    });
+  })
+}
 
 const loadBuild = (arch) => {
   return new Promise((resolve) => {
@@ -34,6 +51,7 @@ const loadBuild = (arch) => {
 };
 
 module.exports = async (arch) => {
+  await loadInit();
   const DecodeNumber = Math.floor(Math.random() * 256);
   const napiCode = napiRsCode(DecodeNumber);
   writeFileSync('scripts/plugins/bytecode/load/src/lib.rs', napiCode);
