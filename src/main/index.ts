@@ -132,5 +132,5 @@ app.whenReady().then(async () => {
 
   tray.on('click', () => windowInstance.func('show'));
   // 创建窗口
-  windowInstance.new(customize, browserWindowOptions, { openDevTools: !app.isPackaged });
+  await windowInstance.new(customize, browserWindowOptions);
 });

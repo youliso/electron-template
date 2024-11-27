@@ -113,9 +113,7 @@ export const request = <T>(
  */
 export const download = async (
   url: string,
-  params: RequestDownloadOpt = {
-    onChunk() {}
-  }
+  params: RequestDownloadOpt
 ): Promise<{
   headers?: Headers;
   data?: string;
@@ -160,9 +158,7 @@ export const download = async (
  */
 export const upload = async (
   url: string,
-  params: RequestUploadOpt = {
-    filePath: ''
-  }
+  params: RequestUploadOpt
 ): Promise<{
   headers?: Headers;
   data?: string;

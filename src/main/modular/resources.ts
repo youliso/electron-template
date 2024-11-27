@@ -1,6 +1,6 @@
 import { app } from 'electron';
-import { accessSync, constants } from 'fs';
-import { resolve, join, normalize } from 'path';
+import { accessSync, constants } from 'node:fs';
+import { resolve, join, normalize } from 'node:path';
 import { preload } from '@youliso/electronic/main';
 
 /**

@@ -1,6 +1,6 @@
-const vm = require('vm');
-const v8 = require('v8');
-const wrap = require('module').wrap;
+const vm = require('node:vm');
+const v8 = require('node:v8');
+const wrap = require('node:module').wrap;
 v8.setFlagsFromString('--no-lazy');
 v8.setFlagsFromString('--no-flush-bytecode');
 

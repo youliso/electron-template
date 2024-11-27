@@ -1,5 +1,5 @@
 const asarmor = require('asarmor');
-const { join } = require('path');
+const { join } = require('node:path');
 
 exports.default = async (appOutDir) => {
   const asarPath = join(packager.getResourcesDir(appOutDir), 'app.asar');

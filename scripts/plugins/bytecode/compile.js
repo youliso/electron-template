@@ -1,5 +1,5 @@
 const electronPath = require('electron');
-const { spawn } = require('child_process');
+const { spawn } = require('node:child_process');
 
 module.exports = (code, DecodeNumber) => {
   return new Promise((resolve, reject) => {

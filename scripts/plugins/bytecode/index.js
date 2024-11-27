@@ -1,9 +1,9 @@
 const compile = require('./compile');
 const external = require('./external');
 const napiRsCode = require('./napi_rs_code');
-const { spawn } = require('child_process');
-const { readFileSync, writeFileSync, unlinkSync, renameSync } = require('fs');
-const path = require('path');
+const { spawn } = require('node:child_process');
+const { readFileSync, writeFileSync, unlinkSync, renameSync } = require('node:fs');
+const path = require('node:path');
 
 const loadInit = () => {
   return new Promise((resolve) => {
