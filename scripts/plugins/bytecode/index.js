@@ -1,13 +1,13 @@
 const compile = require('./compile');
 const external = require('./external');
 const napiRsCode = require('./napi_rs_code');
-const { spawn } = require('child_process');
-const { readFileSync, writeFileSync, unlinkSync, renameSync } = require('fs');
-const path = require('path');
+const { spawn } = require('node:child_process');
+const { readFileSync, writeFileSync, unlinkSync, renameSync } = require('node:fs');
+const path = require('node:path');
 
 const loadInit = () => {
   return new Promise((resolve) => {
-    const loadProcess = spawn('npx', ['npm', 'install'], {
+    const loadProcess = spawn('npm', ['install'], {
       shell: true,
       cwd: path.resolve('scripts/plugins/bytecode/load')
     });
@@ -25,15 +25,15 @@ const loadInit = () => {
 
 const loadBuild = (arch) => {
   return new Promise((resolve) => {
-    let opts = [' napi', ' build'];
+    let opts = ['napi', 'build'];
     if (process.platform === 'win32') {
       if (arch === 'x64') {
-        opts.push(' --target x86_64-pc-windows-msvc');
+        opts.push('--target x86_64-pc-windows-msvc');
       } else if (arch === 'ia32') {
-        opts.push(' --target i686-pc-windows-msvc');
+        opts.push('--target i686-pc-windows-msvc');
       }
     }
-    opts.push(' --release')
+    opts.push('--release')
     const loadProcess = spawn('npx', opts, {
       shell: true,
       cwd: path.resolve('scripts/plugins/bytecode/load')
