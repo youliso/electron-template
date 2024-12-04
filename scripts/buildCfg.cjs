@@ -23,6 +23,8 @@ const buildConfig = async (archPath, archTarget) => {
   config.asar = true; //asar开关
 
   /** win配置 **/
+  config.nsis.language = '2052'; // 2052 cn 1033 en-US
+  config.nsis.installerLanguages = ['zh_CN', 'en_US'];
   config.nsis.shortcutName = packageCfg.productName; // 快捷方式名称
   config.nsis.displayLanguageSelector = false; //安装包语言提示
   config.nsis.menuCategory = true; //是否创建开始菜单目录
