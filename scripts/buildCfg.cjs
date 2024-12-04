@@ -20,7 +20,7 @@ const buildConfig = async (archPath, archTarget) => {
   config.copyright = `Copyright © 2024 ${packageCfg.name}`; //版权
   config.productName = packageCfg.name; // 名称
   config.npmRebuild = true; //是否Rebuild编译
-  config.asar = false; //asar开关
+  config.asar = true; //asar开关
 
   /** win配置 **/
   config.nsis.shortcutName = packageCfg.productName; // 快捷方式名称
