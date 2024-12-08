@@ -1,5 +1,92 @@
-class Audios {
-  public static instance: Audios;
+export class AudioHelper {
+  mediaStream: MediaStream;
+  audioctx: AudioContext;
+  gainNode: GainNode;
+  destAudioNode: MediaStreamAudioDestinationNode;
+  get audioTracks(): MediaStreamTrack[] {
+    return this.destAudioNode.stream.getAudioTracks();
+  }
+
+  constructor() {
+    this.mediaStream = new MediaStream();
+    this.audioctx = new AudioContext();
+    this.gainNode = this.audioctx.createGain(); // 用来控制音量
+    this.destAudioNode = this.audioctx.createMediaStreamDestination();
+    this.gainNode.connect(this.destAudioNode);
+  }
+
+  addTrack(track: MediaStreamTrack) {
+    this.mediaStream.addTrack(track);
+    const srcAudioNode = this.audioctx.createMediaStreamSource(
+      this.mediaStream
+    );
+    srcAudioNode.connect(this.gainNode);
+  }
+
+  getVolumeMinMax() {
+    return [this.gainNode.gain.minValue, this.gainNode.gain.maxValue];
+  }
+
+  getVolume() {
+    return this.gainNode.gain.value;
+  }
+
+  setVolume(volume: number) {
+    this.gainNode.gain.value = volume;
+  }
+}
+
+export class AudioRecorder {
+  mediaRecorder: MediaRecorder | null = null;
+  chunks: Blob[] = [];
+  callback: (blob: Blob) => void;
+
+  constructor(callback: (blob: Blob) => void) {
+    this.callback = callback;
+  }
+
+  on() {
+    if (!this.mediaRecorder) return;
+    this.mediaRecorder.ondataavailable = (e) => {
+      this.chunks.push(e.data);
+    };
+    this.mediaRecorder.onstart = () => {
+      this.chunks = [];
+    };
+    this.mediaRecorder.onstop = async () => {
+      this.callback && this.callback(new Blob(this.chunks, { type: 'audio/ogg; codecs=opus' }));
+    };
+  }
+
+  async init() {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true }).catch((err) => {
+      return null;
+    });
+    if (stream) {
+      this.mediaRecorder = new MediaRecorder(stream);
+      this.on();
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+
+  start(timeslice?: number) {
+    if (!this.mediaRecorder) return;
+    this.mediaRecorder.start(timeslice);
+  }
+
+  stop() {
+    if (!this.mediaRecorder) return;
+    this.mediaRecorder.stop();
+  }
+
+  close() {
+    this.mediaRecorder = null;
+  }
+}
+
+export class AudioPlay {
   // 当前播放源
   public src: string | undefined;
   // 播放状态 1播放 0 暂停
@@ -18,8 +105,12 @@ class Audios {
   public volumeGradualTime: number = 0.7;
   // 音频的数据(可视化)
   public analyser: AnalyserNode;
-  // 监听音频状态更新
-  private audioUpdate = new Event('audio-update');
+  // 监听音频状态开始
+  private audioPlay = new Event('audio-play');
+  // 监听音频播放暂停
+  private audioPause = new Event('audio-pause');
+  // 监听音频播放完毕
+  private audioEnd = new Event('audio-end');
   // 监听音频时间更新
   private audioTimeUpdate = new Event('audio-time-update');
   // 音频Context
@@ -30,11 +121,6 @@ class Audios {
   private sourceAudio: MediaElementAudioSourceNode;
   // 控制节点
   private gainNode: GainNode;
-
-  static getInstance() {
-    if (!Audios.instance) Audios.instance = new Audios();
-    return Audios.instance;
-  }
 
   constructor() {
     this.currentAudio.crossOrigin = 'anonymous'; //音源跨域
@@ -79,7 +165,7 @@ class Audios {
         this.AudioContext.currentTime + this.volumeGradualTime
       ); //音量淡入
       this.type = 1;
-      dispatchEvent(this.audioUpdate);
+      dispatchEvent(this.audioPlay);
     };
 
     this.currentAudio.ontimeupdate = () => {
@@ -91,13 +177,12 @@ class Audios {
     this.currentAudio.onpause = () => {
       //播放暂停
       this.type = 0;
-      dispatchEvent(this.audioUpdate);
+      dispatchEvent(this.audioPause);
     };
 
     this.currentAudio.onended = () => {
       //播放完毕
       this.clear();
-      dispatchEvent(this.audioUpdate);
     };
   }
 
@@ -105,6 +190,7 @@ class Audios {
     this.type = 0;
     this.ingTime = 0;
     this.allTime = 0;
+    dispatchEvent(this.audioEnd);
   }
 
   async play(src?: string) {
@@ -134,7 +220,7 @@ class Audios {
     });
   }
 
-  async setSrc(src: string) {
+  setSrc(src: string) {
     this.src = src;
   }
 
@@ -142,8 +228,8 @@ class Audios {
     delete this.src;
   }
 
-  async load() {
-    if (this.currentAudio.src) this.currentAudio.load();
+  load() {
+    this.currentAudio.src && this.currentAudio.load();
   }
 
   //设置播放位置(暂停情况下)
@@ -184,16 +270,4 @@ class Audios {
         this.currentAudio.duration; //缓存进度  0-1
     }
   }
-
-  //显示时间为分钟
-  showTime() {
-    return `${this.timeToStr(this.ingTime)} / ${this.timeToStr(this.allTime)}`;
-  }
-
-  private timeToStr(s: number) {
-    let t: string = Number(s).toFixed(0);
-    return Math.floor(Number(t) / 60) + ' : ' + (Number(t) % 60);
-  }
 }
-
-export default Audios.getInstance();
