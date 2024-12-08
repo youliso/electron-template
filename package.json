@@ -15,14 +15,14 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "devDependencies": {
-    "@rspack/core": "^1.1.4",
+    "@rspack/core": "^1.1.5",
     "@rspack/dev-server": "^1.0.9",
-    "@types/node": "^22.10.0",
-    "@youliso/electronic": "^5.3.5",
+    "@types/node": "^22.10.1",
+    "@youliso/electronic": "^5.4.2",
     "asarmor": "^3.0.1",
-    "electron": "^33.2.0",
+    "electron": "^33.2.1",
     "electron-builder": "^25.1.8",
-    "prettier": "^3.4.1",
+    "prettier": "^3.4.2",
     "typescript": "^5.7.2"
   }
 }

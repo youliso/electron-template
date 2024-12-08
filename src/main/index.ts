@@ -85,7 +85,7 @@ app.whenReady().then(async () => {
     if (mainWin && mainWin.customize.route === route) {
       mainWin.show();
     } else {
-      windowInstance.new(customize, browserWindowOptions, { openDevTools: !app.isPackaged });
+      windowInstance.new(customize, browserWindowOptions);
     }
   });
   // 获得焦点时发出
