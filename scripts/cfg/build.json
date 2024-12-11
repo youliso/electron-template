@@ -37,6 +37,7 @@
     "include": "scripts/cfg/installer.nsh"
   },
   "dmg": {
+    "sign": false,
     "contents": [
       {
         "x": 410,
@@ -52,8 +53,14 @@
     ]
   },
   "mac": {
-    "category": "public.app-category.utilities",
-    "icon": "scripts/icons/icon.icns"
+    "additionalArguments": ["--deep"],
+    "hardenedRuntime": true,
+    "gatekeeperAssess": false,
+    "entitlements": "scripts/entitlements.mac.plist",
+    "entitlementsInherit": "scripts/entitlements.mac.plist",
+    "category": "public.app-category.business",
+    "icon": "scripts/icons/icon.icns",
+    "target": ["dmg"]
   },
   "win": {
     "icon": "scripts/icons/icon.ico",

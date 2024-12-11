@@ -4,6 +4,7 @@ const packageCfg = require('../package.json');
 const envConfig = require('./cfg/env.json');
 const config = require('./cfg/build.json');
 const updateConfig = require('./cfg/update.json');
+const signConfig = require('./cfg/sign.json');
 
 const buildConfig = async (archPath, archTarget) => {
 
@@ -11,6 +12,7 @@ const buildConfig = async (archPath, archTarget) => {
   // config.files.push('!**/node_modules/包名');
   config.afterPack = 'scripts/buildAfterPack.js';
   config.beforePack = 'scripts/buildBeforePack.js';
+  config.afterSign = 'scripts/buildAfterSign.js';
 
   /** env配置 **/
   envConfig['process.env.PORT'] = JSON.stringify(4891);
@@ -35,12 +37,18 @@ const buildConfig = async (archPath, archTarget) => {
   config.linux.target = 'AppImage'; //默认为AppImage
   config.linux.executableName = packageCfg.name;
 
+  /** mac配置 **/
+  signConfig.mac.identity && (config.mac.identity = signConfig.mac.identity); // 证书标识
+  if (!signConfig.mac.notarize) {
+    config.mac.identity = null;
+    delete config.dmg.sign;
+    delete config.mac.gatekeeperAssess;
+  }
 
   // 动态配置
   if (archTarget) {
     config[archTarget.target].target = archTarget.value;
   }
-
 
   // 资源路径配置
   config.extraResources = [

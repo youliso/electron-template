@@ -1,0 +1,9 @@
+{
+  "mac": {
+    "notarize": false,
+    "identity": "",
+    "appleId": "",
+    "appleIdPassword": "",
+    "teamId": ""
+  }
+}
