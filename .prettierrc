@@ -7,13 +7,5 @@
   "trailingComma": "none",
   "bracketSpacing": true,
   "proseWrap": "always",
-  "htmlWhitespaceSensitivity": "ignore",
-  "overrides": [
-    {
-      "files": ["scss"],
-      "options": {
-        "parser": "scss"
-      }
-    }
-  ]
+  "htmlWhitespaceSensitivity": "ignore"
 }

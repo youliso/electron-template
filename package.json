@@ -20,7 +20,6 @@
     "@types/node": "^22.10.1",
     "@youliso/electronic": "^5.4.2",
     "electron": "^33.2.1",
-    "electron-builder": "^25.1.8",
-    "prettier": "^3.4.2"
+    "electron-builder": "^25.1.8"
   }
 }
