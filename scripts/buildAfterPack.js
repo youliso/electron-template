@@ -1,13 +1,10 @@
-const asarmor = require('./plugins/asarmor');
+const fuses = require('./plugins/fuses');
 const removeLocales = require('./plugins/removeLocales');
 
-exports.default = async ({ appOutDir, packager }) => {
+exports.default = async ({ appOutDir, packager, electronPlatformName, arch }) => {
   try {
-    let target = packager.appInfo.platformSpecificOptions.target[0];
-    if (packager.info._configuration.asar) {
-      asarmor(packager.getResourcesDir(appOutDir));
-    }
-    if (target.target === 'nsis') {
+    await fuses(appOutDir, packager, electronPlatformName, arch)
+    if (packager.appInfo.platformSpecificOptions.target[0].target === 'nsis') {
       removeLocales(appOutDir);
     }
   } catch (err) {
