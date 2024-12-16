@@ -47,7 +47,6 @@
     ]
   },
   "mac": {
-    "additionalArguments": ["--deep"],
     "hardenedRuntime": true,
     "gatekeeperAssess": false,
     "entitlements": "scripts/entitlements.mac.plist",
