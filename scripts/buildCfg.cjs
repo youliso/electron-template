@@ -7,7 +7,6 @@ const updateConfig = require('./cfg/update.json');
 const signConfig = require('./cfg/sign.json');
 
 const buildConfig = async (archPath, archTarget) => {
-
   /** 渲染进程不需要打包到file的包 */
   // config.files.push('!**/node_modules/包名');
   config.afterPack = 'scripts/buildAfterPack.js';
@@ -51,6 +50,16 @@ const buildConfig = async (archPath, archTarget) => {
   }
 
   // 资源路径配置
+  config.extraFiles = [];
+  try {
+    fs.accessSync(path.resolve('./resources/root'));
+    config.extraFiles.push({
+      from: 'resources/root',
+      to: './'
+    });
+  } catch (error) {
+    console.error(error);
+  }
   config.extraResources = [
     {
       from: 'resources/extern',
@@ -94,8 +103,8 @@ const buildConfig = async (archPath, archTarget) => {
   return {
     envConfig,
     buildConfig: config
-  }
-}
+  };
+};
 
 module.exports = {
   buildConfig

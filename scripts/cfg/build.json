@@ -20,12 +20,6 @@
       "filter": ["**/*"]
     }
   ],
-  "extraFiles": [
-    {
-      "from": "resources/root",
-      "to": "./"
-    }
-  ],
   "nsis": {
     "oneClick": false,
     "perMachine": true,
