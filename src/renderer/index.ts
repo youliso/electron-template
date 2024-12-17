@@ -21,16 +21,24 @@ windowLoad(() => {
   rootDom?.appendChild(customizeDom);
   rootDom?.appendChild(document.createTextNode('hello word'));
   resourcesPathGet('platform', 't.txt').then((res) => {
-    rootDom?.appendChild(document.createTextNode(`platform: ` + res));
+    const dom = document.createElement('div');
+    dom.innerText = `platform: ${res}`;
+    rootDom?.appendChild(dom);
   });
   resourcesPathGet('inside', 't.txt').then((res) => {
-    rootDom?.appendChild(document.createTextNode(`inside: ` + res));
+    const dom = document.createElement('div');
+    dom.innerText = `inside: ${res}`;
+    rootDom?.appendChild(dom);
   });
   resourcesPathGet('extern', 't.txt').then((res) => {
-    rootDom?.appendChild(document.createTextNode(`extern: ` + res));
+    const dom = document.createElement('div');
+    dom.innerText = `extern: ${res}`;
+    rootDom?.appendChild(dom);
   });
   resourcesPathGet('root', 't.txt').then((res) => {
-    rootDom?.appendChild(document.createTextNode(`root: ` + res));
+    const dom = document.createElement('div');
+    dom.innerText = `root: ${res}`;
+    rootDom?.appendChild(dom);
   });
   windowShow();
 });

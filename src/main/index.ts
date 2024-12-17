@@ -21,10 +21,8 @@ import { updateOn } from './modular/update';
 preload.initialize();
 
 // 初始渲染进程参数
-let route = '/home';
 let customize: Customize = {
-  title: app.name,
-  route
+  title: app.name
 };
 
 // 初始窗口参数
@@ -82,10 +80,8 @@ app.on('window-all-closed', () => {
 app.whenReady().then(async () => {
   app.on('activate', () => {
     const mainWin = windowInstance.getMain();
-    if (mainWin && mainWin.customize.route === route) {
+    if (mainWin) {
       mainWin.show();
-    } else {
-      windowInstance.new(customize, browserWindowOptions);
     }
   });
   // 获得焦点时发出
