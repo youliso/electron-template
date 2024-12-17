@@ -68,17 +68,5 @@
   "linux": {
     "icon": "scripts/icons",
     "category": "Utility"
-  },
-  "extraResources": [
-    {
-      "from": "resources/extern",
-      "to": "extern/",
-      "filter": ["**/*"]
-    },
-    {
-      "from": "resources/platform/win32",
-      "to": "platform/win32",
-      "filter": ["**/*"]
-    }
-  ]
+  }
 }

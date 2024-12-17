@@ -17,7 +17,7 @@ export function resourcesPathGet(
       case 'platform':
         path = normalize(
           app.isPackaged
-            ? resolve(join(__dirname, '..', 'platform', process.platform, path))
+            ? resolve(join(__dirname, '..', '..', 'platform', process.platform, path))
             : resolve(join('resources', 'platform', process.platform, path))
         );
         break;

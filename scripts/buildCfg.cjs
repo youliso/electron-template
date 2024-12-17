@@ -51,14 +51,6 @@ const buildConfig = async (archPath, archTarget) => {
   }
 
   // 资源路径配置
-  config.extraFiles = [];
-  try {
-    fs.accessSync(path.resolve('./resources/root'));
-    config.extraFiles.push({
-      from: 'resources/root',
-      to: './'
-    });
-  } catch (error) {}
   config.extraResources = [
     {
       from: 'resources/extern',
@@ -66,9 +58,18 @@ const buildConfig = async (archPath, archTarget) => {
       filter: ['**/*']
     }
   ];
+  config.extraFiles = [];
+  try {
+    fs.accessSync(path.resolve('./resources/root'));
+    config.extraFiles.push({
+      from: 'resources/root',
+      to: './',
+      filter: ['**/*']
+    });
+  } catch (error) {}
   try {
     fs.accessSync(path.resolve('./resources/' + archPath));
-    config.extraResources.push({
+    config.extraFiles.push({
       from: 'resources/' + archPath,
       to: archPath,
       filter: ['**/*']
