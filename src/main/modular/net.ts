@@ -2,6 +2,34 @@ import { openAsBlob } from 'node:fs';
 import { basename } from 'node:path';
 import { WritableStream } from 'node:stream/web';
 
+type DATA_TYPE = 'TEXT' | 'JSON' | 'BUFFER';
+
+/**
+ * 数据处理
+ */
+export const responseData = async (type: DATA_TYPE, response: Response) => {
+  let data;
+  switch (type) {
+    case 'JSON':
+      data = await response.json().catch((error) => {
+        throw error;
+      });
+      break;
+    case 'TEXT':
+      data = await response.text().catch((error) => {
+        throw error;
+      });
+      break;
+    case 'BUFFER':
+    default:
+      data = await response.arrayBuffer().catch((error) => {
+        throw error;
+      });
+      data = Buffer.from(data);
+      break;
+  }
+  return { data, headers: response.headers };
+}
 
 /**
  * 对象转参数
@@ -28,11 +56,10 @@ export const queryParams = (data: any): string => {
 };
 
 export interface RequestOpt extends RequestInit {
-  isStringify?: boolean;
   controller?: AbortController;
   data?: any;
   timeout?: number;
-  type?: 'TEXT' | 'JSON' | 'BUFFER';
+  type?: DATA_TYPE;
 }
 
 export interface RequestDownloadOpt extends RequestOpt {
@@ -67,30 +94,7 @@ export const request = <T>(
   return fetch(url, { ...params, signal: controller.signal })
     .then(async (response) => {
       clearTimeout(id);
-      let data;
-      switch (params.type) {
-        case 'BUFFER':
-          data = await response.arrayBuffer().catch((error) => {
-            throw error;
-          });
-          break;
-        case 'JSON':
-          data = await response.json().catch((error) => {
-            throw error;
-          });
-          break;
-        case 'TEXT':
-          data = await response.text().catch((error) => {
-            throw error;
-          });
-          break;
-        default:
-          data = await response.arrayBuffer().catch((error) => {
-            throw error;
-          });
-          break;
-      }
-      return { data, headers: response.headers };
+      return await responseData(params.type!, response);
     })
     .catch((error) => {
       clearTimeout(id);
@@ -186,30 +190,7 @@ export const upload = async (
       throw error;
     });
     clearTimeout(id);
-    let data;
-    switch (params.type) {
-      case 'BUFFER':
-        data = await response.arrayBuffer().catch((error) => {
-          throw error;
-        });
-        break;
-      case 'JSON':
-        data = await response.json().catch((error) => {
-          throw error;
-        });
-        break;
-      case 'TEXT':
-        data = await response.text().catch((error) => {
-          throw error;
-        });
-        break;
-      default:
-        data = await response.arrayBuffer().catch((error) => {
-          throw error;
-        });
-        break;
-    }
-    return { data, headers: response.headers };
+    return await responseData(params.type!, response);
   } catch (error) {
     clearTimeout(id);
     return { error: error as Error };
