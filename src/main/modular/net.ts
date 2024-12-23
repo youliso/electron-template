@@ -1,18 +1,7 @@
-import { createReadStream, stat, type Stats } from 'node:fs';
-import { basename, extname } from 'node:path';
+import { openAsBlob } from 'node:fs';
+import { basename } from 'node:path';
+import { WritableStream } from 'node:stream/web';
 
-const stats = (path: string) => {
-  return new Promise<Stats | null>((resolve) => {
-    stat(path, (err, stats) => {
-      if (err) {
-        console.error(err);
-        resolve(null);
-        return;
-      }
-      resolve(stats);
-    });
-  });
-};
 
 /**
  * 对象转参数
@@ -52,8 +41,9 @@ export interface RequestDownloadOpt extends RequestOpt {
 
 export interface RequestUploadOpt extends RequestOpt {
   filePath: string;
+  fileKey?: string;
   fileName?: string;
-  onUploadProgress?: (status: 'open' | 'ing' | 'end', size?: number, fullSize?: number) => void;
+  onUploadProgress?: (progress: number) => void;
 }
 
 /**
@@ -165,34 +155,28 @@ export const upload = async (
   error?: Error;
 }> => {
   params.method ??= 'POST';
+  params.type ??= 'JSON';
   params.timeout ??= 1000 * 60;
   if (params.data && params.method === 'GET') url += `?${queryParams(params.data)}`;
   const controller = params.controller ?? new AbortController();
   const id = setTimeout(() => controller.abort(), params.timeout);
   try {
-    const fileInfo = await stats(params.filePath);
-    if (!fileInfo) {
-      throw new Error('file not exists');
-    }
+    let sendChunkLength = 0;
     const isProgress = !!params.onUploadProgress;
-    const readStream = createReadStream(params.filePath, {
-      autoClose: true
-    });
-    readStream.on('open', () => {
-      isProgress && params.onUploadProgress!('open');
-    });
-    readStream.on('data', () => {
-      isProgress && params.onUploadProgress!('ing', readStream.bytesRead, fileInfo.size);
-    });
-    readStream.on('end', () => {
-      isProgress && params.onUploadProgress!('end');
-    });
     const form = new FormData();
+    const blob = await openAsBlob(params.filePath);
+    blob.stream().pipeTo(
+      new WritableStream({
+        write(chunk) {
+          sendChunkLength += chunk.length;
+          isProgress && params.onUploadProgress!(sendChunkLength / blob.size);
+        }
+      })
+    );
     form.append(
-      'file',
-      // @ts-ignore
-      readStream,
-      params.fileName ?? basename(params.filePath, extname(params.filePath))
+      params.fileKey || 'file',
+      blob,
+      params.fileName ?? basename(params.filePath)
     );
     const response = await fetch(url, {
       ...params,
