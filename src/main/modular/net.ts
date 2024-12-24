@@ -76,7 +76,7 @@ export interface RequestUploadOpt extends RequestOpt {
 /**
  * 请求
  */
-export const request = <T>(
+export const net = <T = any>(
   url: string,
   params: RequestOpt = {}
 ): Promise<{
@@ -150,12 +150,12 @@ export const download = async (
 /**
  * 上传
  */
-export const upload = async (
+export const upload = async <T = any>(
   url: string,
   params: RequestUploadOpt
 ): Promise<{
   headers?: Headers;
-  data?: string;
+  data?: T;
   error?: Error;
 }> => {
   params.method ??= 'POST';
@@ -197,4 +197,4 @@ export const upload = async (
   }
 };
 
-export default request;
+export default net;
