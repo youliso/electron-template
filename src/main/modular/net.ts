@@ -90,7 +90,7 @@ export const net = <T = any>(
   params.headers ??= { 'content-type': 'application/json;charset=utf-8' };
   if (params.data && params.method === 'GET') url += `?${queryParams(params.data)}`;
   const controller = params.controller ?? new AbortController();
-  const id = setTimeout(() => controller.abort(), params.timeout);
+  const id = setTimeout(() => controller.abort(new Error('timeout')), params.timeout);
   return fetch(url, { ...params, signal: controller.signal })
     .then(async (response) => {
       clearTimeout(id);
@@ -117,7 +117,7 @@ export const download = async (
   params.timeout ??= 1000 * 60;
   if (params.data && params.method === 'GET') url += `?${queryParams(params.data)}`;
   const controller = params.controller ?? new AbortController();
-  const id = setTimeout(() => controller.abort(), params.timeout);
+  const id = setTimeout(() => controller.abort(new Error('timeout')), params.timeout);
   try {
     const response = await fetch(url, { ...params, signal: controller.signal }).catch((error) => {
       throw error;
@@ -163,7 +163,7 @@ export const upload = async <T = any>(
   params.timeout ??= 1000 * 60;
   if (params.data && params.method === 'GET') url += `?${queryParams(params.data)}`;
   const controller = params.controller ?? new AbortController();
-  const id = setTimeout(() => controller.abort(), params.timeout);
+  const id = setTimeout(() => controller.abort(new Error('timeout')), params.timeout);
   try {
     let sendChunkLength = 0;
     const isProgress = !!params.onUploadProgress;
@@ -173,7 +173,7 @@ export const upload = async <T = any>(
       new WritableStream({
         write(chunk) {
           sendChunkLength += chunk.length;
-          isProgress && params.onUploadProgress!(sendChunkLength / blob.size);
+          isProgress && params.onUploadProgress!(Math.floor((sendChunkLength / blob.size) * 100));
         }
       })
     );
