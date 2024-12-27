@@ -25,7 +25,7 @@ const buildConfig = async (resourcePaths, archTarget) => {
   config.asar = {
     smartUnpack: false
   };
-  config.asarUnpack = ['**/*.node'];
+  config.asarUnpack = [];
 
   /** win配置 **/
   config.nsis.language = '2052'; // 2052 cn 1033 en-US
