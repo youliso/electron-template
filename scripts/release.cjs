@@ -46,7 +46,7 @@ const r = readline.createInterface({
 const question = util.promisify(r.question).bind(r);
 const core = async (arch) => {
   arch = arch.trim();
-  let archPath = '';
+  let resourcePaths = [];
   let archTarget = null;
   let targets;
   switch (arch) {
@@ -56,42 +56,35 @@ const core = async (arch) => {
     case 'winp':
     case 'winp32':
     case 'winp64':
+      resourcePaths.push('platform/win32');
       targets = builder.Platform.WINDOWS.createTarget();
-      archPath = 'platform/win32';
-      if (arch.startsWith('win')) {
-        let bv = {
-          target: 'nsis',
-          arch: null
-        };
-        if (arch.length === 3) bv.arch = [process.arch];
-        else if (arch.indexOf('32') > -1) bv.arch = ['ia32'];
-        else if (arch.indexOf('64') > -1) bv.arch = ['x64'];
-        archTarget = {
-          target: 'win',
-          value: [bv]
-        };
-      } else if (arch.startsWith('winp')) {
-        let bv = {
-          target: 'portable',
-          arch: null
-        };
-        if (arch.length === 4) bv.arch = [process.arch];
-        else if (arch.indexOf('32') > -1) bv.arch = ['ia32'];
-        else if (arch.indexOf('64') > -1) bv.arch = ['x64'];
-        archTarget = {
-          target: 'win',
-          value: [bv]
-        };
+      let bv = {
+        target: arch === 'winp' ? 'portable' : 'nsis',
+        arch: null
+      };
+      if (arch.endsWith('32')) {
+        bv.arch = ['ia32'];
+        resourcePaths.push('platform/win32/ia32');
+      } else if (arch.endsWith('64')) {
+        bv.arch = ['x64'];
+        resourcePaths.push('platform/win32/x64');
+      } else {
+        bv.arch = [process.arch];
+        resourcePaths.push('platform/win32/' + process.arch);
       }
+      archTarget = {
+        target: 'win',
+        value: [bv]
+      };
       break;
     case 'darwin':
     case 'mac':
+      resourcePaths.push('platform/darwin/' + process.arch);
       targets = builder.Platform.MAC.createTarget();
-      archPath = 'platform/darwin';
       break;
     case 'linux':
+      resourcePaths.push('platform/linux/' + process.arch);
       targets = builder.Platform.LINUX.createTarget();
-      archPath = 'platform/linux';
       if (arg_opt) {
         archTarget = {
           target: 'linux',
@@ -122,7 +115,7 @@ const core = async (arch) => {
       break;
   }
 
-  const cfg = await buildConfig(archPath, archTarget);
+  const cfg = await buildConfig(resourcePaths, archTarget);
   await build(targets, cfg.envConfig, cfg.buildConfig);
 }
 

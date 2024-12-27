@@ -10,15 +10,18 @@ import { preload } from '@youliso/electronic/main';
  * */
 export function resourcesPathGet(
   type: 'platform' | 'inside' | 'extern' | 'root',
-  path: string = './'
+  path: string = './',
+  is_arch: boolean = true
 ): string {
   try {
     switch (type) {
       case 'platform':
         path = normalize(
           app.isPackaged
-            ? resolve(join(__dirname, '..', '..', 'platform', process.platform, path))
-            : resolve(join('resources', 'platform', process.platform, path))
+            ? resolve(
+                join(__dirname, '..', '..', 'platform', (is_arch && process.platform) || '', path)
+              )
+            : resolve(join('resources', 'platform', (is_arch && process.platform) || '', path))
         );
         break;
       case 'inside':
@@ -55,6 +58,6 @@ export function resourcesPathGet(
 export function resourcesOn() {
   //获取依赖路径
   preload.handle('resources-path-get', (_, args) => {
-    return resourcesPathGet(args.type, args.path);
+    return resourcesPathGet(args.type, args.path, args.is_arch);
   });
 }
