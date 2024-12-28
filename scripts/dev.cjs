@@ -83,7 +83,7 @@ function onLog(type, data) {
 
 const start = async () => {
   console.time('dev');
-  const { envConfig } = await buildConfig(`platform/${process.platform}`);
+  const { envConfig } = await buildConfig([`platform/${process.platform}`, `platform/${process.platform}/${process.arch}`]);
   await startRenderer(envConfig).catch(console.error);
   await startMain(envConfig).catch(console.error);
   await startElectron().catch(console.error);
