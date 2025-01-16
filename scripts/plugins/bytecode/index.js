@@ -31,10 +31,10 @@ const loadBuild = (electronPlatformName, arch) => {
       case 'win32':
         switch (arch) {
           case Arch.x64:
-            opts.push('--target x86_64-pc-windows-gnu');
+            opts.push('--target x86_64-pc-windows-msvc');
             break;
           case Arch.ia32:
-            opts.push('--target i686-pc-windows-gnu');
+            opts.push('--target i686-pc-windows-msvc');
             break;
         }
         break;
