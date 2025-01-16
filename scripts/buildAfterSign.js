@@ -1,8 +1,8 @@
 const notarize = require('./plugins/notarize');
 
-exports.default = async ({ appOutDir, packager }) => {
+exports.default = async ({ appOutDir, packager, electronPlatformName }) => {
   try {
-    if (process.platform === 'darwin') {
+    if (electronPlatformName === 'darwin') {
       return await notarize(appOutDir, packager);
     }
   } catch (err) {
