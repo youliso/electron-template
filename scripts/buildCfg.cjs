@@ -3,7 +3,6 @@ const path = require('node:path');
 const packageCfg = require('../package.json');
 const envConfig = require('./cfg/env.json');
 const config = require('./cfg/build.json');
-const updateConfig = require('./cfg/update.json');
 const signConfig = require('./cfg/sign.json');
 
 const buildConfig = async (resourcePaths, archTarget) => {
@@ -21,7 +20,7 @@ const buildConfig = async (resourcePaths, archTarget) => {
   config.copyright = `Copyright © 2024 ${packageCfg.name}`; //版权
   config.productName = packageCfg.name; // 名称
   config.npmRebuild = true; //是否Rebuild编译
-  //asar开关 
+  //asar开关
   config.asar = {
     smartUnpack: false
   };
@@ -69,7 +68,7 @@ const buildConfig = async (resourcePaths, archTarget) => {
       to: './',
       filter: ['**/*']
     });
-  } catch (error) { }
+  } catch (error) {}
   resourcePaths.forEach((resource) => {
     try {
       fs.accessSync(path.resolve('./resources/' + resource));
@@ -78,18 +77,16 @@ const buildConfig = async (resourcePaths, archTarget) => {
         to: resource,
         filter: ['*.*']
       });
-    } catch (error) { }
-  })
+    } catch (error) {}
+  });
 
   //更新配置
-  updateConfig.dirname = `${packageCfg.name.toLowerCase()}-updater`;
-  config.publish = [
-    {
-      provider: updateConfig.provider,
-      url: updateConfig.url
-    }
-  ];
-  envConfig['process.env.UPDATEDIRNAME'] = JSON.stringify(updateConfig.dirname);
+  const updateConfig = {
+    provider: envConfig['process.env.UPDATEPROVIDER'],
+    url: envConfig['process.env.UPDATEURL']
+  };
+  const updateDirname = `${packageCfg.name.toLowerCase()}-updater`;
+  envConfig['process.env.UPDATEDIRNAME'] = JSON.stringify(updateDirname);
   let update =
     'provider: ' +
     updateConfig.provider +
@@ -98,9 +95,10 @@ const buildConfig = async (resourcePaths, archTarget) => {
     updateConfig.url +
     '\n' +
     'updaterCacheDirName: ' +
-    updateConfig.dirname +
+    updateDirname +
     '';
 
+  config.publish = [updateConfig];
   fs.writeFileSync('scripts/.update.yml', update);
 
   return {
