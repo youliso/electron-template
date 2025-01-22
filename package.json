@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "@electron/fuses": "^1.8.0",
-    "@rspack/core": "^1.1.8",
+    "@rspack/core": "^1.2.0",
     "@rspack/dev-server": "^1.0.10",
     "@types/node": "^22.10.7",
     "@youliso/electronic": "^5.4.6",
