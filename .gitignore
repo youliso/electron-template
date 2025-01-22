@@ -1,13 +1,10 @@
 /node_modules/
 /out/
 /dist/
-/logs/
 /.idea/
-/.swc/
 electron-template.kdev4
 package-lock.json
-scripts/.build.json
-scripts/.update.yml
+.update.yml
 scripts/plugins/bytecode/load/Cargo.lock
 scripts/plugins/bytecode/load/target/
 scripts/plugins/bytecode/load/node_modules/

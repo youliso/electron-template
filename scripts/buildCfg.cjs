@@ -99,7 +99,7 @@ const buildConfig = async (resourcePaths, archTarget) => {
     '';
 
   config.publish = [updateConfig];
-  fs.writeFileSync('scripts/.update.yml', update);
+  fs.writeFileSync('.update.yml', update);
 
   return {
     envConfig,
