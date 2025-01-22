@@ -82,8 +82,8 @@ const buildConfig = async (resourcePaths, archTarget) => {
 
   //更新配置
   const updateConfig = {
-    provider: envConfig['process.env.UPDATEPROVIDER'],
-    url: envConfig['process.env.UPDATEURL']
+    provider: JSON.parse(envConfig['process.env.UPDATEPROVIDER']),
+    url: JSON.parse(envConfig['process.env.UPDATEURL']),
   };
   const updateDirname = `${packageCfg.name.toLowerCase()}-updater`;
   envConfig['process.env.UPDATEDIRNAME'] = JSON.stringify(updateDirname);
