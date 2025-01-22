@@ -119,7 +119,7 @@ const core = async (arch) => {
       process.exit(0);
   }
 
-  const cfg = await buildConfig(resourcePaths, archTarget);
+  const cfg = await buildConfig(resourcePaths, archTarget, true);
   await build(targets, cfg.envConfig, cfg.buildConfig);
 };
 

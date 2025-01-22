@@ -1,11 +1,22 @@
 const fs = require('node:fs');
+const net = require('node:net');
 const path = require('node:path');
 const packageCfg = require('../package.json');
 const envConfig = require('./cfg/env.json');
 const config = require('./cfg/build.json');
 const signConfig = require('./cfg/sign.json');
 
-const buildConfig = async (resourcePaths, archTarget) => {
+function getFreePort() {
+  return new Promise((res) => {
+    const srv = net.createServer();
+    srv.listen(0, () => {
+      const port = srv.address().port;
+      srv.close(() => res(port));
+    });
+  });
+}
+
+const buildConfig = async (resourcePaths, archTarget, isRelease) => {
   /** 渲染进程不需要打包到file的包 */
   // config.files.push('!**/node_modules/包名');
   config.afterPack = 'scripts/buildAfterPack.js';
@@ -13,7 +24,7 @@ const buildConfig = async (resourcePaths, archTarget) => {
   config.afterSign = 'scripts/buildAfterSign.js';
 
   /** env配置 **/
-  envConfig['process.env.PORT'] = JSON.stringify(4891);
+  !isRelease && (envConfig['process.env.PORT'] = JSON.stringify(await getFreePort()));
 
   /**  config配置  **/
   config.appId = `org.${packageCfg.author.name}.${packageCfg.name}`;
@@ -83,7 +94,7 @@ const buildConfig = async (resourcePaths, archTarget) => {
   //更新配置
   const updateConfig = {
     provider: JSON.parse(envConfig['process.env.UPDATEPROVIDER']),
-    url: JSON.parse(envConfig['process.env.UPDATEURL']),
+    url: JSON.parse(envConfig['process.env.UPDATEURL'])
   };
   const updateDirname = `${packageCfg.name.toLowerCase()}-updater`;
   envConfig['process.env.UPDATEDIRNAME'] = JSON.stringify(updateDirname);
