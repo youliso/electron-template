@@ -8,7 +8,6 @@ export const updateOn = () => {
       provider: process.env.UPDATEPROVIDER as any,
       url: process.env.UPDATEURL
     },
-    process.env.UPDATEDIRNAME,
     join(__dirname, '../.update.yml'),
     console
   );
