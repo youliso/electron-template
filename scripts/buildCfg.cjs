@@ -97,7 +97,6 @@ const buildConfig = async (resourcePaths, archTarget, isRelease) => {
     url: JSON.parse(envConfig['process.env.UPDATEURL'])
   };
   const updateDirname = `${packageCfg.name.toLowerCase()}-updater`;
-  envConfig['process.env.UPDATEDIRNAME'] = JSON.stringify(updateDirname);
   let update =
     'provider: ' +
     updateConfig.provider +
