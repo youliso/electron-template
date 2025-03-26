@@ -49,11 +49,11 @@
   "mac": {
     "hardenedRuntime": true,
     "gatekeeperAssess": false,
-    "entitlements": "scripts/entitlements.mac.plist",
-    "entitlementsInherit": "scripts/entitlements.mac.plist",
+    "entitlements": "scripts/cfg/mas/entitlements.mas.plist",
+    "entitlementsInherit": "scripts/cfg/mas/entitlements.mas.inherit.plist",
+    "entitlementsLoginHelper": "scripts/cfg/mas/entitlements.mas.loginhelper.plist",
     "category": "public.app-category.business",
-    "icon": "scripts/icons/icon.icns",
-    "target": ["dmg"]
+    "icon": "scripts/icons/icon.icns"
   },
   "win": {
     "icon": "scripts/icons/icon.ico",
