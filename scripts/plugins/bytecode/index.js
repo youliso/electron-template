@@ -9,7 +9,7 @@ const path = require('node:path');
 const loadInit = () => {
   return new Promise((resolve) => {
     const loadProcess = spawn('npm', ['install'], {
-      shell: true,
+      shell: process.platform === 'win32',
       cwd: path.resolve('scripts/plugins/bytecode/load')
     });
     loadProcess.stdout.on('data', (data) => {
@@ -61,7 +61,7 @@ const loadBuild = (electronPlatformName, arch) => {
     }
     opts.push('--release');
     const loadProcess = spawn('npx', opts, {
-      shell: true,
+      shell: process.platform === 'win32',
       cwd: path.resolve('scripts/plugins/bytecode/load')
     });
     loadProcess.stdout.on('data', (data) => {
